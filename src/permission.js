@@ -36,8 +36,8 @@ router.beforeEach(async(to, from, next) => {
           console.log('搞点info')
           // get user info
           await store.dispatch('user/getInfo')
-          const { spec: { data }} = await store.dispatch('user/getRoutesConfig')
-          await store.dispatch('permission/generateRoutes', data)
+          const { spec: { routes }} = await store.dispatch('user/getRoutesConfig')
+          await store.dispatch('permission/generateRoutes', routes)
           // dynamically add accessible routes
           router.addRoutes(store.getters.add_routes)
           // hack method to ensure that addRoutes is complete

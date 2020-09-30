@@ -1,17 +1,21 @@
 <template>
   <div class="topbar-container">
     <el-menu
-      :default-active="'1'"
+      :default-active="'0'"
       class="el-menu-demo"
       mode="horizontal"
       background-color="#304156"
       text-color="#C0C4CC"
       active-text-color="#409EFF"
     >
-      <el-menu-item index="1" class="menu-style">
-        <router-link to="/in/welcome">操作菜单</router-link>
-      </el-menu-item>
-      <el-menu-item index="4" class=""><a href="https://www.ele.me" target="_blank">订单管理</a></el-menu-item>
+      <top-bar-menu-item
+        v-for="menu in top_menus"
+        :key="menu.key"
+        :icon="menu.icon"
+        :title="menu.title"
+        :menu-index="menu.key"
+        @changeMenu="handleChange">
+      </top-bar-menu-item>
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
@@ -42,10 +46,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import TopBarMenuItem from '@/layout/components/TopBarMenuItem/index'
 
 export default {
+  components: {
+    TopBarMenuItem
+  },
+  data() {
+    return {
+      menus: []
+    }
+  },
   computed: {
-    ...mapGetters(['avatar'])
+    ...mapGetters(['avatar', 'top_menus'])
   },
   methods: {
     async logout() {
@@ -53,6 +66,10 @@ export default {
       // added by Chace
       this.$store.commit('permission/RESET_ROUTES')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    handleChange(menuIndex) {
+      this.$store.commit('permission/SET_CURRMENUPREFIX', this.top_menus[menuIndex].path)
+      this.$store.commit('permission/RESET_MENUROUTES', menuIndex)
     }
   }
 }
@@ -61,14 +78,16 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
 
-.topbar-container{
+.topbar-container {
   position: sticky;
   top: 0;
   z-index: 1001;
 }
-.el-menu-item{
+
+.el-menu-item {
   left: $sideBarWidth;
 }
+
 .right-menu {
   float: right;
   height: 100%;

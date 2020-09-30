@@ -7,6 +7,8 @@ const getters = {
   roles: state => state.user.roles,
   add_routes: state => state.permission.addRoutes,
   fixedHeader: state => state.settings.fixedHeader,
-  menu_routes: state => state.permission.menuRoutes
+  menu_routes: state => state.permission.menuRoutes,
+  currentMenuPrefix: state => state.permission.currMenusPrefix,
+  top_menus: state => state.permission.topMenus
 }
 export default getters

@@ -1,6 +1,7 @@
 import { constantRoutes } from '@/router'
 import Layout from '@/layout/layout'
 import Base from '@/layout/index'
+
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -22,6 +23,7 @@ function generateRoutesHelper(data) {
       } else if (item.component === 'Layout') {
         item.component = Layout
       } else {
+        console.log(item.component)
         item.component = require('@/views' + item.component + '.vue').default
       }
       if (item.children && item.children.length) {
@@ -57,18 +59,33 @@ export function filterAsyncRoutes(routes, roles) {
 const state = {
   routes: [],
   addRoutes: [],
-  menuRoutes: []
+  menuRoutes: [],
+  topMenus: [],
+  currMenusPrefix: ''
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
-    state.routes = constantRoutes.concat(routes),
+    state.routes = constantRoutes.concat(routes)
     state.menuRoutes = routes[0].children
   },
   RESET_ROUTES: () => {
     state.addRoutes = []
     state.routes = []
+    state.menuRoutes = []
+    state.topMenus = []
+    state.currMenusPrefix = ''
+  },
+  SET_TOPMENUS: (state, topMenus) => {
+    state.topMenus = topMenus
+  },
+  SET_CURRMENUPREFIX: (state, curr) => {
+    state.currMenusPrefix = curr
+  },
+  RESET_MENUROUTES: (state, index) => {
+    state.menuRoutes = state.addRoutes[index].children
+    state.currMenusPrefix = state.addRoutes[index].path
   }
 }
 
@@ -76,7 +93,19 @@ const actions = {
   generateRoutes({ commit }, data) {
     const accessedRoutes = generateRoutesHelper(data)
     if (accessedRoutes) {
+      const topmenus = []
+      let index = 0
+      for (const item of accessedRoutes) {
+        topmenus.push({
+          key: '' + index++,
+          title: item.meta.title,
+          icon: item.meta.icon,
+          path: item.path
+        })
+      }
       commit('SET_ROUTES', accessedRoutes)
+      commit('SET_TOPMENUS', topmenus)
+      commit('SET_CURRMENUPREFIX', topmenus[0].path)
     }
   }
 }

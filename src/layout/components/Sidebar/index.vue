@@ -16,7 +16,7 @@
           v-for="route in menu_routes"
           :key="route.path"
           :item="route"
-          :base-path=" '/' + route.path"/>
+          :base-path="currentMenuPrefix + '/' + route.path"/>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -33,7 +33,8 @@ export default {
   computed: {
     ...mapGetters([
       'menu_routes',
-      'sidebar'
+      'sidebar',
+      'currentMenuPrefix'
     ]),
     activeMenu() {
       const route = this.$route
