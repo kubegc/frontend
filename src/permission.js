@@ -26,7 +26,7 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       try {
-        if (store.getters.add_routes.length) {
+        if (store.getters.role) {
           console.log('直接走了')
           if (to.path === '/') {
             next({ path: '/in/welcome' })
@@ -35,8 +35,8 @@ router.beforeEach(async(to, from, next) => {
         } else {
           console.log('搞点info')
           // get user info
-          await store.dispatch('user/getInfo')
-          const { spec: { routes }} = await store.dispatch('user/getRoutesConfig')
+          const { role } = await store.dispatch('user/getInfo')
+          const { spec: { routes }} = await store.dispatch('user/getRoutesConfig', role)
           await store.dispatch('permission/generateRoutes', routes)
           // dynamically add accessible routes
           router.addRoutes(store.getters.add_routes)

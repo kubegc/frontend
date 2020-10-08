@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function createResource(payload) {
   return request({
-    url: window.g.baseURL + '/createResource',
+    url: '/kube/createResource',
     method: 'post',
     payload
   })
@@ -10,7 +10,7 @@ export function createResource(payload) {
 
 export function updateResource(payload) {
   return request({
-    url: window.g.baseURL + '/kube/updateResource',
+    url: '/kube/updateResource',
     method: 'post',
     payload
   })
@@ -18,7 +18,7 @@ export function updateResource(payload) {
 
 export function deleteResource(payload) {
   return request({
-    url: window.g.baseURL + '/kube/deleteResource',
+    url: '/kube/deleteResource',
     method: 'post',
     payload
   })
@@ -26,7 +26,7 @@ export function deleteResource(payload) {
 
 export function getResource(payload) {
   return request({
-    url: window.g.baseURL + '/kube/getResource',
+    url: '/kube/getResource',
     type: 'get',
     params: payload
   })
@@ -34,7 +34,7 @@ export function getResource(payload) {
 
 export function listResources(payload) {
   return request({
-    url: window.g.baseURL + '/kube/listResources',
+    url: '/kube/listResources',
     method: 'get',
     params: payload
   })

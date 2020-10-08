@@ -5,7 +5,7 @@
       class="el-menu-demo"
       mode="horizontal"
       background-color="#304156"
-      text-color="#C0C4CC"
+      text-color="#e6f7ff"
       active-text-color="#409EFF"
     >
       <top-bar-menu-item
@@ -14,13 +14,12 @@
         :icon="menu.icon"
         :title="menu.title"
         :menu-index="menu.key"
-        @changeMenu="handleChange">
-      </top-bar-menu-item>
+        @changeMenu="handleChange"/>
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
-            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-            <i class="el-icon-caret-bottom"/>
+            <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
+            <i class="el-icon-caret-bottom" />
           </div>
           <el-dropdown-menu slot="dropdown" class="user-dropdown">
             <router-link to="/">

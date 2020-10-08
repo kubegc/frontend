@@ -1,13 +1,16 @@
-import { login, logout, getInfo, getRoutesConfig} from '@/api/user'
+import { login, logout, getUserInfo } from '@/api/user'
+import { getResource } from '@/api/k8sResource'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    role: '',
+    namespace: 'default'
   }
 }
 
@@ -26,21 +29,24 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  SET_ROLE: (state, role) => {
+    state.role = role
   }
 }
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
+  login({ state, commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
+      login({ username: username.trim(), password: password, namespace: state.namespace }).then(response => {
+        if (response.code === 20000) {
+          const { data } = response
+          commit('SET_TOKEN', data.token)
+          commit('SET_NAME', username.trim())
+          setToken(data.token)
+          resolve()
+        }
       }).catch(error => {
         reject(error)
       })
@@ -50,22 +56,13 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getUserInfo({ token: state.token, username: state.name, namespace: state.namespace }).then(response => {
         const { data } = response
-
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-
-        const { roles, name, avatar } = data
-
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
-
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
+        const { role, avatar } = data
+        commit('SET_ROLE', role)
         commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
@@ -101,9 +98,10 @@ const actions = {
    * @param state
    * @returns {Promise<unknown>}
    */
-  getRoutesConfig({ state }) {
+  getRoutesConfig({ state }, role) {
     return new Promise(resolve => {
-      getRoutesConfig(state.token).then(response => {
+      getResource({ token: state.token, kind: 'Frontend', namespace: state.namespace, name: 'routes-' + role }).then(response => {
+        console.log(response.data)
         resolve(response.data)
       })
     })
