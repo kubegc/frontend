@@ -23,7 +23,6 @@ function generateRoutesHelper(data) {
       } else if (item.component === 'Layout') {
         item.component = Layout
       } else {
-        console.log(item.component)
         item.component = require('@/views' + item.component + '.vue').default
       }
       if (item.children && item.children.length) {

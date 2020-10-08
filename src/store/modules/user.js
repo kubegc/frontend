@@ -1,6 +1,6 @@
 import { login, logout, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/k8sResource'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setValue ,getValue, removeValue} from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 
@@ -45,6 +45,7 @@ const actions = {
           commit('SET_TOKEN', data.token)
           commit('SET_NAME', username.trim())
           setToken(data.token)
+          setValue('name', username.trim())
           resolve()
         }
       }).catch(error => {
@@ -56,7 +57,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getUserInfo({ token: state.token, username: state.name, namespace: state.namespace }).then(response => {
+      getUserInfo({ token: state.token, username: getValue('name'), namespace: state.namespace }).then(response => {
         const { data } = response
         if (!data) {
           reject('Verification failed, please Login again.')
@@ -64,6 +65,8 @@ const actions = {
         const { role, avatar } = data
         commit('SET_ROLE', role)
         commit('SET_AVATAR', avatar)
+        setValue('role', role)
+        setValue('avatar', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -101,7 +104,6 @@ const actions = {
   getRoutesConfig({ state }, role) {
     return new Promise(resolve => {
       getResource({ token: state.token, kind: 'Frontend', namespace: state.namespace, name: 'routes-' + role }).then(response => {
-        console.log(response.data)
         resolve(response.data)
       })
     })

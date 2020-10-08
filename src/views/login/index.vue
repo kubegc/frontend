@@ -96,7 +96,6 @@ export default {
   },
   created() {
     getResource({ kind: 'Frontend', namespace: 'default', name: 'title-project' }).then(response => {
-      console.log(response.data.spec.data)
       this.projectTitles = response.data.spec.data
     })
   },

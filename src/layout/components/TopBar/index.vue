@@ -4,7 +4,7 @@
       :default-active="'0'"
       class="el-menu-demo"
       mode="horizontal"
-      background-color="#304156"
+      background-color="#24292e"
       text-color="#e6f7ff"
       active-text-color="#409EFF"
     >
