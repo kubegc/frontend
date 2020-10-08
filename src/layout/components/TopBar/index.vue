@@ -61,10 +61,12 @@ export default {
   },
   methods: {
     async logout() {
-      await this.$store.dispatch('user/logout')
-      // added by Chace
-      this.$store.commit('permission/RESET_ROUTES')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$store.dispatch('user/logout').then(() => {
+        this.$store.commit('permission/RESET_ROUTES')
+        this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      })
+
+
     },
     handleChange(menuIndex) {
       this.$store.commit('permission/SET_CURRMENUPREFIX', this.top_menus[menuIndex].path)

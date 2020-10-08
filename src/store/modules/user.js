@@ -1,8 +1,7 @@
 import { login, logout, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/k8sResource'
-import { getToken, setToken, removeToken, setValue ,getValue, removeValue} from '@/utils/auth'
+import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
 import { resetRouter } from '@/router'
-
 
 const getDefaultState = () => {
   return {
@@ -75,15 +74,25 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
+  // logout({ commit, state }) {
+  // return new Promise((resolve, reject) => {
+  //   logout(state.token).then(() => {
+  //     removeToken() // must remove  token  first
+  //     resetRouter()
+  //     commit('RESET_STATE')
+  //     resolve()
+  //   }).catch(error => {
+  //     reject(error)
+  //   })
+  // })
+  logout({ dispatch }) {
+    return new Promise(resolve => {
+      dispatch('resetToken').then(() => {
+        removeValue('name')
+        removeValue('role')
+        removeValue('avatar')
         resetRouter()
-        commit('RESET_STATE')
         resolve()
-      }).catch(error => {
-        reject(error)
       })
     })
   },
@@ -103,7 +112,12 @@ const actions = {
    */
   getRoutesConfig({ state }, role) {
     return new Promise(resolve => {
-      getResource({ token: state.token, kind: 'Frontend', namespace: state.namespace, name: 'routes-' + role }).then(response => {
+      getResource({
+        token: state.token,
+        kind: 'Frontend',
+        namespace: state.namespace,
+        name: 'routes-' + role
+      }).then(response => {
         resolve(response.data)
       })
     })

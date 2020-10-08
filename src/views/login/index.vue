@@ -10,7 +10,7 @@
             :key="item.label"
             :label="item.label"
             :value="item.value"
-            style="color:black" />
+            style="color:black"/>
         </el-select>
       </div>
 
