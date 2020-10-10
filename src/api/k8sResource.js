@@ -40,6 +40,12 @@ export function listResources(payload) {
   })
 }
 
+export function getMeta() {
+  return request({
+    url: '/kube/getMeta'
+  })
+}
+
 export function validateRes(res) {
   if (res.code === 20000) {
     return true

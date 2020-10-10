@@ -4,7 +4,7 @@
              label-position="left">
 
       <div class="title-container">
-        <el-select v-model="chosenTitle" placeholder="请选择项目" style="width:100%;margin-bottom:20px;color:black">
+        <el-select v-model="chosenTitle" style="width:100%;margin-bottom:20px;">
           <el-option
             v-for="item in projectTitles"
             :key="item.label"
@@ -14,7 +14,7 @@
         </el-select>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="username" style="background-color: #1f2d3d">
         <span class="svg-container">
           <svg-icon icon-class="user"/>
         </span>
@@ -29,7 +29,7 @@
         />
       </el-form-item>
 
-      <el-form-item prop="password">
+      <el-form-item prop="password" style="background-color: #1f2d3d">
         <span class="svg-container">
           <svg-icon icon-class="password"/>
         </span>
@@ -50,7 +50,7 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                 @click.native.prevent="handleLogin">Login
+                 @click.native.prevent="handleLogin">登录
       </el-button>
 
     </el-form>
@@ -95,8 +95,9 @@ export default {
     }
   },
   created() {
-    getResource({ kind: 'Frontend', namespace: 'default', name: 'title-project' }).then(response => {
+    getResource({token: 'default', kind: 'Frontend', namespace: 'default', name: 'title-project' }).then(response => {
       this.projectTitles = response.data.spec.data
+      this.chosenTitle = response.data.spec.data[0].label
     })
   },
   watch: {
@@ -123,6 +124,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+            console.log(this.redirect)
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

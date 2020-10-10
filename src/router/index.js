@@ -60,8 +60,7 @@ export const constantRoutes = [
           }]
       }
     ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
   //
   // {
   //   path: '/',

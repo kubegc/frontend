@@ -36,12 +36,10 @@ router.beforeEach(async(to, from, next) => {
           console.log('搞点info')
           // get user info
           const { role } = await store.dispatch('user/getInfo')
-          const { spec: { routes }} = await store.dispatch('user/getRoutesConfig', role)
-           store.dispatch('permission/generateRoutes', routes).then(r => {
-             router.addRoutes(store.getters.add_routes)
-           })
+          const { spec: { routes } } = await store.dispatch('user/getRoutesConfig', role)
+          await store.dispatch('permission/generateRoutes', routes)
           // dynamically add accessible routes
-
+          router.addRoutes(store.getters.add_routes)
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record
           next({ ...to, replace: true })

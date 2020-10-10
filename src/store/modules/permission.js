@@ -65,6 +65,8 @@ const state = {
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
+    const page_404 = { path: '*', redirect: '/404', hidden: true }
+    routes.push(page_404)
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
     state.menuRoutes = routes[0].children
@@ -89,7 +91,7 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, data) {
+  generateRoutes({ state, commit }, data) {
     const accessedRoutes = generateRoutesHelper(data)
     if (accessedRoutes) {
       const topmenus = []
