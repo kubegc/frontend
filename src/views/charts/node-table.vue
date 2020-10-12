@@ -197,8 +197,6 @@ import {
   listResources,
   deleteResource,
   createResource,
-  getMeta,
-  search,
   updateResource
 } from '@/api/k8sResource'
 import waves from '@/directive/waves' // waves directive
@@ -284,14 +282,8 @@ export default {
   },
   created() {
     this.catalog_operator = this.$route.name
-    //this.responseJson = this.$route.meta.data
+    this.responseJson = this.$route.meta.data
     this.dialogTitle = this.catalog_operator
-    // getMeta({
-    //   kind: this.catalog_operator,
-    // }).then((response) => {
-    //   this.createRSJson = response.data;
-    // });
-
     // 获取上面的表单的信息
     getResource({
       token: this.token,
@@ -451,7 +443,7 @@ export default {
     getList() {
       this.listLoading = true
       this.list = []
-      search({
+      listResources({
         token: this.token,
         kind: this.catalog_operator,
         limit: this.listQuery.limit,
@@ -713,14 +705,14 @@ export default {
                 )
                 ] = this.CVariables[key].value
             }
-          } else if (this.CVariables[key].type == 'integer') {
+          } else if (this.CVariables[key].type === 'integer') {
             createJsonDataTmp[longkey[longkey.length - 1]] = Number(
               this.CVariables[key].value
             )
           } else {
             createJsonDataTmp[longkey[longkey.length - 1]] = this.CVariables[
               key
-              ].value
+            ].value
             console.log(key)
             console.log(this.CVariables[key].value)
           }
@@ -737,12 +729,11 @@ export default {
         token: this.token,
         json: this.createRSJson
       }).then((response) => {
-        if (this.validateRes(response) == 1) {
-          if (response.code == 20000) {
+        if (this.validateRes(response) === 1) {
+          if (response.code === 20000) {
             this._message()
             this.successCreate = 'success'
             this.refresh()
-          } else {
           }
         }
       })
@@ -790,14 +781,14 @@ export default {
                 name: 'action-' + this.catalog_operator.toLowerCase(),
                 namespace: 'default'
               }).then((response) => {
-                if (this.validateRes(response) === 1) {
-                  if (response.hasOwnProperty('data')) {
+                if (response.code === 20000) {
+                  if (response.data) {
                     this.actions = response.data.spec.data
                   } else {
                     this.actions = []
                   }
                   this.list = []
-                  for (var i = 0; i < this.listJsonTemp.length; i++) {
+                  for (let i = 0; i < this.listJsonTemp.length; i++) {
                     this.list.push({})
                     this.list[i].json = this.listJsonTemp[i]
                     this.list[i].actions = this.actions
@@ -827,7 +818,7 @@ export default {
           createJsonDataTmp = createJsonDataTmp[longkey[i]]
           console.log(this.createJsonData)
         }
-        if (this.Variables[key].type == 'integer') {
+        if (this.Variables[key].type === 'integer') {
           createJsonDataTmp[longkey[longkey.length - 1]] = Number(
             this.Variables[key].value
           )
@@ -849,8 +840,6 @@ export default {
             this.list[key].val = ''
           }
           this._message('更新成功', 'suceess')
-        } else {
-          this._message('更新失败', 'error')
         }
       })
     },

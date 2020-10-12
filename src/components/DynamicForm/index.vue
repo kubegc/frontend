@@ -2,50 +2,50 @@
   <div class="full-form">
     <!-- <h3>{{initParams.title}}</h3> -->
     <el-form
-        :ref="initParams.formName"
-        class="formStyle"
-        :rules="initParams.rules"
-        :model="initParams.model"
-        label-position="left"
-        label-width="80px"
-        :style="initParams.formStyle"
+      :ref="initParams.formName"
+      class="formStyle"
+      :rules="initParams.rules"
+      :model="initParams.model"
+      label-position="left"
+      label-width="80px"
+      :style="initParams.formStyle"
     >
       <el-form-item
-          v-for="efi in items"
-          :key="efi.key"
-          :label="efi.label"
-          :prop="efi.prop"
-          :style="efi.itemStyle"
+        v-for="efi in items"
+        :key="efi.key"
+        :label="efi.label"
+        :prop="efi.prop"
+        :style="efi.itemStyle"
       >
         <el-input
-            v-if="efi.type == 'input'"
-            size="medium"
-            v-model="initParams.model[efi.prop]"
-            :placeholder="efi.ph"
-            :style="efi.selfStyle"
+          v-if="efi.type == 'input'"
+          size="medium"
+          v-model="initParams.model[efi.prop]"
+          :placeholder="efi.ph"
+          :style="efi.selfStyle"
         />
         <el-select
-            v-if="efi.type == 'select'"
-            v-model="initParams.model[efi.prop]"
-            :placeholder="efi.ph"
-            :style="efi.selfStyle"
+          v-if="efi.type == 'select'"
+          v-model="initParams.model[efi.prop]"
+          :placeholder="efi.ph"
+          :style="efi.selfStyle"
         >
           <el-option
-              v-for="lds in initParams.dataSources[efi.prop]"
-              :key="lds.key"
-              :label="lds.label"
-              :value="lds.value"
+            v-for="lds in initParams.dataSources[efi.prop]"
+            :key="lds.key"
+            :label="lds.label"
+            :value="lds.value"
           />
         </el-select>
         <el-tree
-            v-if="efi.type == 'tree'"
-            ref="tree"
-            :check-strictly="checkStrictly"
-            :data="initParams.model[efi.prop]"
-            :props="defaultProps"
-            show-checkbox
-            node-key="path"
-            class="permission-tree"
+          v-if="efi.type == 'tree'"
+          ref="tree"
+          :check-strictly="checkStrictly"
+          :data="initParams.model[efi.prop]"
+          :props="defaultProps"
+          show-checkbox
+          node-key="path"
+          class="permission-tree"
         />
         <el-checkbox-group v-if="efi.type == 'checkbox'" v-model="initParams.model[efi.prop]">
           <el-checkbox v-for="r in initParams.dataSources[efi.prop]" :key="r.key" :label="r.label"></el-checkbox>
@@ -54,10 +54,10 @@
           <el-radio v-for="r in initParams.dataSources[efi.prop]" :key="r.key" :label="r.label"></el-radio>
         </el-radio-group>
         <el-input
-            v-if="efi.type == undefined"
-            v-model="temp[efi.prop]"
-            :placeholder="efi.ph"
-            :style="efi.style"
+          v-if="efi.type == undefined"
+          v-model="temp[efi.prop]"
+          :placeholder="efi.ph"
+          :style="efi.style"
         />
       </el-form-item>
       <el-button style="margin-left:33px;" :icon="initParams.icon" type="primary" @click="submitForm()">
@@ -108,23 +108,21 @@ export default {
     }
   },
   created() {
-    console.log('here')
     this.initParams = this.formData
-    console.log(this.formData)
     if (!this.initParams.title || this.initParams.title == '') {
       this.initParams.title = '标签'
     }
     if (!this.initParams.submitButton || this.initParams.submitButton == '') {
       this.initParams.submitButton = '提交'
     }
-    if (!this.initParams.resetButton || this.initParams.resetButton == '') {
+    if (!this.initParams.resetButton || this.initParams.resetButton === '') {
       this.initParams.resetButton = '重置'
     }
     for (var i = 0; i < this.initParams.items.length; i++) {
       if (
-          this.initParams.items[i].type == 'select' ||
-          this.initParams.items[i].type == 'radio' ||
-          this.initParams.items[i].type == 'checkbox'
+        this.initParams.items[i].type === 'select' ||
+        this.initParams.items[i].type === 'radio' ||
+        this.initParams.items[i].type === 'checkbox'
       ) {
         this.promiseDataSource(this.initParams.items[i].prop)
       }
@@ -167,11 +165,11 @@ export default {
     promiseDataSource(itemName) {
       this.loading = 'start' + itemName
       getMockObj(
-          {
-            kind: 'Frontend',
-            name: this.name + '-' + this.initParams.formName + '-' + itemName
-          },
-          '/ds/' + itemName
+        {
+          kind: 'Frontend',
+          name: this.name + '-' + this.initParams.formName + '-' + itemName
+        },
+        '/ds/' + itemName
       ).then(response => {
         if (validateRes(response)) {
           this.initParams.dataSources[itemName] = response.data.spec.data
