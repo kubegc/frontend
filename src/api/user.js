@@ -15,10 +15,3 @@ export function getUserInfo(payload) {
     params: payload
   })
 }
-
-export function logout() {
-  return request({
-    url: '/user/logout',
-    method: 'post'
-  })
-}

@@ -1,42 +1,42 @@
 import request from '@/utils/request'
 
-export function createResource(payload) {
+export function createResource(data) {
   return request({
     url: '/kube/createResource',
     method: 'post',
-    payload
+    data
   })
 }
 
-export function updateResource(payload) {
+export function updateResource(data) {
   return request({
     url: '/kube/updateResource',
     method: 'post',
-    payload
+    data
   })
 }
 
-export function deleteResource(payload) {
+export function deleteResource(data) {
   return request({
     url: '/kube/deleteResource',
     method: 'post',
-    payload
+    data
   })
 }
 
-export function getResource(payload) {
+export function getResource(params) {
   return request({
     url: '/kube/getResource',
     type: 'get',
-    params: payload
+    params
   })
 }
 
-export function listResources(payload) {
+export function listResources(data) {
   return request({
     url: '/kube/listResources',
-    method: 'get',
-    params: payload
+    method: 'post',
+    data
   })
 }
 

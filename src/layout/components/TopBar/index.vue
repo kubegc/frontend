@@ -2,13 +2,11 @@
   <div class="topbar-container">
     <el-menu
       :default-active="'0'"
-      class="el-menu-demo"
       mode="horizontal"
-      background-color="#24292e"
+      background-color="#304156"
       text-color="#e6f7ff"
       active-text-color="#409EFF"
     >
-
       <top-bar-menu-item
         v-for="menu in top_menus"
         :key="menu.key"
@@ -77,9 +75,9 @@ export default {
   z-index: 1001;
 }
 
-.el-menu-item {
-  left: $sideBarWidth;
-}
+//.el-menu-item {
+//  left: $sideBarWidth;
+//}
 
 .right-menu {
   float: right;

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div>
-      <dynamic-form :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList" />
+      <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList"/>
     </div>
     <div class="filter-container" style="margin-bottom:50px">
       <el-button
@@ -10,13 +10,15 @@
         type="primary"
         class="filter-item"
         @click.native="createJson"
-      >{{ this.createResource }}</el-button>
+      >{{ this.createResource }}
+      </el-button>
       <el-button
         icon="el-icon-refresh"
         style="float:left;margin-right:20px"
         class="filter-item"
         @click.native="refresh"
-      >刷新页面</el-button>
+      >刷新页面
+      </el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -42,8 +44,9 @@
             tag="a"
             class="link"
             @click="getData"
-          >{{ getInputValue(scope.row.json,item.row) }}</router-link>
-          <span v-if="item.kind == undefined">{{ getInputValue(scope.row.json,item.row) }}</span>
+          >{{ getInputValue(scope.row.json, item.row) }}
+          </router-link>
+          <span v-if="item.kind == undefined">{{ getInputValue(scope.row.json, item.row) }}</span>
           <svg-icon
             v-if="item.kind == 'terminal'"
             icon-class="pc"
@@ -77,12 +80,12 @@
 
     <el-dialog
       v-el-drag-dialog
-      :visible.sync="udialogTableVisible"
+      :visible.sync="actionDialogTableVisible"
       :title="this.dialogTitle"
       @dragDialog="handleDrag"
     >
       <div class="card-editor-container">
-        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createJsonData" />
+        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createJsonData"/>
       </div>
       <el-table
         v-if="otherOperation==true"
@@ -121,27 +124,28 @@
           type="primary"
           style="float:right;margin-top:20px;height:40px;display:inline;"
           @click.native="applyOperation"
-        >确认</el-button>
+        >确认
+        </el-button>
       </div>
     </el-dialog>
 
     <el-dialog
       v-el-drag-dialog
-      :visible.sync="dialogTableVisible"
+      :visible.sync="createDialogTableVisible"
       :title="this.createResource"
       @dragDialog="handleDrag"
     >
       <div class="card-editor-container">
         <!-- <p>请填写JSON格式（因版本兼容性约束，请使用以下的group和version信息创建资源）</p> -->
-        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createRSJson" />
+        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createRSJson"/>
         <div v-if="otherOperation==true">
           请选择模版：
           <el-select v-model="createModel" placeholder="选择模版" @change="(handleModel($event))">
-            <el-option v-for="item in models" :key="item" :label="item" :value="item" />
+            <el-option v-for="item in models" :key="item" :label="item" :value="item"/>
           </el-select>
         </div>
         <el-table
-          v-if="otherOperation"
+          v-if="otherOperation === true"
           v-loading="listLoading"
           :data="CVariables"
           border
@@ -178,7 +182,8 @@
             type="primary"
             style="float:right;margin-top:20px;height:40px;display:inline;"
             @click.native="create"
-          >确认</el-button>
+          >确认
+          </el-button>
           <!-- <el-button type="primary" style="float:right;margin-top:20px;height:40px;display:inline;margin-right:0px;" >取消</el-button> -->
         </div>
       </div>
@@ -225,39 +230,28 @@ export default {
   },
   data() {
     return {
+      formVisible: false,
       tableKey: 0,
       list: [],
       listLoading: true,
-      dialogFormVisible: false,
-      dialogStatus: '',
       downloadLoading: false,
       columns: [],
-      littleDataSource: {},
-      filterForm: [],
       listQuery: {
         page: 1,
         limit: 10,
         continue: 1
       },
       total: 0,
-      rules: {},
-      temp: {},
-      textMap: {
-        update: '更新数据',
-        create: '创建新记录'
-      },
-      value: '',
-      ip: '',
       frontend_kind: 'Frontend',
       table_kind: 'table',
       catalog_operator: '',
       actions: [],
-      listTemp: '',
+      listJsonTemp: '',
       createJsonData: {},
-      dialogTableVisible: false,
+      createDialogTableVisible: false,
       createResource: '创建对象',
       createRSJson: {},
-      udialogTableVisible: false,
+      actionDialogTableVisible: false,
       responseJson: {},
       formsearch_kind: 'formsearch',
       namespace: 'default',
@@ -290,7 +284,7 @@ export default {
   },
   created() {
     this.catalog_operator = this.$route.name
-    this.responseJson = this.$route.meta.data
+    //this.responseJson = this.$route.meta.data
     this.dialogTitle = this.catalog_operator
     // getMeta({
     //   kind: this.catalog_operator,
@@ -298,6 +292,7 @@ export default {
     //   this.createRSJson = response.data;
     // });
 
+    // 获取上面的表单的信息
     getResource({
       token: this.token,
       kind: this.frontend_kind,
@@ -305,8 +300,10 @@ export default {
       namespace: 'default'
     }).then((response) => {
       this.responseJson = response.data.spec.data
+      this.formVisible = true
     })
 
+    // 获取表头信息
     getResource({
       token: this.token,
       kind: this.frontend_kind,
@@ -315,6 +312,7 @@ export default {
     }).then((response) => {
       if (this.validateRes(response) === 1) {
         this.columns = response.data.spec.data
+        // 获取表格数据
         listResources({
           token: this.token,
           kind: this.catalog_operator,
@@ -322,10 +320,11 @@ export default {
           page: this.listQuery.continue
         }).then((response) => {
           if (this.validateRes(response) === 1) {
-            this.listTemp = response.data.items
+            this.listJsonTemp = response.data.items
             this.total = response.data.metadata.totalCount
             this.listQuery.continue = response.data.metadata.continue
             this.listLoading = false
+            // 获取可以进行的操作
             getResource({
               token: this.token,
               kind: this.frontend_kind,
@@ -338,9 +337,10 @@ export default {
                 } else {
                   this.actions = []
                 }
-                for (let i = 0; i < this.listTemp.length; i++) {
+                // 这里的list就是最后传进table的data的数据
+                for (let i = 0; i < this.listJsonTemp.length; i++) {
                   this.list.push({})
-                  this.list[i].json = this.listTemp[i]
+                  this.list[i].json = this.listJsonTemp[i]
                   this.list[i].actions = this.actions
                   this.list[i].val = ''
                 }
@@ -353,7 +353,7 @@ export default {
   },
   methods: {
     validateRes(res) {
-      if (res.code == 20000) {
+      if (res.code === 20000) {
         return 1
       } else {
         this.$notify({
@@ -366,6 +366,7 @@ export default {
       }
     },
 
+    // 创建资源选择模板的时候触发的函数
     handleModel(event) {
       getResource({
         token: this.token,
@@ -404,11 +405,6 @@ export default {
         }
       })
     },
-    deleteMenu() {
-      // console.log(constantRoutes[9])
-      // constantRoutes.splice(9,1)
-      Bus.$emit('deleteMenuTest')
-    },
     getData() {
       Bus.$emit('val', this.list)
     },
@@ -416,17 +412,17 @@ export default {
     searchList(message) {
       this.message = message
       this.list = []
-      this.listTemp = ''
+      this.listJsonTemp = ''
       // this.total = response3.total
       console.log(message)
       this.listLoading = false
-      search({
+      listResources({
         token: this.token,
         kind: this.catalog_operator,
         labels: message,
         page: 1
       }).then((response) => {
-        this.listTemp = response.data.items
+        this.listJsonTemp = response.data.items
         this.total = response.data.metadata.totalCount
         getResource({
           token: this.token,
@@ -440,9 +436,9 @@ export default {
             } else {
               this.actions = []
             }
-            for (var i = 0; i < this.listTemp.length; i++) {
+            for (var i = 0; i < this.listJsonTemp.length; i++) {
               this.list.push({})
-              this.list[i].json = this.listTemp[i]
+              this.list[i].json = this.listJsonTemp[i]
               this.list[i].actions = this.actions
               this.list[i].val = ''
             }
@@ -451,6 +447,7 @@ export default {
       })
     },
 
+    // 将表格的 list 和 action 进行更新
     getList() {
       this.listLoading = true
       this.list = []
@@ -462,7 +459,7 @@ export default {
         labels: this.message
       }).then((response) => {
         if (this.validateRes(response) == 1) {
-          this.listTemp = response.data.items
+          this.listJsonTemp = response.data.items
           // this.total = response.data.metadata.remainingItemCount + 10
           // this.listQuery.page = this.listQuery.page + 1
           this.listQuery.continue = response.data.metadata.continue
@@ -479,9 +476,9 @@ export default {
               } else {
                 this.actions = []
               }
-              for (var i = 0; i < this.listTemp.length; i++) {
+              for (var i = 0; i < this.listJsonTemp.length; i++) {
                 this.list.push({})
-                this.list[i].json = this.listTemp[i]
+                this.list[i].json = this.listJsonTemp[i]
                 this.list[i].actions = this.actions
                 this.list[i].val = ''
               }
@@ -493,13 +490,6 @@ export default {
     handleFilter() {
       this.listQuery.pageNum = 1
       this.getList()
-    },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.status = status
     },
     sortChange(data) {
       const { prop, order } = data
@@ -514,37 +504,12 @@ export default {
     sortByID(order) {
       this.handleFilter()
     },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
-      }
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-        }
-      })
-    },
     handleUpdate(event, row) {
       console.log('event name is ' + event)
       this.otherOperation = false
       this.operator = event
       var name = row.metadata.name
-      if (row.metadata.namespace != undefined) {
+      if (row.metadata.namespace !== undefined) {
         this.namespace = row.metadata.namespace
       }
 
@@ -553,9 +518,13 @@ export default {
         kind: this.container_kind + 'Template',
         name: this.catalog_operator.toLowerCase() + '-' + event.toLowerCase()
       }).then((response) => {
-        if (response.code == 20000) {
+        if (response.code === 20000) {
           this.dialogTitle = response.data.spec.data.key
           this.otherOperation = true
+          // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
+          // id是 spec.replicas
+          // type 是字段的类型
+          // vlue 是这个字段默认的值，bool 是 true, string 是 ''
           this.Variables = []
           if (response.hasOwnProperty('data')) {
             const nameVariables = response.data.spec.data.values
@@ -564,7 +533,7 @@ export default {
               this.Variables[i].nameVariable = nameVariables[i].name
               this.Variables[i].id = nameVariables[i].id
               this.Variables[i].type = nameVariables[i].type
-              if (nameVariables[i].type == 'bool') {
+              if (nameVariables[i].type === 'bool') {
                 this.Variables[i].value = true
                 this.Variables[i].placeholder = nameVariables[i].type
               } else {
@@ -576,15 +545,16 @@ export default {
         }
       })
 
-      if (event == 'delete') {
+      if (event === 'delete') {
         deleteResource({
-          json: row,
+          token: this.token,
           kind: this.catalog_operator,
-          namespace: this.namespace
+          namespace: this.namespace,
+          name: row.metadata.name
         }).then((response) => {
-          if (this.validateRes(response) == 1) {
+          if (this.validateRes(response) === 1) {
             var deleteName = response.data.metadata.name
-            // this.listLoading = true;
+            this.listLoading = true
             var id = setInterval(
               function() {
                 getResource({
@@ -593,18 +563,18 @@ export default {
                   kind: this.catalog_operator,
                   namespace: this.namespace
                 }).then((response) => {
-                  if (response.code == 20000) {
-                    this.fetch(row)
-                    this.refresh()
+                  if (response.code === 20000 && response.data.code && response.data.code === 404) {
                     clearInterval(id)
+                    this.refresh()
+                    this._message('删除成功')
                   }
                 })
               }.bind(this),
-              2 * 1000
+              500
             )
           }
         })
-      } else if (event.slice(event.length - 8) == 'Instance') {
+      } else if (event.slice(event.length - 8) === 'Instance') {
         getResource({
           token: this.token,
           name: name,
@@ -621,12 +591,12 @@ export default {
             kind: this.catalog_operator,
             namespace: this.namespace
           }).then((response) => {
-            if (response.code == 20000) {
+            if (response.code === 20000) {
               for (var key in this.list) {
                 this.list[key].val = ''
               }
               // this.handleSuccess();
-              if (event == 'startInstance') {
+              if (event === 'startInstance') {
                 // this.listLoading = true;
                 // var id = setInterval(
                 //   function() {
@@ -646,13 +616,14 @@ export default {
                 //   2 * 1000
                 // );
               } else {
-                this.handleSuccess()
+                this._message()
               }
             }
           })
         })
       } else {
-        this.udialogTableVisible = true
+        // 更新 update 的情况
+        this.actionDialogTableVisible = true
         getResource({
           token: this.token,
           name: name,
@@ -669,7 +640,7 @@ export default {
       }
     },
     create() {
-      this.dialogTableVisible = false
+      this.createDialogTableVisible = false
 
       // console.log(createJsonDataTmp);
       // this.createRSJson = JSON.parse(this.createRSJson);
@@ -697,7 +668,7 @@ export default {
               createJsonDataTmp =
                 createJsonDataTmp[
                   longkey[i].substring(0, longkey[i].indexOf('['))
-                ]
+                  ]
               createJsonDataTmp =
                 createJsonDataTmp[
                   parseInt(
@@ -706,7 +677,7 @@ export default {
                       longkey[i].indexOf(']')
                     )
                   )
-                ]
+                  ]
               // console.log(createJsonDataTmp);
             } else {
               createJsonDataTmp = createJsonDataTmp[longkey[i]]
@@ -721,7 +692,7 @@ export default {
                   0,
                   longkey[longkey.length - 1].indexOf('[')
                 )
-              ]
+                ]
 
             if (this.CVariables[key].type == 'integer') {
               createJsonDataTmp[
@@ -731,7 +702,7 @@ export default {
                     longkey[longkey.length - 1].indexOf(']')
                   )
                 )
-              ] = Number(this.CVariables[key].value)
+                ] = Number(this.CVariables[key].value)
             } else {
               createJsonDataTmp[
                 parseInt(
@@ -740,7 +711,7 @@ export default {
                     longkey[longkey.length - 1].indexOf(']')
                   )
                 )
-              ] = this.CVariables[key].value
+                ] = this.CVariables[key].value
             }
           } else if (this.CVariables[key].type == 'integer') {
             createJsonDataTmp[longkey[longkey.length - 1]] = Number(
@@ -749,7 +720,7 @@ export default {
           } else {
             createJsonDataTmp[longkey[longkey.length - 1]] = this.CVariables[
               key
-            ].value
+              ].value
             console.log(key)
             console.log(this.CVariables[key].value)
           }
@@ -760,13 +731,15 @@ export default {
       if (typeof this.createRSJson === 'string') {
         this.createRSJson = JSON.parse(this.createRSJson)
       }
+      console.log(this.createRSJson)
+      // 新建资源
       createResource({
-        json: this.createRSJson,
-        kind: this.createRSJson.kind
+        token: this.token,
+        json: this.createRSJson
       }).then((response) => {
         if (this.validateRes(response) == 1) {
           if (response.code == 20000) {
-            this.handleSuccess()
+            this._message()
             this.successCreate = 'success'
             this.refresh()
           } else {
@@ -775,7 +748,7 @@ export default {
       })
     },
     createJson() {
-      this.dialogTableVisible = true
+      this.createDialogTableVisible = true
 
       getResource({
         token: this.token,
@@ -799,7 +772,7 @@ export default {
         name: this.table_kind + '-' + this.catalog_operator.toLowerCase(),
         namespace: 'default'
       }).then((response) => {
-        if (this.validateRes(response) == 1) {
+        if (this.validateRes(response) === 1) {
           this.columns = response.data.spec.data
           listResources({
             token: this.token,
@@ -807,8 +780,8 @@ export default {
             limit: this.listQuery.limit,
             page: this.listQuery.page
           }).then((response) => {
-            if (this.validateRes(response) == 1) {
-              this.listTemp = response.data.items
+            if (this.validateRes(response) === 1) {
+              this.listJsonTemp = response.data.items
               // this.total = response3.total
               this.listLoading = false
               getResource({
@@ -817,16 +790,16 @@ export default {
                 name: 'action-' + this.catalog_operator.toLowerCase(),
                 namespace: 'default'
               }).then((response) => {
-                if (this.validateRes(response) == 1) {
+                if (this.validateRes(response) === 1) {
                   if (response.hasOwnProperty('data')) {
                     this.actions = response.data.spec.data
                   } else {
                     this.actions = []
                   }
                   this.list = []
-                  for (var i = 0; i < this.listTemp.length; i++) {
+                  for (var i = 0; i < this.listJsonTemp.length; i++) {
                     this.list.push({})
-                    this.list[i].json = this.listTemp[i]
+                    this.list[i].json = this.listJsonTemp[i]
                     this.list[i].actions = this.actions
                     this.list[i].val = ''
                   }
@@ -839,10 +812,10 @@ export default {
         }
       })
     },
+    // 用于更新的 action 提交
     applyOperation() {
-      this.udialogTableVisible = false
-
-      var temp = {}
+      this.actionDialogTableVisible = false
+      // createJsonData 是得到的这个资源的 json 文件，更新的时候需要在这里进行更改
       if (typeof this.createJsonData === 'string') {
         this.createJsonData = JSON.parse(this.createJsonData)
       }
@@ -861,65 +834,43 @@ export default {
         } else {
           createJsonDataTmp[longkey[longkey.length - 1]] = this.Variables[
             key
-          ].value
+            ].value
         }
       }
       // this.createJsonData = JSON.parse(this.createJsonData);
 
       updateResource({
-        json: this.createJsonData,
-        kind: this.catalog_operator,
-        namespace: this.namespace
+        token: this.token,
+        json: this.createJsonData
       }).then((response) => {
-        if (response.code == 20000) {
+        if (response.code === 20000) {
           this.getList()
           for (var key in this.list) {
             this.list[key].val = ''
           }
-          this.handleSuccess()
+          this._message('更新成功', 'suceess')
+        } else {
+          this._message('更新失败', 'error')
         }
       })
     },
 
-    handleSuccess() {
-      this.$notify({
-        title: 'Success',
-        message: '操作成功',
-        type: 'success',
+    _message(message, type) {
+      this.$message({
+        message: message || '操作成功',
+        type: type || 'info',
         duration: 2000
       })
     },
 
     openTerminal(row) {
-      if (this.catalog_operator == 'Pod') {
+      if (this.catalog_operator === 'Pod') {
         this.$router.push({
           path: '/resourceInfo/podTerminal',
           query: { catalog_operator: this.catalog_operator, row: row }
         })
       }
       connectTerminal(this.catalog_operator, row)
-    },
-
-    updateData() {},
-    handleDelete(row) {
-      this.$notify({
-        title: 'Success',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
-      })
-    },
-
-    formatJson(filterVal, jsonData) {
-      return jsonData.map((v) =>
-        filterVal.map((j) => {
-          if (j === 'timestamp') {
-            return parseTime(v[j])
-          } else {
-            return v[j]
-          }
-        })
-      )
     },
     getInputValue(scope, longKey) {
       if (JSON.stringify(scope) == '{}') {
@@ -958,7 +909,7 @@ export default {
                     element.indexOf(']')
                   )
                 )
-              ]
+                ]
           }
         } else {
           // todo 这里代码有问题，if走不到
@@ -998,7 +949,7 @@ export default {
                   element.indexOf(']')
                 )
               )
-            ]
+              ]
         } else {
           obj = obj[element]
         }
@@ -1014,9 +965,11 @@ export default {
   color: red;
   cursor: pointer;
 }
+
 a:hover {
   text-decoration: underline;
 }
+
 input {
   height: 35px;
 }
