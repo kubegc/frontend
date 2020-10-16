@@ -42,7 +42,7 @@ const actions = {
         if (response.code === 20000) {
           const { data } = response
           commit('SET_TOKEN', data.token)
-          commit('SET_NAME', username.trim())
+          // commit('SET_NAME', username.trim())
           setToken(data.token)
           setValue('name', username.trim())
           resolve()
@@ -64,6 +64,7 @@ const actions = {
         const { role, avatar } = data
         commit('SET_ROLE', role)
         commit('SET_AVATAR', avatar)
+        commit('SET_NAME', getValue('name'))
         setValue('role', role)
         setValue('avatar', avatar)
         resolve(data)

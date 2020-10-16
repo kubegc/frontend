@@ -15,7 +15,7 @@
             :key="item.label"
             :label="item.label"
             :value="item.value"
-            style="color:black"/>
+            style="color:black;"/>
         </el-select>
       </div>
 
@@ -169,7 +169,7 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-
+    font-size: 16px;
     input {
       background: transparent;
       border: 0px;

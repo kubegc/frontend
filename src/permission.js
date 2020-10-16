@@ -39,6 +39,7 @@ router.beforeEach(async(to, from, next) => {
           const { spec: { routes } } = await store.dispatch('user/getRoutesConfig', role)
           await store.dispatch('permission/generateRoutes', routes)
           // dynamically add accessible routes
+          console.log('test')
           router.addRoutes(store.getters.add_routes)
           // hack method to ensure that addRoutes is complete
           // set the replace: true, so the navigation will not leave a history record

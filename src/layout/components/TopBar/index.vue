@@ -4,7 +4,7 @@
       :default-active="'0'"
       mode="horizontal"
       background-color="#304156"
-      text-color="#e6f7ff"
+      text-color="#bfcbd9"
       active-text-color="#409EFF"
     >
       <top-bar-menu-item

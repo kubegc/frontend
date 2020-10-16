@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div>
-      <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList"/>
+      <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList" />
     </div>
     <div class="filter-container" style="margin-bottom:50px">
       <el-button
@@ -80,12 +80,12 @@
 
     <el-dialog
       v-el-drag-dialog
-      :visible.sync="actionDialogTableVisible"
+      :visible.sync="actionDialogVisible"
       :title="this.dialogTitle"
       @dragDialog="handleDrag"
     >
       <div class="card-editor-container">
-        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createJsonData"/>
+        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createJsonData" />
       </div>
       <el-table
         v-if="otherOperation==true"
@@ -131,23 +131,23 @@
 
     <el-dialog
       v-el-drag-dialog
-      :visible.sync="createDialogTableVisible"
+      :visible.sync="createDialogVisible"
       :title="this.createResource"
       @dragDialog="handleDrag"
     >
       <div class="card-editor-container">
         <!-- <p>请填写JSON格式（因版本兼容性约束，请使用以下的group和version信息创建资源）</p> -->
-        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createRSJson"/>
+        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createTemplate" />
         <div v-if="otherOperation==true">
           请选择模版：
-          <el-select v-model="createModel" placeholder="选择模版" @change="(handleModel($event))">
-            <el-option v-for="item in models" :key="item" :label="item" :value="item"/>
+          <el-select v-model="createModel" placeholder="选择模版" @change="handleModel($event)">
+            <el-option v-for="item in models" :key="item" :label="item" :value="item" />
           </el-select>
         </div>
         <el-table
           v-if="otherOperation === true"
           v-loading="listLoading"
-          :data="CVariables"
+          :data="createTableData"
           border
           fit
           highlight-current-row
@@ -188,6 +188,7 @@
         </div>
       </div>
     </el-dialog>
+
   </div>
 </template>
 
@@ -200,7 +201,6 @@ import {
   updateResource
 } from '@/api/k8sResource'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Bus from '@/utils/Bus'
 import JsonEditor from '@/components/JsonEditor'
@@ -246,20 +246,20 @@ export default {
       actions: [],
       listJsonTemp: '',
       createJsonData: {},
-      createDialogTableVisible: false,
+      createDialogVisible: false,
       createResource: '创建对象',
-      createRSJson: {},
-      actionDialogTableVisible: false,
+      createTemplate: {},
+      actionDialogVisible: false,
       responseJson: {},
       formsearch_kind: 'formsearch',
       namespace: 'default',
       Variables: [],
-      CVariables: [],
+      createTableData: [],
       container_kind: 'Container',
       otherOperation: false,
       createModel: '',
       models: '',
-      nameTempVariables: [],
+      propertiesInfo: [],
       message: {}
     }
   },
@@ -281,10 +281,10 @@ export default {
     }
   },
   created() {
-    this.catalog_operator = this.$route.name
+    this.catalog_operator = this.$route.name // 该资源的名字
     this.responseJson = this.$route.meta.data
-    this.dialogTitle = this.catalog_operator
-    // 获取上面的表单的信息
+    this.dialogTitle = this.catalog_operator // 点击 action 之后弹出的 Dialog 的title
+    // 获取上面搜索表单的信息
     getResource({
       token: this.token,
       kind: this.frontend_kind,
@@ -329,7 +329,7 @@ export default {
                 } else {
                   this.actions = []
                 }
-                // 这里的list就是最后传进table的data的数据
+                // 这里的 list 就是最后传进 table 的 data prop的数据
                 for (let i = 0; i < this.listJsonTemp.length; i++) {
                   this.list.push({})
                   this.list[i].json = this.listJsonTemp[i]
@@ -358,8 +358,10 @@ export default {
       }
     },
 
-    // 创建资源选择模板的时候触发的函数
+    // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
+    // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
     handleModel(event) {
+      // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
       getResource({
         token: this.token,
         kind: this.container_kind + 'Template',
@@ -367,30 +369,44 @@ export default {
         namespace: 'default'
       }).then((response) => {
         if (response.code === 20000) {
+          // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
           this.otherOperation = true
-          this.createRSJson = response.data.spec.data.template
-          this.CVariables = []
+          // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
+          this.createTemplate = response.data.spec.data.template
+          console.log(this.createTemplate)
+          // 生成之后就会变成填写字段信息表格的数据来源数组
+          this.createTableData = []
           if (response.hasOwnProperty('data')) {
-            var nameVariables = response.data.spec.data.values
-            this.nameTempVariables = response.data.spec.data.values
-            for (var i = 0; i < nameVariables.length; i++) {
-              this.CVariables.push({})
-              this.CVariables[i].nameVariable = nameVariables[i].name
-              if (nameVariables[i].id.indexOf(',') > 0) {
-                this.CVariables[i].id = nameVariables[i].id.substring(
+            // 字段信息的一个临时副本，其他方法会用的比如 create()
+            this.propertiesInfo = response.data.spec.data.values
+            for (let i = 0; i < this.propertiesInfo.length; i++) {
+              this.createTableData.push({})
+              // 当前这个字段变量的名字
+              this.createTableData[i].nameVariable = this.propertiesInfo[i].name
+              // 如果像是这种的
+              // "metadata.name,
+              //  metadata.labels.job-name,
+              //  spec.selector.matchLabels.job-name,
+              //  spec.template.metadata.labels.job-name,
+              //  spec.template.spec.containers[0].name"
+              if (this.propertiesInfo[i].id.indexOf(',') > 0) {
+                // 这里的意思是只取第一个，比如这里的 metadata.name
+                this.createTableData[i].id = this.propertiesInfo[i].id.substring(
                   0,
-                  nameVariables[i].id.indexOf(',')
+                  this.propertiesInfo[i].id.indexOf(',')
                 )
               } else {
-                this.CVariables[i].id = nameVariables[i].id
+                // 比如只有 metadata.name 这种的
+                this.createTableData[i].id = this.propertiesInfo[i].id
               }
-              this.CVariables[i].type = nameVariables[i].type
-              if (nameVariables[i].type === 'bool') {
-                this.CVariables[i].value = true
-                this.CVariables[i].placeholder = nameVariables[i].type
+              this.createTableData[i].type = this.propertiesInfo[i].type
+              if (this.propertiesInfo[i].type === 'bool') {
+                this.createTableData[i].value = true
+                // 这里的 placeholder 是指在生成表格的时候，需要填写字段信息的 input 组件的 placeholder（我也不知道怎么翻译）
+                this.createTableData[i].placeholder = this.propertiesInfo[i].type
               } else {
-                this.CVariables[i].value = ''
-                this.CVariables[i].placeholder = nameVariables[i].type
+                this.createTableData[i].value = ''
+                this.createTableData[i].placeholder = this.propertiesInfo[i].type
               }
             }
           }
@@ -614,8 +630,8 @@ export default {
           })
         })
       } else {
-        // 更新 update 的情况
-        this.actionDialogTableVisible = true
+        // 当操作是更新 update 的情况
+        this.actionDialogVisible = true
         getResource({
           token: this.token,
           name: name,
@@ -632,114 +648,102 @@ export default {
       }
     },
     create() {
-      this.createDialogTableVisible = false
-
-      // console.log(createJsonDataTmp);
-      // this.createRSJson = JSON.parse(this.createRSJson);
-      for (const key in this.CVariables) {
-        // var createJsonDataTmp = this.createRSJson;
-        console.log(this.CVariables)
-        console.log(createJsonDataTmp)
-        if (this.nameTempVariables[key].id.indexOf(',') > 0) {
-          var outerlongkey = this.nameTempVariables[key].id.split(',')
+      let createTemplateTemp
+      let propertiesRequired
+      // 创建资源的 dialog 需要消失
+      this.createDialogVisible = false
+      for (const key in this.createTableData) {
+        // 如果 id 是长长的一串
+        // 例如 ...,...,... 这种，就将这个长字符串按 ','  分成字符串数组 ['...','...','...']
+        if (this.propertiesInfo[key].id.indexOf(',') > 0) {
+          propertiesRequired = this.propertiesInfo[key].id.split(',')
         } else {
-          var outerlongkey = []
-          outerlongkey.push(this.nameTempVariables[key].id)
-          console.log(outerlongkey)
+          propertiesRequired = []
+          propertiesRequired.push(this.propertiesInfo[key].id)
+          console.log(propertiesRequired)
         }
 
-        for (let j = 0; j < outerlongkey.length; j++) {
-          var createJsonDataTmp = this.createRSJson
-          var longkey = outerlongkey[j].split('.')
-
-          // console.log(longkey)
-
-          for (let i = 0; i < longkey.length - 1; i++) {
+        // 这里是针对每一个属性进行一个循环
+        for (let j = 0; j < propertiesRequired.length; j++) {
+          createTemplateTemp = this.createTemplate
+          const pathToProperty = propertiesRequired[j].split('.')
+          // pathToProperty 数组中最后一个元素是我们的目标属性，所以要解析前面的中间属性
+          for (let i = 0; i < pathToProperty.length - 1; i++) {
             // console.log(longkey[i]);
-            if (longkey[i].indexOf('[') > 0) {
-              createJsonDataTmp =
-                createJsonDataTmp[
-                  longkey[i].substring(0, longkey[i].indexOf('['))
-                  ]
-              createJsonDataTmp =
-                createJsonDataTmp[
+            if (pathToProperty[i].indexOf('[') > 0) {
+              // 获得 example[index] 的 example 数组对象
+              createTemplateTemp =
+                createTemplateTemp[ pathToProperty[i].substring(0, pathToProperty[i].indexOf('[')) ]
+              // 获得 example 数组对象里面的 index 索引下的对象
+              createTemplateTemp =
+                createTemplateTemp[
                   parseInt(
-                    longkey[i].substring(
-                      longkey[i].indexOf('[') + 1,
-                      longkey[i].indexOf(']')
-                    )
+                    pathToProperty[i].substring(pathToProperty[i].indexOf('[') + 1, pathToProperty[i].indexOf(']'))
                   )
-                  ]
+                ]
               // console.log(createJsonDataTmp);
             } else {
-              createJsonDataTmp = createJsonDataTmp[longkey[i]]
+              createTemplateTemp = createTemplateTemp[pathToProperty[i]]
               // console.log(createJsonDataTmp);
             }
           }
-
-          if (longkey[longkey.length - 1].indexOf('[') > 0) {
-            createJsonDataTmp =
-              createJsonDataTmp[
-                longkey[longkey.length - 1].substring(
+          // 处理目标属性，是 example 这种 还是 exapmle[index] 这种
+          if (pathToProperty[pathToProperty.length - 1].indexOf('[') > 0) {
+            createTemplateTemp =
+              createTemplateTemp[
+                pathToProperty[pathToProperty.length - 1].substring(
                   0,
-                  longkey[longkey.length - 1].indexOf('[')
+                  pathToProperty[pathToProperty.length - 1].indexOf('[')
                 )
-                ]
+              ]
 
-            if (this.CVariables[key].type == 'integer') {
-              createJsonDataTmp[
+            if (this.createTableData[key].type === 'integer') {
+              createTemplateTemp[
                 parseInt(
-                  longkey[longkey.length - 1].substring(
-                    longkey[longkey.length - 1].indexOf('[') + 1,
-                    longkey[longkey.length - 1].indexOf(']')
+                  pathToProperty[pathToProperty.length - 1].substring(
+                    pathToProperty[pathToProperty.length - 1].indexOf('[') + 1,
+                    pathToProperty[pathToProperty.length - 1].indexOf(']')
                   )
                 )
-                ] = Number(this.CVariables[key].value)
+              ] = Number(this.createTableData[key].value) // 这里的 value 就是用户填写的信息
             } else {
-              createJsonDataTmp[
+              createTemplateTemp[
                 parseInt(
-                  longkey[longkey.length - 1].substring(
-                    longkey[longkey.length - 1].indexOf('[') + 1,
-                    longkey[longkey.length - 1].indexOf(']')
+                  pathToProperty[pathToProperty.length - 1].substring(
+                    pathToProperty[pathToProperty.length - 1].indexOf('[') + 1,
+                    pathToProperty[pathToProperty.length - 1].indexOf(']')
                   )
                 )
-                ] = this.CVariables[key].value
+              ] = this.createTableData[key].value
             }
-          } else if (this.CVariables[key].type === 'integer') {
-            createJsonDataTmp[longkey[longkey.length - 1]] = Number(
-              this.CVariables[key].value
-            )
+          } else if (this.createTableData[key].type === 'integer') {
+            createTemplateTemp[pathToProperty[pathToProperty.length - 1]] = Number(this.createTableData[key].value)
           } else {
-            createJsonDataTmp[longkey[longkey.length - 1]] = this.CVariables[
-              key
-            ].value
-            console.log(key)
-            console.log(this.CVariables[key].value)
+            createTemplateTemp[pathToProperty[pathToProperty.length - 1]] = this.createTableData[key].value
           }
         }
-        // var longkey = this.CVariables[key].id.split(".");
       }
 
-      if (typeof this.createRSJson === 'string') {
-        this.createRSJson = JSON.parse(this.createRSJson)
+      if (typeof this.createTemplate === 'string') {
+        this.createTemplate = JSON.parse(this.createTemplate)
       }
-      console.log(this.createRSJson)
       // 新建资源
       createResource({
         token: this.token,
-        json: this.createRSJson
+        json: this.createTemplate
       }).then((response) => {
         if (this.validateRes(response) === 1) {
           if (response.code === 20000) {
-            this._message()
+            this._message('创建成功', 'success')
             this.successCreate = 'success'
             this.refresh()
           }
         }
       })
     },
+    // 获取创建资源的模板信息，models 存有下拉列表的选项数据
     createJson() {
-      this.createDialogTableVisible = true
+      this.createDialogVisible = true
 
       getResource({
         token: this.token,
@@ -748,7 +752,6 @@ export default {
         namespace: 'default'
       }).then((response) => {
         if (response.code === 20000) {
-          console.log(response.data)
           this.otherOperation = true
           this.models = response.data.spec.data.support
         }
@@ -795,7 +798,6 @@ export default {
                     this.list[i].val = ''
                   }
                   this.listLoading = false
-                  // console.log(this.list);
                 }
               })
             }
@@ -805,15 +807,15 @@ export default {
     },
     // 用于更新的 action 提交
     applyOperation() {
-      this.actionDialogTableVisible = false
+      this.actionDialogVisible = false
       // createJsonData 是得到的这个资源的 json 文件，更新的时候需要在这里进行更改
       if (typeof this.createJsonData === 'string') {
         this.createJsonData = JSON.parse(this.createJsonData)
       }
 
-      var createJsonDataTmp = this.createJsonData
+      let createJsonDataTmp = this.createJsonData
       for (const key in this.Variables) {
-        var longkey = this.Variables[key].id.split('.')
+        const longkey = this.Variables[key].id.split('.')
         for (let i = 0; i < longkey.length - 1; i++) {
           createJsonDataTmp = createJsonDataTmp[longkey[i]]
           console.log(this.createJsonData)
@@ -825,7 +827,7 @@ export default {
         } else {
           createJsonDataTmp[longkey[longkey.length - 1]] = this.Variables[
             key
-            ].value
+          ].value
         }
       }
       // this.createJsonData = JSON.parse(this.createJsonData);
@@ -839,7 +841,7 @@ export default {
           for (var key in this.list) {
             this.list[key].val = ''
           }
-          this._message('更新成功', 'suceess')
+          this._message('更新成功', 'success')
         }
       })
     },
@@ -862,32 +864,24 @@ export default {
       connectTerminal(this.catalog_operator, row)
     },
     getInputValue(scope, longKey) {
-      if (JSON.stringify(scope) == '{}') {
-        return ''
-      }
-      if (
-        longKey == '' ||
-        longKey == undefined ||
-        longKey == null ||
-        !longKey
-      ) {
+      if (JSON.stringify(scope) === '{}' || !longKey) {
         return ''
       }
       if (longKey.indexOf('.') < 0) {
-        if (longKey == 'unknown') {
+        if (longKey === 'unknown') {
           return '无'
         } else {
           return scope[longKey]
         }
       }
-      var keys = longKey.split('.')
-      var res = scope
+      const keys = longKey.split('.')
+      let res = scope
       keys.forEach((element) => {
         if (element.indexOf('[') > 0) {
           res = res[element.substring(0, element.indexOf('['))]
-          if (res == undefined) {
+          if (res === undefined) {
             res = 'unknown'
-          } else if (res.length == 0) {
+          } else if (res.length === 0) {
             res = 'unknown'
           } else {
             res =
@@ -898,7 +892,7 @@ export default {
                     element.indexOf(']')
                   )
                 )
-                ]
+              ]
           }
         } else {
           // todo 这里代码有问题，if走不到
@@ -906,7 +900,7 @@ export default {
             res = res[element]
             return res
 
-            if (res == undefined) {
+            if (res === undefined) {
               res = 'unknown'
             }
           } else {
@@ -938,7 +932,7 @@ export default {
                   element.indexOf(']')
                 )
               )
-              ]
+            ]
         } else {
           obj = obj[element]
         }
