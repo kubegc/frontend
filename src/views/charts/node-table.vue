@@ -3,7 +3,7 @@
     <div>
       <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList" />
     </div>
-    <div class="filter-container" style="margin-bottom:50px">
+    <div class="filter-container" style="margin-bottom:70px">
       <el-button
         icon="el-icon-plus"
         style="float:left"
@@ -24,17 +24,14 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      border
       fit
       highlight-current-row
-      :header-cell-style="{background:'#eef1f6',color:'#606266'}"
       @sort-change="sortChange"
     >
       <el-table-column
         v-for="item in columns"
         :key="item.key"
         :label="item.label"
-        align="left"
         :width="item.width"
       >
         <template slot-scope="scope">
@@ -526,7 +523,7 @@ export default {
         kind: this.container_kind + 'Template',
         name: this.catalog_operator.toLowerCase() + '-' + event.toLowerCase()
       }).then((response) => {
-        if (response.code === 20000) {
+        if (response.code === 20000 && response.data) {
           this.dialogTitle = response.data.spec.data.key
           this.otherOperation = true
           // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
@@ -876,37 +873,31 @@ export default {
       }
       const keys = longKey.split('.')
       let res = scope
-      keys.forEach((element) => {
-        if (element.indexOf('[') > 0) {
-          res = res[element.substring(0, element.indexOf('['))]
-          if (res === undefined) {
-            res = 'unknown'
-          } else if (res.length === 0) {
-            res = 'unknown'
+      keys.forEach((item) => {
+        if (item.indexOf('[') > 0) {
+          res = res[item.substring(0, item.indexOf('['))]
+          if (res === undefined || res.length === 0) {
+            return 'unknown'
           } else {
             res =
               res[
                 parseInt(
-                  element.substring(
-                    element.indexOf('[') + 1,
-                    element.indexOf(']')
+                  item.substring(
+                    item.indexOf('[') + 1,
+                    item.indexOf(']')
                   )
                 )
               ]
           }
         } else {
           // todo 这里代码有问题，if走不到
-          if (res.hasOwnProperty(element)) {
-            res = res[element]
-            return res
-
+          if (res.hasOwnProperty(item)) {
+            res = res[item]
             if (res === undefined) {
-              res = 'unknown'
+              return 'unknown'
             }
           } else {
-            res = '无'
-            return res
-            throw new Error('notExist')
+            return '无'
           }
         }
       })

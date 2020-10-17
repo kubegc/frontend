@@ -3,9 +3,10 @@
     <el-menu
       :default-active="'0'"
       mode="horizontal"
-      background-color="#304156"
+      background-color="#24292e"
       text-color="#bfcbd9"
       active-text-color="#409EFF"
+      style="border: none"
     >
       <top-bar-menu-item
         v-for="menu in top_menus"
@@ -72,7 +73,12 @@ export default {
 .topbar-container {
   position: sticky;
   top: 0;
-  z-index: 1001;
+  z-index: 3000;
+  box-shadow:
+    0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+    0px 3px 6px 0px rgba(0, 0, 0, 0.12),
+    0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+
 }
 
 //.el-menu-item {

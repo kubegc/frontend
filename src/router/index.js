@@ -43,7 +43,24 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
+  {
+    path: '/routes',
+    component: Base,
+    meta: { icon: 'routes', title: '向导路由' },
+    children: [
+      {
+        path: 'sidebar',
+        component: Layout,
+        children: [
+          {
+            path: 'guide',
+            component: () => import('@/views/guide/index'),
+            meta: { icon: 'tree', title: '向导' }
+          }
+        ]
+      }
+    ]
+  },
   {
     path: '/',
     component: Base,

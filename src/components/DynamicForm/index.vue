@@ -190,7 +190,6 @@ export default {
   height: auto;
   overflow: hidden;
   background: white;
-  border-radius: 3px;
 }
 
 .permission-tree {
