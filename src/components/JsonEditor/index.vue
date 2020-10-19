@@ -13,14 +13,13 @@ require('script-loader!jsonlint')
 import 'codemirror/mode/javascript/javascript'
 import 'codemirror/addon/lint/lint'
 import 'codemirror/addon/lint/json-lint'
-
 export default {
   name: 'JsonEditor',
   /* eslint-disable vue/require-prop-types */
   props: ['value'],
   data() {
     return {
-      jsonEditor: false,
+      jsonEditor: false
     }
   },
   watch: {
@@ -39,9 +38,7 @@ export default {
       theme: 'rubyblue',
       lint: true
     })
-
     this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
-    this.jsonEditor.setOption("readOnly", false);
     this.jsonEditor.on('change', cm => {
       this.$emit('changed', cm.getValue())
       this.$emit('input', cm.getValue())
@@ -55,19 +52,22 @@ export default {
 }
 </script>
 
-<style scoped>
-.json-editor{
-  height: 738px;
+<style lang="scss" scoped>
+.json-editor {
+  height: 100%;
   position: relative;
-}
-.json-editor >>> .CodeMirror {
-  height: 738px;
-  min-height: 300px;
-}
-.json-editor >>> .CodeMirror-scroll{
-  min-height: 300px;
-}
-.json-editor >>> .cm-s-rubyblue span.cm-string {
-  color: #F08047;
+  ::v-deep {
+    .CodeMirror {
+      height: auto;
+      min-height: 300px;
+    }
+    .CodeMirror-scroll {
+      min-height: 300px;
+      max-height: 400px;
+    }
+    .cm-s-rubyblue span.cm-string {
+      color: #F08047;
+    }
+  }
 }
 </style>

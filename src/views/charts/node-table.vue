@@ -10,13 +10,15 @@
         type="primary"
         class="filter-item"
         @click.native="createJson"
-      >{{ this.createResource }}
+        circle
+      >
       </el-button>
       <el-button
         icon="el-icon-refresh"
         style="float:left;margin-right:20px"
         class="filter-item"
         @click.native="refresh"
+        round
       >刷新页面
       </el-button>
     </div>
@@ -80,6 +82,7 @@
       :visible.sync="actionDialogVisible"
       :title="this.dialogTitle"
       @dragDialog="handleDrag"
+      width="70%"
     >
       <div class="card-editor-container">
         <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createJsonData" />

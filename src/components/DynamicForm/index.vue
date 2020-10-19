@@ -60,10 +60,10 @@
           :style="efi.style"
         />
       </el-form-item>
-      <el-button style="margin-left:33px;" :icon="initParams.icon" type="primary" @click="submitForm()">
+      <el-button style="margin-left:33px;" :icon="initParams.icon" type="primary" @click="submitForm()" round>
         {{ initParams.submitButton }}
       </el-button>
-      <el-button @click="resetForm()">{{ initParams.resetButton }}</el-button>
+      <el-button @click="resetForm()" round>{{ initParams.resetButton }}</el-button>
       <a v-if="items.length>initParams.expand" class="drop-down" @click="dropDown">
         {{ dropDownContent }}
         <Icon :type="dropDownIcon"></Icon>

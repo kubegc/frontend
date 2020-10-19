@@ -31,9 +31,9 @@ export default {
 <style lang="scss" scoped>
 @import "~@/styles/variables.scss";
 .navbar {
-  height: 50px;
+  height: 55px;
   position: sticky;
-  top: 66px;
+  top: 60px;
   background: #fff;
   //box-shadow: 0 1px 4px rgba(0,21,41,.08);
   box-shadow:

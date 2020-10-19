@@ -3,7 +3,7 @@
     <el-menu
       :default-active="'0'"
       mode="horizontal"
-      background-color="#24292e"
+      background-color="#304156"
       text-color="#bfcbd9"
       active-text-color="#409EFF"
       style="border: none"
@@ -14,7 +14,9 @@
         :icon="menu.icon"
         :title="menu.title"
         :menu-index="menu.key"
-        @changeMenu="handleChange"/>
+        @changeMenu="handleChange"
+        style="border: none"
+        />
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
@@ -73,12 +75,11 @@ export default {
 .topbar-container {
   position: sticky;
   top: 0;
-  z-index: 3000;
+  z-index: 1003;
   box-shadow:
     0px 1px 2px -2px rgba(0, 0, 0, 0.16),
     0px 3px 6px 0px rgba(0, 0, 0, 0.12),
     0px 5px 12px 4px rgba(0, 0, 0, 0.09);
-
 }
 
 //.el-menu-item {
@@ -88,8 +89,6 @@ export default {
 .right-menu {
   float: right;
   height: 100%;
-  line-height: 50px;
-
   &:focus {
     outline: none;
   }
