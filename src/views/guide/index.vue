@@ -207,8 +207,39 @@ export default {
           }
         }
       },
-      tableColumnJson: {},
-      formSearchJson: {},
+      tableColumnJson: {
+        'apiVersion': 'cloudplus.io/v1alpha3',
+        'kind': 'Frontend',
+        'metadata': {
+          'name': ''
+        },
+        'spec': {
+          'data': [
+            {
+              'key': 0,
+              'kind': '',
+              'label': '',
+              'link': '',
+              'row': '',
+              'style': '',
+              'type': '',
+              'width': ''
+            }
+          ],
+          'type': 'table'
+        }
+      },
+      formSearchJson: {
+        'apiVersion': 'cloudplus.io/v1alpha3',
+        'kind': 'Frontend',
+        'metadata': {
+          'name': ''
+        },
+        'spec': {
+          'data': {},
+          'type': 'formsearch'
+        }
+      },
       createMetaJson: {
         'apiVersion': 'cloudplus.io/v1alpha3',
         'kind': 'ContainerTemplate',
@@ -306,7 +337,6 @@ export default {
                       })
                     }
                   })
-
                 }
               })
             }
@@ -357,10 +387,19 @@ export default {
       }
     },
     handleInputChange(value) {
+      console.log('hereeeeeeeeeeeee')
       this.createTemplateJson.metadata.name = value.toLowerCase() + '-create.your_template_name_here'
       this.actionTemplateJson.metadata.name = value.toLowerCase() + '-your_action_name_here'
+      this.createTemplates.forEach(item => {
+        item.createJson.metadata.name = value.toLowerCase() + '-create.your_template_name_here'
+      })
+      this.actionTemplates.forEach(item => {
+        item.actionJson.metadata.name = value.toLowerCase() + '-your_action_name_here'
+      })
       this.createMetaJson.metadata.name = value.toLowerCase() + '-create'
       this.actionMetaJson.metadata.name = 'action-' + value.toLowerCase()
+      this.tableColumnJson.metadata.name = 'table-' + value.toLowerCase()
+      this.formSearchJson.metadata.name = 'formsearch-' + value.toLowerCase()
     }
   }
 }

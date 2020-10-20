@@ -526,7 +526,7 @@ export default {
         kind: this.container_kind + 'Template',
         name: this.catalog_operator.toLowerCase() + '-' + event.toLowerCase()
       }).then((response) => {
-        if (response.code === 20000 && response.data) {
+        if (response.code === 20000 && response.data !== 404) {
           this.dialogTitle = response.data.spec.data.key
           this.otherOperation = true
           // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
