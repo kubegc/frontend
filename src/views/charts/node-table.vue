@@ -31,6 +31,10 @@
       @sort-change="sortChange"
     >
       <el-table-column
+        type="index"
+        width="50">
+      </el-table-column>
+      <el-table-column
         v-for="item in columns"
         :key="item.key"
         :label="item.label"

@@ -9,7 +9,7 @@
       label-position="left">
 
       <div class="title-container">
-        <el-select v-model="chosenTitle" style="width:100%;margin-bottom:20px;">
+        <el-select v-model="chosenTitle" style="width:112%;margin-bottom:20px;">
           <el-option
             v-for="item in projectTitles"
             :key="item.label"
@@ -19,7 +19,7 @@
         </el-select>
       </div>
 
-      <el-form-item prop="username" style="background-color: #1f2d3d">
+      <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user"/>
         </span>
@@ -34,7 +34,7 @@
         />
       </el-form-item>
 
-      <el-form-item prop="password" style="background-color: #1f2d3d">
+      <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password"/>
         </span>
@@ -169,7 +169,7 @@ $cursor: #fff;
     display: inline-block;
     height: 47px;
     width: 85%;
-    font-size: 16px;
+    font-size: 15px;
     input {
       background: transparent;
       border: 0px;
@@ -188,10 +188,21 @@ $cursor: #fff;
   }
 
   .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    //background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
     color: #454545;
+    background-color: #304156;
+    box-shadow:
+      0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+      0px 3px 6px 0px rgba(0, 0, 0, 0.12),
+      0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+  }
+  .el-button{
+    box-shadow:
+      0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+      0px 3px 6px 0px rgba(0, 0, 0, 0.12),
+      0px 5px 12px 4px rgba(0, 0, 0, 0.09);
   }
 }
 </style>
@@ -205,8 +216,8 @@ $light_gray: #eee;
   min-height: 100%;
   width: 100%;
   background: url(../../assets/login.jpg) no-repeat center;
+  //background: $bg;
   overflow: hidden;
-
   .login-form {
     position: relative;
     width: 520px;

@@ -27,13 +27,14 @@ export default {
   watch: {
     value: {
       handler: function(value) {
-        console.log('asdasdsadsad')
+        console.log('laile')
         const editorValue = this.jsonEditor.getValue()
-        if (JSON.stringify(value, null, 2) !== editorValue) {
-          this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
+        if (value !== editorValue) {
+          console.log('赋值了')
+          // this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
+          this.jsonEditor.setValue(value)
         }
-      },
-      deep: true
+      }
     }
   },
   mounted() {
@@ -44,13 +45,13 @@ export default {
       theme: 'rubyblue',
       lint: true
     })
-    this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
+    // this.jsonEditor.setValue(JSON.stringify(this.value, null, 2))
+    this.jsonEditor.setValue(this.value)
     this.jsonEditor.on('change', cm => {
       this.$emit('changed', cm.getValue())
-      this.$emit('input', JSON.parse(cm.getValue()))
+      this.$emit('input', cm.getValue())
     })
-  }
-  ,
+  },
   methods: {
     getValue() {
       return this.jsonEditor.getValue()

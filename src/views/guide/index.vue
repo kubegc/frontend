@@ -2,6 +2,7 @@
   <div class="app-container">
     <el-row :gutter="15">
       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="130px">
+
         <el-col :span="12">
           <el-form-item label="资源名称" prop="resource">
             <el-input
@@ -14,115 +15,83 @@
             </el-input>
           </el-form-item>
         </el-col>
+
         <el-col :span="13">
-          <el-form-item label="编辑表列信息" prop="">
-            <el-button
-              type="text"
-              icon="el-icon-document-add"
-              size="medium"
-              @click="tableColumnVisible = !tableColumnVisible"> 点击编辑
-            </el-button>
-            <el-dialog
-              :visible.sync="tableColumnVisible"
-              width="70%">
-              <json-editor v-model="tableColumnJson"></json-editor>
-            </el-dialog>
-          </el-form-item>
-        </el-col>
-        <el-col :span="13">
-          <el-form-item label="编辑查询表单" prop="">
-            <el-button
-              type="text"
-              icon="el-icon-document-add"
-              size="medium"
-              @click="formSearchVisible = !formSearchVisible"> 点击编辑
-            </el-button>
-            <el-dialog
-              :visible.sync="formSearchVisible"
-              width="70%">
-              <json-editor v-model="formSearchJson"></json-editor>
-            </el-dialog>
-          </el-form-item>
-        </el-col>
-        <el-col :span="13">
-          <el-form-item label="创建模板数量" prop="createTemplateNum">
-            <el-input-number
-              v-model="formData.createTemplateNum"
-              placeholder="创建模板数量"
-              :min="0"
-              @change="handleCreateNumChange">
-            </el-input-number>
+          <el-form-item label="模板类型" prop="resource">
+            <el-select v-model="formData.chosenGuideType" placeholder="请选择" @change="handleGuideTypeChange">
+              <el-option
+                v-for="item in guideTypes"
+                :key="item.key"
+                :label="item.label"
+                :value="item.key"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="13" v-if="formData.createTemplateNum > 0">
+
+        <el-col :span="13" v-if="canEdit">
           <el-form-item
-            v-for="item in createTemplates"
-            :label="item.label"
-            :key="item.key">
-            <el-button
-              type="text"
-              icon="el-icon-document-add"
-              size="medium"
-              @click="item.dialogVisible = !item.dialogVisible">
-              点击编辑创建资源的 json 文件
-            </el-button>
-            <el-dialog
-              :visible.sync="item.dialogVisible"
-              width="70%">
-              <json-editor v-model="item.createJson"></json-editor>
-            </el-dialog>
-          </el-form-item>
-        </el-col>
-        <el-col :span="13">
-          <el-form-item label="资源操作种类" prop="actionNum">
-            <el-input-number
-              v-model="formData.actionNum"
-              placeholder="资源操作种类"
-              :min="0"
-              @change="handleActionNumChange"
-            >
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="13" v-if="formData.actionNum > 0">
-          <el-form-item
-            v-for="item in actionTemplates"
+            v-for="item in editTemplates"
             :label="item.label"
             :key="item.key"
           >
-            <el-button
-              type="text"
-              icon="el-icon-document-add"
-              size="medium"
-              @click="item.dialogVisible = !item.dialogVisible">
-              点击编辑对资源操作的 json 文件
-            </el-button>
+            <el-popover
+              placement="right"
+              trigger="hover"
+            >
+              <el-image
+                style="width: 800px; height: 350px;"
+                :src="require('../../assets/nodetable-' + item.key + '.jpg')"
+              >
+              </el-image>
+              <el-button
+                type="text"
+                icon="el-icon-document-add"
+                size="medium"
+                slot="reference"
+                @click="item.dialogVisible = true"> 点击编辑
+              </el-button>
+            </el-popover>
             <el-dialog
               :visible.sync="item.dialogVisible"
               width="70%">
-              <json-editor v-model="item.actionJson"></json-editor>
+              <json-editor
+                :value="JSON.stringify(item.jsonFileObj, null, 2)"
+                @input="item.jsonFileObj = JSON.parse($event)"></json-editor>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="item.dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="item.dialogVisible = false">确 定</el-button>
+              </div>
             </el-dialog>
           </el-form-item>
         </el-col>
 
-        <el-col :span="13">
-          <el-form-item label="编辑支持的 action" prop="">
+        <el-col :span="13" v-if="canEdit">
+          <el-form-item
+            label="编辑路由信息">
             <el-button
               type="text"
               icon="el-icon-document-add"
               size="medium"
-              @click="actionMetaVisible = !actionMetaVisible"> 点击编辑
+              @click="routeVisible = true"> 点击编辑
             </el-button>
             <el-dialog
-              :visible.sync="actionMetaVisible"
+              :visible.sync="routeVisible"
               width="70%">
-              <json-editor v-model="actionMetaJson"></json-editor>
+              <json-editor
+                :value="JSON.stringify(routeFile, null, 2)"
+                @input="routeFile = JSON.parse($event)"></json-editor>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="routeVisible = false">取 消</el-button>
+                <el-button type="primary" @click="routeVisible = false">确 定</el-button>
+              </div>
             </el-dialog>
           </el-form-item>
         </el-col>
 
-        <el-col :span="24">
+        <el-col :span="24" v-if="canEdit">
           <el-form-item size="large">
             <el-button type="primary" @click="submitForm">提交</el-button>
             <el-button @click="resetForm">重置</el-button>
@@ -134,7 +103,7 @@
 </template>
 <script>
 import JsonEditor from '@/components/JsonEditor/index'
-import { createResource, deleteResource } from '@/api/k8sResource'
+import { createResource, listResources, getResource, updateResource } from '@/api/k8sResource'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -144,7 +113,8 @@ export default {
       formData: {
         resource: '',
         createTemplateNum: 0,
-        actionNum: 0
+        actionNum: 0,
+        chosenGuideType: ''
       },
       rules: {
         resource: [{
@@ -163,9 +133,12 @@ export default {
           trigger: 'blur'
         }]
       },
-      tableColumnVisible: false,
-      formSearchVisible: false,
-      actionMetaVisible: false,
+      canEdit: false,
+      editTemplates: [],
+      guideTypes: [{ key: 'table1', label: '普通资源操作页面' }],
+      routeVisible: false,
+      routeFile: {},
+
       createTemplates: [],
       actionTemplates: [],
       createTemplateJson: {
@@ -207,39 +180,6 @@ export default {
           }
         }
       },
-      tableColumnJson: {
-        'apiVersion': 'cloudplus.io/v1alpha3',
-        'kind': 'Frontend',
-        'metadata': {
-          'name': ''
-        },
-        'spec': {
-          'data': [
-            {
-              'key': 0,
-              'kind': '',
-              'label': '',
-              'link': '',
-              'row': '',
-              'style': '',
-              'type': '',
-              'width': ''
-            }
-          ],
-          'type': 'table'
-        }
-      },
-      formSearchJson: {
-        'apiVersion': 'cloudplus.io/v1alpha3',
-        'kind': 'Frontend',
-        'metadata': {
-          'name': ''
-        },
-        'spec': {
-          'data': {},
-          'type': 'formsearch'
-        }
-      },
       createMetaJson: {
         'apiVersion': 'cloudplus.io/v1alpha3',
         'kind': 'ContainerTemplate',
@@ -251,24 +191,17 @@ export default {
             'support': []
           }
         }
-      },
-      actionMetaJson: {
-        'apiVersion': 'cloudplus.io/v1alpha3',
-        'kind': 'Frontend',
-        'metadata': {
-          'name': ''
-        },
-        'spec': {
-          'data': [
-            {
-              'key': '删除',
-              'type': 'delete'
-            }
-          ],
-          'type': 'action'
-        }
       }
     }
+  },
+  created() {
+    getResource({ token: this.token, kind: 'Frontend', name: 'routes-user', namespace: 'default' }).then(
+      response => {
+        if (response.code === 20000 && response.data !== null) {
+          this.routeFile = response.data
+        }
+      }
+    )
   },
   computed: {
     ...mapGetters(['token'])
@@ -277,87 +210,37 @@ export default {
     submitForm() {
       this.$refs['elForm'].validate(valid => {
         if (!valid) return
+        // if valid
         const alreadyCreate = []
         try {
-          createResource({
-            token: this.token,
-            json: typeof this.tableColumnJson === 'string' ? this.tableColumnJson = JSON.parse(this.tableColumnJson) : this.tableColumnJson
-          }).then(response => {
-            if (response.code === 20000) {
-              alreadyCreate.push(this.tableColumnJson)
-              createResource({
-                token: this.token,
-                json: typeof this.formSearchJson === 'string' ? this.formSearchJson = JSON.parse(this.formSearchJson) : this.formSearchJson
-              }).then(response => {
-                if (response.code === 20000) {
-                  alreadyCreate.push((this.formSearchJson))
-                  if (this.createTemplates.length > 0) {
-                    for (const item of this.createTemplates) {
-                      createResource({
-                        token: this.token,
-                        json: typeof item.createJson === 'string' ? item.createJson = JSON.parse(item.createJson) : item.createJson
-                      }).then(response => {
-                        if (response.code === 20000) {
-                          alreadyCreate.push(item.createJson)
-                        }
-                      })
-                    }
-                  }
-
-                  if (this.actionTemplates.length > 0) {
-                    for (const item of this.actionTemplates) {
-                      createResource({
-                        token: this.token,
-                        json: typeof item.actionJson === 'string' ? item.actionJson = JSON.parse(item.actionJson) : item.actionJson
-                      }).then(response => {
-                        if (response.code === 20000) {
-                          alreadyCreate.push(item.actionJson)
-                        }
-                      })
-                    }
-                  }
-                  for (const item of this.createTemplates) {
-                    this.createMetaJson.spec.data.support.push(item.createJson.metadata.name.substring(item.createJson.metadata.name.lastIndexOf('.') + 1, item.createJson.metadata.name.length))
-                  }
-                  createResource({ token: this.token, json: this.createMetaJson }).then(response => {
-                    if (response.code === 20000) {
-                      createResource({
-                        token: this.token,
-                        json: typeof this.actionMetaJson === 'string'
-                          ? this.actionMetaJson = JSON.parse(this.actionMetaJson)
-                          : this.actionMetaJson
-                      }).then(response => {
-                        if (response.code === 20000) {
-                          this.$message({
-                            message: '创建资源页面操作成功',
-                            type: 'success',
-                            duration: 2000
-                          })
-                        }
-                      })
-                    }
-                  })
-                }
-              })
-            }
-          })
-        } catch (e) {
-          for (const item of alreadyCreate) {
-            deleteResource({ token: this.token, namespace: 'default', kind: item.kind, name: item.metadata.name }).then(
+          this.editTemplates.forEach(item => {
+            createResource({ token: this.token, json: item.jsonFileObj }).then(
               response => {
-                if (response.code === 20000) {
-                  alreadyCreate.splice(-1, 1)
+                if (response.code === 2000 && response.data !== null) {
+                  alreadyCreate.push(item.jsonFileObj)
+                } else {
+                  throw Error
                 }
               }
             )
-          }
-          if (alreadyCreate.length === 0) {
-            this.$message({
-              message: '增加新资源失败',
-              type: 'error',
-              duration: 2000
-            })
-          }
+          })
+          updateResource({ token: this.token, json: this.routeFile }).then(
+            response => {
+              if (response.code === 20000 && response.data !== null) {
+                this.$message({
+                  message: '创建资源页面成功',
+                  type: 'success',
+                  duration: 2000
+                })
+              }
+            }
+          )
+        } catch (e) {
+          this.$message({
+            message: '创建资源页面失败',
+            type: 'error',
+            duration: 2000
+          })
         }
       })
     },
@@ -387,19 +270,28 @@ export default {
       }
     },
     handleInputChange(value) {
-      console.log('hereeeeeeeeeeeee')
-      this.createTemplateJson.metadata.name = value.toLowerCase() + '-create.your_template_name_here'
-      this.actionTemplateJson.metadata.name = value.toLowerCase() + '-your_action_name_here'
-      this.createTemplates.forEach(item => {
-        item.createJson.metadata.name = value.toLowerCase() + '-create.your_template_name_here'
-      })
-      this.actionTemplates.forEach(item => {
-        item.actionJson.metadata.name = value.toLowerCase() + '-your_action_name_here'
-      })
-      this.createMetaJson.metadata.name = value.toLowerCase() + '-create'
-      this.actionMetaJson.metadata.name = 'action-' + value.toLowerCase()
-      this.tableColumnJson.metadata.name = 'table-' + value.toLowerCase()
-      this.formSearchJson.metadata.name = 'formsearch-' + value.toLowerCase()
+      for (const item of this.editTemplates) {
+        item.jsonFileObj.metadata.name = item.key + '-' + value.toLowerCase()
+      }
+    },
+    handleGuideTypeChange(value) {
+      listResources({ token: this.token, kind: 'Frontend', labels: { 'spec.type': 'wizard' } }).then(
+        response => {
+          if (response.code === 20000 && response.data != null) {
+            const guideName = 'wizard-' + value
+            const info = response.data.items.filter(item => item.metadata.name === guideName)[0].spec.data
+            console.log(info)
+            for (const key in info.keys) {
+              const temp = {}
+              temp.key = key
+              temp.label = info.keys[key]
+              temp.jsonFileObj = info.values[key]
+              temp.dialogVisible = false
+              this.editTemplates.push(temp)
+            }
+          }
+          this.canEdit = true
+        })
     }
   }
 }

@@ -3,7 +3,7 @@
     <el-menu
       :default-active="'0'"
       mode="horizontal"
-      background-color="#304156"
+      background-color="#24292e"
       text-color="#bfcbd9"
       active-text-color="#409EFF"
       style="border: none"
@@ -77,9 +77,9 @@ export default {
   top: 0;
   z-index: 1003;
   box-shadow:
-    0px 1px 2px -2px rgba(0, 0, 0, 0.16),
-    0px 3px 6px 0px rgba(0, 0, 0, 0.12),
-    0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+    0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+    0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+    0px 12px 48px 16px rgba(0, 0, 0, 0.03);
 }
 
 //.el-menu-item {
