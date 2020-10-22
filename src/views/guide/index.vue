@@ -3,19 +3,6 @@
     <el-row :gutter="15">
       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="130px">
 
-        <el-col :span="12">
-          <el-form-item label="资源名称" prop="resource">
-            <el-input
-              v-model="formData.resource"
-              placeholder="请输入资源名称"
-              clearable
-              prefix-icon='el-icon-folder'
-              :style="{width: '100%'}"
-              @change="handleInputChange">
-            </el-input>
-          </el-form-item>
-        </el-col>
-
         <el-col :span="13">
           <el-form-item label="模板类型" prop="resource">
             <el-select v-model="formData.chosenGuideType" placeholder="请选择" @change="handleGuideTypeChange">
@@ -30,6 +17,18 @@
           </el-form-item>
         </el-col>
 
+        <el-col :span="12" v-if="canEdit">
+          <el-form-item label="资源名称" prop="resource">
+            <el-input
+              v-model="formData.resource"
+              placeholder="请输入资源名称"
+              clearable
+              prefix-icon='el-icon-folder'
+              :style="{width: '100%'}"
+              @change="handleInputChange">
+            </el-input>
+          </el-form-item>
+        </el-col>
 
         <el-col :span="13" v-if="canEdit">
           <el-form-item
@@ -59,7 +58,7 @@
               width="70%">
               <json-editor
                 :value="JSON.stringify(item.jsonFileObj, null, 2)"
-                @input="item.jsonFileObj = JSON.parse($event)"></json-editor>
+                @input="item.jsonFileObj = JSON.parse($event)"/>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="item.dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="item.dialogVisible = false">确 定</el-button>
@@ -102,7 +101,7 @@
   </div>
 </template>
 <script>
-import JsonEditor from '@/components/JsonEditor/index'
+import JsonEditor from '@/components/JsonEditorSpecial/index'
 import { createResource, listResources, getResource, updateResource } from '@/api/k8sResource'
 import { mapGetters } from 'vuex'
 
@@ -296,5 +295,5 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 </style>
