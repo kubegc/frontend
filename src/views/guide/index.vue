@@ -4,7 +4,7 @@
       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="130px">
 
         <el-col :span="13">
-          <el-form-item label="模板类型" prop="resource">
+          <el-form-item label="新增页面类型" prop="resource">
             <el-select v-model="formData.chosenGuideType" placeholder="请选择" @change="handleGuideTypeChange">
               <el-option
                 v-for="item in guideTypes"
@@ -47,7 +47,7 @@
               </el-image>
               <el-button
                 type="text"
-                icon="el-icon-document-add"
+                icon="el-icon-edit"
                 size="medium"
                 slot="reference"
                 @click="item.dialogVisible = true"> 点击编辑
@@ -67,33 +67,37 @@
           </el-form-item>
         </el-col>
 
+<!--        <el-col :span="13" v-if="canEdit">-->
+<!--          <el-form-item-->
+<!--            label="编辑路由信息">-->
+<!--            <el-button-->
+<!--              type="text"-->
+<!--              icon="el-icon-edit"-->
+<!--              size="medium"-->
+<!--              @click="routeVisible = true"> 点击编辑-->
+<!--            </el-button>-->
+<!--            <el-dialog-->
+<!--              :visible.sync="routeVisible"-->
+<!--              width="70%">-->
+<!--              <json-editor-->
+<!--                :value="JSON.stringify(routeFile, null, 2)"-->
+<!--                @input="routeFile = JSON.parse($event)"></json-editor>-->
+<!--              <div slot="footer" class="dialog-footer">-->
+<!--                <el-button @click="routeVisible = false">取 消</el-button>-->
+<!--                <el-button type="primary" @click="routeVisible = false">确 定</el-button>-->
+<!--              </div>-->
+<!--            </el-dialog>-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
         <el-col :span="13" v-if="canEdit">
-          <el-form-item
-            label="编辑路由信息">
-            <el-button
-              type="text"
-              icon="el-icon-document-add"
-              size="medium"
-              @click="routeVisible = true"> 点击编辑
-            </el-button>
-            <el-dialog
-              :visible.sync="routeVisible"
-              width="70%">
-              <json-editor
-                :value="JSON.stringify(routeFile, null, 2)"
-                @input="routeFile = JSON.parse($event)"></json-editor>
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="routeVisible = false">取 消</el-button>
-                <el-button type="primary" @click="routeVisible = false">确 定</el-button>
-              </div>
-            </el-dialog>
+          <el-form-item label="路由树">
+            <routes-tree-view v-model= "routeFile"></routes-tree-view>
           </el-form-item>
         </el-col>
-
         <el-col :span="24" v-if="canEdit">
           <el-form-item size="large">
-            <el-button type="primary" @click="submitForm">提交</el-button>
-            <el-button @click="resetForm">重置</el-button>
+            <el-button type="primary" @click="submitForm" round>提交</el-button>
+            <el-button @click="resetForm" round>重置</el-button>
           </el-form-item>
         </el-col>
       </el-form>
@@ -104,9 +108,10 @@
 import JsonEditor from '@/components/JsonEditorSpecial/index'
 import { createResource, listResources, getResource, updateResource } from '@/api/k8sResource'
 import { mapGetters } from 'vuex'
+import RoutesTreeView from '@/components/RoutesTreeView/index'
 
 export default {
-  components: { JsonEditor },
+  components: { RoutesTreeView, JsonEditor },
   data() {
     return {
       formData: {
@@ -279,7 +284,6 @@ export default {
           if (response.code === 20000 && response.data != null) {
             const guideName = 'wizard-' + value
             const info = response.data.items.filter(item => item.metadata.name === guideName)[0].spec.data
-            console.log(info)
             for (const key in info.keys) {
               const temp = {}
               temp.key = key
