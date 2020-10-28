@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function createResource(data) {
   return request({
-    url: '/kube/createResource',
+    url: '/kube/createOrUpdateResource',
     method: 'post',
     data
   })

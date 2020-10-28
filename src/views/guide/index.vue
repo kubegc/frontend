@@ -91,7 +91,7 @@
 <!--        </el-col>-->
         <el-col :span="13" v-if="canEdit">
           <el-form-item label="路由树">
-            <routes-tree-view v-model= "routeFile"></routes-tree-view>
+            <routes-tree-view v-model= "routeFile" :resource-name="formData.resource"></routes-tree-view>
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="canEdit">

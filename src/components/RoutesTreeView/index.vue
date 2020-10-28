@@ -8,7 +8,7 @@
             type="text"
             size="mini"
             icon="el-icon-circle-plus"
-            @click="() => append(data)"
+            @click="append(data)"
           >
             增加子路由
           </el-button>
@@ -18,39 +18,42 @@
     <el-dialog :visible.sync="routeEditVisible" append-to-body>
       <el-row :gutter="15">
         <el-form ref="routeForm" :model="routeContent" :rules="rules" size="medium" label-width="100px">
+
           <el-col :span="21">
-            <el-form-item label="path" prop="path">
-              <el-input v-model="routeContent.path" placeholder="path" clearable :style="{width: '100%'}" />
+            <el-form-item label="title">
+              <el-input v-model="routeContent.title" placeholder="title" clearable :style="{width: '100%'}" />
             </el-form-item>
           </el-col>
+
           <el-col :span="21">
-            <el-form-item label="name" prop="name">
-              <el-input v-model="routeContent.name" placeholder="name" clearable :style="{width: '100%'}" />
+            <el-form-item label="icon">
+              <el-input v-model="routeContent.icon" placeholder="icon" clearable :style="{width: '100%'}" />
             </el-form-item>
           </el-col>
-          <el-col :span="21">
-            <el-form-item label="component" prop="component">
-              <el-input
-                v-model="routeContent.component"
-                placeholder="component"
-                clearable
-                :style="{width: '100%'}"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="21">
-            <el-form-item label="meta" prop="meta">
-              <el-input
-                v-model="routeContent.meta"
-                placeholder="meta 对象信息"
-                clearable
-                :style="{width: '100%'}"
-              >
-                <template slot="prepend">{</template>
-                <template slot="append">}</template>
-              </el-input>
-            </el-form-item>
-          </el-col>
+          <!--          <el-col :span="21">-->
+          <!--            <el-form-item label="component" prop="component">-->
+          <!--              <el-input-->
+          <!--                v-model="routeContent.component"-->
+          <!--                placeholder="component"-->
+          <!--                clearable-->
+          <!--                :style="{width: '100%'}"-->
+          <!--              />-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
+
+          <!--          <el-col :span="21">-->
+          <!--            <el-form-item label="meta" prop="meta">-->
+          <!--              <el-input-->
+          <!--                v-model="routeContent.meta"-->
+          <!--                placeholder="meta 对象信息"-->
+          <!--                clearable-->
+          <!--                :style="{width: '100%'}"-->
+          <!--              >-->
+          <!--                <template slot="prepend">{</template>-->
+          <!--                <template slot="append">}</template>-->
+          <!--              </el-input>-->
+          <!--            </el-form-item>-->
+          <!--          </el-col>-->
         </el-form>
       </el-row>
       <div slot="footer">
@@ -64,37 +67,25 @@
 <script>
 export default {
   name: 'RoutesTreeView',
-  props: ['value'],
+  props: ['value', 'resourceName'],
   data() {
     return {
       treeData: undefined,
       routeEditVisible: false,
       submitRequire: undefined,
       routeContent: {
-        path: undefined,
-        name: undefined,
-        component: undefined,
-        meta: undefined
+        title: undefined,
+        icon: undefined
       },
       rules: {
-        path: [{
+        title: [{
           required: true,
-          message: 'path',
+          message: 'title',
           trigger: 'blur'
         }],
-        name: [{
-          required: true,
-          message: 'name',
-          trigger: 'blur'
-        }],
-        component: [{
-          required: true,
-          message: 'component',
-          trigger: 'blur'
-        }],
-        meta: [{
-          required: true,
-          message: 'meta 对象信息',
+        icon: [{
+          required: false,
+          message: 'icon',
           trigger: 'blur'
         }]
       }
@@ -103,7 +94,6 @@ export default {
   created() {
     const routes = this.value.spec.routes
     this.treeData = this.generateTreeData(routes)
-    console.log(this.treeData)
   },
   methods: {
     generateTreeData(routes, parent) {
@@ -130,7 +120,6 @@ export default {
     handleSubmit() {
       this.$refs['routeForm'].validate(valid => {
         if (!valid) return
-        // todo
         const data = this.submitRequire
         const path = data.path
         let routesTemp = this.value.spec.routes
@@ -139,8 +128,15 @@ export default {
           routesTemp = routesTemp.filter(item => item.meta.title === key)
           routesTemp = routesTemp[0].children
         }
-        const routeContentTemp = Object.assign({}, this.routeContent);
-        routeContentTemp.meta = JSON.parse('{' + routeContentTemp.meta + '}')
+        const routeContentTemp = {
+          path: this.resourceName + '-' + new Date().getTime(),
+          name: this.resourceName,
+          component: '/charts/node-table',
+          meta: {
+            title: this.routeContent.title,
+            icon: this.routeContent.icon
+          }
+        }
         routesTemp.push(routeContentTemp)
 
         const newRouteData = {}

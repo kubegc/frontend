@@ -1,4 +1,4 @@
-import { login, logout, getUserInfo } from '@/api/user'
+import { login, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/k8sResource'
 import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
 import { resetRouter } from '@/router'
@@ -7,7 +7,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: '',
+    // avatar: '',
     role: '',
     namespace: 'default'
   }
@@ -25,9 +25,9 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
-  },
+  // SET_AVATAR: (state, avatar) => {
+  //   state.avatar = avatar
+  // },
   SET_ROLE: (state, role) => {
     state.role = role
   }
@@ -42,7 +42,6 @@ const actions = {
         if (response.code === 20000) {
           const { data } = response
           commit('SET_TOKEN', data.token)
-          // commit('SET_NAME', username.trim())
           setToken(data.token)
           setValue('name', username.trim())
           resolve()
@@ -61,12 +60,12 @@ const actions = {
         if (!data) {
           reject('Verification failed, please Login again.')
         }
-        const { role, avatar } = data
+        const { role } = data
         commit('SET_ROLE', role)
-        commit('SET_AVATAR', avatar)
+        // commit('SET_AVATAR', avatar)
         commit('SET_NAME', getValue('name'))
         setValue('role', role)
-        setValue('avatar', avatar)
+        // setValue('avatar', avatar)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -92,7 +91,7 @@ const actions = {
         resetRouter()
         removeValue('name')
         removeValue('role')
-        removeValue('avatar')
+        // removeValue('avatar')
         resolve()
       })
     })

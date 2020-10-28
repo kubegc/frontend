@@ -82,7 +82,6 @@
     />
 
     <el-dialog
-      v-el-drag-dialog
       :visible.sync="actionDialogVisible"
       :title="this.dialogTitle"
       @dragDialog="handleDrag"
@@ -134,7 +133,6 @@
     </el-dialog>
 
     <el-dialog
-      v-el-drag-dialog
       :visible.sync="createDialogVisible"
       :title="this.createResource"
       @dragDialog="handleDrag"
@@ -208,7 +206,6 @@ import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Bus from '@/utils/Bus'
 import JsonEditor from '@/components/JsonEditor'
-import elDragDialog from '@/directive/el-drag-dialog'
 import { connectTerminal } from '@/api/commonKindMethod'
 import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'
@@ -216,7 +213,7 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'NodeTable',
   components: { Pagination, JsonEditor, DynamicForm },
-  directives: { waves, elDragDialog },
+  directives: { waves },
   filters: {
     statusFilter(status) {
       const statusMap = {
