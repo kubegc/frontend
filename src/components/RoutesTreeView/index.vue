@@ -9,6 +9,7 @@
             size="mini"
             icon="el-icon-circle-plus"
             @click="append(data)"
+            v-if="data.level === 2 && !data.oneChild"
           >
             增加子路由
           </el-button>
@@ -30,30 +31,6 @@
               <el-input v-model="routeContent.icon" placeholder="icon" clearable :style="{width: '100%'}" />
             </el-form-item>
           </el-col>
-          <!--          <el-col :span="21">-->
-          <!--            <el-form-item label="component" prop="component">-->
-          <!--              <el-input-->
-          <!--                v-model="routeContent.component"-->
-          <!--                placeholder="component"-->
-          <!--                clearable-->
-          <!--                :style="{width: '100%'}"-->
-          <!--              />-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
-
-          <!--          <el-col :span="21">-->
-          <!--            <el-form-item label="meta" prop="meta">-->
-          <!--              <el-input-->
-          <!--                v-model="routeContent.meta"-->
-          <!--                placeholder="meta 对象信息"-->
-          <!--                clearable-->
-          <!--                :style="{width: '100%'}"-->
-          <!--              >-->
-          <!--                <template slot="prepend">{</template>-->
-          <!--                <template slot="append">}</template>-->
-          <!--              </el-input>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
         </el-form>
       </el-row>
       <div slot="footer">
@@ -67,7 +44,7 @@
 <script>
 export default {
   name: 'RoutesTreeView',
-  props: ['value', 'resourceName'],
+  props: ['value', 'resourceName', 'pageType'],
   data() {
     return {
       treeData: undefined,
@@ -100,13 +77,19 @@ export default {
       const res = []
       for (const item of routes) {
         const currNode = {}
-        currNode.label = item.meta.title
+        if (item.meta) {
+          currNode.label = item.meta.title
+        } else {
+          currNode.label = item.children[0].meta.title
+          currNode.oneChild = true
+        }
         currNode.path = []
         parent && parent.path
           ? currNode.path = parent.path.concat(currNode.label)
           : currNode.path = [].concat(currNode.label)
+        parent ? currNode.level = parent.level + 1 : currNode.level = 1
 
-        if (item.children) {
+        if (item.children && !currNode.oneChild) {
           currNode.children = this.generateTreeData(item.children, currNode)
         }
         res.push(currNode)
@@ -123,15 +106,15 @@ export default {
         const data = this.submitRequire
         const path = data.path
         let routesTemp = this.value.spec.routes
+        console.log(path)
         for (const key of path) {
-          console.log(key)
-          routesTemp = routesTemp.filter(item => item.meta.title === key)
+          routesTemp = routesTemp.filter(item => item.meta && item.meta.title === key)
           routesTemp = routesTemp[0].children
         }
         const routeContentTemp = {
           path: this.resourceName + '-' + new Date().getTime(),
           name: this.resourceName,
-          component: '/charts/node-table',
+          component: '/charts/' + this.pageType,
           meta: {
             title: this.routeContent.title,
             icon: this.routeContent.icon
@@ -142,6 +125,7 @@ export default {
         const newRouteData = {}
         newRouteData.label = routeContentTemp.meta.title
         newRouteData.path = data.path.concat(newRouteData.label)
+        newRouteData.level = data.level + 1
         data.children.push(newRouteData)
         this.routeEditVisible = false
         this.$message({

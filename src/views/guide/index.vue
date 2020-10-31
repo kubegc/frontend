@@ -4,10 +4,10 @@
       <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="130px">
 
         <el-col :span="13">
-          <el-form-item label="新增页面类型" prop="resource">
-            <el-select v-model="formData.chosenGuideType" placeholder="请选择" @change="handleGuideTypeChange">
+          <el-form-item label="新增页面类型" prop="chosenGuideType">
+            <el-select v-model="formData.chosenPageType" placeholder="请选择" @change="handleGuideTypeChange">
               <el-option
-                v-for="item in guideTypes"
+                v-for="item in pageTypes"
                 :key="item.key"
                 :label="item.label"
                 :value="item.key"
@@ -19,14 +19,14 @@
 
         <el-col :span="12" v-if="canEdit">
           <el-form-item label="资源名称" prop="resource">
-            <el-input
-              v-model="formData.resource"
-              placeholder="请输入资源名称"
-              clearable
-              prefix-icon='el-icon-folder'
-              :style="{width: '100%'}"
-              @change="handleInputChange">
-            </el-input>
+            <el-select v-model="formData.resource" placeholder="请选择" filterable @change="handleResourceChange">
+              <el-option
+                v-for="item in resourceOptions"
+                :key="item.label"
+                :label="item.label"
+                :value="item.label">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
 
@@ -66,32 +66,9 @@
             </el-dialog>
           </el-form-item>
         </el-col>
-
-<!--        <el-col :span="13" v-if="canEdit">-->
-<!--          <el-form-item-->
-<!--            label="编辑路由信息">-->
-<!--            <el-button-->
-<!--              type="text"-->
-<!--              icon="el-icon-edit"-->
-<!--              size="medium"-->
-<!--              @click="routeVisible = true"> 点击编辑-->
-<!--            </el-button>-->
-<!--            <el-dialog-->
-<!--              :visible.sync="routeVisible"-->
-<!--              width="70%">-->
-<!--              <json-editor-->
-<!--                :value="JSON.stringify(routeFile, null, 2)"-->
-<!--                @input="routeFile = JSON.parse($event)"></json-editor>-->
-<!--              <div slot="footer" class="dialog-footer">-->
-<!--                <el-button @click="routeVisible = false">取 消</el-button>-->
-<!--                <el-button type="primary" @click="routeVisible = false">确 定</el-button>-->
-<!--              </div>-->
-<!--            </el-dialog>-->
-<!--          </el-form-item>-->
-<!--        </el-col>-->
         <el-col :span="13" v-if="canEdit">
-          <el-form-item label="路由树">
-            <routes-tree-view v-model= "routeFile" :resource-name="formData.resource"></routes-tree-view>
+          <el-form-item label="路由">
+            <routes-tree-view v-model="routeFile" :resource-name="formData.resource" :page-type="formData.chosenPageType"></routes-tree-view>
           </el-form-item>
         </el-col>
         <el-col :span="24" v-if="canEdit">
@@ -106,7 +83,7 @@
 </template>
 <script>
 import JsonEditor from '@/components/JsonEditorSpecial/index'
-import { createResource, listResources, getResource, updateResource } from '@/api/k8sResource'
+import { createResource, listResources, getResource, updateResource, getMeta } from '@/api/k8sResource'
 import { mapGetters } from 'vuex'
 import RoutesTreeView from '@/components/RoutesTreeView/index'
 
@@ -116,32 +93,26 @@ export default {
     return {
       formData: {
         resource: '',
-        createTemplateNum: 0,
-        actionNum: 0,
-        chosenGuideType: ''
+        chosenPageType: ''
       },
       rules: {
         resource: [{
           required: true,
-          message: '请输入资源名称',
+          message: '请选择资源名称',
           trigger: 'blur'
         }],
-        createTemplateNum: [{
+        chosenPageType: [{
           required: true,
-          message: '创建模板数量',
-          trigger: 'blur'
-        }],
-        actionNum: [{
-          required: true,
-          message: '资源操作种类',
+          message: '请选择页面类型',
           trigger: 'blur'
         }]
       },
       canEdit: false,
       editTemplates: [],
-      guideTypes: [{ key: 'table1', label: '普通资源操作页面' }],
+      pageTypes: [{ key: 'nodeTable', label: '普通资源操作页面' }],
       routeVisible: false,
       routeFile: {},
+      resourceOptions: [],
 
       createTemplates: [],
       actionTemplates: [],
@@ -199,16 +170,16 @@ export default {
     }
   },
   created() {
-    getResource({ token: this.token, kind: 'Frontend', name: 'routes-user', namespace: 'default' }).then(
+    getResource({ token: this.token, kind: 'Frontend', name: 'routes-' + this.name, namespace: 'default' }).then(
       response => {
-        if (response.code === 20000 && response.data !== null) {
+        if (this.$valid(response)) {
           this.routeFile = response.data
         }
       }
     )
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token', 'name'])
   },
   methods: {
     submitForm() {
@@ -220,7 +191,7 @@ export default {
           this.editTemplates.forEach(item => {
             createResource({ token: this.token, json: item.jsonFileObj }).then(
               response => {
-                if (response.code === 2000 && response.data !== null) {
+                if (this.$valid(response)) {
                   alreadyCreate.push(item.jsonFileObj)
                 } else {
                   throw Error
@@ -230,7 +201,7 @@ export default {
           })
           updateResource({ token: this.token, json: this.routeFile }).then(
             response => {
-              if (response.code === 20000 && response.data !== null) {
+              if (this.$valid(response)) {
                 this.$message({
                   message: '创建资源页面成功',
                   type: 'success',
@@ -251,29 +222,7 @@ export default {
     resetForm() {
       this.$refs['elForm'].resetFields()
     },
-    handleCreateNumChange(currNum) {
-      this.createTemplates = []
-      for (let i = 1; i <= currNum; i++) {
-        const currObj = {}
-        currObj.key = i
-        currObj.label = '创建资源模板' + i
-        currObj.dialogVisible = false
-        currObj.createJson = this.createTemplateJson
-        this.createTemplates.push(currObj)
-      }
-    },
-    handleActionNumChange(currNum) {
-      this.actionTemplates = []
-      for (let i = 1; i <= currNum; i++) {
-        const currObj = {}
-        currObj.key = i
-        currObj.label = 'action 模板' + i
-        currObj.dialogVisible = false
-        currObj.actionJson = this.actionTemplateJson
-        this.actionTemplates.push(currObj)
-      }
-    },
-    handleInputChange(value) {
+    handleResourceChange(value) {
       for (const item of this.editTemplates) {
         item.jsonFileObj.metadata.name = item.key + '-' + value.toLowerCase()
       }
@@ -281,8 +230,8 @@ export default {
     handleGuideTypeChange(value) {
       listResources({ token: this.token, kind: 'Frontend', labels: { 'spec.type': 'wizard' } }).then(
         response => {
-          if (response.code === 20000 && response.data != null) {
-            const guideName = 'wizard-' + value
+          if (this.$valid(response)) {
+            const guideName = 'wizard-' + value.toLowerCase()
             const info = response.data.items.filter(item => item.metadata.name === guideName)[0].spec.data
             for (const key in info.keys) {
               const temp = {}
@@ -292,6 +241,19 @@ export default {
               temp.dialogVisible = false
               this.editTemplates.push(temp)
             }
+
+            getMeta({ token: this.token }).then(
+              response => {
+                if (this.$valid(response)) {
+                  const data = response.data
+                  for (const key in data) {
+                    const curr = {}
+                    curr.value = key
+                    curr.label = key
+                    this.resourceOptions.push(curr)
+                  }
+                }
+              })
           }
           this.canEdit = true
         })
@@ -299,5 +261,3 @@ export default {
   }
 }
 </script>
-<style scoped>
-</style>

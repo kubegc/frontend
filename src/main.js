@@ -11,9 +11,11 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
+import valid from '@/api/public'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+
 
 /**
  * If you don't want to use mock-server
@@ -27,7 +29,7 @@ import '@/permission' // permission control
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
-
+Vue.prototype.$valid = valid
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

@@ -93,6 +93,7 @@ const mutations = {
 const actions = {
   generateRoutes({ state, commit }, data) {
     const accessedRoutes = generateRoutesHelper(data)
+    console.log('teeeeeeeeeeeeeee')
     if (accessedRoutes) {
       const topmenus = []
       let index = 0

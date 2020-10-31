@@ -40,9 +40,11 @@ export function listResources(data) {
   })
 }
 
-export function getMeta() {
+export function getMeta(params) {
   return request({
-    url: '/kube/getMeta'
+    url: '/kube/getMeta',
+    type: 'get',
+    params
   })
 }
 

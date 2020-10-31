@@ -89,8 +89,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'user',
-        password: 'user'
+        username: 'admin',
+        password: 'admin'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -208,15 +208,15 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg: #2d3a4b;
+$bg: #24292e;
 $dark_gray: #889aa4;
 $light_gray: #eee;
 
 .login-container {
   min-height: 100%;
   width: 100%;
-  background: url(../../assets/login.jpg) no-repeat center;
-  //background: $bg;
+  //background: url(../../assets/login.jpg) no-repeat center;
+  background: $bg;
   overflow: hidden;
   .login-form {
     position: relative;
