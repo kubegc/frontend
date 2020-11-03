@@ -1,5 +1,5 @@
 <template>
-  <el-menu-item :index="menuIndex" @click="handleClick">
+  <el-menu-item :index="k" @click="handleClick">
     <i v-if="icon.includes('el-icon')" :class="icon"/>
     <svg-icon v-else :icon-class="icon"/>
     <span slot="title"> {{ title }}</span>
@@ -18,6 +18,10 @@ export default {
       required: true
     },
     menuIndex: {
+      type: String,
+      required: true
+    },
+    k: {
       type: String,
       required: true
     }

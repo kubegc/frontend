@@ -1,5 +1,8 @@
 <template>
   <div class="imageMarket-app-container">
+    <el-row>
+      <el-divider content-position="left">全部</el-divider>
+    </el-row>
     <el-row
       v-for="(arrays, index) in cardsData"
       :key="index"
@@ -22,7 +25,7 @@
               <el-row :gutter="20">
                 <el-col :span="8">
                   <el-image
-                    style="border-radius: 5px;"
+                    style="border-radius: 2px;"
                     :src="require('../../assets/' + item.avatar)"
                     :fit="'fill'"
                   />
@@ -69,30 +72,30 @@ export default {
           developer: 'lcz',
           url: ''
         },
-        {
-          title: 'tomcat',
-          avatar: 'avatar.jpg',
-          describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-          latestVersion: '1.2.1',
-          developer: 'lcz',
-          url: ''
-        },
-        {
-          title: 'tomcat',
-          avatar: 'avatar.jpg',
-          describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-          latestVersion: '1.2.1',
-          developer: 'lcz',
-          url: ''
-        },
-        {
-          title: 'tomcat',
-          avatar: 'avatar.jpg',
-          describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-          latestVersion: '1.2.1',
-          developer: 'lcz',
-          url: ''
-        }],
+          {
+            title: 'tomcat',
+            avatar: 'avatar.jpg',
+            describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
+            latestVersion: '1.2.1',
+            developer: 'lcz',
+            url: ''
+          },
+          {
+            title: 'tomcat',
+            avatar: 'avatar.jpg',
+            describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
+            latestVersion: '1.2.1',
+            developer: 'lcz',
+            url: ''
+          },
+          {
+            title: 'tomcat',
+            avatar: 'avatar.jpg',
+            describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
+            latestVersion: '1.2.1',
+            developer: 'lcz',
+            url: ''
+          }],
         [{
           title: 'tomcat',
           avatar: 'avatar.jpg',
@@ -106,7 +109,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$router.push('')
+      this.$router.push({name: 'appDetail', params:{push: true}})
     }
   }
 }
@@ -114,24 +117,26 @@ export default {
 
 <style lang="scss" scoped>
 .imageMarket-app-container {
-  padding: 30px 20px;
+  padding: 10px 20px;
   font-size: 14px;
   line-height: 1.67
 }
-.el-card{
-  box-shadow:
-    0px 1px 2px -2px rgba(0, 0, 0, 0.16),
-    0px 3px 6px 0px rgba(0, 0, 0, 0.12),
-    0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+
+.el-card {
+  box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+  0px 3px 6px 0px rgba(0, 0, 0, 0.12),
+  0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+
 }
-.el-card:hover{
-  //border: black 1px solid;
-  box-shadow:
-    0px 6px 16px -8px rgba(0, 0, 0, 0.08),
-    0px 9px 28px 0px rgba(0, 0, 0, 0.05),
-    0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+
+.el-card:hover {
+  box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+  0px 12px 48px 16px rgba(0, 0, 0, 0.03);
   transform: translateY(-5px);
   color: yellowgreen;
+  //border-top: #409EFF 1px solid;
+  border: #409EFF 1px solid;
 }
 
 </style>

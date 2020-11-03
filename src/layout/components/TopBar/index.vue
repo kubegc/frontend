@@ -1,6 +1,7 @@
 <template>
   <div class="topbar-container">
     <el-menu
+      :default-active="activeMenu"
       mode="horizontal"
       background-color="#24292e"
       text-color="#bfcbd9"
@@ -9,13 +10,14 @@
     >
       <top-bar-menu-item
         v-for="menu in top_menus"
-        :key="menu.key"
+        :key="menu.path"
         :icon="menu.icon"
         :title="menu.title"
         :menu-index="menu.key"
+        :k="menu.path"
         @changeMenu="handleChange"
         style="border: none"
-        />
+      />
       <div class="right-menu">
         <el-dropdown class="avatar-container" trigger="click">
           <div class="avatar-wrapper">
@@ -47,7 +49,16 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['top_menus'])
+    ...mapGetters(['top_menus', 'currentMenuPrefix']),
+    activeMenu() {
+      const matched = this.$route.matched[0].path
+      if (this.$route.params.push) {
+        const menuIndex = this.top_menus.filter(item => item.path === matched)[0].key
+        console.log('路由变化，通知侧边栏变化')
+        this.handleChange(menuIndex)
+      }
+      return matched
+    }
   },
   methods: {
     async logout() {
@@ -56,6 +67,7 @@ export default {
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     handleChange(menuIndex) {
+      console.log('点击菜单处理')
       this.$store.commit('permission/SET_CURRMENUPREFIX', this.top_menus[menuIndex].path)
       this.$store.commit('permission/RESET_MENUROUTES', menuIndex)
     }
@@ -70,10 +82,9 @@ export default {
   position: sticky;
   top: 0;
   z-index: 1003;
-  box-shadow:
-    0px 6px 16px -8px rgba(0, 0, 0, 0.08),
-    0px 9px 28px 0px rgba(0, 0, 0, 0.05),
-    0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+  box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+  0px 12px 48px 16px rgba(0, 0, 0, 0.03);
 }
 
 //.el-menu-item {
@@ -83,6 +94,7 @@ export default {
 .right-menu {
   float: right;
   height: 100%;
+
   &:focus {
     outline: none;
   }

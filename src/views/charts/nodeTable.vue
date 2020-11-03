@@ -26,38 +26,34 @@
       :key="tableKey"
       v-loading="listLoading"
       :data="list"
-      fit
       highlight-current-row
       @sort-change="sortChange"
+      :header-cell-style="{'background-color': '#eef1f6','color':'#606266'}"
     >
-      <el-table-column
-        type="index"
-        width="50">
-      </el-table-column>
+      <el-table-column type="index"/>
       <el-table-column
         v-for="item in columns"
         :key="item.key"
         :label="item.label"
-        :width="item.width"
       >
         <template slot-scope="scope">
           <router-link
-            v-if="item.kind == 'a'"
+            v-if="item.kind === 'a'"
             :to="{path:'/resourceInfo/metadataInfo',query:{kind: catalog_operator, name:scope.row.json}}"
             tag="a"
             class="link"
             @click="getData"
           >{{ getInputValue(scope.row.json, item.row) }}
           </router-link>
-          <span v-if="item.kind == undefined">{{ getInputValue(scope.row.json, item.row) }}</span>
+          <span v-if="item.kind === undefined">{{ getInputValue(scope.row.json, item.row) }}</span>
           <svg-icon
-            v-if="item.kind == 'terminal'"
+            v-if="item.kind === 'terminal'"
             icon-class="pc"
             class-name="custom-class"
             @click="openTerminal(scope.row)"
           />
           <el-select
-            v-if="item.kind == 'action'"
+            v-if="item.kind === 'action'"
             v-model="scope.row.val"
             placeholder="更多操作"
             @change="(handleUpdate($event, scope.row.json))"
@@ -88,10 +84,10 @@
       width="70%"
     >
       <div class="card-editor-container">
-        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createJsonData" />
+        <json-editor v-if="otherOperation===false" ref="jsonEditor" v-model="createJsonData" />
       </div>
       <el-table
-        v-if="otherOperation==true"
+        v-if="otherOperation===true"
         v-loading="listLoading"
         :data="Variables"
         border
@@ -107,12 +103,12 @@
         </el-table-column>
         <el-table-column label="value" align="center">
           <template slot-scope="{row}">
-            <el-radio-group v-if="row.placeholder == 'bool'" v-model="row.value">
+            <el-radio-group v-if="row.placeholder === 'bool'" v-model="row.value">
               <el-radio :label="true">true</el-radio>
               <el-radio :label="false">false</el-radio>
             </el-radio-group>
             <input
-              v-if="row.placeholder != 'bool'"
+              v-if="row.placeholder !== 'bool'"
               style="border-radius:8px;border:1px solid grey;outline:none"
               class="el-input"
               :placeholder="row.placeholder"
@@ -163,12 +159,12 @@
           </el-table-column>
           <el-table-column label="value" align="center">
             <template slot-scope="{row}">
-              <el-radio-group v-if="row.placeholder == 'bool'" v-model="row.value">
+              <el-radio-group v-if="row.placeholder === 'bool'" v-model="row.value">
                 <el-radio :label="true">true</el-radio>
                 <el-radio :label="false">false</el-radio>
               </el-radio-group>
               <input
-                v-if="row.placeholder != 'bool'"
+                v-if="row.placeholder !== 'bool'"
                 style="border-radius:8px;border:1px solid grey;outline:none"
                 class="el-input"
                 :placeholder="row.placeholder"
