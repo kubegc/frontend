@@ -1,42 +1,49 @@
 <template>
-  <div>
-    <el-row style="margin-bottom: 30px;">
+  <div class="app-detail-container">
+    <el-row class="top-row">
       <el-col>
         <el-card>
-          <label>
-            <strong>Tomcat</strong>
-          </label>
+          <el-link :underline="false" href="http://39.106.40.190:5002/?image=tomcat">
+            Tomcat
+          </el-link>
         </el-card>
       </el-col>
     </el-row>
-    <el-row :gutter="40">
-      <el-col :span="12">
-        <el-card>
-          <el-form label-position="top">
-            <el-form-item label="商品名称">
-              <span>商品名称</span>
-            </el-form-item>
-            <el-form-item label="所属店铺">
-              <span>商品名称</span>
-            </el-form-item>
-            <el-form-item label="商品 ID">
-              <span>商品名称</span>
-            </el-form-item>
-            <el-form-item label="店铺 ID">
-              <span>商品名称</span>
-            </el-form-item>
-            <el-form-item label="商品分类">
-              <span>商品名称</span>
-            </el-form-item>
-            <el-form-item label="店铺地址">
-              <span>商品名称</span>
-            </el-form-item>
-            <el-form-item label="商品描述">
-              <span>商品名称</span>
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </el-col>
+
+    <el-row>
+      <el-form label-position="top">
+        <el-form-item label="architecture">
+          <span>{{ imageJson.metadata.architecture }}</span>
+        </el-form-item>
+
+        <el-form-item label="os">
+          <el-row gutter="20">
+            <el-col :span="6">
+              <el-card>
+                <p v-for="(key, val) in imageJson.os">
+                  {{ key + ': ' + val }}
+                </p>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-form-item>
+
+        <el-form-item label="application">
+          <el-row gutter="20">
+            <el-col :span="6" v-for="(item, index) in imageJson.application" :key="index">
+              <el-card>
+                <p v-for="(key, val) in item">
+                  {{ key + ': ' + val }}
+                </p>
+              </el-card>
+            </el-col>
+          </el-row>
+        </el-form-item>
+
+        <el-form-item label="image">
+          <span>{{ imageJson.metadata.config.Image }}</span>
+        </el-form-item>
+      </el-form>
     </el-row>
   </div>
 </template>
@@ -416,7 +423,47 @@ export default {
           'groupId': 'aa',
           'artifactId': 'bbb',
           'version': '111'
-        }]
+        },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          },
+          {
+            'groupId': 'aa',
+            'artifactId': 'bbb',
+            'version': '111'
+          }]
       }
     }
   }
@@ -424,17 +471,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-detail-container{
-  font-size: 20px;
-}
-.el-form{
-  ::v-deep{
-    label{
-      width: 100px;
+.app-detail-container {
+  padding: 10px 20px;
+  .top-row{
+    margin-bottom: 30px;
+  }
+  .el-row {
+    .el-link {
+      font-size: 50px;
+    }
+
+    .el-form {
+      margin-left: 30px;
+
+      ::v-deep {
+        label {
+          font-size: 20px;
+        }
+      }
+
+      .el-form-item {
+
+        p, span {
+          margin-left: 20px;
+          font-size: 20px;
+        }
+
+        .el-col:nth-child(n + 5){
+          margin-top: 30px;
+        }
+      }
     }
   }
-  .el-form-item{
-    margin-bottom: 50px;
-  }
+
 }
+
 </style>
