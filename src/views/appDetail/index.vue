@@ -20,7 +20,7 @@
           <el-row gutter="20">
             <el-col :span="6">
               <el-card>
-                <p v-for="(key, val) in imageJson.os">
+                <p v-for="(val, key) in imageJson.os">
                   {{ key + ': ' + val }}
                 </p>
               </el-card>
@@ -32,7 +32,7 @@
           <el-row gutter="20">
             <el-col :span="6" v-for="(item, index) in imageJson.application" :key="index">
               <el-card>
-                <p v-for="(key, val) in item">
+                <p v-for="(val, key) in item">
                   {{ key + ': ' + val }}
                 </p>
               </el-card>
@@ -478,7 +478,7 @@ export default {
   }
   .el-row {
     .el-link {
-      font-size: 50px;
+      font-size: 30px;
     }
 
     .el-form {
@@ -486,7 +486,7 @@ export default {
 
       ::v-deep {
         label {
-          font-size: 20px;
+          font-size: 16px;
         }
       }
 
@@ -494,7 +494,7 @@ export default {
 
         p, span {
           margin-left: 20px;
-          font-size: 20px;
+          font-size: 16px;
         }
 
         .el-col:nth-child(n + 5){
