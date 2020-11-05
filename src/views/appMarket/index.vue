@@ -1,8 +1,6 @@
 <template>
   <div class="imageMarket-app-container">
-    <el-row>
-      <el-divider content-position="left">全部</el-divider>
-    </el-row>
+    <el-divider content-position="left">全部</el-divider>
     <el-row
       v-for="(arrays, index) in cardsData"
       :key="index"

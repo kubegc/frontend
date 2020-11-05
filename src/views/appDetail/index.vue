@@ -2,46 +2,50 @@
   <div class="app-detail-container">
     <el-row class="top-row">
       <el-col>
-        <el-card>
-          <el-link :underline="false" href="http://39.106.40.190:5002/?image=tomcat">
-            Tomcat
-          </el-link>
-        </el-card>
+        Tomcat
+          <a href="http://39.106.40.190:5002/?image=tomcat">
+            <el-button icon="el-icon-share" circle>
+            </el-button>
+          </a>
+
       </el-col>
     </el-row>
-
+    <el-divider/>
     <el-row>
+
       <el-form label-position="top">
         <el-form-item label="architecture">
           <span>{{ imageJson.metadata.architecture }}</span>
+          <el-divider/>
         </el-form-item>
 
         <el-form-item label="os">
-          <el-row gutter="20">
+          <el-row :gutter="20">
             <el-col :span="6">
-              <el-card>
+              <el-card shadow="never">
                 <p v-for="(val, key) in imageJson.os">
                   {{ key + ': ' + val }}
                 </p>
               </el-card>
+              <el-divider/>
             </el-col>
           </el-row>
         </el-form-item>
 
         <el-form-item label="application">
-          <el-row gutter="20">
+          <el-row :gutter="20">
             <el-col :span="6" v-for="(item, index) in imageJson.application" :key="index">
-              <el-card>
-                <p v-for="(val, key) in item">
-                  {{ key + ': ' + val }}
-                </p>
+              <el-card shadow="never">
+                    <p class="p-style" v-for="(val, key) in item">{{ key + ':' + val }}</p>
               </el-card>
+              <el-divider/>
             </el-col>
           </el-row>
         </el-form-item>
 
         <el-form-item label="image">
           <span>{{ imageJson.metadata.config.Image }}</span>
+          <el-divider/>
         </el-form-item>
       </el-form>
     </el-row>
@@ -422,7 +426,7 @@ export default {
         'application': [{
           'groupId': 'aa',
           'artifactId': 'bbb',
-          'version': '111'
+          'version': '11111111111111111111111111111111111111111111111111'
         },
           {
             'groupId': 'aa',
@@ -475,25 +479,23 @@ export default {
   padding: 10px 20px;
   .top-row{
     margin-bottom: 30px;
+    font-size: 50px;
+  }
+  .p-style{
+    overflow: hidden;
   }
   .el-row {
-    .el-link {
-      font-size: 30px;
-    }
-
     .el-form {
-      margin-left: 30px;
+      margin-left: 20px;
 
       ::v-deep {
         label {
-          font-size: 16px;
+          font-size: 20px;
         }
       }
 
       .el-form-item {
-
-        p, span {
-          margin-left: 20px;
+        p, span{
           font-size: 16px;
         }
 
