@@ -1,4 +1,4 @@
 export default function valid(response) {
-  return response && response.code === 20000 && response.data !== null
+  return response.data !== null && response.data !== 404 && response.data.code !== 404
 }
 

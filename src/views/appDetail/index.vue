@@ -3,49 +3,48 @@
     <el-row class="top-row">
       <el-col>
         Tomcat
-          <a href="http://39.106.40.190:5002/?image=tomcat">
-            <el-button icon="el-icon-share" circle>
-            </el-button>
-          </a>
+        <a href="http://39.106.40.190:5002/?image=tomcat">
+          <el-button icon="el-icon-share" circle style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);" />
+        </a>
 
       </el-col>
     </el-row>
-    <el-divider/>
+    <el-divider />
     <el-row>
 
       <el-form label-position="top">
         <el-form-item label="architecture">
           <span>{{ imageJson.metadata.architecture }}</span>
-          <el-divider/>
+          <el-divider />
         </el-form-item>
 
         <el-form-item label="os">
           <el-row :gutter="20">
             <el-col :span="6">
-              <el-card shadow="never">
-                <p v-for="(val, key) in imageJson.os">
+              <el-card>
+                <p v-for="(val, key) in imageJson.os" :key="key">
                   {{ key + ': ' + val }}
                 </p>
               </el-card>
-              <el-divider/>
+              <el-divider />
             </el-col>
           </el-row>
         </el-form-item>
 
         <el-form-item label="application">
           <el-row :gutter="20">
-            <el-col :span="6" v-for="(item, index) in imageJson.application" :key="index">
-              <el-card shadow="never">
-                    <p class="p-style" v-for="(val, key) in item">{{ key + ':' + val }}</p>
+            <el-col v-for="(item, index) in imageJson.application" :key="index" :span="6">
+              <el-card>
+                <p v-for="(val, key) in item" :key="key" class="p-style">{{ key + ':' + val }}</p>
               </el-card>
-              <el-divider/>
+              <el-divider />
             </el-col>
           </el-row>
         </el-form-item>
 
         <el-form-item label="image">
           <span>{{ imageJson.metadata.config.Image }}</span>
-          <el-divider/>
+          <el-divider />
         </el-form-item>
       </el-form>
     </el-row>
@@ -428,46 +427,46 @@ export default {
           'artifactId': 'bbb',
           'version': '11111111111111111111111111111111111111111111111111'
         },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          },
-          {
-            'groupId': 'aa',
-            'artifactId': 'bbb',
-            'version': '111'
-          }]
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        },
+        {
+          'groupId': 'aa',
+          'artifactId': 'bbb',
+          'version': '111'
+        }]
       }
     }
   }
@@ -477,6 +476,7 @@ export default {
 <style lang="scss" scoped>
 .app-detail-container {
   padding: 10px 20px;
+
   .top-row{
     margin-bottom: 30px;
     font-size: 50px;

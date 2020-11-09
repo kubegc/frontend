@@ -9,16 +9,15 @@
         style="float:left"
         type="primary"
         class="filter-item"
-        @click.native="createJson"
         circle
-      >
-      </el-button>
+        @click.native="createJson"
+      />
       <el-button
         icon="el-icon-refresh"
         style="float:left;margin-right:20px"
         class="filter-item"
-        @click.native="refresh"
         round
+        @click.native="refresh"
       >刷新页面
       </el-button>
     </div>
@@ -27,10 +26,10 @@
       v-loading="listLoading"
       :data="list"
       highlight-current-row
-      @sort-change="sortChange"
       :header-cell-style="{'background-color': '#eef1f6','color':'#606266'}"
+      @sort-change="sortChange"
     >
-      <el-table-column type="index"/>
+      <el-table-column type="index" />
       <el-table-column
         v-for="item in columns"
         :key="item.key"
@@ -80,8 +79,8 @@
     <el-dialog
       :visible.sync="actionDialogVisible"
       :title="this.dialogTitle"
-      @dragDialog="handleDrag"
       width="70%"
+      @dragDialog="handleDrag"
     >
       <div class="card-editor-container">
         <json-editor v-if="otherOperation===false" ref="jsonEditor" v-model="createJsonData" />
@@ -299,7 +298,7 @@ export default {
       name: this.table_kind + '-' + this.catalog_operator.toLowerCase(),
       namespace: 'default'
     }).then((response) => {
-      if (this.validateRes(response) === 1) {
+      if (this.$valid(response)) {
         this.columns = response.data.spec.data
         // 获取表格数据
         listResources({
@@ -308,7 +307,7 @@ export default {
           limit: this.listQuery.limit,
           page: this.listQuery.continue
         }).then((response) => {
-          if (this.validateRes(response) === 1) {
+          if (this.$valid(response)) {
             this.listJsonTemp = response.data.items
             this.total = response.data.metadata.totalCount
             this.listQuery.continue = response.data.metadata.continue
@@ -320,7 +319,7 @@ export default {
               name: 'action-' + this.catalog_operator.toLowerCase(),
               namespace: 'default'
             }).then((response) => {
-              if (this.validateRes(response) === 1) {
+              if (this.$valid(response)) {
                 if (response.hasOwnProperty('data')) {
                   this.actions = response.data.spec.data
                 } else {
@@ -341,20 +340,6 @@ export default {
     })
   },
   methods: {
-    validateRes(res) {
-      if (res.code === 20000) {
-        return 1
-      } else {
-        this.$notify({
-          title: 'error',
-          message: res.data,
-          type: 'warning',
-          duration: 3000
-        })
-        return 0
-      }
-    },
-
     // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
     // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
     handleModel(event) {
@@ -364,8 +349,8 @@ export default {
         kind: this.container_kind + 'Template',
         name: this.catalog_operator.toLowerCase() + '-create.' + event,
         namespace: 'default'
-      }).then((response) => {
-        if (response.code === 20000) {
+      }).then(response => {
+        if (this.$valid(response)) {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
           this.otherOperation = true
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
@@ -435,7 +420,7 @@ export default {
           name: 'action-' + this.catalog_operator.toLowerCase(),
           namespace: 'default'
         }).then((response) => {
-          if (this.validateRes(response) == 1) {
+          if (this.$valid(response)) {
             if (response.hasOwnProperty('data')) {
               this.actions = response.data.spec.data
             } else {
@@ -463,7 +448,7 @@ export default {
         page: this.listQuery.page,
         labels: this.message
       }).then((response) => {
-        if (this.validateRes(response) == 1) {
+        if (this.$valid(response)) {
           this.listJsonTemp = response.data.items
           // this.total = response.data.metadata.remainingItemCount + 10
           // this.listQuery.page = this.listQuery.page + 1
@@ -475,7 +460,7 @@ export default {
             name: 'action-' + this.catalog_operator.toLowerCase(),
             namespace: 'default'
           }).then((response) => {
-            if (this.validateRes(response) == 1) {
+            if (this.$valid(response)) {
               if (response.hasOwnProperty('data')) {
                 this.actions = response.data.spec.data
               } else {
@@ -557,21 +542,25 @@ export default {
           namespace: this.namespace,
           name: row.metadata.name
         }).then((response) => {
-          if (this.validateRes(response) === 1) {
-            var deleteName = response.data.metadata.name
+          if (this.$valid(response)) {
+            const deleteName = response.data.details.name
             this.listLoading = true
-            var id = setInterval(
+            const id = setInterval(
               function() {
                 getResource({
                   token: this.token,
                   name: deleteName,
                   kind: this.catalog_operator,
                   namespace: this.namespace
-                }).then((response) => {
-                  if (response.code === 20000 && response.data.code && response.data.code === 404) {
+                }).then(response => {
+                  if (!this.$valid(response)) {
                     clearInterval(id)
-                    this.refresh()
-                    this._message('删除成功')
+                    if (this.message) {
+                      this.searchList(this.message)
+                    } else {
+                      this.refresh()
+                    }
+                    this._message('删除成功', 'success')
                   }
                 })
               }.bind(this),
@@ -670,7 +659,7 @@ export default {
             if (pathToProperty[i].indexOf('[') > 0) {
               // 获得 example[index] 的 example 数组对象
               createTemplateTemp =
-                createTemplateTemp[ pathToProperty[i].substring(0, pathToProperty[i].indexOf('[')) ]
+                createTemplateTemp[pathToProperty[i].substring(0, pathToProperty[i].indexOf('['))]
               // 获得 example 数组对象里面的 index 索引下的对象
               createTemplateTemp =
                 createTemplateTemp[
@@ -729,12 +718,10 @@ export default {
         token: this.token,
         json: this.createTemplate
       }).then((response) => {
-        if (this.validateRes(response) === 1) {
-          if (response.code === 20000) {
-            this._message('创建成功', 'success')
-            this.successCreate = 'success'
-            this.refresh()
-          }
+        if (this.$valid(response)) {
+          this._message('创建成功', 'success')
+          this.successCreate = 'success'
+          this.refresh()
         }
       })
     },
@@ -748,7 +735,7 @@ export default {
         name: this.catalog_operator.toLowerCase() + '-' + 'create',
         namespace: 'default'
       }).then((response) => {
-        if (response.code === 20000) {
+        if (this.$valid(response)) {
           this.otherOperation = true
           this.models = response.data.spec.data.support
         }
@@ -763,7 +750,7 @@ export default {
         name: this.table_kind + '-' + this.catalog_operator.toLowerCase(),
         namespace: 'default'
       }).then((response) => {
-        if (this.validateRes(response) === 1) {
+        if (this.$valid(response)) {
           this.columns = response.data.spec.data
           listResources({
             token: this.token,
@@ -771,7 +758,7 @@ export default {
             limit: this.listQuery.limit,
             page: this.listQuery.page
           }).then((response) => {
-            if (this.validateRes(response) === 1) {
+            if (this.$valid(response)) {
               this.listJsonTemp = response.data.items
               // this.total = response3.total
               this.listLoading = false
@@ -847,7 +834,7 @@ export default {
       this.$message({
         message: message || '操作成功',
         type: type || 'info',
-        duration: 2000
+        duration: 3000
       })
     },
 
