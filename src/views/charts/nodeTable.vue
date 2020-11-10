@@ -1,12 +1,9 @@
 <template>
   <div class="app-container">
-    <div>
-      <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList" />
-    </div>
-    <div class="filter-container" style="margin-bottom:70px">
+    <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList" />
+    <div class="base-button-container">
       <el-button
         icon="el-icon-plus"
-        style="float:left"
         type="primary"
         class="filter-item"
         circle
@@ -14,10 +11,9 @@
       />
       <el-button
         icon="el-icon-refresh"
-        style="float:left;margin-right:20px"
         class="filter-item"
         round
-        @click.native="refresh"
+        @click.native="getList"
       >刷新页面
       </el-button>
     </div>
@@ -288,6 +284,7 @@ export default {
       namespace: 'default'
     }).then((response) => {
       this.responseJson = response.data.spec.data
+      this.message = this.responseJson.model
       this.formVisible = true
     })
 
@@ -399,17 +396,15 @@ export default {
       Bus.$emit('val', this.list)
     },
 
-    searchList(message) {
-      this.message = message
+    searchList() {
       this.list = []
       this.listJsonTemp = ''
       // this.total = response3.total
-      console.log(message)
       this.listLoading = false
       listResources({
         token: this.token,
         kind: this.catalog_operator,
-        labels: message,
+        labels: this.message,
         page: 1
       }).then((response) => {
         this.listJsonTemp = response.data.items
@@ -450,6 +445,7 @@ export default {
       }).then((response) => {
         if (this.$valid(response)) {
           this.listJsonTemp = response.data.items
+          this.total = response.data.metadata.totalCount
           // this.total = response.data.metadata.remainingItemCount + 10
           // this.listQuery.page = this.listQuery.page + 1
           this.listQuery.continue = response.data.metadata.continue
@@ -508,7 +504,7 @@ export default {
         kind: this.container_kind + 'Template',
         name: this.catalog_operator.toLowerCase() + '-' + event.toLowerCase()
       }).then((response) => {
-        if (response.code === 20000 && response.data !== 404) {
+        if (this.$valid(response)) {
           this.dialogTitle = response.data.spec.data.key
           this.otherOperation = true
           // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
@@ -555,11 +551,12 @@ export default {
                 }).then(response => {
                   if (!this.$valid(response)) {
                     clearInterval(id)
-                    if (this.message) {
-                      this.searchList(this.message)
-                    } else {
-                      this.refresh()
-                    }
+                    // if (this.message) {
+                    //   this.searchList(this.message)
+                    // } else {
+                    //   this.refresh()
+                    // }
+                    this.getList()
                     this._message('删除成功', 'success')
                   }
                 })
@@ -721,7 +718,8 @@ export default {
         if (this.$valid(response)) {
           this._message('创建成功', 'success')
           this.successCreate = 'success'
-          this.refresh()
+          // this.refresh()
+          this.getList()
         }
       })
     },
@@ -741,54 +739,54 @@ export default {
         }
       })
     },
-    refresh() {
-      this.listLoading = true
-      // this.list = [];
-      getResource({
-        token: this.token,
-        kind: this.frontend_kind,
-        name: this.table_kind + '-' + this.catalog_operator.toLowerCase(),
-        namespace: 'default'
-      }).then((response) => {
-        if (this.$valid(response)) {
-          this.columns = response.data.spec.data
-          listResources({
-            token: this.token,
-            kind: this.catalog_operator,
-            limit: this.listQuery.limit,
-            page: this.listQuery.page
-          }).then((response) => {
-            if (this.$valid(response)) {
-              this.listJsonTemp = response.data.items
-              // this.total = response3.total
-              this.listLoading = false
-              getResource({
-                token: this.token,
-                kind: this.frontend_kind,
-                name: 'action-' + this.catalog_operator.toLowerCase(),
-                namespace: 'default'
-              }).then((response) => {
-                if (response.code === 20000) {
-                  if (response.data) {
-                    this.actions = response.data.spec.data
-                  } else {
-                    this.actions = []
-                  }
-                  this.list = []
-                  for (let i = 0; i < this.listJsonTemp.length; i++) {
-                    this.list.push({})
-                    this.list[i].json = this.listJsonTemp[i]
-                    this.list[i].actions = this.actions
-                    this.list[i].val = ''
-                  }
-                  this.listLoading = false
-                }
-              })
-            }
-          })
-        }
-      })
-    },
+    // refresh() {
+    //   this.listLoading = true
+    //   // this.list = [];
+    //   getResource({
+    //     token: this.token,
+    //     kind: this.frontend_kind,
+    //     name: this.table_kind + '-' + this.catalog_operator.toLowerCase(),
+    //     namespace: 'default'
+    //   }).then((response) => {
+    //     if (this.$valid(response)) {
+    //       this.columns = response.data.spec.data
+    //       listResources({
+    //         token: this.token,
+    //         kind: this.catalog_operator,
+    //         limit: this.listQuery.limit,
+    //         page: this.listQuery.page
+    //       }).then((response) => {
+    //         if (this.$valid(response)) {
+    //           this.listJsonTemp = response.data.items
+    //           // this.total = response3.total
+    //           this.listLoading = false
+    //           getResource({
+    //             token: this.token,
+    //             kind: this.frontend_kind,
+    //             name: 'action-' + this.catalog_operator.toLowerCase(),
+    //             namespace: 'default'
+    //           }).then((response) => {
+    //             if (response.code === 20000) {
+    //               if (response.data) {
+    //                 this.actions = response.data.spec.data
+    //               } else {
+    //                 this.actions = []
+    //               }
+    //               this.list = []
+    //               for (let i = 0; i < this.listJsonTemp.length; i++) {
+    //                 this.list.push({})
+    //                 this.list[i].json = this.listJsonTemp[i]
+    //                 this.list[i].actions = this.actions
+    //                 this.list[i].val = ''
+    //               }
+    //               this.listLoading = false
+    //             }
+    //           })
+    //         }
+    //       })
+    //     }
+    //   })
+    // },
     // 用于更新的 action 提交
     applyOperation() {
       this.actionDialogVisible = false
@@ -922,6 +920,13 @@ export default {
 </script>
 
 <style scoped>
+.dynamic-form-container{
+  margin-bottom: 30px;
+}
+.base-button-container{
+  padding: 10px;
+  margin-bottom: 22px;
+}
 .link {
   color: red;
   cursor: pointer;
