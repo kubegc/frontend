@@ -4,28 +4,31 @@
       type="primary"
       style="display:block;margin-left: 20px;margin-top: 20px;"
       @click="execute()"
-    >执行</el-button>
+    >执行
+    </el-button>
     <p style="margin-left:20px">注意：index必须从1开始且连续，注意任务应用关联性！</p>
     <div
       class="card-editor-container"
       style="width: 30%; height: 400px;float: left;margin-top:10px;margin-left:20px"
     >
       <!-- <json-editor ref="EditableJson" v-model="value" /> -->
-      <EditableJson v-model="json" />
+      <EditableJson v-model="json"/>
     </div>
     <div id="myChart" style="width: 65%; height: 700px;float: left;"></div>
   </div>
 </template>
 <script>
-import { AgetScheduleData } from "@/api/taskData";
-import {getResource, getScheduleData} from "@/api/k8sResource";
-import { setInterval } from "timers";
-import elDragDialog from "@/directive/el-drag-dialog";
-import EditableJson from "@/components/EditableJson";
-let echarts = require("echarts");
+import { AgetScheduleData } from '@/api/taskData'
+import { getResource, getScheduleData } from '@/api/k8sResource'
+import { setInterval } from 'timers'
+import elDragDialog from '@/directive/el-drag-dialog'
+import EditableJson from '@/components/EditableJson'
+import { mapGetters } from 'vuex'
+
+let echarts = require('echarts')
 
 export default {
-  name: "schedule",
+  name: 'schedule',
   directives: { elDragDialog },
   components: {
     EditableJson
@@ -34,8 +37,7 @@ export default {
     return {
       echartsData: [],
       symbol: [],
-      categories: [      
-      ],
+      categories: [],
       tipData: [],
       data: [],
       json: {},
@@ -44,129 +46,132 @@ export default {
       animations: [],
       counter: 0,
       testData: {
-        name: "flare",
+        name: 'flare',
 
         children: [
           {
-            name: "flex",
+            name: 'flex',
             value: 4116,
             collapsed: true
           }
         ]
       }
-    };
+    }
+  },
+  computed: {
+    ...mapGetters(['token'])
   },
   mounted() {
-    getResource({ kind: "mcmf", name: "simpleparameter" }).then(
-          response => {
-            if (this.validateRes(response) == 1) {
-            this.json = response.data.spec.data
-            }
-          })
+    getResource({ token: this.token, kind: 'MCMF', name: 'simpleparameter', namespace: 'default' }).then(
+      response => {
+        if (this.validateRes(response) == 1) {
+          this.json = response.data.spec.data
+        }
+      })
   },
   methods: {
     validateRes(res) {
-      if(res.code == 20000) {
+      if (res.code == 20000) {
         return 1
-      }else {
+      } else {
         this.$notify({
-          title: "error",
+          title: 'error',
           message: res.data,
-          type: "warning",
+          type: 'warning',
           duration: 3000
-        });
+        })
         return 0
       }
     },
     execute() {
-        //                 AgetScheduleData().then(response => {
-        //           console.log(response.data)
+      //                 AgetScheduleData().then(response => {
+      //           console.log(response.data)
 
-        //           this.failure = response.data.failure
-        //           this.tipData = response.data.tipData
-        //           this.symbol = response.data.symbol
-        //             this.echartsData = response.data.links
-        //                 for(let i = 0;i<response.data.links.length;i++) {
+      //           this.failure = response.data.failure
+      //           this.tipData = response.data.tipData
+      //           this.symbol = response.data.symbol
+      //             this.echartsData = response.data.links
+      //                 for(let i = 0;i<response.data.links.length;i++) {
 
-        //                     setTimeout(function(){
-        //                         this.drawLine(i)
-        //                     }.bind(this)
-        // , i*200)
-        //         }
-        //       })
-        //       setTimeout(function(){
-        //                         this.$message({
-        //         message: '经过分析，是微服务场景！',
-        //         type: 'success'
-        //       })}.bind(this),5000)
+      //                     setTimeout(function(){
+      //                         this.drawLine(i)
+      //                     }.bind(this)
+      // , i*200)
+      //         }
+      //       })
+      //       setTimeout(function(){
+      //                         this.$message({
+      //         message: '经过分析，是微服务场景！',
+      //         type: 'success'
+      //       })}.bind(this),5000)
 
-        // this.color = ["#ff9999", "#67b55b", "MediumTurquoise", "#0399d3"];
-        getScheduleData(JSON.parse(this.json)).then(response => {
-              // this.failure = response.data.failure
-              // this.tipData = response.data.tipData
-              this.symbol = []
-              this.echartsData = []
-              this.animations = []
-              this.symbol = response.data.dm.data;
-              this.echartsData = response.data.dm.links;
-              this.animations = response.data.dm.animations
-              this.categories = response.data.dm.categories
-              this.colors = response.data.dm.colors
-              this.counter = 0
-               this.drawLine();
-              setInterval(function(){
-                if(this.counter < this.animations.length){
-                    var temp = this.animations[this.counter]
-                    if(temp.type == 'link' && temp.action == "reset"){
-                        for( var j = 0;j< this.echartsData.length;j++){
-                          if(this.echartsData[j].source == temp.link.source &&
-                            this.echartsData[j].target == temp.link.target){
-                            this.echartsData[j] = temp.link
-                            this.drawLine();
-                            break;
-                          }
-                        }
-                    }
-                    if(temp.type == 'link' && temp.action == 'add'){
-                      this.echartsData.push(temp.link)
-                      this.drawLine();
-                    }
-                    if(temp.type == 'data' && temp.action == 'add'){
-                      this.symbol.push(temp.data)
-                      console.log(this.symbol)
-                      this.drawLine();
-                    }
-                    if(temp.type == 'data' && temp.action == 'reset'){
-                      for( var j = 0;j< this.symbol.length;j++){
-                          if(this.symbol[j].name == temp.data.name){
-                            this.symbol[j].symbolSize = temp.data.symbolSize
-                            this.drawLine();
-                            break;
-                          }
-                        }
-                    }
-                    this.counter++
-
+      // this.color = ["#ff9999", "#67b55b", "MediumTurquoise", "#0399d3"];
+      getScheduleData(JSON.parse(this.json)).then(response => {
+        // this.failure = response.data.failure
+        // this.tipData = response.data.tipData
+        this.symbol = []
+        this.echartsData = []
+        this.animations = []
+        this.symbol = response.data.dm.data
+        this.echartsData = response.data.dm.links
+        this.animations = response.data.dm.animations
+        this.categories = response.data.dm.categories
+        this.colors = response.data.dm.colors
+        this.counter = 0
+        this.drawLine()
+        setInterval(function() {
+          if (this.counter < this.animations.length) {
+            var temp = this.animations[this.counter]
+            if (temp.type == 'link' && temp.action == 'reset') {
+              for (var j = 0; j < this.echartsData.length; j++) {
+                if (this.echartsData[j].source == temp.link.source &&
+                  this.echartsData[j].target == temp.link.target) {
+                  this.echartsData[j] = temp.link
+                  this.drawLine()
+                  break
                 }
-                
-              }.bind(this),500)
-              
-            });
-            
+              }
+            }
+            if (temp.type == 'link' && temp.action == 'add') {
+              this.echartsData.push(temp.link)
+              this.drawLine()
+            }
+            if (temp.type == 'data' && temp.action == 'add') {
+              this.symbol.push(temp.data)
+              console.log(this.symbol)
+              this.drawLine()
+            }
+            if (temp.type == 'data' && temp.action == 'reset') {
+              for (var j = 0; j < this.symbol.length; j++) {
+                if (this.symbol[j].name == temp.data.name) {
+                  this.symbol[j].symbolSize = temp.data.symbolSize
+                  this.drawLine()
+                  break
+                }
+              }
+            }
+            this.counter++
+
+          }
+
+        }.bind(this), 500)
+
+      })
+
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById("myChart"));
-    
+      let myChart = this.$echarts.init(document.getElementById('myChart'))
+
       myChart.setOption({
         title: {
-          text: ""
+          text: ''
         },
         color: this.colors,
         legend: [
           {
             data: this.categories.map(function(a) {
-              return a;
+              return a
             }),
             itemWidth: 30,
             itemHeight: 20,
@@ -223,7 +228,7 @@ export default {
 
         series: [
           {
-            type: "graph",
+            type: 'graph',
             symbolSize: 50,
             roam: true,
             categories: this.categories,
@@ -233,10 +238,10 @@ export default {
                 fontSize: 12
               }
             },
-            edgeSymbol: ["circle", "arrow"],
+            edgeSymbol: ['circle', 'arrow'],
             lineStyle: {
               width: 2.5,
-              color: "#33cc33"
+              color: '#33cc33'
               // shadowColor: 'black',
               // shadowOffsetX: 1,
               // shadowOffsetY: 1,
@@ -246,8 +251,8 @@ export default {
             links: this.echartsData
           }
         ]
-      },true);
+      }, true)
     }
   }
-};
+}
 </script>
