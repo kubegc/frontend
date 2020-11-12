@@ -22,6 +22,7 @@ import {getResource, getScheduleData} from "@/api/k8sResource";
 import { setInterval } from "timers";
 import elDragDialog from "@/directive/el-drag-dialog";
 import EditableJson from "@/components/EditableJson";
+import { mapGetters } from 'vuex'
 let echarts = require("echarts");
 
 export default {
@@ -57,12 +58,15 @@ export default {
     };
   },
   mounted() {
-    getResource({ kind: "mcmf", name: "simpleparameter" }).then(
+    getResource({token: this.token, kind: "mcmf", name: "simpleparameter" }).then(
           response => {
             if (this.validateRes(response) == 1) {
             this.json = response.data.spec.data
             }
           })
+  },
+  computed: {
+    ...mapGetters(['token', 'name'])
   },
   methods: {
     validateRes(res) {

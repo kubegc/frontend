@@ -57,6 +57,15 @@ export function getScheduleData(data) {
   return res
 }
 
+export function getKinds(data) {
+  var res = request({
+    url: 'atomic/getKinds',
+    method: 'get',
+    params: data
+  })
+  return res
+}
+
 // export function validateRes(res) {
 //   if (res.code === 20000) {
 //     return true
