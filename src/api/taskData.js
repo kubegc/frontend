@@ -127,3 +127,12 @@ export function getRouterData(listQuery) {
   return res
 }
 
+export function getPipelineItems(listQuery) {
+  var res = request({
+    url: '/getPipelineItems',
+    method: 'get',
+    params: listQuery
+  })
+  return res
+}
+
