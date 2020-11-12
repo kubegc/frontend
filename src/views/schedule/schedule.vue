@@ -61,21 +61,12 @@ export default {
     ...mapGetters(['token'])
   },
   mounted() {
-<<<<<<< HEAD
-    getResource({token: this.token, kind: "mcmf", name: "simpleparameter" }).then(
-          response => {
-            if (this.validateRes(response) == 1) {
-            this.json = response.data.spec.data
-            }
-          })
-=======
     getResource({ token: this.token, kind: 'MCMF', name: 'simpleparameter', namespace: 'default' }).then(
       response => {
         if (this.validateRes(response) == 1) {
           this.json = response.data.spec.data
         }
       })
->>>>>>> 7ac284739e9b1dedd80c5b5e50e6bf10dafe6045
   },
   computed: {
     ...mapGetters(['token', 'name'])
@@ -172,7 +163,7 @@ export default {
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('myChart'))
+      let myChart = echarts.init(document.getElementById('myChart'))
 
       myChart.setOption({
         title: {
