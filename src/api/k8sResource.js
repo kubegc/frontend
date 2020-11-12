@@ -49,12 +49,12 @@ export function getMeta(params) {
 }
 
 export function getScheduleData(data) {
-  var res = request({
-    url: 'networkFlow/solveBase',
+return request({
+    url: 'mcmf/solveBase',
     method: 'post',
     data
   })
-  return res
+
 }
 
 export function getKinds(data) {
