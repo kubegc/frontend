@@ -48,6 +48,15 @@ export function getMeta(params) {
   })
 }
 
+export function getScheduleData(data) {
+  var res = request({
+    url: 'networkFlow/solveBase',
+    method: 'post',
+    data
+  })
+  return res
+}
+
 // export function validateRes(res) {
 //   if (res.code === 20000) {
 //     return true
