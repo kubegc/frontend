@@ -14,43 +14,60 @@
         >
             <el-card v-if="card.type == 'span1'" class="box-card">
                 <div slot="header" class="clearfix">
+                    <span v-if="card.color == 'red'" style="color:red;font-weight:bold;font-size:16px;">{{ '步骤' + card.index+"：" }}</span>
+                    <span v-if="card.color == 'brown'" style="color:brown;font-weight:bold;font-size:16px;">{{ '步骤' + card.index+"：" }}</span>
+                    <span v-if="card.color == 'green'" style="color:green;font-weight:bold;font-size:16px;">{{ '步骤' + card.index+"：" }}</span>
                     <span>{{card.name }}</span>
-                    <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
                 </div>
-                <div v-for="o in 4" :key="o" class="text item">
-                    {{'列表内容 ' + o }}
+                <div class="text item">
+                    <div style="float:left;margin:0;width:50%">
+                        <el-image :src="card.src" fit="scale-down" lazy style="float:left;margin: 0;height:6em">
+                        <div slot="error" class="image-slot">
+                            <i class="el-icon-picture-outline"></i>
+                        </div>
+                        </el-image>
+                    </div>
+                    <div style="float:left;margin:0;width:50%">
+                        <p>{{card.description}}</p>
+                    </div>
+                    <el-button  style="float:left;background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">配置参数</el-button>
+
+                    <el-button v-if="card.color == 'red'" style="float:left;background-color:red;width:7em;height:3em;font-size:1em;color:white;margin:10px">启动</el-button>
+                    <el-button v-if="card.color == 'brown'" style="float:left;background-color:brown;width:7em;height:3em;font-size:1em;color:white;margin:10px">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        运行
+                    </el-button>
+                    <el-button v-if="card.color == 'green'" style="float:left;background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">成功</el-button>
                 </div>
             </el-card>
 
             <div style="margin-top:4em" v-if="card.type == 'span2-right'">
-               <svg width="6em" height="6em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="green" xmlns="http://www.w3.org/2000/svg">
+               <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"/>
 </svg>
             </div>
 
             <div style="margin-top:4em" v-if="card.type == 'span2-left'">
-                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-bar-left" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5zM10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5z"/>
+                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-left-circle-fill" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5.5a.5.5 0 0 0 0-1H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5z"/>
+</svg>
 </svg>
             </div>
 
             <div :style="card.style" v-if="card.type == 'span2-up'">
-                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-bar-up" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/>
+                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-up-circle-fill" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"/>
 </svg>
             </div>
 
             <div :style="card.style" v-if="card.type == 'span2-down'">
-                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-bar-down" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M1 3.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5zM8 6a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V6.5A.5.5 0 0 1 8 6z"/>
+                <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-down-circle-fill" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"/>
 </svg>
             </div>
 
         </el-col>
     </el-row>
-
-                <div>
-            </div>
   </div>
 </template>
 
@@ -59,6 +76,9 @@
 import { getPipelineItems } from "@/api/taskData"
 import mock from './mock.js'
 import axios from 'axios'
+//import './jquery-3.3.1.slim.min.js'
+// import './popper.min.js'
+// import './bootstrap.min.js'
 
 export default {
   data() {
@@ -87,6 +107,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import './bootstrap.min.css';
+
 .imageMarket-app-container {
   padding: 10px 20px;
   font-size: 14px;
@@ -97,7 +119,6 @@ export default {
   box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
   0px 3px 6px 0px rgba(0, 0, 0, 0.12),
   0px 5px 12px 4px rgba(0, 0, 0, 0.09);
-
 }
 
 .el-card:hover {
