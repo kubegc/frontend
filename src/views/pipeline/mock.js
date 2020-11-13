@@ -9,7 +9,7 @@ Mock.mock('/getPipelineItems', { //输出数据
             {
                 index: 10,
                 items:[
-                    {index: 1,type:"span1",span: 6,name: "多云API信息导入",color:"green", src : "https://bkimg.cdn.bcebos.com/pic/2cf5e0fe9925bc31137974de55df8db1cb13704b?x-bce-process=image/resize,m_lfit,w_268,limit_1/format,f_jpg", description:"对应多种不同API，需要提供准确的maven依赖配置"},
+                    {index: 1,type:"span1",span: 6,name: "多云API信息导入",color:"green", src : "require('../../assets/docker.jpg')", description:"对应多种不同API，需要提供准确的maven依赖配置"},
                     {index: 100,type:"span2-right",span: 2, color: "red",name: "多云API分析元服务部署"},
                     {index: 2,type:"span1",span: 6,color:"red"},
                     {index: 105,type:"span2-right",span: 2, color: "red",name: "多云API分析引擎"},
