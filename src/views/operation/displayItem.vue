@@ -1,6 +1,6 @@
 <template>
   <el-collapse-item :title="speedup.metadata.name" style="padding-left: 20px;">
-      <div :id=this.index style="height: 500px; width: 1300px"></div>
+    <div :id="this.index" style="height: 500px; width: 1300px" />
   </el-collapse-item>
 </template>
 
@@ -17,11 +17,17 @@ export default {
       required: true
     }
   },
+
+  created() {
+    this.$nextTick(function() {
+      this.drawBar(this.index)
+    })
+  },
   methods: {
 
     drawBar(id) {
-      let operationNames = []
-      let speedups = []
+      const operationNames = []
+      const speedups = []
 
       this.speedup.data.speedups.sort((a, b) => {
         return Object.values(a) - Object.values(b)
@@ -33,13 +39,13 @@ export default {
         speedups.push(Object.values(this.speedup.data.speedups[i])[0])
       }
       // console.log(operationNames)
-      this.charts = echarts.init(document.getElementById(id));
-      let option = {
+      this.charts = echarts.init(document.getElementById(id))
+      const option = {
         color: ['#3398DB'],
         tooltip: {
           trigger: 'axis',
-          axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+          axisPointer: { // 坐标轴指示器，坐标轴触发有效
+            type: 'line' // 默认为直线，可选为：'line' | 'shadow'
           }
         },
         grid: {
@@ -58,7 +64,7 @@ export default {
             axisLabel: {
               interval: 0,
               rotate: 30
-            },
+            }
           }
         ],
         yAxis: [
@@ -76,21 +82,11 @@ export default {
         ]
       }
       this.charts.setOption(option)
-
-
-
-
     }
-  },
-
-  created() {
-    this.$nextTick(function() {
-      this.drawBar(this.index)
-    })
   }
 }
 </script>
-<style>
+<style scoped>
 .el-card {
   box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
   0px 3px 6px 0px rgba(0, 0, 0, 0.12),
@@ -103,7 +99,7 @@ export default {
   0px 9px 28px 0px rgba(0, 0, 0, 0.05),
   0px 12px 48px 16px rgba(0, 0, 0, 0.03);
   transform: translateY(-5px);
-//border-top: #409EFF 1px solid;
+  border-top: #409EFF 1px solid;
   /*border: #409EFF 1px solid;*/
 }
 </style>
