@@ -1,14 +1,7 @@
 <template>
-  <li>
-    <el-card>
-      <div slot="header" class="clearfix">
-        <span style="font-size: 20px">{{speedup.metadata.name}} Cat-Fish BatchSize: 64</span>
-        <el-tag style="float: right;" effect="dark">运行中</el-tag>
-        <el-tag style="float: right;" type="success" effect="dark">已完成</el-tag>
-      </div>
-      <div :id=this.index style="height: 500px; width: 1000px"></div>
-    </el-card>
-  </li>
+  <el-collapse-item :title="speedup.metadata.name" style="padding-left: 20px;">
+      <div :id=this.index style="height: 500px; width: 1300px"></div>
+  </el-collapse-item>
 </template>
 
 <script>
@@ -75,7 +68,7 @@ export default {
         ],
         series: [
           {
-            name: '直接访问',
+            name: '加速比',
             type: 'bar',
             barWidth: '60%',
             data: speedups
@@ -111,7 +104,6 @@ export default {
   0px 12px 48px 16px rgba(0, 0, 0, 0.03);
   transform: translateY(-5px);
 //border-top: #409EFF 1px solid;
-  border: #409EFF 1px solid;
+  /*border: #409EFF 1px solid;*/
 }
-
 </style>
