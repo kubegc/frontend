@@ -82,6 +82,11 @@ export const constantRoutes = [
     path: '/pipeline',
     component: () => import('@/views/pipeline/pipeline'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
+  },
+  {
+    path: '/newPipeline',
+    component: () => import('@/views/pipeline/newPipeline'),
+    meta: { icon: 'pipeline', title: '多云协作框架' }
   }
   //
   // {
