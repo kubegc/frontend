@@ -20,28 +20,33 @@
                     <span>{{card.name }}</span>
                 </div>
                 <div class="text item">
-                  <div style="width:100%;height:70%">
-                    <div style="margin:0;width:50%">
-                        <el-image :src="card.src" fit="scale-down" lazy style="margin: 0;height:6em">
+                  <el-row gutter="10">
+                      <el-col span="5" style="width:50%">
+                        <el-image :src="require('../../assets/' + card.src)" fit="scale-down" lazy style="margin: 0;height:6em">
                         <div slot="error" class="image-slot">
                             <i class="el-icon-picture-outline"></i>
                         </div>
                         </el-image>
-                    </div>
-                    <div style="margin:0;width:50%">
+                      </el-col>
+                      <el-col span="5" style="width:50%">
                         <p>{{card.description}}</p>
-                    </div>
-                  </div>
-                    <div style="width:100%;height:30%">
-                      <el-button style="background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">配置参数</el-button>
-
-                      <el-button v-if="card.color == 'red'" style="background-color:red;width:7em;height:3em;font-size:1em;color:white;margin:10px">启动</el-button>
-                      <el-button v-if="card.color == 'brown'" style="background-color:brown;width:7em;height:3em;font-size:1em;color:white;margin:10px">
+                      </el-col>
+                  </el-row>
+                  <el-row gutter="10">
+                      <el-col span="5" style="width:50%">
+                        <el-button style="background-color:black;width:7em;height:3em;font-size:1em;color:white;margin-left:30%">配置参数</el-button>
+                      </el-col>
+                      <el-col span="5" style="width:50%">
+                        <el-button v-if="card.color == 'black'" style="background-color:black;width:7em;height:3em;font-size:1em;color:white;margin-left:30%">启动</el-button>
+                        <el-button v-if="card.color == 'red'" style="background-color:red;width:7em;height:3em;font-size:1em;color:white;margin-left:30%">终止</el-button>
+                      <el-button v-if="card.color == 'brown'" style="background-color:brown;width:7em;height:3em;font-size:1em;color:white;margin-left:30%">
                           <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                           运行
                       </el-button>
-                      <el-button v-if="card.color == 'green'" style="background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">成功</el-button>
-                    </div>
+                      <el-button v-if="card.color == 'green'" style="background-color:green;width:7em;height:3em;font-size:1em;color:white;margin-left:30%">成功
+                      </el-button>
+                      </el-col>
+                  </el-row>
                 </div>
             </el-card>
 
@@ -54,7 +59,6 @@
             <div style="margin-top:4em" v-if="card.type == 'span2-left'">
                 <svg width="4em" height="4em" viewBox="0 0 16 16" class="bi bi-arrow-left-circle-fill" :fill="card.color" xmlns="http://www.w3.org/2000/svg">
   <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5.5a.5.5 0 0 0 0-1H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5z"/>
-</svg>
 </svg>
             </div>
 
