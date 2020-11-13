@@ -46,7 +46,7 @@
               </el-col>
             </el-row>
             <el-row :gutter=10>
-              <el-col :span=5 style="width: 50%">
+              <el-col :span="12" style="text-align:center;">
                 <el-button
                   @click="handleClick('black', card.name)"
                   v-if="card.color == 'black'"
@@ -54,9 +54,9 @@
                     background-color: black;
                     width: 7em;
                     height: 3em;
-                    font-size: 1em;
+                   
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                   >配置参数</el-button
                 >
@@ -69,7 +69,7 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                   >配置参数</el-button
                 >
@@ -82,7 +82,7 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                   >配置参数</el-button
                 >
@@ -95,13 +95,14 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                   >配置参数</el-button
                 >
               </el-col>
-              <el-col :span=5 style="width: 50%">
+              <el-col :span="12" style="text-align:center;">
                 <el-button
+                 @click="checkLoki('black', card.name)"
                   v-if="card.color == 'black'"
                   style="
                     background-color: black;
@@ -109,7 +110,7 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                   >启动</el-button
                 >
@@ -121,7 +122,7 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                   >终止</el-button
                 >
@@ -133,7 +134,7 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
+                    display: inline-block;
                   "
                 >
                   <span
@@ -151,7 +152,6 @@
                     height: 3em;
                     font-size: 1em;
                     color: white;
-                    margin-left: 20%;
                   "
                   >成功
                 </el-button>
@@ -171,10 +171,16 @@
             </div>
           </el-dialog>
 
-        <div style="margin-top: 45%" v-if="card.type == 'span2-right'">
+          <el-dialog :title="dialogTitle" :visible.sync="lokiDialogTitle" width="70%">
+            
+            
+          </el-dialog>
+
+        <div style=" text-align:center; height: 100%;" v-if="card.type == 'span2-right'">
           <svg
-            width="4em"
-            height="4em"
+          style="display: inline-block;" 
+            width="3em"
+            height="3em"
             viewBox="0 0 16 16"
             class="bi bi-arrow-right-circle-fill"
             :fill="card.color"
@@ -187,7 +193,7 @@
           </svg>
         </div>
 
-        <div style="margin-top: 45%" v-if="card.type == 'span2-left'">
+        <div style="line-height:20" v-if="card.type == 'span2-left'">
           <svg
             width="4em"
             height="4em"
@@ -254,6 +260,7 @@ export default {
     return {
       pipelineItems: [],
       dialogVisible: false,
+      lokiDialogTitle: false,
       jsonFileObj: {},
       dialogTitle: ""
     };
@@ -265,6 +272,12 @@ export default {
     handleClick(color, name) {
         this.dialogTitle = name;
       this.dialogVisible = true;
+      
+    },
+
+    checkLoki(color, name) {
+        this.dialogTitle = name;
+      this.lokiDialogTitle = true;
       
     },
 
@@ -285,7 +298,7 @@ export default {
 @import "./bootstrap.min.css";
 
 .imageMarket-app-container {
-  padding: 10px 20px;
+  padding: 20px 30px;
   font-size: 14px;
   line-height: 1.67;
 }
