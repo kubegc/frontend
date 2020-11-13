@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: window.g.baseURL, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -22,7 +22,12 @@ service.interceptors.request.use(
   //   }
   //   return config
   // },
-  config => config,
+  config => {
+    if (config.data && !config.data.token && store.getters.token) {
+      config.data.token = store.getters.token
+    }
+    return config
+  },
   error => {
     // do something with request error
     console.log(error) // for debug

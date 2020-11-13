@@ -48,6 +48,24 @@ export function getMeta(params) {
   })
 }
 
+export function getScheduleData(data) {
+return request({
+    url: 'mcmf/solveBase',
+    method: 'post',
+    data
+  })
+
+}
+
+export function getKinds(data) {
+  var res = request({
+    url: 'atomic/getKinds',
+    method: 'get',
+    params: data
+  })
+  return res
+}
+
 // export function validateRes(res) {
 //   if (res.code === 20000) {
 //     return true

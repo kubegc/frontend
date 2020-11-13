@@ -1,0 +1,72 @@
+<template>
+  <div class="json-editor">
+    <textarea ref="textarea" />
+  </div>
+</template>
+
+<script>
+import CodeMirror from 'codemirror'
+import 'codemirror/addon/lint/lint.css'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/rubyblue.css'
+require('script-loader!jsonlint')
+import 'codemirror/mode/javascript/javascript'
+import 'codemirror/addon/lint/lint'
+import 'codemirror/addon/lint/json-lint'
+
+export default {
+  name: 'EditableJson',
+  /* eslint-disable vue/require-prop-types */
+  props: ['value'],
+  data() {
+    return {
+      EditableJson: false
+    }
+  },
+  watch: {
+    value(value) {
+      const editorValue = this.EditableJson.getValue()
+      if (value !== editorValue) {
+        this.EditableJson.setValue(JSON.stringify(this.value, null, 2))
+      }
+    }
+  },
+  mounted() {
+    this.EditableJson = CodeMirror.fromTextArea(this.$refs.textarea, {
+      lineNumbers: true,
+      mode: 'application/json',
+      gutters: ['CodeMirror-lint-markers'],
+      theme: 'rubyblue',
+      lint: true
+    })
+
+    this.EditableJson.setValue(JSON.stringify(this.value, null, 2))
+    this.EditableJson.on('change', cm => {
+      this.$emit('changed', cm.getValue())
+      this.$emit('input', cm.getValue())
+    })
+  },
+  methods: {
+    getValue() {
+      return this.EditableJson.getValue()
+    }
+  }
+}
+</script>
+
+<style scoped>
+.json-editor{
+  height: 538px;
+  position: relative;
+}
+.json-editor >>> .CodeMirror {
+  height: 538px;
+  min-height: 300px;
+}
+.json-editor >>> .CodeMirror-scroll{
+  min-height: 300px;
+}
+.json-editor >>> .cm-s-rubyblue span.cm-string {
+  color: #F08047;
+}
+</style>
