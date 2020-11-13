@@ -22,7 +22,12 @@ service.interceptors.request.use(
   //   }
   //   return config
   // },
-  config => config,
+  config => {
+    if (config.data && !config.data.token && store.getters.token) {
+      config.data.token = store.getters.token
+    }
+    return config
+  },
   error => {
     // do something with request error
     console.log(error) // for debug
