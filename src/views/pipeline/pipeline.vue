@@ -4,10 +4,10 @@
     <el-row
       v-for="row in pipelineItems.rows"
       :key="row.index"
-      :gutter="pipelineItems.gutter"
+      :gutter=pipelineItems.gutter
       style="margin-bottom: 30px"
     >
-      <el-col v-for="card in row.items" :key="card.index" :span="card.span">
+      <el-col v-for="card in row.items" :key="card.index" :span=card.span>
         <el-card v-if="card.type == 'span1'" class="box-card">
           <div slot="header" class="clearfix">
             <span
@@ -28,8 +28,8 @@
             <span>{{ card.name }}</span>
           </div>
           <div class="text item">
-            <el-row gutter=10>
-              <el-col span=5 style="width: 50%">
+            <el-row :gutter=10>
+              <el-col :span=5 style="width: 50%">
                 <el-image
                   :src="require('../../assets/' + card.src)"
                   fit="scale-down"
@@ -41,12 +41,12 @@
                   </div>
                 </el-image>
               </el-col>
-              <el-col span=5 style="width: 50%">
+              <el-col :span=5 style="width: 50%">
                 <p>{{ card.description }}</p>
               </el-col>
             </el-row>
-            <el-row gutter=10>
-              <el-col span=5 style="width: 50%">
+            <el-row :gutter=10>
+              <el-col :span=5 style="width: 50%">
                 <el-button
                   @click="handleClick('black', card.name)"
                   v-if="card.color == 'black'"
@@ -100,7 +100,7 @@
                   >配置参数</el-button
                 >
               </el-col>
-              <el-col span=5 style="width: 50%">
+              <el-col :span=5 style="width: 50%">
                 <el-button
                   v-if="card.color == 'black'"
                   style="
@@ -274,8 +274,6 @@ export default {
       axios.get("/getPipelineItems").then((response) => {
         if (response.data) {
           this.pipelineItems = response.data.data;
-          console.log(this.pipelineItems.span);
-          console.log(this.pipelineItems.gutter);
         }
       });
     },
