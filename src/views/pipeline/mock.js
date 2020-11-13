@@ -3,13 +3,12 @@ import Mock from 'mockjs';
 Mock.mock('/getPipelineItems', { //输出数据
     code: 20000,
     data:{
-        total: 6,
         gutter: 30,
         rows:[
             {
                 index: 10,
                 items:[
-                    {index: 1,type:"span1",span: 6,name: "多云API信息导入",color:"black", src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置"},
+                    {index: 1,type:"span1",span: 6,name: "多云API信息导入",color:"black", src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置,根据所需要的配置，框架自动打包部署需要的API分析服务"},
                     {index: 100,type:"span2-right",span: 2, color: "black"},
                     // {index: 2,type:"span1",span: 6,color:"red"},
                     // {index: 105,type:"span2-right",span: 2, color: "red",name: "多云API分析引擎",src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置"},
