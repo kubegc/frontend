@@ -20,24 +20,28 @@
                     <span>{{card.name }}</span>
                 </div>
                 <div class="text item">
-                    <div style="float:left;margin:0;width:50%">
-                        <el-image :src="card.src" fit="scale-down" lazy style="float:left;margin: 0;height:6em">
+                  <div style="width:100%;height:70%">
+                    <div style="margin:0;width:50%">
+                        <el-image :src="card.src" fit="scale-down" lazy style="margin: 0;height:6em">
                         <div slot="error" class="image-slot">
                             <i class="el-icon-picture-outline"></i>
                         </div>
                         </el-image>
                     </div>
-                    <div style="float:left;margin:0;width:50%">
+                    <div style="margin:0;width:50%">
                         <p>{{card.description}}</p>
                     </div>
-                    <el-button  style="float:left;background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">配置参数</el-button>
+                  </div>
+                    <div style="width:100%;height:30%">
+                      <el-button style="background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">配置参数</el-button>
 
-                    <el-button v-if="card.color == 'red'" style="float:left;background-color:red;width:7em;height:3em;font-size:1em;color:white;margin:10px">启动</el-button>
-                    <el-button v-if="card.color == 'brown'" style="float:left;background-color:brown;width:7em;height:3em;font-size:1em;color:white;margin:10px">
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        运行
-                    </el-button>
-                    <el-button v-if="card.color == 'green'" style="float:left;background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">成功</el-button>
+                      <el-button v-if="card.color == 'red'" style="background-color:red;width:7em;height:3em;font-size:1em;color:white;margin:10px">启动</el-button>
+                      <el-button v-if="card.color == 'brown'" style="background-color:brown;width:7em;height:3em;font-size:1em;color:white;margin:10px">
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          运行
+                      </el-button>
+                      <el-button v-if="card.color == 'green'" style="background-color:green;width:7em;height:3em;font-size:1em;color:white;margin:10px">成功</el-button>
+                    </div>
                 </div>
             </el-card>
 
