@@ -2,14 +2,11 @@
   <div class="imageMarket-app-container">
     <el-divider content-position="left">全部</el-divider>
     <el-row
-      v-for="(arrays, index) in cardsData"
-      :key="index"
       :gutter="20"
-      style="margin-bottom: 30px"
     >
       <a
-        v-for="(item, idx) in arrays"
-        :key="idx"
+        v-for="(item, index) in cardsData"
+        :key="index"
         @click="handleClick"
       >
         <el-col
@@ -17,35 +14,35 @@
         >
           <el-tooltip placement="top">
             <div slot="content" style="width: 200px;">
-              <p>{{ item.describe }}</p>
+              <p>{{ item.metadata.name }}</p>
             </div>
             <el-card>
               <el-row :gutter="20">
                 <el-col :span="8">
                   <el-image
                     style="border-radius: 2px;"
-                    :src="require('../../assets/' + item.avatar)"
+                    :src="require('../../assets/' + (item.avatar ? item.avatar : 'avatar.jpg'))"
                     :fit="'fill'"
                   />
                 </el-col>
                 <el-col :span="16">
                   <div style="display: block;overflow: hidden;height: 90px">
-                    <p style="margin: 0;"><strong>Tomcat</strong></p>
-                    <p style="margin: 0;color: gray;overflow: hidden">
+                    <p style="margin: 0;"><strong>{{ item.metadata.name }}}</strong></p>
+                    <p v-if="item.describe" style="margin: 0;color: gray;overflow: hidden">
                       {{ item.describe }}
                     </p>
                   </div>
                 </el-col>
               </el-row>
               <el-row style="margin-top: 20px">
-                <el-col :span="12">
+                <el-col v-if="item.developer" :span="12">
                   <span style="color: black">
                     {{ '开发者：' + item.developer }}
                   </span>
                 </el-col>
                 <el-col :span="12">
                   <span style="color: black">
-                    {{ '最新版本:' + item.latestVersion }}
+                    {{ '版本: ' + item.apiVersion }}
                   </span>
                 </el-col>
               </el-row>
@@ -58,56 +55,26 @@
 </template>
 
 <script>
+import { listResources } from '@/api/k8sResource'
+
 export default {
   data() {
     return {
-      cardsData: [
-        [{
-          title: 'tomcat',
-          avatar: 'avatar.jpg',
-          describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-          latestVersion: '1.2.1',
-          developer: 'lcz',
-          url: ''
-        },
-          {
-            title: 'tomcat',
-            avatar: 'avatar.jpg',
-            describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-            latestVersion: '1.2.1',
-            developer: 'lcz',
-            url: ''
-          },
-          {
-            title: 'tomcat',
-            avatar: 'avatar.jpg',
-            describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-            latestVersion: '1.2.1',
-            developer: 'lcz',
-            url: ''
-          },
-          {
-            title: 'tomcat',
-            avatar: 'avatar.jpg',
-            describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-            latestVersion: '1.2.1',
-            developer: 'lcz',
-            url: ''
-          }],
-        [{
-          title: 'tomcat',
-          avatar: 'avatar.jpg',
-          describe: 'Deploy a basic tomcat application server with sidecar as web archive container',
-          latestVersion: '1.2.1',
-          developer: 'lcz',
-          url: ''
-        }]
-      ]
+      cardsData: []
     }
+  },
+  created() {
+    listResources({ kind: 'Image' }).then(
+      response => {
+        if (this.$valid(response)) {
+          this.cardsData = response.data.items
+        }
+      }
+    )
   },
   methods: {
     handleClick() {
-      this.$router.push({name: 'appDetail', params:{push: true}})
+      this.$router.push({ name: 'appDetail', params: { push: true, kind: this.$route.meta.kind }})
     }
   }
 }
