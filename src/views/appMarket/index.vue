@@ -1,6 +1,6 @@
 <template>
   <div class="imageMarket-app-container">
-    <el-divider content-position="left">全部</el-divider>
+    <el-divider content-position="left">{{ $route.meta.kind }}</el-divider>
     <el-row
       :gutter="20"
     >
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     handleClick(detail) {
-      this.$router.push({ name: 'appDetail', params: { push: true, kind: 'Image', detail}})
+      this.$router.push({ name: 'appDetail', params: { push: true, kind: 'Image', detail }})
     }
   }
 }

@@ -4,11 +4,11 @@
       <el-col>
         {{ detail.metadata.name }}
         <a v-if="kind == 'Image'" :href="'http://39.106.40.190:5002/?image=' + detail.metadata.name">
-          <el-button icon="el-icon-share" circle style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);"/>
+          <el-button icon="el-icon-share" circle style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);" />
         </a>
       </el-col>
     </el-row>
-    <el-divider/>
+    <el-divider />
     <el-row>
 
       <el-form label-position="top">
@@ -19,30 +19,27 @@
           :label="item.label"
         >
           <div v-if="typeof (item.value) === 'string'">
-          <span>
-            {{ item.value }}
-          </span>
-            <el-divider/>
+            <span>
+              {{ item.value }}
+            </span>
+            <el-divider />
           </div>
-          <div v-if="item.value instanceof Object">
-            <el-row
-              v-for="(itemOne, itemOneIndex) in item.value"
-              :key="itemOneIndex"
-              :gutter="20">
-              <el-col v-for="(itemTwo, itemTwoIndex) in itemOne" :key="itemTwoIndex" :span="8">
-                <el-card shadow="hover">
-                  <div v-if="typeof itemTwoIndex === 'string'" slot="header">
-                    <span>{{ itemTwoIndex }}</span>
-                  </div>
-                  <el-row v-for="(propValue, propKey) in itemTwo" :key="propKey" class="p-style">
-                    {{ propKey + ': ' + propValue }}
-                  </el-row>
-                </el-card>
-                <el-divider/>
-              </el-col>
-            </el-row>
-          </div>
-
+          <el-row
+            v-if="item.value instanceof Object"
+            :gutter="20"
+          >
+            <el-col v-for="(itemValue, index) in item.value" :key="index" :span="8">
+              <el-card shadow="hover">
+                <div v-if="typeof index === 'string'" slot="header" class="p-style">
+                  <span>{{ index }}</span>
+                </div>
+                <p v-for="(propValue, propKey) in itemValue" :key="propKey" class="p-style">
+                  {{ propKey + ': ' + propValue }}
+                </p>
+              </el-card>
+              <el-divider />
+            </el-col>
+          </el-row>
 
         </el-form-item>
 
@@ -92,19 +89,6 @@ export default {
           value = value[item]
         }
       }
-      if (value instanceof Array || value instanceof Object) {
-        const valueTemp = []
-        value.forEach(
-          (item, index) => {
-            const idx = Math.floor(index / 3)
-            if (!valueTemp[idx]) {
-              valueTemp[idx] = []
-            }
-            valueTemp.push(item)
-          }
-        )
-        value = valueTemp
-      }
       return value
     }
   }
@@ -122,6 +106,8 @@ export default {
 
   .p-style {
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
   }
 
   .el-row {
