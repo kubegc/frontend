@@ -1,7 +1,14 @@
 <template>
-  <el-collapse-item :title="speedup.metadata.name" style="padding-left: 20px;">
-    <div :id="this.index" style="height: 500px; width: 1300px" />
-  </el-collapse-item>
+  <el-row>
+    <el-card>
+      <div slot="header" class="clearfix">
+        <span>{{index}}.{{speedup.metadata.name}}</span>
+        <el-button style="float: right; padding: 3px 0" type="primary">已完成</el-button>
+<!--        <el-button style="float: right; padding: 3px 0" type="success">运行中</el-button>-->
+      </div>
+      <div :id=this.index style="height: 500px; width: 1300px"></div>
+    </el-card>
+  </el-row>
 </template>
 
 <script>

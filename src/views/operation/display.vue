@@ -1,14 +1,11 @@
 <template>
   <div>
-    <el-collapse>
-      <displayItem
-        v-for="speedup in speedups"
-        :speedup="speedup"
-        :index="speedup.index"
-      />
-    </el-collapse>
+    <displayItem
+      v-for="speedup in speedups"
+      :speedup="speedup"
+      :index= "speedup.index"
+    />
   </div>
-
 </template>
 <script>
 import displayItem from '@/views/operation/displayItem'
