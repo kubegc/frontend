@@ -23,8 +23,11 @@ service.interceptors.request.use(
   //   return config
   // },
   config => {
-    if (config.data && !config.data.token && store.getters.token) {
+    if (config.data && !config.data.token) {
       config.data.token = store.getters.token
+    }
+    if (config.params && !config.params.token) {
+      config.params.token = store.getters.token
     }
     return config
   },

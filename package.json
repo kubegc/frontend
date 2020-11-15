@@ -54,7 +54,6 @@
     "svgo": "1.2.2",
     "vue-template-compiler": "2.6.10",
     "echarts": "4.9.0"
-
   },
   "browserslist": [
     "> 1%",
