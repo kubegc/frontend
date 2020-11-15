@@ -7,7 +7,7 @@
       <a
         v-for="(item, index) in cardsData"
         :key="index"
-        @click="handleClick"
+        @click="handleClick(item)"
       >
         <el-col
           :span="6"
@@ -73,8 +73,8 @@ export default {
     )
   },
   methods: {
-    handleClick() {
-      this.$router.push({ name: 'appDetail', params: { push: true, kind: this.$route.meta.kind }})
+    handleClick(detail) {
+      this.$router.push({ name: 'appDetail', params: { push: true, kind: 'Image', detail}})
     }
   }
 }
