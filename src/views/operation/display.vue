@@ -1,12 +1,10 @@
 <template>
   <div>
-    <el-collapse>
     <displayItem
       v-for="speedup in speedups"
       :speedup="speedup"
       :index= "speedup.index"
     />
-    </el-collapse>
   </div>
 
 </template>
