@@ -1,19 +1,16 @@
 <template>
   <div>
-    <el-collapse>
     <displayItem
       v-for="speedup in speedups"
       :speedup="speedup"
       :index= "speedup.index"
     />
-    </el-collapse>
   </div>
-
 </template>
 <script>
 import displayItem from '@/views/operation/displayItem'
 
-import { listResources } from "@/api/k8sResource";
+import { listResources } from '@/api/k8sResource'
 export default {
   components: {
     displayItem
@@ -25,7 +22,7 @@ export default {
   },
   created() {
     listResources({ token: 'default', kind: 'Operation' }).then(response => {
-      let operationList = response.data.items
+      const operationList = response.data.items
       for (var i = 0; i < operationList.length; i++) {
         this.speedups.push({
           index: i + 1,
@@ -39,6 +36,4 @@ export default {
 }
 
 </script>
-<style>
 
-</style>

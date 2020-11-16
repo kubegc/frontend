@@ -5,9 +5,8 @@
       v-for="row in pipelineItems.rows"
       :key="row.index"
       :gutter=pipelineItems.gutter
-      style="margin-bottom: 30px"
     >
-      <el-col v-for="card in row.items" :key="card.index" :span=card.span>
+      <el-col v-for="card in row.items" :key="card.index" :span=card.span style="text-align:center;">
         <el-card v-if="card.type == 'span1'" class="box-card">
           <div slot="header" class="clearfix">
             <span
@@ -128,6 +127,7 @@
                 >
                 <el-button
                   v-if="card.color == 'brown'"
+                  icon="el-icon-loading"
                   style="
                     background-color: brown;
                     width: 7em;
@@ -137,11 +137,7 @@
                     display: inline-block;
                   "
                 >
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
+
                   运行
                 </el-button>
                 <el-button
@@ -159,7 +155,18 @@
             </el-row>
           </div>
         </el-card>
-        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="70%">
+        <div style="height:100px">
+          </div>
+          <svg v-if="card.type == 'span2-right'" t="1605260206733" class="icon svg-middle" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1256" width="40" :fill ="card.color"><path d="M512 128c211.74 0 384 172.26 384 384S723.74 896 512 896 128 723.74 128 512s172.26-384 384-384m0-64C264.58 64 64 264.58 64 512s200.58 448 448 448 448-200.58 448-448S759.43 64 512 64z" p-id="1257"></path><path d="M733.53 524.23a31.93 31.93 0 0 0-6.78-34.67c0-0.05-0.07-0.13-0.12-0.19L568.23 331A32 32 0 0 0 523 376.24L626.75 480H320a32 32 0 0 0 0 64h306.75L523 647.76A32 32 0 0 0 568.23 693l158.4-158.39c0-0.06 0.07-0.14 0.12-0.19a31.92 31.92 0 0 0 6.78-10.19z" p-id="1258"></path></svg>
+        
+          <svg v-if="card.type == 'span2-left'" t="1605260646357" class="icon svg-middle" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2901" width="40" :fill ="card.color"><path d="M512 74.666667C270.933333 74.666667 74.666667 270.933333 74.666667 512S270.933333 949.333333 512 949.333333 949.333333 753.066667 949.333333 512 753.066667 74.666667 512 74.666667z m0 810.666666c-204.8 0-373.333333-168.533333-373.333333-373.333333S307.2 138.666667 512 138.666667 885.333333 307.2 885.333333 512 716.8 885.333333 512 885.333333z" p-id="2902"></path><path d="M682.666667 480H405.333333l119.466667-128c12.8-12.8 10.666667-34.133333-2.133333-44.8s-34.133333-10.666667-44.8 2.133333l-170.666667 181.333334c-10.666667 12.8-10.666667 32 0 44.8l170.666667 181.333333c6.4 6.4 14.933333 10.666667 23.466666 10.666667 8.533333 0 14.933333-2.133333 21.333334-8.533334 12.8-12.8 12.8-32 2.133333-44.8l-119.466667-128h277.333334c17.066667 0 32-14.933333 32-32s-14.933333-34.133333-32-34.133333z" p-id="2903"></path></svg>
+          
+          <svg v-if="card.type == 'span2-up'" t="1605260756138" class="icon svg-middle" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3038" width="40"><path d="M512 74.666667C270.933333 74.666667 74.666667 270.933333 74.666667 512S270.933333 949.333333 512 949.333333 949.333333 753.066667 949.333333 512 753.066667 74.666667 512 74.666667z m0 810.666666c-204.8 0-373.333333-168.533333-373.333333-373.333333S307.2 138.666667 512 138.666667 885.333333 307.2 885.333333 512 716.8 885.333333 512 885.333333z" p-id="3039"></path><path d="M533.333333 307.2c-12.8-10.666667-32-10.666667-44.8 0l-181.333333 170.666667c-12.8 12.8-12.8 32-2.133333 44.8s32 12.8 44.8 2.133333l128-119.466667v277.333334c0 17.066667 14.933333 32 32 32s32-14.933333 32-32V405.333333l128 119.466667c6.4 6.4 14.933333 8.533333 21.333333 8.533333 8.533333 0 17.066667-4.266667 23.466667-10.666666 12.8-12.8 10.666667-34.133333-2.133334-44.8l-179.2-170.666667z" p-id="3040"></path></svg>
+
+          <svg v-if="card.type == 'span2-down'"  t="1605260794511" class="icon svg-middle" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3175" width="40"><path d="M512 74.666667C270.933333 74.666667 74.666667 270.933333 74.666667 512S270.933333 949.333333 512 949.333333 949.333333 753.066667 949.333333 512 753.066667 74.666667 512 74.666667z m0 810.666666c-204.8 0-373.333333-168.533333-373.333333-373.333333S307.2 138.666667 512 138.666667 885.333333 307.2 885.333333 512 716.8 885.333333 512 885.333333z" p-id="3176"></path><path d="M672 499.2l-128 119.466667V341.333333c0-17.066667-14.933333-32-32-32s-32 14.933333-32 32v277.333334l-128-119.466667c-12.8-12.8-34.133333-10.666667-44.8 2.133333-12.8 12.8-10.666667 34.133333 2.133333 44.8l181.333334 170.666667c6.4 6.4 14.933333 8.533333 21.333333 8.533333s14.933333-2.133333 21.333333-8.533333l181.333334-170.666667c12.8-12.8 12.8-32 2.133333-44.8-12.8-12.8-32-14.933333-44.8-2.133333z" p-id="3177"></path></svg>
+      </el-col>
+    </el-row>
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="70%">
             
             <json-editor
               :value="JSON.stringify(jsonFileObj, null, 2)"
@@ -172,6 +179,7 @@
           </el-dialog>
 
           <el-dialog :title="dialogTitle" :visible.sync="lokiDialogTitle" width="70%">
+<<<<<<< HEAD
              <iframe class="iframe" id="iframe" :src="lokiLink" width="100%" height="200"></iframe>
             
           </el-dialog>
@@ -242,6 +250,9 @@
         </div>
       </el-col>
     </el-row>
+=======
+    </el-dialog>
+>>>>>>> aa6685f58e8f0c32929297496870e0178ddaf07d
   </div>
 </template>
 
@@ -298,7 +309,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "./bootstrap.min.css";
 
 .imageMarket-app-container {
   padding: 20px 30px;
@@ -318,5 +328,8 @@ export default {
   color: yellowgreen;
   //border-top: #409EFF 1px solid;
   border: #409eff 1px solid;
+}
+.svg-middle {
+  margin:0 auto;display:inline-block;
 }
 </style>
