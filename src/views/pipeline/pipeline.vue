@@ -172,7 +172,7 @@
           </el-dialog>
 
           <el-dialog :title="dialogTitle" :visible.sync="lokiDialogTitle" width="70%">
-            
+             <iframe class="iframe" id="iframe" :src="lokiLink" width="100%" height="200"></iframe>
             
           </el-dialog>
 
@@ -250,6 +250,7 @@ import { getPipelineItems } from "@/api/taskData";
 import mock from "./mock.js";
 import axios from "axios";
 import JsonEditor from "@/components/JsonEditorSpecial/index";
+import { getLokiLink } from '@/utils/getResource'
 //import './jquery-3.3.1.slim.min.js'
 // import './popper.min.js'
 // import './bootstrap.min.js'
@@ -262,11 +263,13 @@ export default {
       dialogVisible: false,
       lokiDialogTitle: false,
       jsonFileObj: {},
-      dialogTitle: ""
+      dialogTitle: "",
+      lokiLink: ""
     };
   },
   mounted() {
     this.readPipeline();
+    this.lokiLink = getLokiLink() 
   },
   methods: {
     handleClick(color, name) {
@@ -278,7 +281,7 @@ export default {
     checkLoki(color, name) {
         this.dialogTitle = name;
       this.lokiDialogTitle = true;
-      
+       this.lokiLink = getLokiLink()
     },
 
     updateJson() {},
