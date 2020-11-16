@@ -27,7 +27,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="display: block;overflow: hidden;height: 90px">
-                    <p style="margin: 0;"><strong>{{ item.metadata.name }}}</strong></p>
+                    <p style="margin: 0;"><strong>{{ item.metadata.name }}</strong></p>
                     <p v-if="item.describe" style="margin: 0;color: gray;overflow: hidden">
                       {{ item.describe }}
                     </p>
