@@ -56,6 +56,11 @@ export function getMonitorInfo(kind, nodeName, podName) {
     return 'http://'+window.g.VUE_APP_MONITOR_HOST_GRAFANA+'/d/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&from='+startTimestamp+'&to='+ new Date().getTime()
   }
 
+  export function getLokiLink() {
+    var startTimestamp = new Date().getTime() - 12 * 60 * 1000;
+    return 'http://'+window.g.VUE_APP_MONITOR_HOST_GRAFANA+'/d-solo/2gSj9goGk/loki-logs-copy?orgId=1&refresh=1m&var-datasource=Loki&var-app=All&var-job=node&panelId=2&var-string=&from='+startTimestamp+'&to='+ new Date().getTime()
+  }
+
   export function getPodGrafanaLink(name) {
     var startTimestamp = new Date().getTime() - 12 * 60 * 1000;
     return 'http://'+window.g.VUE_APP_MONITOR_HOST_GRAFANA+'/d/4KWTCFCWk/kubernetes-pod-metrics?orgId=1&var-Node=All&var-Pod='+ name +'&var-Pod_ip=&var-phase=&var-container=&from='+startTimestamp+'&to='+ new Date().getTime()
