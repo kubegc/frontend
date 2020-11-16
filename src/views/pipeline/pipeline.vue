@@ -179,7 +179,80 @@
           </el-dialog>
 
           <el-dialog :title="dialogTitle" :visible.sync="lokiDialogTitle" width="70%">
+<<<<<<< HEAD
+             <iframe class="iframe" id="iframe" :src="lokiLink" width="100%" height="200"></iframe>
+            
+          </el-dialog>
+
+        <div style=" text-align:center; height: 100%;" v-if="card.type == 'span2-right'">
+          <svg
+          style="display: inline-block;" 
+            width="3em"
+            height="3em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-right-circle-fill"
+            :fill="card.color"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"
+            />
+          </svg>
+        </div>
+
+        <div style="line-height:20" v-if="card.type == 'span2-left'">
+          <svg
+            width="4em"
+            height="4em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-left-circle-fill"
+            :fill="card.color"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5.5a.5.5 0 0 0 0-1H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5z"
+            />
+          </svg>
+        </div>
+
+        <div :style="card.style" v-if="card.type == 'span2-up'">
+          <svg
+            width="4em"
+            height="4em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-up-circle-fill"
+            :fill="card.color"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-7.5 3.5a.5.5 0 0 1-1 0V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11.5z"
+            />
+          </svg>
+        </div>
+
+        <div :style="card.style" v-if="card.type == 'span2-down'">
+          <svg
+            width="4em"
+            height="4em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-down-circle-fill"
+            :fill="card.color"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"
+            />
+          </svg>
+        </div>
+      </el-col>
+    </el-row>
+=======
     </el-dialog>
+>>>>>>> aa6685f58e8f0c32929297496870e0178ddaf07d
   </div>
 </template>
 
@@ -188,6 +261,7 @@ import { getPipelineItems } from "@/api/taskData";
 import mock from "./mock.js";
 import axios from "axios";
 import JsonEditor from "@/components/JsonEditorSpecial/index";
+import { getLokiLink } from '@/utils/getResource'
 //import './jquery-3.3.1.slim.min.js'
 // import './popper.min.js'
 // import './bootstrap.min.js'
@@ -200,11 +274,13 @@ export default {
       dialogVisible: false,
       lokiDialogTitle: false,
       jsonFileObj: {},
-      dialogTitle: ""
+      dialogTitle: "",
+      lokiLink: ""
     };
   },
   mounted() {
     this.readPipeline();
+    this.lokiLink = getLokiLink() 
   },
   methods: {
     handleClick(color, name) {
@@ -216,7 +292,7 @@ export default {
     checkLoki(color, name) {
         this.dialogTitle = name;
       this.lokiDialogTitle = true;
-      
+       this.lokiLink = getLokiLink()
     },
 
     updateJson() {},

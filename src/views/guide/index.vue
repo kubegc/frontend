@@ -7,58 +7,70 @@
           <el-form-item label="新增页面类型" prop="chosenGuideType">
             <el-select v-model="formData.chosenPageType" placeholder="请选择" @change="handleGuideTypeChange">
               <el-option
-                v-for="item in pageTypes"
-                :key="item.key"
-                :label="item.label"
-                :value="item.key"
-              >
-              </el-option>
+                v-for="(value, key) in pageTypes"
+                :key="key"
+                :label="value.label"
+                :value="key"
+              />
             </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="12" v-if="canEdit">
+        <el-col v-if="canEdit" :span="12">
           <el-form-item label="资源名称" prop="resource">
             <el-select v-model="formData.resource" placeholder="请选择" filterable @change="handleResourceChange">
               <el-option
                 v-for="item in resourceOptions"
                 :key="item.label"
                 :label="item.label"
-                :value="item.label">
-              </el-option>
+                :value="item.label"
+              />
             </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="13" v-if="canEdit">
+        <el-col v-if="canEdit" :span="13">
           <el-form-item
             v-for="item in editTemplates"
-            :label="item.label"
             :key="item.key"
+            :label="item.label"
           >
             <el-popover
+              v-if="item.show"
               placement="right"
               trigger="hover"
             >
               <el-image
                 style="width: 800px; height: 350px;"
-                :src="require('../../assets/nodetable-' + item.key + '.jpg')"
-              >
-              </el-image>
+                :src="require('../../assets/' + formData.chosenPageType.toLowerCase() + '-' + item.key + '.jpg')"
+              />
               <el-button
+                slot="reference"
                 type="text"
                 icon="el-icon-edit"
                 size="medium"
-                slot="reference"
-                @click="item.dialogVisible = true"> 点击编辑
+                @click="item.dialogVisible = true"
+              > 点击编辑
               </el-button>
             </el-popover>
+
+            <el-button
+              v-else
+              type="text"
+              icon="el-icon-edit"
+              size="medium"
+              @click="item.dialogVisible = true"
+            > 点击编辑
+            </el-button>
+
             <el-dialog
               :visible.sync="item.dialogVisible"
-              width="70%">
+              width="70%"
+            >
               <json-editor
                 :value="JSON.stringify(item.jsonFileObj, null, 2)"
-                @input="item.jsonFileObj = JSON.parse($event)"/>
+                @input="item.jsonFileObj = JSON.parse($event)"
+              />
               <div slot="footer" class="dialog-footer">
                 <el-button @click="item.dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="item.dialogVisible = false">确 定</el-button>
@@ -66,15 +78,22 @@
             </el-dialog>
           </el-form-item>
         </el-col>
-        <el-col :span="13" v-if="canEdit">
+
+        <el-col v-if="canEdit" :span="13">
           <el-form-item label="路由">
-            <routes-tree-view v-model="routeFile" :resource-name="formData.resource" :page-type="formData.chosenPageType"></routes-tree-view>
+            <routes-tree-view
+              v-model="routeFile"
+              :resource-name="formData.resource"
+              :comp="comp"
+              :page-type="formData.chosenPageType"
+            />
           </el-form-item>
         </el-col>
-        <el-col :span="24" v-if="canEdit">
+
+        <el-col v-if="canEdit" :span="24">
           <el-form-item size="large">
-            <el-button type="primary" @click="submitForm" round>提交</el-button>
-            <el-button @click="resetForm" round>重置</el-button>
+            <el-button type="primary" round @click="submitForm">提交</el-button>
+            <el-button round @click="resetForm">重置</el-button>
           </el-form-item>
         </el-col>
       </el-form>
@@ -83,7 +102,7 @@
 </template>
 <script>
 import JsonEditor from '@/components/JsonEditorSpecial/index'
-import { createResource, listResources, getResource, updateResource, getMeta } from '@/api/k8sResource'
+import { createResource, getResource, updateResource, getMeta } from '@/api/k8sResource'
 import { mapGetters } from 'vuex'
 import RoutesTreeView from '@/components/RoutesTreeView/index'
 
@@ -95,6 +114,7 @@ export default {
         resource: '',
         chosenPageType: ''
       },
+      comp: '',
       rules: {
         resource: [{
           required: true,
@@ -109,10 +129,10 @@ export default {
       },
       canEdit: false,
       editTemplates: [],
-      pageTypes: [{ key: 'nodeTable', label: '普通资源操作页面' }],
+      pageTypes: [],
       routeVisible: false,
       routeFile: {},
-      resourceOptions: [],
+      resourceOptions: undefined,
 
       createTemplates: [],
       actionTemplates: [],
@@ -169,11 +189,23 @@ export default {
       }
     }
   },
+  watch: {
+    'formData.chosenPageType': function(newVal) {
+      this.comp = this.pageTypes[this.formData.chosenPageType].component
+    }
+  },
   created() {
     getResource({ token: this.token, kind: 'Frontend', name: 'routes-' + this.name, namespace: 'default' }).then(
       response => {
         if (this.$valid(response)) {
           this.routeFile = response.data
+        }
+      }
+    )
+    getResource({ kind: 'Frontend', name: 'pages', namespace: 'default' }).then(
+      response => {
+        if (this.$valid(response)) {
+          this.pageTypes = response.data.spec.pageTypes
         }
       }
     )
@@ -224,38 +256,46 @@ export default {
     },
     handleResourceChange(value) {
       for (const item of this.editTemplates) {
-        item.jsonFileObj.metadata.name = item.key + '-' + value.toLowerCase()
+        item.jsonFileObj.metadata.name = item.key.toLowerCase() + '-' + value.toLowerCase()
       }
     },
     handleGuideTypeChange(value) {
-      listResources({ token: this.token, kind: 'Frontend', labels: { 'spec.type': 'wizard' } }).then(
+      this.canEdit = false
+      getResource({ kind: 'Frontend', name: 'wizard-' + value.toLowerCase(), namespace: 'default' }).then(
         response => {
           if (this.$valid(response)) {
-            const guideName = 'wizard-' + value.toLowerCase()
-            const info = response.data.items.filter(item => item.metadata.name === guideName)[0].spec.data
+            // const guideName = 'wizard-' + value.toLowerCase()
+            // const info = response.data.items.filter(item => item.metadata.name === guideName)[0].spec.data
+            const info = response.data.spec.data
+            this.editTemplates = []
             for (const key in info.keys) {
               const temp = {}
               temp.key = key
-              temp.label = info.keys[key]
+              temp.label = info.keys[key].label
+              temp.show = info.keys[key].show
               temp.jsonFileObj = info.values[key]
               temp.dialogVisible = false
               this.editTemplates.push(temp)
             }
 
-            getMeta({ token: this.token }).then(
-              response => {
-                if (this.$valid(response)) {
-                  const data = response.data
-                  for (const key in data) {
-                    const curr = {}
-                    curr.value = key
-                    curr.label = key
-                    this.resourceOptions.push(curr)
+            if (!this.resourceOptions) {
+              this.resourceOptions = []
+              getMeta({ token: this.token }).then(
+                response => {
+                  if (this.$valid(response)) {
+                    const data = response.data
+                    for (const key in data) {
+                      const curr = {}
+                      curr.value = key
+                      curr.label = key
+                      this.resourceOptions.push(curr)
+                    }
                   }
-                }
-              })
+                })
+            }
+
+            this.canEdit = true
           }
-          this.canEdit = true
         })
     }
   }
