@@ -37,7 +37,7 @@ export default {
   mounted() {
     this.jsonEditor = CodeMirror.fromTextArea(this.$refs.textarea, {
       lineNumbers: true,
-      mode: 'application/json',
+      mode: 'text/x-java',
       gutters: ['CodeMirror-lint-markers'],
       theme: 'panda-syntax',
       lint: true
@@ -66,10 +66,12 @@ export default {
     .CodeMirror {
       height: auto;
       min-height: 300px;
+      max-height: 600px;
     }
 
     .CodeMirror-scroll {
       min-height: 300px;
+      max-height: 600px;
     }
 
     .cm-s-rubyblue span.cm-string {
