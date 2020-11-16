@@ -11,30 +11,29 @@
                 :key="item.key"
                 :label="item.label"
                 :value="item.key"
-              >
-              </el-option>
+              />
             </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="12" v-if="canEdit">
+        <el-col v-if="canEdit" :span="12">
           <el-form-item label="资源名称" prop="resource">
             <el-select v-model="formData.resource" placeholder="请选择" filterable @change="handleResourceChange">
               <el-option
                 v-for="item in resourceOptions"
                 :key="item.label"
                 :label="item.label"
-                :value="item.label">
-              </el-option>
+                :value="item.label"
+              />
             </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="13" v-if="canEdit">
+        <el-col v-if="canEdit" :span="13">
           <el-form-item
             v-for="item in editTemplates"
-            :label="item.label"
             :key="item.key"
+            :label="item.label"
           >
             <el-popover
               placement="right"
@@ -42,23 +41,25 @@
             >
               <el-image
                 style="width: 800px; height: 350px;"
-                :src="require('../../assets/nodetable-' + item.key + '.jpg')"
-              >
-              </el-image>
+                :src="require('../../assets/' + formData.chosenPageType.toLowerCase() + '-' + item.key + '.jpg')"
+              />
               <el-button
+                slot="reference"
                 type="text"
                 icon="el-icon-edit"
                 size="medium"
-                slot="reference"
-                @click="item.dialogVisible = true"> 点击编辑
+                @click="item.dialogVisible = true"
+              > 点击编辑
               </el-button>
             </el-popover>
             <el-dialog
               :visible.sync="item.dialogVisible"
-              width="70%">
+              width="70%"
+            >
               <json-editor
                 :value="JSON.stringify(item.jsonFileObj, null, 2)"
-                @input="item.jsonFileObj = JSON.parse($event)"/>
+                @input="item.jsonFileObj = JSON.parse($event)"
+              />
               <div slot="footer" class="dialog-footer">
                 <el-button @click="item.dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="item.dialogVisible = false">确 定</el-button>
@@ -66,15 +67,19 @@
             </el-dialog>
           </el-form-item>
         </el-col>
-        <el-col :span="13" v-if="canEdit">
+        <el-col v-if="canEdit" :span="13">
           <el-form-item label="路由">
-            <routes-tree-view v-model="routeFile" :resource-name="formData.resource" :page-type="formData.chosenPageType"></routes-tree-view>
+            <routes-tree-view
+              v-model="routeFile"
+              :resource-name="formData.resource"
+              :page-type="formData.chosenPageType"
+            />
           </el-form-item>
         </el-col>
-        <el-col :span="24" v-if="canEdit">
+        <el-col v-if="canEdit" :span="24">
           <el-form-item size="large">
-            <el-button type="primary" @click="submitForm" round>提交</el-button>
-            <el-button @click="resetForm" round>重置</el-button>
+            <el-button type="primary" round @click="submitForm">提交</el-button>
+            <el-button round @click="resetForm">重置</el-button>
           </el-form-item>
         </el-col>
       </el-form>
@@ -109,7 +114,7 @@ export default {
       },
       canEdit: false,
       editTemplates: [],
-      pageTypes: [{ key: 'nodeTable', label: '普通资源操作页面' }],
+      pageTypes: [],
       routeVisible: false,
       routeFile: {},
       resourceOptions: [],
@@ -177,6 +182,13 @@ export default {
         }
       }
     )
+    getResource({ kind: 'Frontend', name: 'pages', namespace: 'default' }).then(
+      response => {
+        if (this.$valid(response)) {
+          this.pageTypes = response.data.spec.pageTypes
+        }
+      }
+    )
   },
   computed: {
     ...mapGetters(['token', 'name'])
@@ -228,7 +240,7 @@ export default {
       }
     },
     handleGuideTypeChange(value) {
-      listResources({ token: this.token, kind: 'Frontend', labels: { 'spec.type': 'wizard' } }).then(
+      listResources({ token: this.token, kind: 'Frontend', labels: { 'spec.type': 'wizard' }}).then(
         response => {
           if (this.$valid(response)) {
             const guideName = 'wizard-' + value.toLowerCase()
