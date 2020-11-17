@@ -21,14 +21,21 @@
         <el-form ref="routeForm" :model="routeContent" :rules="rules" size="medium" label-width="100px">
 
           <el-col :span="21">
-            <el-form-item label="title">
+            <el-form-item label="菜单名">
               <el-input v-model="routeContent.title" placeholder="title" clearable :style="{width: '100%'}" />
             </el-form-item>
           </el-col>
 
           <el-col :span="21">
-            <el-form-item label="icon">
-              <el-input v-model="routeContent.icon" placeholder="icon" clearable :style="{width: '100%'}" />
+            <el-form-item label="图标名">
+              <el-select v-model="routeContent.icon" placeholder="icon" clearable :style="{width: '100%'}">
+                <el-option
+                  v-for="(item, key) in icons"
+                  :key="key"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-form>
@@ -42,6 +49,8 @@
 </template>
 
 <script>
+import { getResource } from '@/api/k8sResource'
+
 export default {
   name: 'RoutesTreeView',
   props: ['value', 'resourceName', 'comp', 'pageType'],
@@ -50,6 +59,7 @@ export default {
       treeData: undefined,
       routeEditVisible: false,
       submitRequire: undefined,
+      icons: [],
       routeContent: {
         title: undefined,
         icon: undefined
@@ -71,6 +81,13 @@ export default {
   created() {
     const routes = this.value.spec.routes
     this.treeData = this.generateTreeData(routes)
+    getResource({ kind: 'Metadata', namespace: 'default', name: 'icon' }).then(
+      response => {
+        if (this.$valid(response)) {
+          this.icons = response.data.spec.icons
+        }
+      }
+    )
   },
   methods: {
     generateTreeData(routes, parent) {

@@ -1,6 +1,6 @@
 <template>
   <div class="imageMarket-app-container">
-    <el-divider content-position="left">{{ $route.meta.kind }}</el-divider>
+    <el-divider content-position="left"><el-button icon="el-icon-circle-plus" type="text">{{ this.$route.meta.kind }}</el-button></el-divider>
     <el-row>
       <el-tabs v-model="chosenTabName" tab-position="top" @tab-click="handleTabClick">
         <el-tab-pane label="All" name="all" />
