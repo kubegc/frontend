@@ -66,6 +66,15 @@ export function getKinds(data) {
   return res
 }
 
+export function queryTest(data) {
+  var res = request({
+    url: 'http://39.106.40.190:31100/dos-lab/crosscloud/execRequest',
+    method: 'post',
+    data
+  })
+  return res
+}
+
 // export function validateRes(res) {
 //   if (res.code === 20000) {
 //     return true
