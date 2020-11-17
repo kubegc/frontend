@@ -45,7 +45,7 @@
 <script>
 import { mapGetters } from "vuex";
 import JsonEditor from "@/components/JsonEditorSpecial/index";
-import { createResource, getResource, updateResource, listResources, queryTest } from '@/api/k8sResource'
+import { createResource, getResource, updateResource, listResources, queryTest, getMeta } from '@/api/k8sResource'
 import axios from "axios";
 
 export default {
@@ -66,7 +66,8 @@ export default {
       jsonString: {},
       cloud_kind: "AliyunECS",
       resTemp: [],
-      requestPara: {}
+      requestPara: {},
+      id: ""
     };
   },
   mounted() {
@@ -87,6 +88,11 @@ export default {
         this.options.push(temp);
       }
       
+    }),
+    getResource({
+       kind: 'Metadata', name: 'cloudid', namespace: 'default'
+    }).then((response) => {
+      this.id = response.data.spec.id
     })
   },
   methods: {
@@ -106,7 +112,7 @@ export default {
       var temp = this.requestPara[this.value].lifecycle
       temp[this.value] = JSON.parse(this.form.desc)
      queryTest({
-      id: 'id001',
+      id: this.id,
       lifecycle: temp
     }).then((response) => {
       this.jsonString = response.data
