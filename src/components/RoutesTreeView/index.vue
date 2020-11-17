@@ -5,11 +5,11 @@
         <span>{{ node.label }}</span>
         <span>
           <el-button
+            v-if="data.level === 2 && !data.oneChild"
             type="text"
             size="mini"
             icon="el-icon-circle-plus"
             @click="append(data)"
-            v-if="data.level === 2 && !data.oneChild"
           >
             增加子路由
           </el-button>
@@ -44,7 +44,7 @@
 <script>
 export default {
   name: 'RoutesTreeView',
-  props: ['value', 'resourceName', 'pageType'],
+  props: ['value', 'resourceName', 'comp', 'pageType'],
   data() {
     return {
       treeData: undefined,
@@ -112,12 +112,13 @@ export default {
           routesTemp = routesTemp[0].children
         }
         const routeContentTemp = {
-          path: this.resourceName + '-' + new Date().getTime(),
+          path: this.pageType.toLowerCase() + '-' + this.resourceName + '-' + new Date().getTime(),
           name: this.resourceName,
-          component: '/charts/' + this.pageType,
+          component: this.comp,
           meta: {
             title: this.routeContent.title,
-            icon: this.routeContent.icon
+            icon: this.routeContent.icon,
+            kind: this.pageType === 'appMarket' ? this.resourceName : undefined
           }
         }
         routesTemp.push(routeContentTemp)

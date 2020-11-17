@@ -101,7 +101,13 @@ export const constantRoutes = [
   {
     path: '/apiAnalysis',
     component: () => import('@/views/sysConfig/lifecycle'),
-    meta: { icon: 'cloud', title: 'API分析' }
+    meta: { icon: 'cloud', title: 'API分析' },
+  },
+{
+    path: '/framework-construction',
+    component: () => import('@/views/pipeline/framework-construction'),
+    meta: { icon: 'pipeline', title: '多云协作框架' }
+
   }
   //
   // {

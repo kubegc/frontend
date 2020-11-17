@@ -27,7 +27,7 @@
                 </el-col>
                 <el-col :span="16">
                   <div style="display: block;overflow: hidden;height: 90px">
-                    <p style="margin: 0;"><strong>{{ item.metadata.name }}}</strong></p>
+                    <p style="margin: 0;"><strong>{{ item.metadata.name }}</strong></p>
                     <p v-if="item.describe" style="margin: 0;color: gray;overflow: hidden">
                       {{ item.describe }}
                     </p>
@@ -64,7 +64,7 @@ export default {
     }
   },
   created() {
-    listResources({ kind: 'Image' }).then(
+    listResources({ kind: this.$route.meta.kind }).then(
       response => {
         if (this.$valid(response)) {
           this.cardsData = response.data.items
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     handleClick(detail) {
-      this.$router.push({ name: 'appDetail', params: { push: true, kind: 'Image', detail }})
+      this.$router.push({ name: 'appDetail', params: { push: true, kind: this.$route.meta.kind, detail }})
     }
   }
 }
@@ -91,7 +91,7 @@ export default {
   box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
   0px 3px 6px 0px rgba(0, 0, 0, 0.12),
   0px 5px 12px 4px rgba(0, 0, 0, 0.09);
-
+  margin-top: 30px;
 }
 
 .el-card:hover {
