@@ -104,7 +104,7 @@ export default {
     }, 
     onSubmit() {
       var temp = this.requestPara[this.value].lifecycle
-      temp[this.value] = {}
+      temp[this.value] = JSON.parse(this.form.desc)
      queryTest({
       id: 'id001',
       lifecycle: temp
