@@ -59,10 +59,10 @@ export default {
   ::v-deep {
     .CodeMirror {
       height: auto;
-      min-height: 300px;
+      min-height: 200px;
     }
     .CodeMirror-scroll {
-      min-height: 300px;
+      min-height: 200px;
     }
     .cm-s-rubyblue span.cm-string {
       color: #F08047;
