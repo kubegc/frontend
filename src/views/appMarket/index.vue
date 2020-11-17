@@ -3,7 +3,7 @@
     <el-divider content-position="left">{{ $route.meta.kind }}</el-divider>
     <el-row>
       <el-tabs v-model="chosenTabName" tab-position="top" @tab-click="handleTabClick">
-        <el-tab-pane label="PublicCloud" name="PublicCloud" />
+        <el-tab-pane label="All" name="all" />
         <el-tab-pane label="AliyunECS" name="AliyunECS" />
         <el-tab-pane label="BaiduBCE" name="BaiduBCE" />
         <el-tab-pane label="TencentCVM" name="TencentCVM" />
@@ -60,7 +60,13 @@
       </a>
     </el-row>
     <el-row style="margin-top: 30px">
-      <pagination class="pagination" />
+      <pagination
+        v-show="total > listQuery.limit"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        @pagination="getData(chosenTabName)"
+      />
     </el-row>
   </div>
 
@@ -69,13 +75,16 @@
 <script>
 import { listResources } from '@/api/k8sResource'
 import Pagination from '@/components/Pagination'
+
 export default {
   components: { Pagination },
   data() {
     return {
       cardsData: [],
-      chosenTabName: undefined,
+      chosenTabName: 'all',
+      total: 0,
       listQuery: {
+        page: 1,
         limit: 12,
         continue: 1
       }
@@ -91,34 +100,22 @@ export default {
     handleTabClick(tab) {
       const type = tab.name
       this.getData(type)
-    },
-    load() {
-      const type = this.chosenTabName
-      listResources({
-        kind: this.$route.meta.kind,
-        labels: { type },
-        limit: this.listQuery.limit,
-        page: this.listQuery.continue
-      }).then(
-        response => {
-          if (this.$valid(response)) {
-            this.cardsData.concat(response.data.items)
-          }
-        })
+      this.resetListQuery()
     },
     resetListQuery() {
-      this.listQuery.continue = 1
+      this.listQuery.page = 1
     },
     getData(type) {
       listResources({
         kind: this.$route.meta.kind,
-        labels: { type },
+        labels: { type: type === 'all' ? undefined : type },
         limit: this.listQuery.limit,
-        page: this.listQuery.continue
+        page: this.listQuery.page
       }).then(
         response => {
           if (this.$valid(response)) {
-            this.listQuery.continue = response.data.continue
+            this.total = response.data.metadata.totalCount
+            this.listQuery.continue = response.data.metadata.continue
             this.cardsData = response.data.items
           }
         }
@@ -135,7 +132,7 @@ export default {
   line-height: 1.67;
 }
 
-.pagination .el-card {
+.el-card {
   box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
   0px 3px 6px 0px rgba(0, 0, 0, 0.12),
   0px 5px 12px 4px rgba(0, 0, 0, 0.09);

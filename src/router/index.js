@@ -89,11 +89,6 @@ export const constantRoutes = [
     meta: { icon: 'pipeline', title: '多云协作框架' }
   },
   {
-    path: '/cloud',
-    component: () => import('@/views/cloudPlatform/index'),
-    meta: { icon: 'pipeline', title: '云服务' }
-  },
-  {
     path: '/testRequest',
     component: () => import('@/views/cloudPlatform/testRequest'),
     meta: { icon: 'cloud', title: '请求云服务' }
