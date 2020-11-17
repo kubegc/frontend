@@ -27,13 +27,11 @@ router.beforeEach(async(to, from, next) => {
     } else {
       try {
         if (store.getters.role) {
-          console.log('直接走了')
           if (to.path === '/') {
             next({ path: '/in/welcome' })
           }
           next()
         } else {
-          console.log('搞点info')
           // get user info
           const { role } = await store.dispatch('user/getInfo')
           const { spec: { routes }} = await store.dispatch('user/getRoutesConfig', role)

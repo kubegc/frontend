@@ -30,7 +30,7 @@
               display: inline;
             "
             @click.native="create"
-            >确认
+          >确认
           </el-button>
           <!-- <el-button type="primary" style="float:right;margin-top:20px;height:40px;display:inline;margin-right:0px;" >取消</el-button> -->
         </div>
@@ -46,26 +46,26 @@
         </div>
         <img
           style="display: inline-block; vertical-align: middle; width: 28px"
-          :src="require('@/assets/images/' + account.logo)"
+          :src="require('@/assets/clouds/' + account.logo)"
           alt
-        />
+        >
         <span style="vertical-align: middle">
           <p style="display: inline; font-size: 16px">{{ account.kindDes }}</p>
         </span>
       </el-card>
     </div>
     <div
-      style="text-align: center; margin-top: 30px"
       v-if="cloudConfig.length == 0"
+      style="text-align: center; margin-top: 30px"
     >
       暂无数据
     </div>
     <div>
       <el-row :gutter="20" style="margin-top: 10px">
         <el-col
-          :span="6"
           v-for="(item, index) in cloudConfig"
           :key="item.name"
+          :span="6"
           style="margin-bottom: 30px"
         >
           <el-card class="box-card" :style="height">
@@ -76,9 +76,9 @@
                   vertical-align: middle;
                   width: 13%;
                 "
-                :src="require('@/assets/images/' + item.logo)"
+                :src="require('@/assets/clouds/' + item.logo)"
                 alt
-              />
+              >
               <span style="vertical-align: middle">
                 <p style="font-size: 16px; display: inline; padding: 5px 0">
                   <strong>{{ item.kindDes }}</strong>
@@ -92,9 +92,9 @@
                   vertical-align: middle;
                   width: 13%;
                 "
-                :src="require('@/assets/images/' + item.logo)"
+                :src="require('@/assets/clouds/' + item.logo)"
                 alt
-              />
+              >
               <span style="vertical-align: middle">
                 <p style="font-size: 16px; display: inline; padding: 5px 0">
                   <strong>{{ account.kind }}</strong>
@@ -114,8 +114,7 @@
                 }"
                 tag="a"
                 class="link"
-                >{{ item.button }}</router-link
-              >
+              >{{ item.button }}</router-link>
             </el-button>
           </el-card>
         </el-col>
@@ -130,270 +129,270 @@ import {
   listResources,
   updateResource,
   getResource
-} from "@/api/k8sResource";
+} from '@/api/k8sResource'
 import JsonEditor from '@/components/JsonEditor'
 
 export default {
-  name: "Template",
+  name: 'Template',
   components: {
-    JsonEditor,
+    JsonEditor
   },
   data() {
     return {
       dialogTableVisible: false,
       value: [],
       json: {},
-      cloud_kind: "aliyunvm",
-      catalog_kind: "catalog",
-      frontend_kind: "Frontend",
-      height: "height: 190px",
-      title: "",
-      styleConfig: "",
-      namespace: "default",
+      cloud_kind: 'aliyunvm',
+      catalog_kind: 'catalog',
+      frontend_kind: 'Frontend',
+      height: 'height: 190px',
+      title: '',
+      styleConfig: '',
+      namespace: 'default',
       account: {},
-      current: "account",
-      form_kind: "form",
-      namespace: "default",
+      current: 'account',
+      form_kind: 'form',
+      namespace: 'default',
       cloud: {},
-      template_kind: "template",
-      cloudController_kind: "CloudController",
+      template_kind: 'template',
+      cloudController_kind: 'CloudController',
       cloudConfig: [],
       createDialogVisible: false,
       createResource: '创建对象',
       createTemplate: {}
-    };
+    }
   },
 
   mounted() {},
   created() {
     if (this.$route.query.account) {
-      this.account = this.$route.query.account;
+      this.account = this.$route.query.account
       this.styleConfig = {
         AliyunVM: {
-          logo: "aliyun.jpg",
-          kindDes: "Alibaba Cloud",
-          name: "Upsilon",
-          button: "详情",
-          router: "/resourceInfo/monitor",
-          kind: "AliyunVM",
+          logo: 'aliyun.jpg',
+          kindDes: 'Alibaba Cloud',
+          name: 'Upsilon',
+          button: '详情',
+          router: '/resourceInfo/monitor',
+          kind: 'AliyunVM'
         },
         TencentVM: {
-          logo: "tencent.jpg",
-          kindDes: "Tencent Cloud",
-          name: "Omicron",
-          button: "详情",
-          router: "/resourceInfo/monitor",
-          kind: "TencentVM",
+          logo: 'tencent.jpg',
+          kindDes: 'Tencent Cloud',
+          name: 'Omicron',
+          button: '详情',
+          router: '/resourceInfo/monitor',
+          kind: 'TencentVM'
         },
         AmazonVM: {
-          logo: "amazon.jpg",
-          kindDes: "Amazon Web Services",
-          name: "Upsilon",
-          button: "详情",
-          router: "/resourceInfo/monitor",
-          kind: "AmazonVM",
+          logo: 'amazon.jpg',
+          kindDes: 'Amazon Web Services',
+          name: 'Upsilon',
+          button: '详情',
+          router: '/resourceInfo/monitor',
+          kind: 'AmazonVM'
         },
         BaiduVM: {
-          logo: "baidu.png",
-          kindDes: "Baidu Cloud",
-          name: "Omicron",
-          button: "详情",
-          router: "/resourceInfo/monitor",
-          kind: "BaiduVM",
+          logo: 'baidu.png',
+          kindDes: 'Baidu Cloud',
+          name: 'Omicron',
+          button: '详情',
+          router: '/resourceInfo/monitor',
+          kind: 'BaiduVM'
         },
         JDCloudVM: {
-          logo: "jd.png",
-          kindDes: "JD Cloud",
-          name: "Omicron",
-          button: "详情",
-          router: "/resourceInfo/monitor",
-          kind: "JDCloudVM",
-        },
-      };
+          logo: 'jd.png',
+          kindDes: 'JD Cloud',
+          name: 'Omicron',
+          button: '详情',
+          router: '/resourceInfo/monitor',
+          kind: 'JDCloudVM'
+        }
+      }
     } else {
       this.styleConfig = {
         AliyunVM: {
-          logo: "aliyun.jpg",
-          kindDes: "Alibaba Cloud",
-          name: "Upsilon",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "AliyunVM",
+          logo: 'aliyun.jpg',
+          kindDes: 'Alibaba Cloud',
+          name: 'Upsilon',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'AliyunVM'
         },
         TencentVM: {
-          logo: "tencent.jpg",
-          kindDes: "Tencent Cloud",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "TencentVM",
+          logo: 'tencent.jpg',
+          kindDes: 'Tencent Cloud',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'TencentVM'
         },
         AmazonVM: {
-          logo: "amazon.jpg",
-          kindDes: "Amazon Web Services",
-          name: "Upsilon",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "AmazonVM",
+          logo: 'amazon.jpg',
+          kindDes: 'Amazon Web Services',
+          name: 'Upsilon',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'AmazonVM'
         },
         BaiduVM: {
-          logo: "baidu.png",
-          kindDes: "Baidu Cloud",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "BaiduVM",
+          logo: 'baidu.png',
+          kindDes: 'Baidu Cloud',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'BaiduVM'
         },
         JDCloudVM: {
-          logo: "jd.png",
-          kindDes: "JD Cloud",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "JDCloudVM",
+          logo: 'jd.png',
+          kindDes: 'JD Cloud',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'JDCloudVM'
         },
         AzureVM: {
-          logo: "azure.png",
-          kindDes: "Azure Cloud",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "AzureVM",
+          logo: 'azure.png',
+          kindDes: 'Azure Cloud',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'AzureVM'
         },
         CloudStack: {
-          logo: "cloudstack.png",
-          kindDes: "CloudStack",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "CloudStack",
+          logo: 'cloudstack.png',
+          kindDes: 'CloudStack',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'CloudStack'
         },
         GoogleVM: {
-          logo: "google.jpg",
-          kindDes: "Google Cloud",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "GoogleVM",
+          logo: 'google.jpg',
+          kindDes: 'Google Cloud',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'GoogleVM'
         },
         OpenStack: {
-          logo: "openstack.png",
-          kindDes: "OpenStack",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "OpenStack",
+          logo: 'openstack.png',
+          kindDes: 'OpenStack',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'OpenStack'
         },
         Cloudscale: {
-          logo: "cloudscale.png",
-          kindDes: "Cloudscale",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "Cloudscale",
+          logo: 'cloudscale.png',
+          kindDes: 'Cloudscale',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'Cloudscale'
         },
         GridScale: {
-          logo: "gridscale.png",
-          kindDes: "GridScale",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "GridScale",
+          logo: 'gridscale.png',
+          kindDes: 'GridScale',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'GridScale'
         },
         DigitalOcean: {
-          logo: "digitalocean.png",
-          kindDes: "DigitalOcean",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "DigitalOcean",
+          logo: 'digitalocean.png',
+          kindDes: 'DigitalOcean',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'DigitalOcean'
         },
         Gandi: {
-          logo: "gandi.png",
-          kindDes: "Gandi",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "Gandi",
+          logo: 'gandi.png',
+          kindDes: 'Gandi',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'Gandi'
         },
         Libvirt: {
-          logo: "libvirt.png",
-          kindDes: "Libvirt",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "Libvirt",
+          logo: 'libvirt.png',
+          kindDes: 'Libvirt',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'Libvirt'
         },
         vCloud: {
-          logo: "vcloud.png",
-          kindDes: "vCloud",
-          name: "Omicron",
-          button: "显示实例",
-          router: "/resourceInfo/instance",
-          kind: "vCloud",
-        },
-      };
+          logo: 'vcloud.png',
+          kindDes: 'vCloud',
+          name: 'Omicron',
+          button: '显示实例',
+          router: '/resourceInfo/instance',
+          kind: 'vCloud'
+        }
+      }
       listResources({
         kind: this.cloudController_kind,
         limit: 15,
-        namespace: this.namespace,
+        namespace: this.namespace
       }).then((response) => {
         if (this.validateRes(response) == 1) {
-          var itemtemp = response.data.items;
+          var itemtemp = response.data.items
           for (let i = 0; i < itemtemp.length; i++) {
-            var singleCloud = {};
-            console.log(itemtemp[i]);
+            var singleCloud = {}
+            console.log(itemtemp[i])
             singleCloud.logo = this.styleConfig[
               itemtemp[i].spec.data.kind
-            ].logo;
+            ].logo
             singleCloud.router = this.styleConfig[
               itemtemp[i].spec.data.kind
-            ].router;
+            ].router
             singleCloud.kindDes = this.styleConfig[
               itemtemp[i].spec.data.kind
-            ].kindDes;
+            ].kindDes
             singleCloud.button = this.styleConfig[
               itemtemp[i].spec.data.kind
-            ].button;
+            ].button
             singleCloud.kind = this.styleConfig[
               itemtemp[i].spec.data.kind
-            ].kind;
-            singleCloud.name = itemtemp[i].metadata.name;
-            this.cloudConfig.push(singleCloud);
+            ].kind
+            singleCloud.name = itemtemp[i].metadata.name
+            this.cloudConfig.push(singleCloud)
           }
-          //console.log(this.cloudConfig)
+          // console.log(this.cloudConfig)
         }
-      });
+      })
     }
 
     if (this.$route.meta.data) {
-      this.cloud = this.$route.meta.data;
+      this.cloud = this.$route.meta.data
     }
     if (this.$route.query.current) {
-      if (this.current == "account") {
-        console.log(this.$route.query.account);
-        this.current = "instance";
+      if (this.current == 'account') {
+        console.log(this.$route.query.account)
+        this.current = 'instance'
       }
-      this.cloudConfig = [];
+      this.cloudConfig = []
       listResources({
         kind: this.$route.query.account.kind,
-        namespace: this.namespace,
+        namespace: this.namespace
       }).then((response) => {
         if (this.validateRes(response) == 1) {
-          var itemtemp = response.data.items;
+          var itemtemp = response.data.items
           for (let i = 0; i < itemtemp.length; i++) {
-            var singleCloud = {};
-            singleCloud.logo = this.styleConfig[itemtemp[i].kind].logo;
-            //console.log()
-            singleCloud.router = this.styleConfig[itemtemp[i].kind].router;
-            singleCloud.kindDes = this.styleConfig[itemtemp[i].kind].kindDes;
-            singleCloud.button = this.styleConfig[itemtemp[i].kind].button;
-            singleCloud.name = itemtemp[i].metadata.name;
-            this.cloudConfig.push(singleCloud);
+            var singleCloud = {}
+            singleCloud.logo = this.styleConfig[itemtemp[i].kind].logo
+            // console.log()
+            singleCloud.router = this.styleConfig[itemtemp[i].kind].router
+            singleCloud.kindDes = this.styleConfig[itemtemp[i].kind].kindDes
+            singleCloud.button = this.styleConfig[itemtemp[i].kind].button
+            singleCloud.name = itemtemp[i].metadata.name
+            this.cloudConfig.push(singleCloud)
           }
-          //console.log(this.cloudConfig)
+          // console.log(this.cloudConfig)
         }
-      });
+      })
 
       // this.cloudConfig = [
       //   {
@@ -410,36 +409,36 @@ export default {
   methods: {
     validateRes(res) {
       if (res.code == 20000) {
-        return 1;
+        return 1
       } else {
         this.$notify({
-          title: "error",
+          title: 'error',
           message: res.data,
-          type: "warning",
-          duration: 3000,
-        });
-        return 0;
+          type: 'warning',
+          duration: 3000
+        })
+        return 0
       }
     },
 
     createJson() {
-      this.createDialogVisible = true;
+      this.createDialogVisible = true
     },
 
     handleDrag() {
-      this.$refs.select.blur();
+      this.$refs.select.blur()
     },
 
     handleSuccess() {
       this.$notify({
-        title: "Success",
-        message: "操作成功",
-        type: "success",
-        duration: 2000,
-      });
-    },
-  },
-};
+        title: 'Success',
+        message: '操作成功',
+        type: 'success',
+        duration: 2000
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss">

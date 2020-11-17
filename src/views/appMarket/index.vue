@@ -1,6 +1,14 @@
 <template>
   <div class="imageMarket-app-container">
     <el-divider content-position="left">{{ $route.meta.kind }}</el-divider>
+    <el-row>
+      <el-tabs v-model="chosenTabName" tab-position="top" @tab-click="handleTabClick">
+        <el-tab-pane label="PublicCloud" name="PublicCloud" />
+        <el-tab-pane label="AliyunECS" name="AliyunECS" />
+        <el-tab-pane label="BaiduBCE" name="BaiduBCE" />
+        <el-tab-pane label="TencentCVM" name="TencentCVM" />
+      </el-tabs>
+    </el-row>
     <el-row
       :gutter="20"
     >
@@ -20,9 +28,9 @@
               <el-row :gutter="20">
                 <el-col :span="8">
                   <el-image
-                    style="border-radius: 2px;"
-                    :src="require('../../assets/' + (item.avatar ? item.avatar : 'avatar.jpg'))"
-                    :fit="'fill'"
+                    style="border-radius: 2px;width: 100px; height: 100px"
+                    :src="require('../../assets' + (item.avatar ? item.avatar : '/avatar.jpg'))"
+                    :fit="'fit'"
                   />
                 </el-col>
                 <el-col :span="16">
@@ -51,30 +59,70 @@
         </el-col>
       </a>
     </el-row>
+    <el-row style="margin-top: 30px">
+      <pagination class="pagination" />
+    </el-row>
   </div>
+
 </template>
 
 <script>
 import { listResources } from '@/api/k8sResource'
-
+import Pagination from '@/components/Pagination'
 export default {
+  components: { Pagination },
   data() {
     return {
-      cardsData: []
+      cardsData: [],
+      chosenTabName: undefined,
+      listQuery: {
+        limit: 12,
+        continue: 1
+      }
     }
   },
   created() {
-    listResources({ kind: this.$route.meta.kind }).then(
-      response => {
-        if (this.$valid(response)) {
-          this.cardsData = response.data.items
-        }
-      }
-    )
+    this.getData()
   },
   methods: {
     handleClick(detail) {
       this.$router.push({ name: 'appDetail', params: { push: true, kind: this.$route.meta.kind, detail }})
+    },
+    handleTabClick(tab) {
+      const type = tab.name
+      this.getData(type)
+    },
+    load() {
+      const type = this.chosenTabName
+      listResources({
+        kind: this.$route.meta.kind,
+        labels: { type },
+        limit: this.listQuery.limit,
+        page: this.listQuery.continue
+      }).then(
+        response => {
+          if (this.$valid(response)) {
+            this.cardsData.concat(response.data.items)
+          }
+        })
+    },
+    resetListQuery() {
+      this.listQuery.continue = 1
+    },
+    getData(type) {
+      listResources({
+        kind: this.$route.meta.kind,
+        labels: { type },
+        limit: this.listQuery.limit,
+        page: this.listQuery.continue
+      }).then(
+        response => {
+          if (this.$valid(response)) {
+            this.listQuery.continue = response.data.continue
+            this.cardsData = response.data.items
+          }
+        }
+      )
     }
   }
 }
@@ -84,10 +132,10 @@ export default {
 .imageMarket-app-container {
   padding: 10px 20px;
   font-size: 14px;
-  line-height: 1.67
+  line-height: 1.67;
 }
 
-.el-card {
+.pagination .el-card {
   box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
   0px 3px 6px 0px rgba(0, 0, 0, 0.12),
   0px 5px 12px 4px rgba(0, 0, 0, 0.09);
