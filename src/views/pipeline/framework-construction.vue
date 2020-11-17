@@ -13,12 +13,9 @@
         />
     </div>
     <div style="width:100%;float:left;margin:20px 0 0 0;">
-        <div style="float:left;width:50%">
-            <p style="font-size:16px;margin:0 0 0 10px;height: 10%;width:100%"><a style="color:red;font-size:18px;">步骤2：</a>提取关键云服务操作：</p>
-
-        </div>
-        <div style="float:left;width:50%">
-            <p style="font-size:16px;margin:0 0 0 10px;height: 10%;width:100%"><a style="color:red;font-size:18px;">步骤3：</a>构造云服务树形调用链：</p>
+        <div style="float:left;width:100%">
+            <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:50%display:inline-block;"><a style="color:red;font-size:18px;">步骤2：</a>提取关键云服务操作：</p>
+            <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:50%;display:inline-block;"><a style="color:red;font-size:18px;">步骤3：</a>构造云服务树形调用链：</p>
         </div>
     </div>
   </div>
@@ -37,8 +34,63 @@ export default {
   data() {
     return {
       percentage : 25,
-      jsonString:"import com.aliyuncs.DefaultAcsClient; \nimport com.aliyuncs.IAcsClient;\nimport com.aliyuncs.ecs.model.v20140526.CreateSnapshotRequest;\nimport com.aliyuncs.ecs.model.v20140526.CreateSnapshotResponse;\nimport com.aliyuncs.exceptions.ClientException;\nimport com.aliyuncs.exceptions.ServerException;\nimport com.aliyuncs.profile.DefaultProfile;\n/* pom.xml\n<dependency>\n  <groupId>com.aliyun</groupId>\n  <artifactId>aliyun-java-sdk-core</artifactId>\n  <version>3.0.9</version>\n</dependency>\n<dependency>\n  <groupId>com.aliyun</groupId>\n  <artifactId>aliyun-java-sdk-ecs</artifactId>\n  <version>4.10.1</version>\n</dependency>*/ \n\npublic class CreateSnapshotExample {\n\nprivate String accessKeyId = \"<AccessKey>\";\nprivate String accessSecret = \"<AccessSecret>\";\nprivate String regionId = \"<RegionId>\";\nprivate String diskId = \"<DiskId>\";\n\npublic void createSnapshot() {\n  DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessSecret);\n  IAcsClient client = new DefaultAcsClient(profile);\n  CreateSnapshotRequest request = new CreateSnapshotRequest();\n  request.setRegionId(regionId);\n  request.setDiskId(diskId); \n  try {\n        CreateSnapshotResponse response = client.getAcsResponse(request);\n        logInfo(response.getSnapshotId());\n      } catch (ServerException e) {\n        logInfo(String.format(\"Fail. Something with your connection with Aliyun go incorrect. ErrorCode: %s\",e.getErrCode()));\n      } catch (ClientException e) {\n        logInfo(String.format(\"Fail. Business error. ErrorCode: %s, RequestId: %s\",e.getErrCode(), e.getRequestId()));\n    }\n  }\n\n  public static void main(String[] args) { \n    new CreateSnapshotExample().createSnapshot();\n  }\n}",
-      option: {
+      jsonString: "import com.aliyuncs.DefaultAcsClient; \nimport com.aliyuncs.IAcsClient;\nimport com.aliyuncs.ecs.model.v20140526.CreateSnapshotRequest;\nimport com.aliyuncs.ecs.model.v20140526.CreateSnapshotResponse;\nimport com.aliyuncs.exceptions.ClientException;\nimport com.aliyuncs.exceptions.ServerException;\nimport com.aliyuncs.profile.DefaultProfile;\n/* pom.xml\n<dependency>\n  <groupId>com.aliyun</groupId>\n  <artifactId>aliyun-java-sdk-core</artifactId>\n  <version>3.0.9</version>\n</dependency>\n<dependency>\n  <groupId>com.aliyun</groupId>\n  <artifactId>aliyun-java-sdk-ecs</artifactId>\n  <version>4.10.1</version>\n</dependency>*/ \n\npublic class CreateSnapshotExample {\n\nprivate String accessKeyId = \"<AccessKey>\";\nprivate String accessSecret = \"<AccessSecret>\";\nprivate String regionId = \"<RegionId>\";\nprivate String diskId = \"<DiskId>\";\n\npublic void createSnapshot() {\n  DefaultProfile profile = DefaultProfile.getProfile(regionId, accessKeyId, accessSecret);\n  IAcsClient client = new DefaultAcsClient(profile);\n  CreateSnapshotRequest request = new CreateSnapshotRequest();\n  request.setRegionId(regionId);\n  request.setDiskId(diskId); \n  try {\n        CreateSnapshotResponse response = client.getAcsResponse(request);\n        logInfo(response.getSnapshotId());\n      } catch (ServerException e) {\n        logInfo(String.format(\"Fail. Something with your connection with Aliyun go incorrect. ErrorCode: %s\",e.getErrCode()));\n      } catch (ClientException e) {\n        logInfo(String.format(\"Fail. Business error. ErrorCode: %s, RequestId: %s\",e.getErrCode(), e.getRequestId()));\n    }\n  }\n\n  public static void main(String[] args) { \n    new CreateSnapshotExample().createSnapshot();\n  }\n}",
+         textStyle: { //标签的字体样式
+            color : '#F5FFFA', //字体颜色
+            fontStyle : 'normal',//文字字体的风格 'normal'标准 'italic'斜体 'oblique' 倾斜
+            fontWeight : 'bolder',//'normal'标准'bold'粗的'bolder'更粗的'lighter'更细的或100 | 200 | 300 | 400...
+            fontFamily : 'sans-serif', //文字的字体系列
+            fontSize : 20, //字体大小
+        },
+        itemStyle: {
+            normal: {
+                color: "#000000"
+            }
+        },
+      option:{
+        title: {
+            text: '提取API关键路径'
+        },
+        animationDurationUpdate: 1500,
+        animationEasingUpdate: 'quinticInOut',
+        tooltip: {},
+        series: [
+            {
+                type: 'graph',
+                layout: 'none',
+                //symbolSize:50,
+                roam: true,
+                label: {
+                    show: true,
+                    textStyle : this.textStyle,
+                    itemStyle: this.itemStyle
+                },
+                edgeSymbol: ['circle', 'arrow'],
+                edgeSymbolSize: [4, 10],
+                edgeLabel: {
+                    fontSize: 16
+                },
+                data:[
+                    {
+                        name: '分析代码片段中的云服务API',
+                        symbol:"Rect",
+                        symbolSize:[200 , 50],
+                        x: 0,
+                        y: 0,
+                    },
+                ],
+                links:[
+
+                ],
+                lineStyle: {
+                    opacity: 0.9,
+                    width: 2,
+                    curveness: 0
+                }
+            }
+        ]
+      },
+      optionDemo: {
         title: {
             text: 'Graph 简单示例'
         },
@@ -53,22 +105,10 @@ export default {
             roam: true,
             label: {
                 show: true,
-                textStyle : { //标签的字体样式
-                                color : '#cde6c7', //字体颜色
-                                fontStyle : 'normal',//文字字体的风格 'normal'标准 'italic'斜体 'oblique' 倾斜
-                                fontWeight : 'bolder',//'normal'标准'bold'粗的'bolder'更粗的'lighter'更细的或100 | 200 | 300 | 400...
-                                fontFamily : 'sans-serif', //文字的字体系列
-                                fontSize : 20, //字体大小
-                            },
-                itemStyle: {
-                    normal: {
-                     color: "#000000",
-                     
-                    }
-                 },
+                textStyle : this.textStyle,
+                itemStyle: this.itemStyle
             },
-            
-            edgeSymbol: ['rect', 'arrow'],
+            edgeSymbol: ['circle', 'arrow'],
             edgeSymbolSize: [4, 10],
             edgeLabel: {
                 fontSize: 20
@@ -138,7 +178,7 @@ export default {
     };
   },
   mounted() {
-    this.readPipeline();
+    
   },
   methods: {
 
