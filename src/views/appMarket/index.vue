@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     handleClick(detail) {
-      this.$router.push({ name: 'appDetail', params: { push: true, kind: this.$route.meta.kind, detail }})
+      this.$router.push({ name: detail.to ? detail.to : 'appDetail', params: { push: true, kind: this.$route.meta.kind, detail }})
     },
     handleTabClick(tab) {
       const type = tab.name

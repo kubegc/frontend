@@ -1,6 +1,11 @@
 <template>
   <div class="app-container">
-    <dynamic-form v-if="formVisible" :form-data="responseJson" :kind="catalog_operator" @watchSearch="searchList" />
+    <dynamic-form
+      v-if="formVisible"
+      :form-data="responseJson"
+      :kind="catalog_operator"
+      @watchSearch="searchList"
+    />
     <div class="base-button-container">
       <el-button
         icon="el-icon-plus"
@@ -79,7 +84,11 @@
       @dragDialog="handleDrag"
     >
       <div class="card-editor-container">
-        <json-editor v-if="otherOperation===false" ref="jsonEditor" v-model="createJsonData" />
+        <json-editor
+          v-if="otherOperation===false"
+          ref="jsonEditor"
+          v-model="createJsonData"
+        />
       </div>
       <el-table
         v-if="otherOperation===true"
@@ -130,7 +139,11 @@
     >
       <div class="card-editor-container">
         <!-- <p>请填写JSON格式（因版本兼容性约束，请使用以下的group和version信息创建资源）</p> -->
-        <json-editor v-if="otherOperation==false" ref="jsonEditor" v-model="createTemplate" />
+        <json-editor
+          v-if="otherOperation==false"
+          ref="jsonEditor"
+          v-model="createTemplate"
+        />
         <div v-if="otherOperation==true">
           请选择模版：
           <el-select v-model="createModel" placeholder="选择模版" @change="handleModel($event)">
@@ -920,13 +933,15 @@ export default {
 </script>
 
 <style scoped>
-.dynamic-form-container{
+.dynamic-form-container {
   margin-bottom: 30px;
 }
-.base-button-container{
+
+.base-button-container {
   padding: 10px;
   margin-bottom: 22px;
 }
+
 .link {
   color: red;
   cursor: pointer;
