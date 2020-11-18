@@ -1,11 +1,10 @@
 <template>
-  <div :style="{width: '1280px', height: '1600px'}">
+  <div :style="{ height: '1600px'}">
     
-    <div id="myChart" :style="{width: '1100px', height: '700px',float:'left'}"></div>
+    <div id="myChart" :style="{width: '150%', height: '900px',float:'left'}"></div>
   </div>
 </template>
 <script>
-import mock from "./mock.js";
 import axios from "axios";
 
 let echarts = require("echarts");
@@ -14,8 +13,8 @@ export default {
   name: "test",
   props: {
     message: {
-      type: String,
-      default: "yy"
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -23,7 +22,9 @@ export default {
       echartsData: {},
       containerSDK:
         "当前SDK： https://github.com/fabric8io/kubernetes-client，版本:4.6.3",
-      childValue: "hh"
+      childValue: "hh",
+      data: [],
+      picData: {}
     };
   },
   mounted() {
@@ -31,36 +32,41 @@ export default {
   watch: {
     message(val) {
         console.log(val)
-        if(val == "aaa") {
+        if(val != []) {
            // console.log('hhhh')
+           this.data = val
             this.analyze()
         }
     }
     },
   methods: {
     analyze() {
-      axios.get("/getEchartsData").then((response) => {
-        
-      this.echartsData = response.data;
-      console.log(response.data);
-      //this.drawLine()
-      for (let i = 0; i < 4; i++) {
+     
+      this.picData.name = this.data[0].type
+      this.picData.children = []
+      
+      for(var i = 0; i < this.data.length; i++) {
+        var tmp = this.data[i].spec
+        var key = Object.keys(tmp)[0]
+        var param = tmp[key].lifecycle[key]
+        var paramkey = Object.keys(param)
+        var children = []
+        for(var j = 0; j < paramkey.length; j++) {
+          var kv = {name: paramkey[j], value: param[paramkey[j]]}
+          children.push(kv)
+        }
+        var obj = {name: key, children: children}
+        this.picData.children.push(obj)
+      }
+      
+      for (let i = 0; i < 2; i++) {
         setTimeout(
           function() {
             this.drawLine(i);
           }.bind(this),
           i * 1000
         );
-      }
-      setTimeout(
-        function() {
-          this.$emit("childByValue", this.childValue);
-          this.echartsData = {}
-        }.bind(this),
-        4 * 1000
-      );
-    });
-      
+      }      
     },
 
     validateRes(res) {
@@ -87,8 +93,8 @@ export default {
         series: [
           {
             type: "tree",
-
-            data: [this.echartsData],
+            draggable: true,
+            data: [this.picData],
 
             left: "2%",
             right: "2%",
@@ -126,6 +132,7 @@ export default {
           }
         ]
       });
+
     }
   }
 };

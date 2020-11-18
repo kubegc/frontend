@@ -1,12 +1,16 @@
 <template>
   <div class="app-container">
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+      <editorImage
+        color="#1890ff"
+        class="editor-upload-btn"
+        @successCBK="imageSuccessCBK"
+      />
     </div>
     <div class="tab-container">
       <el-tabs
         v-model="activeName"
-        style="margin-top:15px;"
+        style="margin-top: 15px"
         type="border-card"
         @tab-click="handleClick"
       >
@@ -19,42 +23,51 @@
           <keep-alive>
             <div
               class="components-container"
-              v-if="activeName==item.key"
+              v-if="activeName == item.key"
               :type="item.key"
               :tabName="item.key"
             >
               <el-button
                 type="primary"
-                style="float:left;margin:10px;margin-top:0px;margin-left:15px"
+                style="
+                  float: left;
+                  margin: 10px;
+                  margin-top: 0px;
+                  margin-left: 15px;
+                "
                 @click.native="analyze"
-              >分析</el-button>
-              <p style="line-height:30px;height:50px">当前SDK：{{SDK}} &nbsp;&nbsp; 版本：{{version}}</p>
+                >分析</el-button
+              >
+              <p style="line-height: 30px; height: 50px">
+                当前SDK：{{ SDK }} &nbsp;&nbsp; 版本：{{ version }}
+              </p>
               <api-analysis
                 :message="parentMessage"
-                v-show="test1!=test"
+                v-show="test1 != test"
                 v-on:childByValue="childByValue"
               />
-              <el-row :gutter="20" style="margin:5px;">
+              <el-row :gutter="20" style="margin: 5px">
                 <el-col
                   :span="6"
-                  v-for="(item,index) in value"
+                  v-for="(item, index) in value"
                   :key="item.metadata.name"
-                  style="margin-bottom:30px"
+                  style="margin-bottom: 30px"
                 >
                   <el-card class="box-card" :style="height">
                     <div slot="header" class="clearfix">
                       <span>
-                        <p style="display:inline;font-size:16px;">
+                        <p style="display: inline; font-size: 16px">
                           <strong>{{ value[index].metadata.name }}</strong>
                         </p>
                       </span>
                     </div>
-                    <p style="font-size:12px;">{{item.metadata.name}}</p>
+                    <p style="font-size: 12px">{{ item.metadata.name }}</p>
                     <el-button
                       type="primary"
-                      style="float:right;margin:15px;"
+                      style="float: right; margin: 15px"
                       @click.native="showDialog(index)"
-                    >查看/修改</el-button>
+                      >查看/修改</el-button
+                    >
                   </el-card>
                 </el-col>
               </el-row>
@@ -69,12 +82,18 @@
                   <!-- <json-editor ref="EditableJson" v-model="value" /> -->
                   <EditableJson v-model="json" />
                 </div>
-                <div style="width:100%;height:50px;">
+                <div style="width: 100%; height: 50px">
                   <el-button
                     type="primary"
-                    style="float:right;margin-top:20px;height:40px;display:inline;"
+                    style="
+                      float: right;
+                      margin-top: 20px;
+                      height: 40px;
+                      display: inline;
+                    "
                     @click.native="updateTemplate"
-                  >确认</el-button>
+                    >确认</el-button
+                  >
                   <!-- <el-button type="primary" style="float:right;margin-top:20px;height:40px;display:inline;margin-right:0px;" >取消</el-button> -->
                 </div>
               </el-dialog>
@@ -90,7 +109,13 @@
 <script>
 import elDragDialog from "@/directive/el-drag-dialog"; // base on element-ui
 import EditableJson from "@/components/EditableJson";
-import { createResource, listResources, getResource, updateResource, getMeta } from '@/api/k8sResource'
+import {
+  createResource,
+  listResources,
+  getResource,
+  updateResource,
+  getMeta,
+} from "@/api/k8sResource";
 import apiAnalysis from "@/views/config/apiAnalysis";
 import editorImage from "./components/EditorImage";
 
@@ -100,20 +125,20 @@ export default {
   components: {
     EditableJson,
     apiAnalysis,
-    editorImage
+    editorImage,
   },
   props: {
     tabName: {
       type: String,
-      default: "VirtualMachine"
-    }
+      default: "VirtualMachine",
+    },
   },
   data() {
     return {
       schedulingType: "未选择",
       test: "hhh",
       test1: "hhh",
-      parentMessage: "",
+      parentMessage: [],
       dialogTableVisible: false,
       options: [{ value: "", label: "" }],
       modelType: "",
@@ -134,7 +159,9 @@ export default {
       version: "",
       sdkJson: {},
       catalogJson: {},
-      namespace: "default"
+      namespace: "default",
+      cloud_kind: "AliyunECS",
+      dataTemp: []
     };
   },
 
@@ -143,30 +170,35 @@ export default {
     getResource({
       kind: this.frontend_kind,
       name: this.catalog_kind + "-" + this.catalog_operator,
-      namespace: this.namespace
-    }).then(response => {
+      namespace: this.namespace,
+    }).then((response) => {
       if (this.validateRes(response) == 1) {
-        this.catalogJson = response.data
+        this.catalogJson = response.data;
         this.tabMapOptions = response.data.spec.data.tabMapOptions;
         this.activeName = response.data.spec.data.activeName;
 
         getResource({
           kind: this.frontend_kind,
           name: this.api_kind + "-" + this.activeName,
-          namespace: this.namespace
-        }).then(response => {
+          namespace: this.namespace,
+        }).then((response) => {
           if (this.validateRes(response) == 1) {
-            this.sdkJson = response.data
+            this.sdkJson = response.data;
             this.SDK = response.data.spec.data.git;
             this.version = response.data.spec.data.version;
 
             listResources({
-              kind: this.activeName + this.lifecycle_kind,
-              namespace: this.namespace
-            }).then(response => {
+              kind: "Template",
+              page: 1,
+              limit: 1000,
+              labels: {
+                type: this.cloud_kind,
+              },
+            }).then((response) => {
               if (this.validateRes(response) == 1) {
-                this.value = response.data;
-                console.log(this.value);
+                //this.value = response.data.items;
+                this.dataTemp = response.data.items;
+               // console.log(this.value);
               }
             });
           }
@@ -184,32 +216,38 @@ export default {
           title: "error",
           message: res.data,
           type: "warning",
-          duration: 3000
+          duration: 3000,
         });
         return 0;
       }
     },
     analyze() {
       this.value = [];
-      this.parentMessage = "aaa";
+      this.parentMessage = this.dataTemp;
       this.test = "hh";
     },
-    childByValue: function(childValue) {
-      console.log(childValue)
+    childByValue: function (childValue) {
+      console.log(childValue);
       if (childValue == "hh") {
         this.test = "hhh";
         this.analyzeTemplete();
       }
     },
     analyzeTemplete() {
-      listResources({
-        kind: this.activeName + this.lifecycle_kind,
-        namespace: this.namespace
-      }).then(response => {
-        this.value = response.data;
-        console.log(this.value);
-      });
-      this.parentMessage = "bbb";
+       listResources({
+              kind: "Template",
+              page: 1,
+              limit: 1000,
+              labels: {
+                type: this.cloud_kind,
+              },
+            }).then((response) => {
+              if (this.validateRes(response) == 1) {
+                this.value = response.data.items;
+                console.log(this.value);
+              }
+            });
+      this.parentMessage = [];
     },
 
     handleClick(tab, event) {
@@ -217,22 +255,22 @@ export default {
       getResource({
         kind: this.frontend_kind,
         name: this.api_kind + "-" + this.activeName,
-        namespace: this.namespace
-      }).then(response => {
+        namespace: this.namespace,
+      }).then((response) => {
         this.SDK = response.data.spec.data.git;
         this.version = response.data.spec.data.version;
-        listResources({
-          kind: this.activeName + this.lifecycle_kind,
-          namespace: this.namespace
-        }).then(response => {
-          this.value = response.data;
-          if (this.activeName == "virtualmachine") {
-            this.height = "height: 240px";
-          } else if (this.activeName == "container") {
-            this.height = "height: 190px";
-          }
-          console.log(this.value);
-        });
+        // listResources({
+        //   kind: this.activeName + this.lifecycle_kind,
+        //   namespace: this.namespace,
+        // }).then((response) => {
+        //   this.value = response.data;
+        //   if (this.activeName == "virtualmachine") {
+        //     this.height = "height: 240px";
+        //   } else if (this.activeName == "container") {
+        //     this.height = "height: 190px";
+        //   }
+        //   console.log(this.value);
+        // });
       });
     },
     showDialog(index) {
@@ -245,8 +283,8 @@ export default {
       updateResource({
         json: this.json,
         kind: this.kind,
-        namespace: this.namespace
-      }).then(response => {
+        namespace: this.namespace,
+      }).then((response) => {
         console.log(response.code);
       });
     },
@@ -264,29 +302,27 @@ export default {
     },
     imageSuccessCBK(data) {
       //向后台发送请求，新增一个sdk
-      console.log(data)
-      this.catalogJson.spec.data.tabMapOptions.push({"label": data.name, "key": data.name})
+      console.log(data);
+      this.catalogJson.spec.data.tabMapOptions.push({
+        label: data.name,
+        key: data.name,
+      });
       updateResource({
         json: this.catalogJson,
         kind: this.frontend_kind,
-        namespace: this.namespace
-      }).then(response => {
-        
-      });
-      console.log(this.sdkJson)
-      this.sdkJson.metadata.name = this.api_kind + '-' + data.name
-      this.sdkJson.spec.data.git = data.git
-      this.sdkJson.spec.data.version = data.version
+        namespace: this.namespace,
+      }).then((response) => {});
+      console.log(this.sdkJson);
+      this.sdkJson.metadata.name = this.api_kind + "-" + data.name;
+      this.sdkJson.spec.data.git = data.git;
+      this.sdkJson.spec.data.version = data.version;
 
       createResource({
         json: this.sdkJson,
-        kind: this.frontend_kind
-      }).then(response => {
-        
-      });
-      
-    }
-  }
+        kind: this.frontend_kind,
+      }).then((response) => {});
+    },
+  },
 };
 </script>
 
