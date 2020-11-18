@@ -1,12 +1,32 @@
 <template>
   <div class="imageMarket-app-container">
-    <el-divider content-position="left"><el-button icon="el-icon-circle-plus" type="text">{{ this.$route.meta.kind }}</el-button></el-divider>
+    <el-divider content-position="left">
+      <el-button icon="el-icon-circle-plus" type="text" @click="handleCreateDialogClick">{{
+          this.$route.meta.kind
+        }}
+      </el-button>
+    </el-divider>
+    <el-dialog
+      :visible.sync="createDialogVisible"
+      width="70%"
+    >
+      <json-editor
+        :value="JSON.stringify(createTemplate, null, 2)"
+        @input="createTemplate = JSON.parse($event)"
+      />
+      <span slot="title">创建</span>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="createDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleCreateClick">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <el-row>
       <el-tabs v-model="chosenTabName" tab-position="top" @tab-click="handleTabClick">
-        <el-tab-pane label="All" name="all" />
-        <el-tab-pane label="AliyunECS" name="AliyunECS" />
-        <el-tab-pane label="BaiduBCE" name="BaiduBCE" />
-        <el-tab-pane label="TencentCVM" name="TencentCVM" />
+        <el-tab-pane label="All" name="all"/>
+        <el-tab-pane label="AliyunECS" name="AliyunECS"/>
+        <el-tab-pane label="BaiduBCE" name="BaiduBCE"/>
+        <el-tab-pane label="TencentCVM" name="TencentCVM"/>
       </el-tabs>
     </el-row>
     <el-row
@@ -73,11 +93,12 @@
 </template>
 
 <script>
-import { listResources } from '@/api/k8sResource'
+import { createResource, getResource, listResources } from '@/api/k8sResource'
 import Pagination from '@/components/Pagination'
+import JsonEditor from '@/components/JsonEditorSpecial/index'
 
 export default {
-  components: { Pagination },
+  components: { Pagination, JsonEditor },
   data() {
     return {
       cardsData: [],
@@ -85,9 +106,10 @@ export default {
       total: 0,
       listQuery: {
         page: 1,
-        limit: 12,
-        continue: 1
-      }
+        limit: 12
+      },
+      createDialogVisible: false,
+      createTemplate: {}
     }
   },
   created() {
@@ -95,12 +117,54 @@ export default {
   },
   methods: {
     handleClick(detail) {
-      this.$router.push({ name: detail.to ? detail.to : 'appDetail', params: { push: true, kind: this.$route.meta.kind, detail }})
+      this.$router.push({
+        name: detail.to ? detail.to : 'appDetail',
+        params: { push: true, kind: this.$route.meta.kind, detail }
+      })
     },
     handleTabClick(tab) {
       const type = tab.name
       this.getData(type)
       this.resetListQuery()
+    },
+    handleCreateDialogClick() {
+      getResource({
+        kind: 'Frontend',
+        name: 'createtemplate-' + this.$route.meta.kind.toLowerCase(),
+        namespace: 'default'
+      }).then(
+        response => {
+          if (this.$valid(response)) {
+            this.createTemplate = response.data.spec
+          } else {
+            this.$message({
+              message: '获取创建模板失败，请手动填写',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        }
+      )
+      this.createDialogVisible = true;
+    },
+    handleCreateClick() {
+      createResource({ json: this.createTemplate }).then(
+        response => {
+          if (this.$valid(response)) {
+            this.$message({
+              message: '创建' + this.$route.kind + '成功',
+              type: 'success',
+              duration: 2000
+            })
+          } else {
+            this.$message({
+              message: '创建' + this.$route.kind + '失败,请重新创建',
+              type: 'error',
+              duration: 2000
+            })
+          }
+        }
+      )
     },
     resetListQuery() {
       this.listQuery.page = 1
