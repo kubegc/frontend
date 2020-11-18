@@ -15,6 +15,7 @@ export default {
     message: {
       type: Array,
       default: []
+      
     }
   },
   data() {
