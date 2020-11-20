@@ -48,7 +48,7 @@
               <el-row :gutter="20">
                 <el-col :span="8">
                   <el-image
-                    style="border-radius: 2px;width: 100px; height: 100px"
+                    style="border-radius: 2px;"
                     :src="require('../../assets' + (item.avatar ? item.avatar : '/avatar.jpg'))"
                     :fit="'fit'"
                   />
@@ -70,7 +70,7 @@
                 </el-col>
                 <el-col :span="12">
                   <span style="color: black">
-                    {{ '版本: ' + item.apiVersion }}
+                    {{ 'apiVersion: ' + item.apiVersion }}
                   </span>
                 </el-col>
               </el-row>
