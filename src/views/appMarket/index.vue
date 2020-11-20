@@ -152,13 +152,14 @@ export default {
         response => {
           if (this.$valid(response)) {
             this.$message({
-              message: '创建' + this.$route.kind + '成功',
+              message: '创建' + this.$route.meta.kind + '成功',
               type: 'success',
               duration: 2000
             })
+            this.getData()
           } else {
             this.$message({
-              message: '创建' + this.$route.kind + '失败,请重新创建',
+              message: '创建' + this.$route.meta.kind + '失败,请重新创建',
               type: 'error',
               duration: 2000
             })
