@@ -166,6 +166,7 @@ export default {
           }
         }
       )
+      this.createDialogVisible = false
     },
     resetListQuery() {
       this.listQuery.page = 1
