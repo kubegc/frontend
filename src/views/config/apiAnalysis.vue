@@ -1,6 +1,5 @@
 <template>
   <div :style="{ height: '1600px'}">
-    
     <div id="myChart" :style="{width: '150%', height: '900px',float:'left'}"></div>
   </div>
 </template>
@@ -41,10 +40,10 @@ export default {
     },
   methods: {
     analyze() {
-     
+
       this.picData.name = this.data[0].type
       this.picData.children = []
-      
+
       for(var i = 0; i < this.data.length; i++) {
         var tmp = this.data[i].spec
         var key = Object.keys(tmp)[0]
@@ -58,7 +57,7 @@ export default {
         var obj = {name: key, children: children}
         this.picData.children.push(obj)
       }
-      
+
       for (let i = 0; i < 2; i++) {
         setTimeout(
           function() {
@@ -66,7 +65,7 @@ export default {
           }.bind(this),
           i * 1000
         );
-      }      
+      }
     },
 
     validateRes(res) {

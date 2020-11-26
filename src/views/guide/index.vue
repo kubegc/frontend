@@ -82,7 +82,7 @@
         <el-col v-if="canEdit" :span="13">
           <el-form-item label="路由">
             <routes-tree-view
-              v-model="routeFile"
+              v-model="routesFile"
               :resource-name="formData.resource"
               :comp="comp"
               :page-type="formData.chosenPageType"
@@ -131,7 +131,7 @@ export default {
       editTemplates: [],
       pageTypes: [],
       routeVisible: false,
-      routeFile: {},
+      routesFile: {},
       resourceOptions: undefined,
 
       createTemplates: [],
@@ -198,7 +198,7 @@ export default {
     getResource({ token: this.token, kind: 'Frontend', name: 'routes-' + this.name, namespace: 'default' }).then(
       response => {
         if (this.$valid(response)) {
-          this.routeFile = response.data
+          this.routesFile = response.data
         }
       }
     )
@@ -231,7 +231,7 @@ export default {
               }
             )
           })
-          updateResource({ token: this.token, json: this.routeFile }).then(
+          updateResource({ token: this.token, json: this.routesFile }).then(
             response => {
               if (this.$valid(response)) {
                 this.$message({

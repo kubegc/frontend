@@ -2,8 +2,6 @@ import { constantRoutes } from '@/router'
 import Layout from '@/layout/layout'
 import Base from '@/layout/index'
 
-
-
 function generateRoutesHelper(data) {
   const res = data.filter(item => {
     if (item.component) {

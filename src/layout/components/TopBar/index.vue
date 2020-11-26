@@ -54,7 +54,6 @@ export default {
       const matched = this.$route.matched[0].path
       if (this.$route.params.push) {
         const menuIndex = this.top_menus.filter(item => item.path === matched)[0].key
-        console.log('路由变化，通知侧边栏变化')
         this.handleChange(menuIndex)
       }
       return matched
@@ -67,7 +66,6 @@ export default {
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     handleChange(menuIndex) {
-      console.log('点击菜单处理')
       this.$store.commit('permission/SET_CURRMENUPREFIX', this.top_menus[menuIndex].path)
       this.$store.commit('permission/RESET_MENUROUTES', menuIndex)
     }
@@ -98,25 +96,6 @@ export default {
   &:focus {
     outline: none;
   }
-
-  .right-menu-item {
-    display: inline-block;
-    padding: 0 8px;
-    height: 100%;
-    font-size: 18px;
-    color: #5a5e66;
-    vertical-align: text-bottom;
-
-    &.hover-effect {
-      cursor: pointer;
-      transition: background .3s;
-
-      &:hover {
-        background: rgba(0, 0, 0, .025)
-      }
-    }
-  }
-
   .avatar-container {
     margin-right: 30px;
     bottom: -5px;
