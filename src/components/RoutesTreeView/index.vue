@@ -9,7 +9,7 @@
             type="text"
             size="mini"
             icon="el-icon-circle-plus"
-            @click.stop="append(data)"
+            @click.stop="append(node)"
           />
           <el-button type="text" size="mini" @click.stop="del(node, data)">
             删除
@@ -106,6 +106,11 @@ export default {
       }
     }
   },
+  watch: {
+    value(newVal) {
+      this.treeData = this.generateTreeData(newVal.spec.routes)
+    }
+  },
   created() {
     const routes = this.value.spec.routes
     this.treeData = this.generateTreeData(routes)
@@ -128,10 +133,10 @@ export default {
           currNode.label = item.children[0].meta.title
           currNode.oneChild = true
         }
-        currNode.path = []
-        parent && parent.path
-          ? currNode.path = parent.path.concat(currNode.label)
-          : currNode.path = [].concat(currNode.label)
+        // currNode.path = []
+        // parent && parent.path
+        //   ? currNode.path = parent.path.concat(currNode.label)
+        //   : currNode.path = [].concat(currNode.label)
         parent ? currNode.level = parent.level + 1 : currNode.level = 1
 
         if (item.children && !currNode.oneChild) {
@@ -141,22 +146,23 @@ export default {
       }
       return res
     },
-    append(data) {
+    append(node) {
+      console.log(node)
       this.routeAddVisible = true
-      this.submitRequire = data
+      this.submitRequire = node
     },
     handleSubmit() {
       this.$refs['routeForm'].validate(valid => {
         if (!valid) return
-        const data = this.submitRequire
-        const path = data.path
+        const node = this.submitRequire
+        const path = this.getPath(node)
         let routesTemp = this.value.spec.routes
         for (const key of path) {
           routesTemp = routesTemp.filter(item => item.meta && item.meta.title === key)
           routesTemp = routesTemp[0].children
         }
         const routeContentTemp = {
-          path: this.pageType.toLowerCase() + '-' + this.resourceName + '-' + new Date().getTime(),
+          path: new Date().getTime() + '',
           name: this.resourceName,
           component: this.comp || this.routeContent.comp,
           meta: {
@@ -169,22 +175,21 @@ export default {
 
         const newRouteData = {}
         newRouteData.label = routeContentTemp.meta.title
-        newRouteData.path = data.path.concat(newRouteData.label)
-        newRouteData.level = data.level + 1
-        data.children.push(newRouteData)
+        // newRouteData.path = data.path.concat(newRouteData.label)
+        newRouteData.level = node.data.level + 1
+        node.data.children.push(newRouteData)
         this.routeAddVisible = false
         this.$message({
           message: '增加路由节点成功，不要忘记提交哦！',
           type: 'success',
           duration: 4000
         })
-        this.$emit('input', this.value)
+        // this.$emit('input', this.value)
       }
       )
     },
     del(node, data) {
-      const path = data.path
-      path.splice(path.length - 1, 1)
+      const path = this.getPath(node.parent)
       let routesTemp = this.value.spec.routes
       for (const key of path) {
         const pre = routesTemp
@@ -229,7 +234,6 @@ export default {
       this.routeOriginObjParent[this.routeOriginObjIndex] = this.routeEditObj
       this.diffAndChange(this.currentEditNode, this.routeEditObj)
       this.routeEditVisible = false
-
     },
     diffAndChange(node, routeObj) {
       node.data.label = routeObj.meta ? routeObj.meta.title : routeObj.children[0].meta.title

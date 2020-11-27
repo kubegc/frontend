@@ -91,9 +91,9 @@ export const constantRoutes = [
   {
     path: '/apiAnalysis',
     component: () => import('@/views/sysConfig/lifecycle'),
-    meta: { icon: 'cloud', title: 'API分析' },
+    meta: { icon: 'cloud', title: 'API分析' }
   },
-{
+  {
     path: '/framework-construction',
     component: () => import('@/views/pipeline/framework-construction'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
@@ -147,12 +147,6 @@ export const constantRoutes = [
   //   ]
   // }
 ]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = []
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

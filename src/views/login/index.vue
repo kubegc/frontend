@@ -6,7 +6,8 @@
       :rules="loginRules"
       class="login-form"
       auto-complete="on"
-      label-position="left">
+      label-position="left"
+    >
 
       <div class="title-container">
         <el-select v-model="chosenTitle" style="width:112%;margin-bottom:20px;">
@@ -15,13 +16,14 @@
             :key="item.label"
             :label="item.label"
             :value="item.value"
-            style="color:black;"/>
+            style="color:black;"
+          />
         </el-select>
       </div>
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user"/>
+          <svg-icon icon-class="user" />
         </span>
         <el-input
           ref="username"
@@ -36,7 +38,7 @@
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password"/>
+          <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
@@ -50,7 +52,7 @@
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
@@ -58,7 +60,8 @@
         :loading="loading"
         type="primary"
         style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin">
+        @click.native.prevent="handleLogin"
+      >
         登录
       </el-button>
 
@@ -89,7 +92,7 @@ export default {
     }
     return {
       loginForm: {
-        username: 'yc',
+        username: 'admin',
         password: 'admin'
       },
       loginRules: {
@@ -103,12 +106,6 @@ export default {
       chosenTitle: ''
     }
   },
-  created() {
-    getResource({ token: 'default', kind: 'Frontend', namespace: 'default', name: 'title-project' }).then(response => {
-      this.projectTitles = response.data.spec.data
-      this.chosenTitle = response.data.spec.data[0].label
-    })
-  },
   watch: {
     $route: {
       handler: function(route) {
@@ -116,6 +113,12 @@ export default {
       },
       immediate: true
     }
+  },
+  created() {
+    getResource({ token: 'default', kind: 'Frontend', namespace: 'default', name: 'title-project' }).then(response => {
+      this.projectTitles = response.data.spec.data
+      this.chosenTitle = response.data.spec.data[0].label
+    })
   },
   methods: {
     showPwd() {
