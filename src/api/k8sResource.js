@@ -75,6 +75,15 @@ export function queryTest(data) {
   return res
 }
 
+export function execDiff(data) {
+  var res = request({
+    url: 'http://39.106.40.190:31100/dos-lab/crosscloud/execDiff',
+    method: 'post',
+    data
+  })
+  return res
+}
+
 // export function validateRes(res) {
 //   if (res.code === 20000) {
 //     return true

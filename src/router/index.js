@@ -89,9 +89,9 @@ export const constantRoutes = [
     meta: { icon: 'cloud', title: '请求云服务' }
   },
   {
-    path: '/apiAnalysis',
-    component: () => import('@/views/sysConfig/lifecycle'),
-    meta: { icon: 'cloud', title: 'API分析' }
+    path: '/diff',
+    component: () => import('@/views/sysConfig/diff'),
+    meta: { icon: 'cloud', title: '兼容性分析' }
   },
   {
     path: '/framework-construction',
