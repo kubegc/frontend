@@ -130,11 +130,11 @@ export default {
           for(let ele in union) {
               //删除的
               if(paramkey1.includes(union[ele]) && !paramkey2.includes(union[ele])) {
-                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red'} };
+                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red', width: 4} };
 
               //新增的
               }else if(!paramkey1.includes(union[ele]) && paramkey2.includes(union[ele])) {
-                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'green',  borderColor: 'green'}, lineStyle: {color: 'green'} };
+                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'green',  borderColor: 'green', borderWidth: 4}, lineStyle: {color: 'green', width: 4}, label: {color: 'green', fontSize: 14} };
 
               //不变的
               }else {
