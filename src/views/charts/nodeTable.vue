@@ -523,7 +523,7 @@ export default {
           // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
           // id是 spec.replicas
           // type 是字段的类型
-          // vlue 是这个字段默认的值，bool 是 true, string 是 ''
+          // value 是这个字段默认的值，bool 是 true, string 是 ''
           this.Variables = []
           if (response.hasOwnProperty('data')) {
             const nameVariables = response.data.spec.data.values
@@ -552,7 +552,7 @@ export default {
           name: row.metadata.name
         }).then((response) => {
           if (this.$valid(response)) {
-            const deleteName = response.data.details.name
+            const deleteName = response.data.details ? response.data.details.name : response.data.metadata.name
             this.listLoading = true
             const id = setInterval(
               function() {
