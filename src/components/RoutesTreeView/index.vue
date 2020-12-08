@@ -133,10 +133,6 @@ export default {
           currNode.label = item.children[0].meta.title
           currNode.oneChild = true
         }
-        // currNode.path = []
-        // parent && parent.path
-        //   ? currNode.path = parent.path.concat(currNode.label)
-        //   : currNode.path = [].concat(currNode.label)
         parent ? currNode.level = parent.level + 1 : currNode.level = 1
 
         if (item.children && !currNode.oneChild) {
