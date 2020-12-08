@@ -38,13 +38,11 @@
       >
         <template slot-scope="scope">
           <router-link
-            v-if="item.kind === 'a'"
-            :to="{path:'/resourceInfo/metadataInfo',query:{kind: catalog_operator, name:scope.row.json}}"
+            :to="{path:resourceInfo,query:{outTabName: outTabName, tabName: tabName, name:getInputValue(scope.row.json,item.row),nodeName:scope.row.json.spec.nodeName}}"
+            v-if="item.kind == 'a'"
             tag="a"
             class="link"
-            @click="getData"
-          >{{ getInputValue(scope.row.json, item.row) }}
-          </router-link>
+          >{{ getInputValue(scope.row.json,item.row) }}</router-link>
           <span v-if="item.kind === undefined">{{ getInputValue(scope.row.json, item.row) }}</span>
           <svg-icon
             v-if="item.kind === 'terminal'"
@@ -218,6 +216,16 @@ export default {
   name: 'NodeTable',
   components: { Pagination, JsonEditor, DynamicForm },
   directives: { waves },
+  props: {
+    tabName: {
+      type: String,
+      default: "Pod"
+    },
+    outTabName: {
+      type: String,
+      default: "Container"
+    }
+  },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -265,7 +273,8 @@ export default {
       createModel: '',
       models: '',
       propertiesInfo: [],
-      message: {}
+      message: {},
+      resourceInfo: ""
     }
   },
   computed: {
@@ -289,6 +298,8 @@ export default {
     this.catalog_operator = this.$route.name // 该资源的名字
     this.responseJson = this.$route.meta.data
     this.dialogTitle = this.catalog_operator // 点击 action 之后弹出的 Dialog 的title
+    this.resourceInfo = this.$route.meta.resourceInfo;
+    console.log(this.resourceInfo)
     // 获取上面搜索表单的信息
     getResource({
       token: this.token,

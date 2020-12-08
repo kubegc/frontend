@@ -4,6 +4,9 @@ export function getMonitorInfo(kind, nodeName, podName) {
     var node_prefix = "http://"+window.g.VUE_APP_MONITOR_HOST_GRAFANA+"/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&var-interval=%24__auto_interval_interval&var-datasource=default&var-Node="+ nodeName +"&from="+startTimestamp+"&to="+new Date().getTime()+"&panelId="
     var pod_prefix = "http://"+window.g.VUE_APP_MONITOR_HOST_GRAFANA+"/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&var-interval=%24__auto_interval_interval&var-datasource=default&var-Node="+ nodeName +"&var-Pod=" + podName +"&from="+startTimestamp+"&to="+new Date().getTime()+"&panelId="
     var testcase_prefix = "http://"+window.g.VUE_APP_MONITOR_HOST_GRAFANA+"/d-solo/JABGX_-mz/cluster-monitoring-for-kubernetes?refresh=5s&orgId=1&from="+startTimestamp+"&to="+new Date().getTime()+"&panelId=77&var-interval=%24__auto_interval_interval&var-datasource=Prometheus&var-Node=All"
+    console.log(kind + " " + nodeName + " " + podName)
+    
+    
     if(kind == "Node") {
         prefix = node_prefix
         var monitor_rs = {
@@ -12,7 +15,7 @@ export function getMonitorInfo(kind, nodeName, podName) {
           "fs": prefix + "73", 
           "network":prefix + "63",
         }
-    }else if(kind == "container") {
+    }else if(kind == "Container") {
         prefix = pod_prefix
         var monitor_rs = {
           "cpu": prefix + "17",

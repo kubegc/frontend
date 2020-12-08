@@ -94,6 +94,16 @@ export const constantRoutes = [
     meta: { icon: 'cloud', title: '兼容性分析' }
   },
   {
+    path: '/overall',
+    component: () => import('@/views/sysConfig/overall'),
+    meta: { icon: 'cloud', title: '智能服务演化' }
+  },
+  {
+    path: '/charts/containerInfo',
+    component: () => import('@/views/charts/containerInfo'),
+    meta: { icon: 'cloud', title: 'pod信息' }
+  },
+  {
     path: '/framework-construction',
     component: () => import('@/views/pipeline/framework-construction'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
