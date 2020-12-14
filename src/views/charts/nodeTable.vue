@@ -38,8 +38,8 @@
       >
         <template slot-scope="scope">
           <router-link
-            :to="{path:resourceInfo,query:{outTabName: outTabName, tabName: tabName, name:getInputValue(scope.row.json,item.row),nodeName:scope.row.json.spec.nodeName, namespace: scope.row.json.metadata.namespace}}"
             v-if="item.kind == 'a'"
+            :to="{path:resourceInfo,query:{outTabName: outTabName, tabName: tabName, name:getInputValue(scope.row.json,item.row),nodeName:scope.row.json.spec.nodeName, namespace: scope.row.json.metadata.namespace}}"
             tag="a"
             class="link"
           >{{ getInputValue(scope.row.json,item.row) }}</router-link>
@@ -216,16 +216,6 @@ export default {
   name: 'NodeTable',
   components: { Pagination, JsonEditor, DynamicForm },
   directives: { waves },
-  props: {
-    tabName: {
-      type: String,
-      default: "Pod"
-    },
-    outTabName: {
-      type: String,
-      default: "Container"
-    }
-  },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -237,6 +227,16 @@ export default {
     },
     typeFilter(type) {
       return calendarTypeKeyValue[type]
+    }
+  },
+  props: {
+    tabName: {
+      type: String,
+      default: 'Pod'
+    },
+    outTabName: {
+      type: String,
+      default: 'Container'
     }
   },
   data() {
@@ -274,7 +274,7 @@ export default {
       models: '',
       propertiesInfo: [],
       message: {},
-      resourceInfo: ""
+      resourceInfo: ''
     }
   },
   computed: {
@@ -298,7 +298,7 @@ export default {
     this.catalog_operator = this.$route.name // 该资源的名字
     this.responseJson = this.$route.meta.data
     this.dialogTitle = this.catalog_operator // 点击 action 之后弹出的 Dialog 的title
-    this.resourceInfo = this.$route.meta.resourceInfo;
+    this.resourceInfo = this.$route.meta.resourceInfo
     console.log(this.resourceInfo)
     // 获取上面搜索表单的信息
     getResource({
@@ -639,9 +639,9 @@ export default {
       } else {
         // 当操作是更新 update 的情况
         this.$router.push({
-        path: '/crossCloud/apiAnalysis/index',
-        params: {}
-      })
+          path: '/crossCloud/apiAnalysis/index',
+          params: {}
+        })
         // this.actionDialogVisible = true
         // getResource({
         //   token: this.token,
@@ -886,11 +886,12 @@ export default {
       }
       const keys = longKey.split('.')
       let res = scope
-      keys.forEach((item) => {
+      keys.every((item) => {
         if (item.indexOf('[') > 0) {
           res = res[item.substring(0, item.indexOf('['))]
           if (res === undefined || res.length === 0) {
-            return 'unknown'
+            res = 'unknown'
+            return false
           } else {
             res =
               res[
@@ -901,16 +902,16 @@ export default {
                   )
                 )
               ]
+            return true
           }
         } else {
           // todo 这里代码有问题，if走不到
-          if (res.hasOwnProperty(item)) {
+          if (res && res[item]) {
             res = res[item]
-            if (res === undefined) {
-              return 'unknown'
-            }
+            return true
           } else {
-            return '无'
+            res = '无'
+            return false
           }
         }
       })
