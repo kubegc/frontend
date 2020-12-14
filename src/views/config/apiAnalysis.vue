@@ -1,6 +1,6 @@
 <template>
   <div :style="{ height: '1600px'}">
-    <div id="myChart" :style="{width: '150%', height: '900px',float:'left'}"></div>
+    <div id="myChart" :style="{width: '100%', height: '900px',float:'left'}"></div>
   </div>
 </template>
 <script>
@@ -43,9 +43,10 @@ export default {
     analyze() {
 
       this.picData.name = this.data[0].type
+      //this.picData.name = 'VirtualMachine'
       this.picData.children = []
 
-      for(var i = 0; i < this.data.length; i++) {
+      for(var i = 0; i < 50; i++) {
         var tmp = this.data[i].spec
         var key = Object.keys(tmp)[0]
         var param = tmp[key].lifecycle[key]
@@ -59,7 +60,7 @@ export default {
         this.picData.children.push(obj)
       }
 
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         setTimeout(
           function() {
             this.drawLine(i);

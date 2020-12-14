@@ -2,7 +2,7 @@
   <div class="container">
     <div
         id="keyChart"
-        :style="{ width: '100%', height: '700px', float: 'left' }"
+        :style="{ width: '40%', height: '700px', float: 'left' }"
       ></div>
     <div :style="{ height: '1000px' }">
       <div
@@ -10,6 +10,45 @@
         :style="{ width: '100%', height: '900px', float: 'left' }"
       ></div>
     </div>
+    <el-dialog
+      :visible.sync="createDialogVisible"
+      :title="this.createResource"
+      @dragDialog="handleDrag"
+    >
+    <el-form label-position="top" :model="dynamicValidateForm">
+      <el-form-item label="云服务类型">
+        <el-select
+          filterable
+          style="float: left"
+          v-model="dynamicValidateForm.value"
+          placeholder="请选择"
+          @change="handle(dynamicValidateForm.value)"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item 
+      v-for="(domain, index) in dynamicValidateForm.domains"
+    :label="'版本' + index"
+    :key="domain.value">
+        <el-input :rows="6" type="textarea" v-model="domain.value" />
+      </el-form-item>
+      
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">确定</el-button>
+        <el-button @click="addDomain">新增</el-button>
+        <el-button>取消</el-button>
+      </el-form-item>
+    </el-form>
+      
+    </el-dialog>
   </div>
 </template>
 
@@ -39,6 +78,12 @@ export default {
     return {
       options: [],
       value: "",
+      dynamicValidateForm: {
+          domains: [{
+            value: ''
+          }],
+          value: ''
+        },
       form: {
         v1: "",
         v2: "",
@@ -47,9 +92,109 @@ export default {
       resTemp: [],
       id: "",
       picData: {},
+      apiNum: "123",
+      createDialogVisible: false,
+      createResource: "配置SDK",
+      data: []
     };
   },
   mounted() {
+      let keyChart = echarts.init(document.getElementById("keyChart"));
+      keyChart.setOption({
+        tooltip: {
+          trigger: "item",
+          triggerOn: "mousemove",
+        },
+         series: [
+        {
+            type: 'graph',
+            layout: 'none',
+            symbolSize: 50,
+            roam: true,
+            label: {
+                show: true
+            },
+            edgeSymbol: ['circle', 'arrow'],
+            edgeSymbolSize: [4, 10],
+            edgeLabel: {
+                fontSize: 20
+            },
+            data: [{
+                name: '节点1',
+                x: 300,
+                y: 500,
+                symbol: 'rect',
+                symbolSize: [100, 50]
+            }, {
+                name: 'API数量：' + this.apiNum,
+                x: 700,
+                y: 500,
+                symbol: 'rect',
+                symbolSize: [100, 50]
+            }, {
+                name: '节点3',
+                x: 500,
+                y: 700,
+                symbol: 'rect',
+                symbolSize: [100, 50]
+            }],
+            // links: [],
+            links: [{
+                source: 0,
+                target: 1,
+                symbolSize: [5, 20],
+                label: {
+                    show: true
+                },
+                lineStyle: {
+                    width: 5,
+                    curveness: 0.3
+                }
+            }, {
+                source: 1,
+                target: 2,
+                label: {
+                    show: true
+                },
+                lineStyle: {
+                    width: 5,
+                    curveness: 0.3
+                }
+            }, {
+                source: 2,
+                target: 0,
+                 label: {
+                    show: true
+                },
+                lineStyle: {
+                    width: 5,
+                    curveness: 0.3
+                }
+            }
+              ],
+            lineStyle: {
+                opacity: 0.9,
+                width: 2,
+                curveness: 0
+            }
+        }
+    ]
+      });
+
+      //解决this作用域的问题
+        let _self = this
+
+      keyChart.on('click', function (params) {
+    if (params.dataIndex === 1) {
+         _self.analyze()
+        
+    }else if(params.dataIndex === 0) {
+        _self.createDialogVisible = true
+    }
+    
+});
+  
+
     listResources({
       kind: "Account",
       page: 1,
@@ -66,6 +211,18 @@ export default {
     });
   },
   methods: {
+
+      handleDrag() {
+      this.$refs.select.blur()
+    },
+      
+      addDomain() {
+        this.dynamicValidateForm.domains.push({
+          value: '',
+          key: Date.now()
+        });
+      },
+
     handle(value) {
       for (var i = 0; i < this.resTemp.length; i++) {
         var obj = this.resTemp[i].spec;
@@ -77,13 +234,64 @@ export default {
         }
       }
     },
+     analyze() {
+
+         this.picData = {}
+         listResources({
+              kind: "Template",
+              page: 1,
+              limit: 1000,
+              labels: {
+                type: this.dynamicValidateForm.value,
+              },
+            }).then((response) => {
+                //this.value = response.data.items;
+                this.data = response.data.items;
+                this.picData.name = this.data[0].type
+                this.picData.children = []
+
+      for(var i = 0; i < this.data.length; i++) {
+        var tmp = this.data[i].spec
+        var key = Object.keys(tmp)[0]
+        var param = tmp[key].lifecycle[key]
+        var paramkey = Object.keys(param)
+        var children = []
+        for(var j = 0; j < paramkey.length; j++) {
+          var kv = {name: paramkey[j], value: param[paramkey[j]]}
+          children.push(kv)
+        }
+        var obj = {name: key, children: children}
+        this.picData.children.push(obj)
+      }
+
+ for (let i = 0; i < 2; i++) {
+        setTimeout(
+          function() {
+            this.drawLineSingle(i)
+          }.bind(this),
+          i * 1000
+        );
+      }
+      
+               
+            
+            });
+
+      
+    },
+
     onSubmit() {
-      execDiff({
-        v1: JSON.parse(this.form.v1),
-        v2: JSON.parse(this.form.v2),
+        if(this.dynamicValidateForm.domains.length == 1) {
+            this.apiNum = '1000'
+            this.createDialogVisible = false
+
+        }else {
+            execDiff({
+        v1: JSON.parse(this.dynamicValidateForm.domains[0].value),
+        v2: JSON.parse(this.dynamicValidateForm.domains[1].value),
       }).then((response) => {
-        var v1 = JSON.parse(this.form.v1).version;
-        var v2 = JSON.parse(this.form.v2).version;
+        var v1 = JSON.parse(this.dynamicValidateForm.domains[0].value).version;
+        var v2 = JSON.parse(this.dynamicValidateForm.domains[1].value).version;
         this.picData.name = this.value;
         this.picData.children = [];
         this.picData.itemStyle = {color: 'black',  borderColor: 'black'}
@@ -123,7 +331,62 @@ export default {
         }
 
         this.drawLine();
+        this.createDialogVisible = false
       });
+        }
+      
+    },
+
+    drawLineSingle(i) {
+      let myChart = echarts.init(document.getElementById("myChart"));
+      myChart.setOption({
+        tooltip: {
+          trigger: "item",
+          triggerOn: "mousemove"
+        },
+        series: [
+          {
+            type: "tree",
+            draggable: true,
+            data: [this.picData],
+
+            left: "2%",
+            right: "2%",
+            top: "8%",
+            bottom: "20%",
+
+            symbol: "emptyCircle",
+
+            orient: "vertical",
+
+            expandAndCollapse: true,
+            initialTreeDepth: i,
+
+            label: {
+              normal: {
+                position: "top",
+                rotate: -90,
+                verticalAlign: "middle",
+                align: "right",
+                fontSize: 9
+              }
+            },
+
+            leaves: {
+              label: {
+                normal: {
+                  position: "bottom",
+                  rotate: -90,
+                  verticalAlign: "middle",
+                  align: "left"
+                }
+              }
+            },
+            animationDurationUpdate: 750
+          }
+        ]
+      });
+
     },
 
     drawLine() {

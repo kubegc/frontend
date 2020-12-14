@@ -109,13 +109,35 @@ export function AgetScheduleData(listQuery) {
   return res
 }
 
-export function getPriorityData(listQuery) {
-  var res = request({
-    url: '/getPriorityData',
-    method: 'get',
-    params: listQuery
-  })
-  return res
+export function getPriorityData() {
+  return {
+    code: 20000,
+    data: [{
+      title:'测试用例1',
+      json: testcase1         
+    },
+    {
+      title:'测试用例2',
+      json: testcase2        
+    },
+    {
+      title:'测试用例3',
+      json: testcase3
+    },
+    {
+      title:'测试用例1',
+      json: ptestcase1         
+    },
+    {
+      title:'测试用例2',
+      json: ptestcase2        
+    },
+    {
+      title:'测试用例3',
+      json: ptestcase3
+    }
+  ]
+}
 }
 
 export function getRouterData(listQuery) {

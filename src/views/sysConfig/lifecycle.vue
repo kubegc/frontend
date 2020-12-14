@@ -161,7 +161,8 @@ export default {
       catalogJson: {},
       namespace: "default",
       cloud_kind: "AliyunECS",
-      dataTemp: []
+      dataTemp: [],
+      templateKind: "Template"
     };
   },
 
@@ -186,13 +187,14 @@ export default {
             this.sdkJson = response.data;
             this.SDK = response.data.spec.data.git;
             this.version = response.data.spec.data.version;
+            this.kind = response.data.spec.data.kind;
 
             listResources({
-              kind: "Template",
+              kind: this.templateKind,
               page: 1,
               limit: 1000,
               labels: {
-                type: this.cloud_kind,
+                
               },
             }).then((response) => {
               if (this.validateRes(response) == 1) {

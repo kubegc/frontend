@@ -38,7 +38,7 @@
       >
         <template slot-scope="scope">
           <router-link
-            :to="{path:resourceInfo,query:{outTabName: outTabName, tabName: tabName, name:getInputValue(scope.row.json,item.row),nodeName:scope.row.json.spec.nodeName}}"
+            :to="{path:resourceInfo,query:{outTabName: outTabName, tabName: tabName, name:getInputValue(scope.row.json,item.row),nodeName:scope.row.json.spec.nodeName, namespace: scope.row.json.metadata.namespace}}"
             v-if="item.kind == 'a'"
             tag="a"
             class="link"
@@ -53,7 +53,7 @@
           <el-select
             v-if="item.kind === 'action'"
             v-model="scope.row.val"
-            placeholder="更多操作"
+            placeholder="安装软件"
             @change="(handleUpdate($event, scope.row.json))"
           >
             <el-option
@@ -638,20 +638,24 @@ export default {
         })
       } else {
         // 当操作是更新 update 的情况
-        this.actionDialogVisible = true
-        getResource({
-          token: this.token,
-          name: name,
-          kind: this.catalog_operator,
-          namespace: this.namespace
-        }).then((response) => {
-          this.listLoading = false
-          this.createJsonData = response.data
-          console.log(this.createJsonData)
-        })
-        for (var key in this.list) {
-          this.list[key].val = ''
-        }
+        this.$router.push({
+        path: '/crossCloud/apiAnalysis/index',
+        params: {}
+      })
+        // this.actionDialogVisible = true
+        // getResource({
+        //   token: this.token,
+        //   name: name,
+        //   kind: this.catalog_operator,
+        //   namespace: this.namespace
+        // }).then((response) => {
+        //   this.listLoading = false
+        //   this.createJsonData = response.data
+        //   console.log(this.createJsonData)
+        // })
+        // for (var key in this.list) {
+        //   this.list[key].val = ''
+        // }
       }
     },
     create() {

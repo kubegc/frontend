@@ -98,11 +98,11 @@ export const constantRoutes = [
     component: () => import('@/views/sysConfig/overall'),
     meta: { icon: 'cloud', title: '智能服务演化' }
   },
-  {
-    path: '/charts/containerInfo',
-    component: () => import('@/views/charts/containerInfo'),
-    meta: { icon: 'cloud', title: 'pod信息' }
-  },
+  // {
+  //   path: '/charts/containerInfo',
+  //   component: () => import('@/views/charts/containerInfo'),
+  //   meta: { icon: 'cloud', title: 'pod信息' }
+  // },
   {
     path: '/framework-construction',
     component: () => import('@/views/pipeline/framework-construction'),

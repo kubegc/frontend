@@ -14,7 +14,7 @@
       </el-form-item>
 
       <el-form-item label="请求参数：">
-        <el-input :rows="6"type="textarea" v-model="form.desc"/>
+        <el-input :rows="6" type="textarea" v-model="form.desc"/>
         <el-row style="margin-top: 30px">
           <el-col>
             <el-button type="primary" @click="onSubmit">发送请求</el-button>

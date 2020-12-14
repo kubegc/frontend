@@ -117,6 +117,7 @@ export default {
     this.nodeName = this.$route.query.nodeName;
     this.tabName = this.$route.query.tabName;
     this.outTabName = this.$route.query.outTabName;
+    this.namespace = this.$route.query.namespace;
 
     console.log(this.tabName)
 
