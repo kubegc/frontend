@@ -1,0 +1,15 @@
+{
+  "apiVersion": "kubesys.io/v1",
+  "kind": "User",
+  "metadata": {
+    "name": "admin"
+  },
+  "spec": {
+    "password": "admin",
+    "role": {
+      "name": "admin",
+      "namespace": "default"
+    },
+    "info": null
+  }
+}

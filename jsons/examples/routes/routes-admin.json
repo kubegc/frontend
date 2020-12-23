@@ -1,0 +1,184 @@
+{
+  "apiVersion": "cloudplus.io/v1alpha3",
+  "kind": "Frontend",
+  "metadata": {
+    "name": "routes-admin",
+    "namespace": "default"
+  },
+  "spec": {
+    "routes": [
+      {
+        "path": "/systemConfig",
+        "component": "Base",
+        "meta": {
+          "title": "控制面板",
+          "icon": "routes"
+        },
+        "children": [
+          {
+            "path": "resourcesPanel",
+            "component": "Layout",
+            "meta": {
+              "title": "资源面板",
+              "icon": "resources"
+            },
+            "children": [
+              {
+                "path": "namespace",
+                "name": "Namespace",
+                "component": "/charts/nodeTable",
+                "meta": {
+                  "title": "命名空间（Namespace）",
+                  "icon": "node"
+                }
+              },
+              {
+                "path": "node",
+                "name": "Node",
+                "component": "/charts/nodeTable",
+                "meta": {
+                  "title": "节点（Node）",
+                  "icon": "node"
+                }
+              },
+              {
+                "path": "frontend",
+                "name": "Frontend",
+                "component": "/charts/nodeTable",
+                "meta": {
+                  "title": "布局",
+                  "icon": "node"
+                }
+              }
+            ]
+          },
+          {
+            "path": "appPanel",
+            "component": "Layout",
+            "meta": {
+              "title": "应用面板",
+              "icon": "resources"
+            },
+            "children": [
+              {
+                "path": "job",
+                "name": "Job",
+                "component": "/charts/nodeTable",
+                "meta": {
+                  "title": "作业（Job）",
+                  "icon": "node"
+                }
+              },
+              {
+                "path": "deployment",
+                "name": "Deployment",
+                "component": "/charts/nodeTable",
+                "meta": {
+                  "title": "deployment",
+                  "icon": "node"
+                }
+              }
+            ]
+          },
+          {
+            "path": "orchestrationPanel",
+            "component": "Layout",
+            "meta": {
+              "title": "编排面板",
+              "icon": "resources"
+            }
+          },
+          {
+            "path": "evolve",
+            "component": "Layout",
+            "children": [
+              {
+                "path": "index",
+                "component": "/guide/index",
+                "meta": {
+                  "title": "面板配置",
+                  "icon": "resources"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "path": "/resourceManage",
+        "component": "Base",
+        "meta": {
+          "title": "资源管理",
+          "icon": "routes"
+        },
+        "children": [
+          {
+            "path": "node",
+            "component": "Layout",
+            "children": [
+              {
+                "path": "index",
+                "component": "/charts/nodeTable",
+                "name": "Node",
+                "meta": {
+                  "title": "节点",
+                  "icon": "node"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "path": "/appManage",
+        "component": "Base",
+        "meta": {
+          "title": "应用管理",
+          "icon": "routes"
+        },
+        "children": [
+          {
+            "path": "privateClouds",
+            "component": "Layout",
+            "children": [
+              {
+                "path": "index",
+                "component": "/appMarket/index",
+                "name": "privateClouds",
+                "meta": {
+                  "title": "私有云",
+                  "icon": "routes"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "path": "/coreTech",
+        "component": "Base",
+        "meta": {
+          "title": "关键技术",
+          "icon": "routes"
+        },
+        "children": [
+          {
+            "path": "appDetail",
+            "component": "Layout",
+            "children": [
+              {
+                "path": "index",
+                "component": "/appDetail/index",
+                "name": "appDetail",
+                "meta": {
+                  "title": "应用详情",
+                  "icon": "node"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

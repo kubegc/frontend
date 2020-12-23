@@ -1,0 +1,20 @@
+{
+  "apiVersion": "cloudplus.io/v1alpha3",
+  "kind": "Frontend",
+  "metadata": {
+    "name": "pages",
+    "namespace": "default"
+  },
+  "spec": {
+    "pageTypes": {
+      "nodeTable": {
+        "label": "普通资源操作页面",
+        "component": "/charts/nodeTable"
+      },
+      "appMarket": {
+        "label": "平铺展示页面",
+        "component": "/appMarket/index"
+      }
+    }
+  }
+}

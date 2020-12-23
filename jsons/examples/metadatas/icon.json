@@ -1,0 +1,10 @@
+{
+	"apiVersion": "kubesys.io/v1",
+	"kind": "Metadata",
+	"metadata": {
+		"name": "icon"
+	},
+        "type": "icon",
+	"spec": {
+	}
+}
