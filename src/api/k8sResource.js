@@ -92,17 +92,3 @@ export function execDiff(data) {
   })
   return res
 }
-
-// export function validateRes(res) {
-//   if (res.code === 20000) {
-//     return true
-//   } else {
-//     this.$notify({
-//       title: 'error',
-//       message: res.data,
-//       type: 'warning',
-//       duration: 3000
-//     })
-//     return false
-//   }
-// }

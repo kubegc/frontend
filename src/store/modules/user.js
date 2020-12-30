@@ -1,7 +1,6 @@
 import { login, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/k8sResource'
 import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
-import { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -25,9 +24,6 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  // SET_AVATAR: (state, avatar) => {
-  //   state.avatar = avatar
-  // },
   SET_ROLE: (state, role) => {
     state.role = role
   }
@@ -73,18 +69,6 @@ const actions = {
     })
   },
 
-  // user logout
-  // logout({ commit, state }) {
-  // return new Promise((resolve, reject) => {
-  //   logout(state.token).then(() => {
-  //     removeToken() // must remove  token  first
-  //     resetRouter()
-  //     commit('RESET_STATE')
-  //     resolve()
-  //   }).catch(error => {
-  //     reject(error)
-  //   })
-  // })
   logout({ dispatch }) {
     return new Promise(resolve => {
       dispatch('resetToken').then(() => {

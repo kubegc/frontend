@@ -37,7 +37,10 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  {
+    path: '/progress',
+    component: () => import('@/views/progress/progress')
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -98,64 +101,14 @@ export const constantRoutes = [
     component: () => import('@/views/sysConfig/overall'),
     meta: { icon: 'cloud', title: '智能服务演化' }
   },
-  // {
-  //   path: '/charts/containerInfo',
-  //   component: () => import('@/views/charts/containerInfo'),
-  //   meta: { icon: 'cloud', title: 'pod信息' }
-  // },
+
   {
     path: '/framework-construction',
     component: () => import('@/views/pipeline/framework-construction'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
 
   }
-  //
-  // {
-  //   path: '/',
-  //   component: Base,
-  //   redirect: '/menus',
-  //   children: [{
-  //     path: 'menus',
-  //     name: 'Menus',
-  //     component: Layout,
-  //     meta: { title: 'Menus', icon: 'dashboard' }
-  //   }]
-  // },
-
-  // {
-  //   path: '/example',
-  //   component: Layout,
-  //   redirect: '/example/table',
-  //   name: 'Example',
-  //   meta: { title: 'Example', icon: 'el-icon-s-help' },
-  //   children: [
-  //     {
-  //       path: 'table',
-  //       name: 'Table',
-  //       component: () => import('@/views/table/index'),
-  //       meta: { title: 'Table', icon: 'table' }
-  //     },
-  //     {
-  //       path: 'tree',
-  //       name: 'Tree',
-  //       component: () => import('@/views/tree/index'),
-  //       meta: { title: 'Tree', icon: 'tree' }
-  //     }
-  //   ]
-  // }
-
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'Form',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: 'Form', icon: 'form' }
-  //     }
-  //   ]
-  // }
+  
 ]
 
 const createRouter = () => new Router({
