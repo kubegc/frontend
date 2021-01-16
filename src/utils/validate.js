@@ -11,11 +11,15 @@ export function isExternal(path) {
 }
 
 /**
- * @param {string} str
+ * @param {desc} regexp
+ * @param {value}  value
  * @returns {Boolean}
  */
-export function validUsername(str) {
-  // const valid_map = ['admin', 'editor']
-  // return valid_map.indexOf(str.trim()) >= 0
-  return true
+export function check(desc, value) {
+  var regexp = new RegExp(desc)
+  if (!regexp.test(value)) {
+      return false;
+  } else {
+      return true;
+  }
 }

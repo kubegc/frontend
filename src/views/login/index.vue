@@ -69,27 +69,38 @@
         登录
       </el-button>
     </el-form>
+
+    <div>
+      <el-button id="usernameRegExp" type="text" hidden=true></el-button>
+      <el-button id="usernameRegExpDesc" type="text" hidden=true></el-button>
+      <el-button id="passwordRegExp" type="text" hidden=true></el-button>
+      <el-button id="passwordRegExpDesc" type="text" hidden=true></el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
+import { check } from "@/utils/validate";
 import { getResource } from "@/api/k8sResource";
 
 export default {
   name: "Login",
   
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error("Please enter the correct user name"));
+     const validateUsername = (rule, value, callback) => {
+      console.log("udesc：" + this.usernameRegExp)
+      console.log("uvalue: " + value)
+      if (!check(this.usernameRegExp, value)) {
+        callback(new Error(this.usernameRegExpDesc));
       } else {
         callback();
       }
     };
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 1) {
-        callback(new Error("The password can not be less than 6 digits"));
+      console.log("pdesc：" + this.passwordRegExp)
+      console.log("pvalue: " + value)
+      if (!check(this.passwordRegExp, value)) {
+        callback(new Error(this.passwordRegExpDesc));
       } else {
         callback();
       }
@@ -112,6 +123,10 @@ export default {
       redirect: undefined,
       projectTitles: [],
       chosenTitle: "",
+      usernameRegExp: "",
+      usernameRegExpDesc: "",
+      passwordRegExp: "",
+      passwordRegExpDesc: "", 
     };
   },
   watch: {
@@ -132,6 +147,26 @@ export default {
     }).then((response) => {
       this.projectTitles = response.data.spec.data;
       this.chosenTitle = response.data.spec.data[0].label;
+    });
+
+    getResource({
+      token: "default",
+      kind: "RegExp",
+      namespace: "default",
+      name: "username",
+    }).then((response) => {
+      this.usernameRegExp = response.data.spec.value;
+      this.usernameRegExpDesc = response.data.spec.desc;
+    });
+
+    getResource({
+      token: "default",
+      kind: "RegExp",
+      namespace: "default",
+      name: "password",
+    }).then((response) => {
+      this.passwordRegExp = response.data.spec.value;
+      this.passwordRegExpDesc = response.data.spec.desc;
     });
   },
 
