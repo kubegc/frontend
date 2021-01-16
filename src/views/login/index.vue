@@ -30,7 +30,7 @@
         <el-input
           ref="username"
           v-model="loginForm.username"
-          placeholder="Username"
+          placeholder="用户名"
           name="username"
           type="text"
           tabindex="1"
@@ -47,7 +47,7 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password"
+          placeholder="密  码"
           name="password"
           tabindex="2"
           auto-complete="on"
@@ -78,6 +78,7 @@ import { getResource } from "@/api/k8sResource";
 
 export default {
   name: "Login",
+  
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -121,6 +122,7 @@ export default {
       immediate: true,
     },
   },
+  
   created() {
     getResource({
       token: "default",
@@ -132,6 +134,8 @@ export default {
       this.chosenTitle = response.data.spec.data[0].label;
     });
   },
+
+  
   methods: {
     showPwd() {
       if (this.passwordType === "password") {
@@ -157,7 +161,6 @@ export default {
               this.loading = false;
             });
         } else {
-          console.log("error submit!!");
           return false;
         }
       });
