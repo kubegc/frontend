@@ -88,8 +88,6 @@ export default {
   
   data() {
      const validateUsername = (rule, value, callback) => {
-      console.log("udesc：" + this.usernameRegExp)
-      console.log("uvalue: " + value)
       if (!check(this.usernameRegExp, value)) {
         callback(new Error(this.usernameRegExpDesc));
       } else {
@@ -97,8 +95,6 @@ export default {
       }
     };
     const validatePassword = (rule, value, callback) => {
-      console.log("pdesc：" + this.passwordRegExp)
-      console.log("pvalue: " + value)
       if (!check(this.passwordRegExp, value)) {
         callback(new Error(this.passwordRegExpDesc));
       } else {

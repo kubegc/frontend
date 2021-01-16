@@ -72,10 +72,8 @@ const actions = {
   logout({ dispatch }) {
     return new Promise(resolve => {
       dispatch('resetToken').then(() => {
-        resetRouter()
         removeValue('name')
         removeValue('role')
-        // removeValue('avatar')
         resolve()
       })
     })
