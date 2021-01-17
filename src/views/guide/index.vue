@@ -9,7 +9,7 @@
         label-width="130px"
       >
         <el-col :span="16">
-          <el-form-item label="页面类型" prop="chosenGuideType">
+          <el-form-item label="页面类型" prop="chosenPageType">
             <el-select
               v-model="formData.chosenPageType"
               placeholder="请选择"
@@ -140,7 +140,9 @@ export default {
         resource: "",
         chosenPageType: "",
       },
+      
       comp: "",
+      
       rules: {
         resource: [
           {
