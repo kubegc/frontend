@@ -26,7 +26,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col v-if="canEdit" :span="16">
+        <el-col :span="16">
           <el-form-item label="资源名称" prop="resource" >
             <el-select
               v-model="formData.resource"
@@ -44,61 +44,8 @@
           </el-form-item>
         </el-col>
 
-        <el-col v-if="canEdit" :span="13">
-          <el-form-item
-            v-for="item in editTemplates"
-            :key="item.key"
-            :label="item.label"
-          >
-            <el-popover v-if="item.show" placement="right" trigger="hover">
-              <el-image
-                style="width: 800px; height: 350px"
-                :src="
-                  require('../../assets/' +
-                    formData.chosenPageType.toLowerCase() +
-                    '-' +
-                    item.key +
-                    '.jpg')
-                "
-              />
-              <el-button
-                slot="reference"
-                type="text"
-                icon="el-icon-edit"
-                size="medium"
-                @click="item.dialogVisible = true"
-              >
-                点击编辑
-              </el-button>
-            </el-popover>
-
-            <el-button
-              v-else
-              type="text"
-              icon="el-icon-edit"
-              size="medium"
-              @click="item.dialogVisible = true"
-            >
-              点击编辑
-            </el-button>
-
-            <el-dialog :visible.sync="item.dialogVisible" width="70%">
-              <json-editor
-                :value="JSON.stringify(item.jsonFileObj, null, 2)"
-                @input="item.jsonFileObj = JSON.parse($event)"
-              />
-              <div slot="footer" class="dialog-footer">
-                <el-button @click="item.dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="item.dialogVisible = false"
-                  >确 定</el-button
-                >
-              </div>
-            </el-dialog>
-          </el-form-item>
-        </el-col>
-
-        <el-col v-if="canEdit" :span="13">
-          <el-form-item label="路由">
+        <el-col :span="16">
+          <el-form-item prop="routers" label="菜单路由">
             <routes-tree-view
               v-model="routesFile"
               :resource-name="formData.resource"
@@ -108,7 +55,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col v-if="canEdit" :span="24">
+        <el-col :span="24">
           <el-form-item size="large">
             <el-button type="primary" round @click="submitForm">提交</el-button>
             <el-button round @click="resetForm">重置</el-button>
@@ -147,19 +94,25 @@ export default {
         resource: [
           {
             required: true,
-            message: "请选择资源名称",
+            message: "请选择",
+            trigger: "blur",
+          },
+        ],
+        routers: [
+          {
+            required: true,
+            message: "请配置",
             trigger: "blur",
           },
         ],
         chosenPageType: [
           {
             required: true,
-            message: "请选择页面类型",
+            message: "请选择",
             trigger: "blur",
           },
         ],
       },
-      canEdit: false,
       editTemplates: [],
       pageTypes: [],
       routeVisible: false,
@@ -203,6 +156,7 @@ export default {
         if (!valid) return;
         // if valid
         const alreadyCreate = [];
+        
         try {
           this.editTemplates.forEach((item) => {
             console.log(item.jsonFileObj)
@@ -216,6 +170,7 @@ export default {
               }
             );
           });
+          
           updateResource({ token: this.token, json: this.routesFile }).then(
             (response) => {
               if (this.$valid(response)) {
@@ -246,7 +201,6 @@ export default {
       }
     },
     handleGuideTypeChange(value) {
-      this.canEdit = false;
       getResource({
         kind: "Frontend",
         name: "wizard-" + value.toLowerCase(),
@@ -279,8 +233,6 @@ export default {
               }
             });
           }
-
-          this.canEdit = true;
         }
       });
     },
