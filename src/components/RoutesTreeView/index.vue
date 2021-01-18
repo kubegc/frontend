@@ -11,12 +11,7 @@
             icon="el-icon-circle-plus"
             @click.stop="append(node)"
           />
-          <el-button type="text" size="mini" @click.stop="del(node, data)">
-            删除
-          </el-button>
-          <el-button type="text" size="mini" @click.stop="edit(node, data)">
-            编辑
-          </el-button>
+          
         </span>
       </span>
     </el-tree>
@@ -32,7 +27,7 @@
         >
 
           <el-col :span="21">
-            <el-form-item label="菜单名">
+            <el-form-item prop="title" label="菜单名">
               <el-input
                 v-model="routeContent.title"
                 placeholder="title"
@@ -43,7 +38,7 @@
           </el-col>
 
           <el-col :span="21">
-            <el-form-item label="图标名">
+            <el-form-item prop="icon" label="图标名">
               <el-select
                 v-model="routeContent.icon"
                 placeholder="icon"
@@ -60,16 +55,6 @@
             </el-form-item>
           </el-col>
 
-          <el-col v-if="!comp" :span="21">
-            <el-form-item label="组件路径">
-              <el-input
-                v-model="routeContent.comp"
-                placeholder="title"
-                clearable
-                :style="{ width: '100%' }"
-              />
-            </el-form-item>
-          </el-col>
         </el-form>
       </el-row>
       <div slot="footer">
@@ -112,6 +97,7 @@ export default {
       currentEditNode: undefined,
       submitRequire: undefined,
       icons: [],
+      routes: "",
       routeContent: {
         title: undefined,
         icon: undefined,
@@ -127,7 +113,7 @@ export default {
         ],
         icon: [
           {
-            required: false,
+            required: true,
             message: "icon",
             trigger: "blur",
           },
@@ -142,7 +128,7 @@ export default {
   },
 
   created() {
-    const routes = this.value.spec.routes;
+    var routes = this.value.spec.routes;
     this.treeData = this.generateTreeData(routes);
     getResource({ kind: "Metadata", namespace: "default", name: "icons" }).then(
       (response) => {

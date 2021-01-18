@@ -27,7 +27,7 @@
         </el-col>
 
         <el-col :span="16">
-          <el-form-item label="资源名称" prop="resource" >
+          <el-form-item label="资源名称" prop="resource">
             <el-select
               v-model="formData.resource"
               placeholder="请选择"
@@ -45,7 +45,7 @@
         </el-col>
 
         <el-col :span="16">
-          <el-form-item prop="routers" label="菜单路由">
+          <el-form-item prop="routers" label="菜单位置">
             <routes-tree-view
               v-model="routesFile"
               :resource-name="formData.resource"
@@ -68,7 +68,6 @@
 
 
 <script>
-import JsonEditor from "@/components/JsonEditorSpecial/index";
 import RoutesTreeView from "@/components/RoutesTreeView/index";
 
 import {
@@ -80,16 +79,16 @@ import {
 import { mapGetters } from "vuex";
 
 export default {
-  components: { RoutesTreeView, JsonEditor },
+  components: { RoutesTreeView },
   data() {
     return {
       formData: {
         resource: "",
         chosenPageType: "",
       },
-      
+
       comp: "",
-      
+
       rules: {
         resource: [
           {
@@ -115,9 +114,8 @@ export default {
       },
       editTemplates: [],
       pageTypes: [],
-      routeVisible: false,
       routesFile: {},
-      resourceOptions: undefined,
+      resourceOptions: [],
     };
   },
   watch: {
@@ -137,6 +135,7 @@ export default {
         this.routesFile = response.data;
       }
     });
+
     getResource({ kind: "Frontend", name: "pages", namespace: "default" }).then(
       (response) => {
         if (this.$valid(response)) {
@@ -144,6 +143,26 @@ export default {
         }
       }
     );
+
+    getResource({ kind: "Frontend", name: "pages", namespace: "default" }).then(
+      (response) => {
+        if (this.$valid(response)) {
+          this.pageTypes = response.data.spec.pageTypes;
+        }
+      }
+    );
+
+    getMeta({ token: this.token }).then((response) => {
+      if (this.$valid(response)) {
+        const data = response.data;
+        for (const key in data) {
+          const curr = {};
+          curr.value = key;
+          curr.label = key;
+          this.resourceOptions.push(curr);
+        }
+      }
+    });
   },
 
   computed: {
@@ -151,15 +170,16 @@ export default {
   },
 
   methods: {
+    
     submitForm() {
       this.$refs["elForm"].validate((valid) => {
         if (!valid) return;
         // if valid
         const alreadyCreate = [];
-        
+
         try {
           this.editTemplates.forEach((item) => {
-            console.log(item.jsonFileObj)
+            console.log(item.jsonFileObj);
             createResource({ token: this.token, json: item.jsonFileObj }).then(
               (response) => {
                 if (this.$valid(response)) {
@@ -170,7 +190,7 @@ export default {
               }
             );
           });
-          
+
           updateResource({ token: this.token, json: this.routesFile }).then(
             (response) => {
               if (this.$valid(response)) {
@@ -217,21 +237,6 @@ export default {
             temp.jsonFileObj = info.values[key];
             temp.dialogVisible = false;
             this.editTemplates.push(temp);
-          }
-
-          if (!this.resourceOptions) {
-            this.resourceOptions = [];
-            getMeta({ token: this.token }).then((response) => {
-              if (this.$valid(response)) {
-                const data = response.data;
-                for (const key in data) {
-                  const curr = {};
-                  curr.value = key;
-                  curr.label = key;
-                  this.resourceOptions.push(curr);
-                }
-              }
-            });
           }
         }
       });
