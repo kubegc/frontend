@@ -11,7 +11,6 @@
             icon="el-icon-circle-plus"
             @click.stop="append(node)"
           />
-          
         </span>
       </span>
     </el-tree>
@@ -25,12 +24,11 @@
           size="medium"
           label-width="100px"
         >
-
           <el-col :span="21">
-            <el-form-item prop="title" label="菜单名">
+            <el-form-item prop="menu" label="菜单名">
               <el-input
                 v-model="routeContent.title"
-                placeholder="title"
+                placeholder="菜单名"
                 clearable
                 :style="{ width: '100%' }"
               />
@@ -41,7 +39,7 @@
             <el-form-item prop="icon" label="图标名">
               <el-select
                 v-model="routeContent.icon"
-                placeholder="icon"
+                placeholder="图标名"
                 clearable
                 :style="{ width: '100%' }"
               >
@@ -54,9 +52,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-
         </el-form>
       </el-row>
+
       <div slot="footer">
         <el-button @click="routeAddVisible = false">取消</el-button>
         <el-button type="primary" @click="handleSubmit">确定</el-button>
@@ -78,7 +76,6 @@
 </template>
 
 <script>
-
 import { getResource } from "@/api/k8sResource";
 import JsonEditor from "@/components/JsonEditorSpecial/index";
 
@@ -88,7 +85,8 @@ export default {
   props: ["value", "resourceName", "comp", "pageType"],
   data() {
     return {
-      treeData: undefined,
+      routes: "",
+      treeData: [],
       routeAddVisible: false,
       routeEditVisible: false,
       routeEditObj: undefined,
@@ -97,17 +95,16 @@ export default {
       currentEditNode: undefined,
       submitRequire: undefined,
       icons: [],
-      routes: "",
       routeContent: {
-        title: undefined,
+        menu: undefined,
         icon: undefined,
         comp: undefined,
       },
       rules: {
-        title: [
+        menu: [
           {
             required: true,
-            message: "title",
+            message: "请输入菜单名",
             trigger: "blur",
           },
         ],
@@ -123,13 +120,14 @@ export default {
   },
   watch: {
     value(tree) {
+      console.log(tree)
+      console.log(tree.spec)
       this.treeData = this.generateTreeData(tree.spec.routes);
     },
   },
 
   created() {
-    var routes = this.value.spec.routes;
-    this.treeData = this.generateTreeData(routes);
+    this.treeData = this.generateTreeData(this.value.spec.routes);
     getResource({ kind: "Metadata", namespace: "default", name: "icons" }).then(
       (response) => {
         if (this.$valid(response)) {
@@ -138,7 +136,7 @@ export default {
       }
     );
   },
-  
+
   methods: {
     generateTreeData(routes, parent) {
       var res = [];
@@ -150,7 +148,7 @@ export default {
           currNode.label = item.children[0].meta.title;
           currNode.oneChild = true;
         }
-        
+
         parent ? (currNode.level = parent.level + 1) : (currNode.level = 1);
 
         if (item.children && !currNode.oneChild) {
@@ -160,10 +158,12 @@ export default {
       }
       return res;
     },
+
     append(node) {
       this.routeAddVisible = true;
       this.submitRequire = node;
     },
+
     handleSubmit() {
       this.$refs["routeForm"].validate((valid) => {
         if (!valid) return;

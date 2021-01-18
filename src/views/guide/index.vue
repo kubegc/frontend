@@ -69,7 +69,6 @@
 
 <script>
 import RoutesTreeView from "@/components/RoutesTreeView/index";
-
 import {
   createResource,
   getResource,
@@ -77,7 +76,6 @@ import {
   getMeta,
 } from "@/api/k8sResource";
 import { mapGetters } from "vuex";
-
 export default {
   components: { RoutesTreeView },
   data() {
@@ -86,9 +84,7 @@ export default {
         resource: "",
         chosenPageType: "",
       },
-
       comp: "",
-
       rules: {
         resource: [
           {
@@ -123,7 +119,6 @@ export default {
       this.comp = this.pageTypes[this.formData.chosenPageType].component;
     },
   },
-
   created() {
     getResource({
       token: this.token,
@@ -135,7 +130,6 @@ export default {
         this.routesFile = response.data;
       }
     });
-
     getResource({ kind: "Frontend", name: "pages", namespace: "default" }).then(
       (response) => {
         if (this.$valid(response)) {
@@ -143,7 +137,6 @@ export default {
         }
       }
     );
-
     getResource({ kind: "Frontend", name: "pages", namespace: "default" }).then(
       (response) => {
         if (this.$valid(response)) {
@@ -151,7 +144,6 @@ export default {
         }
       }
     );
-
     getMeta({ token: this.token }).then((response) => {
       if (this.$valid(response)) {
         const data = response.data;
@@ -164,11 +156,9 @@ export default {
       }
     });
   },
-
   computed: {
     ...mapGetters(["token", "name"]),
   },
-
   methods: {
     
     submitForm() {
@@ -176,7 +166,6 @@ export default {
         if (!valid) return;
         // if valid
         const alreadyCreate = [];
-
         try {
           this.editTemplates.forEach((item) => {
             console.log(item.jsonFileObj);
@@ -190,7 +179,6 @@ export default {
               }
             );
           });
-
           updateResource({ token: this.token, json: this.routesFile }).then(
             (response) => {
               if (this.$valid(response)) {

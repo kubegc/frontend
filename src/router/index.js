@@ -33,12 +33,17 @@ import Layout from '@/layout/layout'
  */
 export const constantRoutes = [
   {
+    path: '/wizzard',
+    component: () => import('@/views/wizzard/index'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
   {
-    path: '/progress',
+    path: '/progress', // deprecated
     component: () => import('@/views/progress/progress')
   },
   {
@@ -47,7 +52,7 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/routes',
+    path: '/routes',  // deprecated
     component: Base,
     meta: { icon: 'routes', title: '向导路由' },
     children: [
@@ -82,28 +87,28 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/pipeline',
+    path: '/pipeline',       // deprecated
     component: () => import('@/views/pipeline/pipeline'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
   },
   {
-    path: '/testRequest',
+    path: '/testRequest',       // deprecated
     component: () => import('@/views/cloudPlatform/testRequest'),
     meta: { icon: 'cloud', title: '请求云服务' }
   },
   {
-    path: '/diff',
+    path: '/diff',             // deprecated
     component: () => import('@/views/sysConfig/diff'),
     meta: { icon: 'cloud', title: '兼容性分析' }
   },
   {
-    path: '/overall',
+    path: '/overall',          // deprecated
     component: () => import('@/views/sysConfig/overall'),
     meta: { icon: 'cloud', title: '智能服务演化' }
   },
 
   {
-    path: '/framework-construction',
+    path: '/framework-construction',    // deprecated
     component: () => import('@/views/pipeline/framework-construction'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
 
