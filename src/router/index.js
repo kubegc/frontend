@@ -38,6 +38,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/table',
+    component: () => import('@/views/table/index'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
