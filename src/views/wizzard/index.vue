@@ -12,33 +12,48 @@
     </div>
 
     <div class="app-container">
-      <el-tabs :tab-position="tabPosition" style="height: 200px">
-        <el-tab-pane label="用户管理">用户管理</el-tab-pane>
-        <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-        <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-        <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
-      </el-tabs>
+      <el-steps :active="active" finish-status="success">
+        <el-step title="步骤 1"></el-step>
+        <el-step title="步骤 2"></el-step>
+        <el-step title="步骤 3"></el-step>
+        <el-step title="步骤 4"></el-step>
+      </el-steps>
+
+      <el-button style="margin-top: 12px" @click="next">上一步</el-button>
+      <el-button style="margin-top: 12px" @click="next">下一步</el-button>
+      <el-button style="margin-top: 12px" @click="next">提交</el-button>
     </div>
   </div>
 </template>
 
 <script>
 import { getResource } from "@/api/k8sResource";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
-      tabPosition: "left",
-      activeName: "1",
+      active: 0,
+      desc: "",
+      kind: "Wizzard",
     };
   },
-  desc: "",
-  
+
+  methods: {
+    next() {
+      if (this.active++ > 2) this.active = 0;
+    },
+  },
+
+  computed: {
+    ...mapGetters(["token"]),
+  },
+
   created() {
     getResource({
-      token: "default",
+      token: this.token,
       kind: "Frontend",
-      name: "desc-wizzard",
+      name: "desc-" + this.kind.toLowerCase(),
       namespace: "default",
     }).then((response) => {
       if (this.$valid(response)) {

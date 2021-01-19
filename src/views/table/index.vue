@@ -1,181 +1,121 @@
 <template>
-  <div class="app-container">
-    <dynamic-form
-      v-if="formVisible"
-      :form-data="responseJson"
-      :kind="catalog_operator"
-      @watchSearch="searchList"
-    />
-    <div class="base-button-container">
-      <el-button
-        icon="el-icon-plus"
-        type="primary"
-        class="filter-item"
-        circle
-        @click.native="createJson"
-      />
-      <el-button
-        icon="el-icon-refresh"
-        class="filter-item"
-        round
-        @click.native="getList"
-        >刷新页面
-      </el-button>
+  <div>
+    <div class="app-container" style="margin-bottom: 20px">
+      <el-collapse v-model="activeName" accordion>
+        <el-collapse-item>
+          <template slot="title">
+            功能描述<i class="header-icon el-icon-info"></i>
+          </template>
+          <div v-text="desc"></div>
+        </el-collapse-item>
+      </el-collapse>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      highlight-current-row
-      :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
-      @sort-change="sortChange"
-    >
-      <el-table-column type="index" />
-      <el-table-column
-        v-for="item in columns"
-        :key="item.key"
-        :label="item.label"
-      >
-        <template slot-scope="scope">
-          <router-link
-            v-if="item.kind == 'a'"
-            :to="{
-              path: resourceInfo,
-              query: {
-                outTabName: outTabName,
-                tabName: tabName,
-                name: getInputValue(scope.row.json, item.row),
-                nodeName: scope.row.json.spec.nodeName,
-                namespace: scope.row.json.metadata.namespace,
-              },
-            }"
-            tag="a"
-            class="link"
-            >{{ getInputValue(scope.row.json, item.row) }}</router-link
-          >
-          <span v-if="item.kind === undefined">{{
-            getInputValue(scope.row.json, item.row)
-          }}</span>
-          <svg-icon
-            v-if="item.kind === 'terminal'"
-            icon-class="pc"
-            class-name="custom-class"
-            @click="openTerminal(scope.row)"
-          />
-          <el-select
-            v-if="item.kind === 'action'"
-            v-model="scope.row.val"
-            placeholder="安装软件"
-            @change="handleUpdate($event, scope.row.json)"
-          >
-            <el-option
-              v-for="item in actions"
-              :key="item.key"
-              :label="item.key"
-              :value="item.type"
-            />
-          </el-select>
-        </template>
-      </el-table-column>
-    </el-table>
 
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      @pagination="getList"
-    />
-
-    <el-dialog
-      :visible.sync="actionDialogVisible"
-      :title="this.dialogTitle"
-      width="70%"
-      @dragDialog="handleDrag"
-    >
-      <div class="card-editor-container">
-        <json-editor
-          v-if="otherOperation === false"
-          ref="jsonEditor"
-          v-model="createJsonData"
+    <div class="app-container">
+      <dynamic-form
+        v-if="formVisible"
+        :form-data="responseJson"
+        :kind="catalog_operator"
+        @watchSearch="searchList"
+      />
+      <div class="base-button-container">
+        <el-button
+          icon="el-icon-plus"
+          type="primary"
+          class="filter-item"
+          circle
+          @click.native="createJson"
         />
+        <el-button
+          icon="el-icon-refresh"
+          class="filter-item"
+          round
+          @click.native="getList"
+          >刷新页面
+        </el-button>
       </div>
       <el-table
-        v-if="otherOperation === true"
+        :key="tableKey"
         v-loading="listLoading"
-        :data="Variables"
-        border
-        fit
+        :data="list"
         highlight-current-row
-        style="width: 100%; margin-top: 20px"
+        :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
         @sort-change="sortChange"
       >
-        <el-table-column label="key" align="center">
-          <template slot-scope="{ row }">
-            <span>{{ row.nameVariable }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="value" align="center">
-          <template slot-scope="{ row }">
-            <el-radio-group
-              v-if="row.placeholder === 'bool'"
-              v-model="row.value"
+        <el-table-column type="index" />
+        <el-table-column
+          v-for="item in columns"
+          :key="item.key"
+          :label="item.label"
+        >
+          <template slot-scope="scope">
+            <router-link
+              v-if="item.kind == 'a'"
+              :to="{
+                path: resourceInfo,
+                query: {
+                  outTabName: outTabName,
+                  tabName: tabName,
+                  name: getInputValue(scope.row.json, item.row),
+                  nodeName: scope.row.json.spec.nodeName,
+                  namespace: scope.row.json.metadata.namespace,
+                },
+              }"
+              tag="a"
+              class="link"
+              >{{ getInputValue(scope.row.json, item.row) }}</router-link
             >
-              <el-radio :label="true">true</el-radio>
-              <el-radio :label="false">false</el-radio>
-            </el-radio-group>
-            <input
-              v-if="row.placeholder !== 'bool'"
-              style="border-radius: 8px; border: 1px solid grey; outline: none"
-              class="el-input"
-              :placeholder="row.placeholder"
-              :value="getInputValue(row, 'value')"
-              @input="updateInputValue(row, 'value', $event.target.value)"
+            <span v-if="item.kind === undefined">{{
+              getInputValue(scope.row.json, item.row)
+            }}</span>
+            <svg-icon
+              v-if="item.kind === 'terminal'"
+              icon-class="pc"
+              class-name="custom-class"
+              @click="openTerminal(scope.row)"
             />
+            <el-select
+              v-if="item.kind === 'action'"
+              v-model="scope.row.val"
+              placeholder="请选择"
+              @change="handleUpdate($event, scope.row.json)"
+            >
+              <el-option
+                v-for="item in actions"
+                :key="item.key"
+                :label="item.key"
+                :value="item.type"
+              />
+            </el-select>
           </template>
         </el-table-column>
       </el-table>
-      <div style="width: 100%; height: 50px">
-        <el-button
-          type="primary"
-          style="float: right; margin-top: 20px; height: 40px; display: inline"
-          @click.native="applyOperation"
-          >确认
-        </el-button>
-      </div>
-    </el-dialog>
 
-    <el-dialog
-      :visible.sync="createDialogVisible"
-      :title="this.createResource"
-      @dragDialog="handleDrag"
-    >
-      <div class="card-editor-container">
-        <!-- <p>请填写JSON格式（因版本兼容性约束，请使用以下的group和version信息创建资源）</p> -->
-        <json-editor
-          v-if="otherOperation == false"
-          ref="jsonEditor"
-          v-model="createTemplate"
-        />
-        <div v-if="otherOperation == true">
-          请选择模版：
-          <el-select
-            v-model="createModel"
-            placeholder="选择模版"
-            @change="handleModel($event)"
-          >
-            <el-option
-              v-for="item in models"
-              :key="item"
-              :label="item"
-              :value="item"
-            />
-          </el-select>
+      <pagination
+        v-show="total > 0"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        @pagination="getList"
+      />
+
+      <el-dialog
+        :visible.sync="actionDialogVisible"
+        :title="this.dialogTitle"
+        width="70%"
+        @dragDialog="handleDrag"
+      >
+        <div class="card-editor-container">
+          <json-editor
+            v-if="otherOperation === false"
+            ref="jsonEditor"
+            v-model="createJsonData"
+          />
         </div>
         <el-table
           v-if="otherOperation === true"
           v-loading="listLoading"
-          :data="createTableData"
+          :data="Variables"
           border
           fit
           highlight-current-row
@@ -211,7 +151,6 @@
             </template>
           </el-table-column>
         </el-table>
-
         <div style="width: 100%; height: 50px">
           <el-button
             type="primary"
@@ -221,13 +160,96 @@
               height: 40px;
               display: inline;
             "
-            @click.native="create"
+            @click.native="applyOperation"
             >确认
           </el-button>
-          <!-- <el-button type="primary" style="float:right;margin-top:20px;height:40px;display:inline;margin-right:0px;" >取消</el-button> -->
         </div>
-      </div>
-    </el-dialog>
+      </el-dialog>
+
+      <el-dialog
+        :visible.sync="createDialogVisible"
+        :title="this.createResource"
+        @dragDialog="handleDrag"
+      >
+        <div class="card-editor-container">
+          <!-- <p>请填写JSON格式（因版本兼容性约束，请使用以下的group和version信息创建资源）</p> -->
+          <json-editor
+            v-if="otherOperation == false"
+            ref="jsonEditor"
+            v-model="createTemplate"
+          />
+          <div v-if="otherOperation == true">
+            请选择模版：
+            <el-select
+              v-model="createModel"
+              placeholder="选择模版"
+              @change="handleModel($event)"
+            >
+              <el-option
+                v-for="item in models"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+          </div>
+          <el-table
+            v-if="otherOperation === true"
+            v-loading="listLoading"
+            :data="createTableData"
+            border
+            fit
+            highlight-current-row
+            style="width: 100%; margin-top: 20px"
+            @sort-change="sortChange"
+          >
+            <el-table-column label="key" align="center">
+              <template slot-scope="{ row }">
+                <span>{{ row.nameVariable }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="value" align="center">
+              <template slot-scope="{ row }">
+                <el-radio-group
+                  v-if="row.placeholder === 'bool'"
+                  v-model="row.value"
+                >
+                  <el-radio :label="true">true</el-radio>
+                  <el-radio :label="false">false</el-radio>
+                </el-radio-group>
+                <input
+                  v-if="row.placeholder !== 'bool'"
+                  style="
+                    border-radius: 8px;
+                    border: 1px solid grey;
+                    outline: none;
+                  "
+                  class="el-input"
+                  :placeholder="row.placeholder"
+                  :value="getInputValue(row, 'value')"
+                  @input="updateInputValue(row, 'value', $event.target.value)"
+                />
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <div style="width: 100%; height: 50px">
+            <el-button
+              type="primary"
+              style="
+                float: right;
+                margin-top: 20px;
+                height: 40px;
+                display: inline;
+              "
+              @click.native="create"
+              >确认
+            </el-button>
+            <!-- <el-button type="primary" style="float:right;margin-top:20px;height:40px;display:inline;margin-right:0px;" >取消</el-button> -->
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -276,6 +298,8 @@ export default {
   },
   data() {
     return {
+      activeName: "1",
+      desc: "",
       formVisible: false,
       tableKey: 0,
       list: [],
@@ -334,7 +358,7 @@ export default {
     this.responseJson = this.$route.meta.data;
     this.dialogTitle = this.catalog_operator; // 点击 action 之后弹出的 Dialog 的title
     this.resourceInfo = this.$route.meta.resourceInfo;
-    console.log(this.resourceInfo);
+
     // 获取上面搜索表单的信息
     getResource({
       token: this.token,
@@ -392,6 +416,16 @@ export default {
             });
           }
         });
+      }
+    });
+    getResource({
+      token: this.token,
+      kind: "Frontend",
+      name: "desc-" + this.catalog_operator.toLowerCase(),
+      namespace: "default",
+    }).then((response) => {
+      if (this.$valid(response)) {
+        this.desc = response.data.spec.desc;
       }
     });
   },
