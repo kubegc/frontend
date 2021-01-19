@@ -33,6 +33,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      activeName: "",
       active: 0,
       desc: "",
       kind: "Wizzard",

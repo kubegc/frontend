@@ -18,7 +18,7 @@
         :kind="kind"
         @watchSearch="searchList"
       />
-      
+
       <div class="base-button-container">
         <el-button
           icon="el-icon-plus"
@@ -27,7 +27,7 @@
           circle
           @click.native="createJson"
         />
-        
+
         <el-button
           icon="el-icon-refresh"
           class="filter-item"
@@ -36,7 +36,7 @@
           >刷新页面
         </el-button>
       </div>
-      
+
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -44,7 +44,6 @@
         highlight-current-row
         :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
       >
-        
         <el-table-column
           v-for="item in columns"
           :key="item.key"
@@ -73,7 +72,7 @@
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
               placeholder="请选择"
-              @change="handleUpdate($event, scope.row.json)"
+              @change="handleAction($event, scope.row.json)"
             >
               <el-option
                 v-for="item in actions"
@@ -93,7 +92,6 @@
         :limit.sync="listQuery.limit"
         @pagination="getList"
       />
-
     </div>
   </div>
 </template>
@@ -110,6 +108,7 @@ import Pagination from "@/components/Pagination"; // secondary package based on 
 import JsonEditor from "@/components/JsonEditor";
 import DynamicForm from "@/components/DynamicForm";
 import { mapGetters } from "vuex";
+import { getList } from '@/api/table';
 
 export default {
   name: "DynamicTable",
@@ -120,7 +119,7 @@ export default {
       default: "Pod",
     },
   },
-  
+
   data() {
     return {
       activeName: "1",
@@ -128,7 +127,7 @@ export default {
       desc: "",
 
       formVisible: false,
-      
+
       list: [],
       listLoading: true,
       columns: [],
@@ -138,10 +137,10 @@ export default {
         continue: 1,
       },
       total: 0,
-      
+
       namespace: "default",
       kind: "",
-      
+
       actions: [],
       listJsonTemp: "",
       createJsonData: {},
@@ -150,7 +149,7 @@ export default {
       createTemplate: {},
       actionDialogVisible: false,
       responseJson: {},
-      
+
       Variables: [],
       createTableData: [],
       customizedAction: false,
@@ -162,11 +161,10 @@ export default {
   computed: {
     ...mapGetters(["token"]),
   },
-  
+
   created() {
-    
     this.kind = this.$route.name; // 该资源的名字
-    
+
     // 获取上面搜索表单的信息
     getResource({
       token: this.token,
@@ -325,7 +323,7 @@ export default {
             } else {
               this.actions = [];
             }
-            
+
             for (var i = 0; i < this.listJsonTemp.length; i++) {
               this.list.push({});
               this.list[i].json = this.listJsonTemp[i];
@@ -379,44 +377,65 @@ export default {
       });
     },
     
-    handleUpdate(event, row) {
+    handleAction(event, row) {
       this.customizedAction = false;
-      var name = row.metadata.name;
-      console.log(name)
 
-      getResource({
-        token: this.token,
-        kind: "Template",
-        name: this.kind.toLowerCase() + "-" + event.toLowerCase(),
-      }).then((response) => {
-        if (this.$valid(response)) {
-          this.dialogTitle = response.data.spec.data.key;
-          this.customizedAction = true;
-          // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
-          // id是 spec.replicas
-          // type 是字段的类型
-          // value 是这个字段默认的值，bool 是 true, string 是 ''
-          this.Variables = [];
-          if (response.hasOwnProperty("data")) {
-            const nameVariables = response.data.spec.data.values;
-            for (var i = 0; i < nameVariables.length; i++) {
-              this.Variables.push({});
-              this.Variables[i].nameVariable = nameVariables[i].name;
-              this.Variables[i].id = nameVariables[i].id;
-              this.Variables[i].type = nameVariables[i].type;
-              if (nameVariables[i].type === "bool") {
-                this.Variables[i].value = true;
-                this.Variables[i].placeholder = nameVariables[i].type;
-              } else {
-                this.Variables[i].value = "";
-                this.Variables[i].placeholder = nameVariables[i].type;
+      if (event === "update") {
+        getResource({
+          token: this.token,
+          kind: this.kind,
+          name: row.metadata.name,
+          namespace: row.metadata.namespace,
+        }).then((response) => {
+          if (this.$valid(response)) {
+            console.log(response)
+          }
+        });
+      } else if (event === "delete") {
+        deleteResource({
+          token: this.token,
+          kind: this.kind,
+          name: row.metadata.name,
+          namespace: row.metadata.namespace,
+        }).then((response) => {
+          if (this.$valid(response)) {
+            this.getList()
+            this._message('删除成功', 'success')
+          }
+        }).bind(this);
+      } else {
+        getResource({
+          token: this.token,
+          kind: "Template",
+          name: this.kind.toLowerCase() + "-" + event.toLowerCase(),
+        }).then((response) => {
+          if (this.$valid(response)) {
+            this.dialogTitle = response.data.spec.data.key;
+            this.customizedAction = true;
+            // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
+            // id是 spec.replicas
+            // type 是字段的类型
+            // value 是这个字段默认的值，bool 是 true, string 是 ''
+            this.Variables = [];
+            if (response.hasOwnProperty("data")) {
+              const nameVariables = response.data.spec.data.values;
+              for (var i = 0; i < nameVariables.length; i++) {
+                this.Variables.push({});
+                this.Variables[i].nameVariable = nameVariables[i].name;
+                this.Variables[i].id = nameVariables[i].id;
+                this.Variables[i].type = nameVariables[i].type;
+                if (nameVariables[i].type === "bool") {
+                  this.Variables[i].value = true;
+                  this.Variables[i].placeholder = nameVariables[i].type;
+                } else {
+                  this.Variables[i].value = "";
+                  this.Variables[i].placeholder = nameVariables[i].type;
+                }
               }
             }
           }
-        } else {
-          console.log("No")
-        }
-      });
+        });
+      }
 
       // if (event === "update") {
 
@@ -460,7 +479,7 @@ export default {
       //   console.log("")
       // }
     },
-    
+
     create() {
       let createTemplateTemp;
       let propertiesRequired;
@@ -578,7 +597,7 @@ export default {
         }
       });
     },
-    
+
     // 用于更新的 action 提交
     applyOperation() {
       this.actionDialogVisible = false;
@@ -670,7 +689,7 @@ export default {
       // console.log(res)
       return res;
     },
-    
+
     updateInputValue(scope, longKey, event) {
       if (longKey.indexOf(".") < 0) {
         scope[longKey] = event;
