@@ -15,9 +15,10 @@
       <dynamic-form
         v-if="formVisible"
         :form-data="responseJson"
-        :kind="catalog_operator"
+        :kind="kind"
         @watchSearch="searchList"
       />
+      
       <div class="base-button-container">
         <el-button
           icon="el-icon-plus"
@@ -42,9 +43,8 @@
         :data="list"
         highlight-current-row
         :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
-        @sort-change="sortChange"
       >
-        <el-table-column type="index" />
+        
         <el-table-column
           v-for="item in columns"
           :key="item.key"
@@ -56,7 +56,6 @@
               :to="{
                 path: resourceInfo,
                 query: {
-                  outTabName: outTabName,
                   tabName: tabName,
                   name: getInputValue(scope.row.json, item.row),
                   nodeName: scope.row.json.spec.nodeName,
@@ -70,12 +69,6 @@
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
-            <svg-icon
-              v-if="item.kind === 'terminal'"
-              icon-class="pc"
-              class-name="custom-class"
-              @click="openTerminal(scope.row)"
-            />
             <el-select
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
@@ -101,156 +94,6 @@
         @pagination="getList"
       />
 
-      <el-dialog
-        :visible.sync="actionDialogVisible"
-        :title="this.dialogTitle"
-        width="70%"
-        @dragDialog="handleDrag"
-      >
-        <div class="card-editor-container">
-          <json-editor
-            v-if="otherOperation === false"
-            ref="jsonEditor"
-            v-model="createJsonData"
-          />
-        </div>
-        <el-table
-          v-if="otherOperation === true"
-          v-loading="listLoading"
-          :data="Variables"
-          border
-          fit
-          highlight-current-row
-          style="width: 100%; margin-top: 20px"
-          @sort-change="sortChange"
-        >
-          <el-table-column label="key" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.nameVariable }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="value" align="center">
-            <template slot-scope="{ row }">
-              <el-radio-group
-                v-if="row.placeholder === 'bool'"
-                v-model="row.value"
-              >
-                <el-radio :label="true">true</el-radio>
-                <el-radio :label="false">false</el-radio>
-              </el-radio-group>
-              <input
-                v-if="row.placeholder !== 'bool'"
-                style="
-                  border-radius: 8px;
-                  border: 1px solid grey;
-                  outline: none;
-                "
-                class="el-input"
-                :placeholder="row.placeholder"
-                :value="getInputValue(row, 'value')"
-                @input="updateInputValue(row, 'value', $event.target.value)"
-              />
-            </template>
-          </el-table-column>
-        </el-table>
-        <div style="width: 100%; height: 50px">
-          <el-button
-            type="primary"
-            style="
-              float: right;
-              margin-top: 20px;
-              height: 40px;
-              display: inline;
-            "
-            @click.native="applyOperation"
-            >确认
-          </el-button>
-        </div>
-      </el-dialog>
-
-      <el-dialog
-        :visible.sync="createDialogVisible"
-        :title="this.createResource"
-        @dragDialog="handleDrag"
-      >
-        <div class="card-editor-container">
-          <!-- <p>请填写JSON格式（因版本兼容性约束，请使用以下的group和version信息创建资源）</p> -->
-          <json-editor
-            v-if="otherOperation == false"
-            ref="jsonEditor"
-            v-model="createTemplate"
-          />
-          <div v-if="otherOperation == true">
-            请选择模版：
-            <el-select
-              v-model="createModel"
-              placeholder="选择模版"
-              @change="handleModel($event)"
-            >
-              <el-option
-                v-for="item in models"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-          </div>
-          <el-table
-            v-if="otherOperation === true"
-            v-loading="listLoading"
-            :data="createTableData"
-            border
-            fit
-            highlight-current-row
-            style="width: 100%; margin-top: 20px"
-            @sort-change="sortChange"
-          >
-            <el-table-column label="key" align="center">
-              <template slot-scope="{ row }">
-                <span>{{ row.nameVariable }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="value" align="center">
-              <template slot-scope="{ row }">
-                <el-radio-group
-                  v-if="row.placeholder === 'bool'"
-                  v-model="row.value"
-                >
-                  <el-radio :label="true">true</el-radio>
-                  <el-radio :label="false">false</el-radio>
-                </el-radio-group>
-                <input
-                  v-if="row.placeholder !== 'bool'"
-                  style="
-                    border-radius: 8px;
-                    border: 1px solid grey;
-                    outline: none;
-                  "
-                  class="el-input"
-                  :placeholder="row.placeholder"
-                  :value="getInputValue(row, 'value')"
-                  @input="updateInputValue(row, 'value', $event.target.value)"
-                />
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <div style="width: 100%; height: 50px">
-            <el-button
-              type="primary"
-              style="
-                float: right;
-                margin-top: 20px;
-                height: 40px;
-                display: inline;
-              "
-              @click.native="create"
-              >确认
-            </el-button>
-            <!-- <el-button type="primary" style="float:right;margin-top:20px;height:40px;display:inline;margin-right:0px;" >取消</el-button> -->
-          </div>
-        </div>
-      </el-dialog>
     </div>
   </div>
 </template>
@@ -269,30 +112,25 @@ import DynamicForm from "@/components/DynamicForm";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Table",
+  name: "DynamicTable",
   components: { Pagination, JsonEditor, DynamicForm },
   props: {
     tabName: {
       type: String,
       default: "Pod",
     },
-    outTabName: {
-      type: String,
-      default: "Container",
-    },
   },
   
   data() {
     return {
       activeName: "1",
+      tableKey: 0,
       desc: "",
 
       formVisible: false,
-      tableKey: 0,
       
       list: [],
       listLoading: true,
-      downloadLoading: false,
       columns: [],
       listQuery: {
         page: 1,
@@ -300,9 +138,10 @@ export default {
         continue: 1,
       },
       total: 0,
-      frontend_kind: "Frontend",
-      table_kind: "table",
-      catalog_operator: "",
+      
+      namespace: "default",
+      kind: "",
+      
       actions: [],
       listJsonTemp: "",
       createJsonData: {},
@@ -311,14 +150,10 @@ export default {
       createTemplate: {},
       actionDialogVisible: false,
       responseJson: {},
-      formsearch_kind: "formsearch",
-      namespace: "default",
+      
       Variables: [],
       createTableData: [],
-      container_kind: "Container",
-      otherOperation: false,
-      createModel: "",
-      models: "",
+      customizedAction: false,
       propertiesInfo: [],
       message: {},
       resourceInfo: "",
@@ -327,31 +162,16 @@ export default {
   computed: {
     ...mapGetters(["token"]),
   },
-  mounted() {
-    // kind=Frontend&name=table-node
-    // route name:frontend_kind-table_kind-catalog_operator
-    var str = this.$route.name.split("-");
-    if (str.length === 3) {
-      this.frontend_kind = str[0];
-      this.table_kind = str[1];
-      this.catalog_operator = str[2];
-    } else {
-      this.frontend_kind = "Frontend";
-      this.table_kind = "table";
-      this.catalog_operator = this.$route.name;
-    }
-  },
+  
   created() {
-    this.catalog_operator = this.$route.name; // 该资源的名字
-    this.responseJson = this.$route.meta.data;
-    this.dialogTitle = this.catalog_operator; // 点击 action 之后弹出的 Dialog 的title
-    this.resourceInfo = this.$route.meta.resourceInfo;
-
+    
+    this.kind = this.$route.name; // 该资源的名字
+    
     // 获取上面搜索表单的信息
     getResource({
       token: this.token,
-      kind: this.frontend_kind,
-      name: this.formsearch_kind + "-" + this.catalog_operator.toLowerCase(),
+      kind: "Frontend",
+      name: "formsearch-" + this.kind.toLowerCase(),
       namespace: "default",
     }).then((response) => {
       this.responseJson = response.data.spec.data;
@@ -362,8 +182,8 @@ export default {
     // 获取表头信息
     getResource({
       token: this.token,
-      kind: this.frontend_kind,
-      name: this.table_kind + "-" + this.catalog_operator.toLowerCase(),
+      kind: "Frontend",
+      name: "table" + "-" + this.kind.toLowerCase(),
       namespace: "default",
     }).then((response) => {
       if (this.$valid(response)) {
@@ -371,7 +191,7 @@ export default {
         // 获取表格数据
         listResources({
           token: this.token,
-          kind: this.catalog_operator,
+          kind: this.kind,
           limit: this.listQuery.limit,
           page: this.listQuery.continue,
         }).then((response) => {
@@ -383,8 +203,8 @@ export default {
             // 获取可以进行的操作
             getResource({
               token: this.token,
-              kind: this.frontend_kind,
-              name: "action-" + this.catalog_operator.toLowerCase(),
+              kind: "Frontend",
+              name: "action-" + this.kind.toLowerCase(),
               namespace: "default",
             }).then((response) => {
               if (this.$valid(response)) {
@@ -406,10 +226,11 @@ export default {
         });
       }
     });
+
     getResource({
       token: this.token,
       kind: "Frontend",
-      name: "desc-" + this.catalog_operator.toLowerCase(),
+      name: "desc-" + this.kind.toLowerCase(),
       namespace: "default",
     }).then((response) => {
       if (this.$valid(response)) {
@@ -424,13 +245,13 @@ export default {
       // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
       getResource({
         token: this.token,
-        kind: this.container_kind + "Template",
-        name: this.catalog_operator.toLowerCase() + "-create." + event,
+        kind: "Template-" + this.name.toLowerCase(),
+        name: this.kind.toLowerCase() + "-create." + event,
         namespace: "default",
       }).then((response) => {
         if (this.$valid(response)) {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
-          this.otherOperation = true;
+          this.customizedAction = true;
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
           this.createTemplate = response.data.spec.data.template;
           console.log(this.createTemplate);
@@ -482,20 +303,20 @@ export default {
     searchList() {
       this.list = [];
       this.listJsonTemp = "";
-      // this.total = response3.total
       this.listLoading = false;
       listResources({
         token: this.token,
-        kind: this.catalog_operator,
+        kind: this.kind,
         labels: this.message,
+        limit: 10,
         page: 1,
       }).then((response) => {
         this.listJsonTemp = response.data.items;
         this.total = response.data.metadata.totalCount;
         getResource({
           token: this.token,
-          kind: this.frontend_kind,
-          name: "action-" + this.catalog_operator.toLowerCase(),
+          kind: "Frontend",
+          name: "action-" + this.kind.toLowerCase(),
           namespace: "default",
         }).then((response) => {
           if (this.$valid(response)) {
@@ -504,6 +325,7 @@ export default {
             } else {
               this.actions = [];
             }
+            
             for (var i = 0; i < this.listJsonTemp.length; i++) {
               this.list.push({});
               this.list[i].json = this.listJsonTemp[i];
@@ -521,7 +343,7 @@ export default {
       this.list = [];
       listResources({
         token: this.token,
-        kind: this.catalog_operator,
+        kind: this.kind,
         limit: this.listQuery.limit,
         page: this.listQuery.page,
         labels: this.message,
@@ -535,8 +357,8 @@ export default {
           this.listLoading = false;
           getResource({
             token: this.token,
-            kind: this.frontend_kind,
-            name: "action-" + this.catalog_operator.toLowerCase(),
+            kind: "Frontend",
+            name: "action-" + this.kind.toLowerCase(),
             namespace: "default",
           }).then((response) => {
             if (this.$valid(response)) {
@@ -556,40 +378,20 @@ export default {
         }
       });
     },
-    handleFilter() {
-      this.listQuery.pageNum = 1;
-      this.getList();
-    },
-    sortChange(data) {
-      const { prop, order } = data;
-      if (prop === "id") {
-        this.sortByID(order);
-      }
-    },
-    handleDrag() {
-      this.$refs.select.blur();
-    },
-
-    sortByID(order) {
-      this.handleFilter();
-    },
+    
     handleUpdate(event, row) {
-      console.log("event name is " + event);
-      this.otherOperation = false;
-      this.operator = event;
+      this.customizedAction = false;
       var name = row.metadata.name;
-      if (row.metadata.namespace !== undefined) {
-        this.namespace = row.metadata.namespace;
-      }
+      console.log(name)
 
       getResource({
         token: this.token,
-        kind: this.container_kind + "Template",
-        name: this.catalog_operator.toLowerCase() + "-" + event.toLowerCase(),
+        kind: "Template",
+        name: this.kind.toLowerCase() + "-" + event.toLowerCase(),
       }).then((response) => {
         if (this.$valid(response)) {
           this.dialogTitle = response.data.spec.data.key;
-          this.otherOperation = true;
+          this.customizedAction = true;
           // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
           // id是 spec.replicas
           // type 是字段的类型
@@ -611,114 +413,54 @@ export default {
               }
             }
           }
+        } else {
+          console.log("No")
         }
       });
 
-      if (event === "delete") {
-        deleteResource({
-          token: this.token,
-          kind: this.catalog_operator,
-          namespace: this.namespace,
-          name: row.metadata.name,
-        }).then((response) => {
-          if (this.$valid(response)) {
-            const deleteName = response.data.details
-              ? response.data.details.name
-              : response.data.metadata.name;
-            this.listLoading = true;
-            const id = setInterval(
-              function () {
-                getResource({
-                  token: this.token,
-                  name: deleteName,
-                  kind: this.catalog_operator,
-                  namespace: this.namespace,
-                }).then((response) => {
-                  if (!this.$valid(response)) {
-                    clearInterval(id);
-                    // if (this.message) {
-                    //   this.searchList(this.message)
-                    // } else {
-                    //   this.refresh()
-                    // }
-                    this.getList();
-                    this._message("删除成功", "success");
-                  }
-                });
-              }.bind(this),
-              500
-            );
-          }
-        });
-      } else if (event.slice(event.length - 8) === "Instance") {
-        getResource({
-          token: this.token,
-          name: name,
-          kind: this.catalog_operator,
-          namespace: this.namespace,
-        }).then((response) => {
-          this.createJsonData = response.data;
-          this.createJsonData.spec.lifecycle = {};
-          this.createJsonData.spec.lifecycle[event + "Request"] = {};
-          this.createJsonData.spec.lifecycle[event + "Request"].instanceId =
-            response.data.spec.data.instances[0].instanceId;
-          updateResource({
-            json: this.createJsonData,
-            kind: this.catalog_operator,
-            namespace: this.namespace,
-          }).then((response) => {
-            if (response.code === 20000) {
-              for (var key in this.list) {
-                this.list[key].val = "";
-              }
-              // this.handleSuccess();
-              if (event === "startInstance") {
-                // this.listLoading = true;
-                // var id = setInterval(
-                //   function() {
-                //     getObj({
-                //       name: name,
-                //       kind: this.catalog_operator,
-                //       namespace: this.namespace
-                //     }).then(response => {
-                //       if (
-                //         response.data.spec.data.instances[0].status == "Staring"
-                //       ) {
-                //         this.getList();
-                //         clearInterval(id);
-                //       }
-                //     });
-                //   }.bind(this),
-                //   2 * 1000
-                // );
-              } else {
-                this._message();
-              }
-            }
-          });
-        });
-      } else {
-        // 当操作是更新 update 的情况
-        this.$router.push({
-          path: "/crossCloud/apiAnalysis/index",
-          params: {},
-        });
-        // this.actionDialogVisible = true
-        // getResource({
-        //   token: this.token,
-        //   name: name,
-        //   kind: this.catalog_operator,
-        //   namespace: this.namespace
-        // }).then((response) => {
-        //   this.listLoading = false
-        //   this.createJsonData = response.data
-        //   console.log(this.createJsonData)
-        // })
-        // for (var key in this.list) {
-        //   this.list[key].val = ''
-        // }
-      }
+      // if (event === "update") {
+
+      // } else if (event === "delete") {
+      //   deleteResource({
+      //     token: this.token,
+      //     kind: this.kind,
+      //     namespace: this.namespace,
+      //     name: row.metadata.name,
+      //   }).then((response) => {
+      //     if (this.$valid(response)) {
+      //       const deleteName = response.data.details
+      //         ? response.data.details.name
+      //         : response.data.metadata.name;
+      //       this.listLoading = true;
+      //       const id = setInterval(
+      //         function () {
+      //           getResource({
+      //             token: this.token,
+      //             name: deleteName,
+      //             kind: this.kind,
+      //             namespace: this.namespace,
+      //           }).then((response) => {
+      //             if (!this.$valid(response)) {
+      //               clearInterval(id);
+      //               // if (this.message) {
+      //               //   this.searchList(this.message)
+      //               // } else {
+      //               //   this.refresh()
+      //               // }
+      //               this.getList();
+      //               this._message("删除成功", "success");
+      //             }
+      //           });
+      //         }.bind(this),
+      //         500
+      //       );
+      //     }
+      //   });
+      // } else {
+      //   console.log("")
+      // }
     },
+    
     create() {
       let createTemplateTemp;
       let propertiesRequired;
@@ -827,64 +569,16 @@ export default {
 
       getResource({
         token: this.token,
-        kind: this.container_kind + "Template",
-        name: this.catalog_operator.toLowerCase() + "-" + "create",
+        kind: "Template",
+        name: this.kind.toLowerCase() + "-" + "create",
         namespace: "default",
       }).then((response) => {
         if (this.$valid(response)) {
-          this.otherOperation = true;
-          this.models = response.data.spec.data.support;
+          this.customizedAction = true;
         }
       });
     },
-    // refresh() {
-    //   this.listLoading = true
-    //   // this.list = [];
-    //   getResource({
-    //     token: this.token,
-    //     kind: this.frontend_kind,
-    //     name: this.table_kind + '-' + this.catalog_operator.toLowerCase(),
-    //     namespace: 'default'
-    //   }).then((response) => {
-    //     if (this.$valid(response)) {
-    //       this.columns = response.data.spec.data
-    //       listResources({
-    //         token: this.token,
-    //         kind: this.catalog_operator,
-    //         limit: this.listQuery.limit,
-    //         page: this.listQuery.page
-    //       }).then((response) => {
-    //         if (this.$valid(response)) {
-    //           this.listJsonTemp = response.data.items
-    //           // this.total = response3.total
-    //           this.listLoading = false
-    //           getResource({
-    //             token: this.token,
-    //             kind: this.frontend_kind,
-    //             name: 'action-' + this.catalog_operator.toLowerCase(),
-    //             namespace: 'default'
-    //           }).then((response) => {
-    //             if (response.code === 20000) {
-    //               if (response.data) {
-    //                 this.actions = response.data.spec.data
-    //               } else {
-    //                 this.actions = []
-    //               }
-    //               this.list = []
-    //               for (let i = 0; i < this.listJsonTemp.length; i++) {
-    //                 this.list.push({})
-    //                 this.list[i].json = this.listJsonTemp[i]
-    //                 this.list[i].actions = this.actions
-    //                 this.list[i].val = ''
-    //               }
-    //               this.listLoading = false
-    //             }
-    //           })
-    //         }
-    //       })
-    //     }
-    //   })
-    // },
+    
     // 用于更新的 action 提交
     applyOperation() {
       this.actionDialogVisible = false;
@@ -934,14 +628,6 @@ export default {
       });
     },
 
-    openTerminal(row) {
-      if (this.catalog_operator === "Pod") {
-        this.$router.push({
-          path: "/resourceInfo/podTerminal",
-          query: { catalog_operator: this.catalog_operator, row: row },
-        });
-      }
-    },
     getInputValue(scope, longKey) {
       if (JSON.stringify(scope) === "{}" || !longKey) {
         return "";
@@ -984,6 +670,7 @@ export default {
       // console.log(res)
       return res;
     },
+    
     updateInputValue(scope, longKey, event) {
       if (longKey.indexOf(".") < 0) {
         scope[longKey] = event;

@@ -128,6 +128,7 @@ export default {
   watch: {
     $route: {
       handler: function (route) {
+        console.log("aaa")
         this.redirect = route.query && route.query.redirect;
       },
       immediate: true,
@@ -178,8 +179,10 @@ export default {
         this.$refs.password.focus();
       });
     },
+
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
+        console.log("aaa")
         if (valid) {
           this.loading = true;
           this.$store
@@ -189,11 +192,10 @@ export default {
               this.loading = false;
             })
             .catch(() => {
+              
               this.loading = false;
             });
-        } else {
-          return false;
-        }
+        } 
       });
     },
   },
