@@ -26,6 +26,7 @@
           circle
           @click.native="createJson"
         />
+        
         <el-button
           icon="el-icon-refresh"
           class="filter-item"
@@ -34,6 +35,7 @@
           >刷新页面
         </el-button>
       </div>
+      
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -261,31 +263,14 @@ import {
   createResource,
   updateResource,
 } from "@/api/k8sResource";
-import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
-import Bus from "@/utils/Bus";
 import JsonEditor from "@/components/JsonEditor";
-import { connectTerminal } from "@/api/commonKindMethod";
 import DynamicForm from "@/components/DynamicForm";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "NodeTable",
+  name: "Table",
   components: { Pagination, JsonEditor, DynamicForm },
-  directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: "success",
-        draft: "info",
-        deleted: "danger",
-      };
-      return statusMap[status];
-    },
-    typeFilter(type) {
-      return calendarTypeKeyValue[type];
-    },
-  },
   props: {
     tabName: {
       type: String,
@@ -296,12 +281,15 @@ export default {
       default: "Container",
     },
   },
+  
   data() {
     return {
       activeName: "1",
       desc: "",
+
       formVisible: false,
       tableKey: 0,
+      
       list: [],
       listLoading: true,
       downloadLoading: false,
@@ -489,9 +477,6 @@ export default {
           }
         }
       });
-    },
-    getData() {
-      Bus.$emit("val", this.list);
     },
 
     searchList() {
@@ -956,7 +941,6 @@ export default {
           query: { catalog_operator: this.catalog_operator, row: row },
         });
       }
-      connectTerminal(this.catalog_operator, row);
     },
     getInputValue(scope, longKey) {
       if (JSON.stringify(scope) === "{}" || !longKey) {
