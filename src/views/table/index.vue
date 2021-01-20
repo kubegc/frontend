@@ -121,6 +121,7 @@ export default {
 
   data() {
     return {
+      pollingId: undefined,
       activeName: '1',
       tableKey: 0,
       desc: '',
@@ -232,7 +233,11 @@ export default {
         this.desc = response.data.spec.desc
       }
     })
-    // setInterval(this.getList, 10000)
+    this.pollingId = setInterval(this.getList, 10000)
+  },
+  beforeDestroy() {
+    console.log(this.pollingId)
+    clearInterval(this.pollingId)
   },
   methods: {
     // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
