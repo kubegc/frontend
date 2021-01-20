@@ -52,12 +52,16 @@ export const constantRoutes = [
     component: () => import('@/views/progress/progress')
   },
   {
+    path: '/progressBar',
+    component: () => import('@/views/progressBar/index')
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
   {
-    path: '/routes',  // deprecated
+    path: '/routes', // deprecated
     component: Base,
     meta: { icon: 'routes', title: '向导路由' },
     children: [
@@ -92,33 +96,33 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/pipeline',       // deprecated
+    path: '/pipeline', // deprecated
     component: () => import('@/views/pipeline/pipeline'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
   },
   {
-    path: '/testRequest',       // deprecated
+    path: '/testRequest', // deprecated
     component: () => import('@/views/cloudPlatform/testRequest'),
     meta: { icon: 'cloud', title: '请求云服务' }
   },
   {
-    path: '/diff',             // deprecated
+    path: '/diff', // deprecated
     component: () => import('@/views/sysConfig/diff'),
     meta: { icon: 'cloud', title: '兼容性分析' }
   },
   {
-    path: '/overall',          // deprecated
+    path: '/overall', // deprecated
     component: () => import('@/views/sysConfig/overall'),
     meta: { icon: 'cloud', title: '智能服务演化' }
   },
 
   {
-    path: '/framework-construction',    // deprecated
+    path: '/framework-construction', // deprecated
     component: () => import('@/views/pipeline/framework-construction'),
     meta: { icon: 'pipeline', title: '多云协作框架' }
 
   }
-  
+
 ]
 
 const createRouter = () => new Router({

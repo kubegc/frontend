@@ -66,169 +66,168 @@
   </div>
 </template>
 
-
 <script>
-import RoutesTreeView from "@/components/RoutesTreeView/index";
+import RoutesTreeView from '@/components/RoutesTreeView/index'
 import {
   createResource,
   getResource,
   updateResource,
-  getMeta,
-} from "@/api/k8sResource";
-import { mapGetters } from "vuex";
+  getMeta
+} from '@/api/k8sResource'
+import { mapGetters } from 'vuex'
 export default {
   components: { RoutesTreeView },
   data() {
     return {
       formData: {
-        resource: "",
-        chosenPageType: "",
+        resource: '',
+        chosenPageType: ''
       },
-      comp: "",
+      comp: '',
       rules: {
         resource: [
           {
             required: true,
-            message: "请选择",
-            trigger: "blur",
-          },
+            message: '请选择',
+            trigger: 'blur'
+          }
         ],
         routers: [
           {
             required: true,
-            message: "请配置",
-            trigger: "blur",
-          },
+            message: '请配置',
+            trigger: 'blur'
+          }
         ],
         chosenPageType: [
           {
             required: true,
-            message: "请选择",
-            trigger: "blur",
-          },
-        ],
+            message: '请选择',
+            trigger: 'blur'
+          }
+        ]
       },
       editTemplates: [],
       pageTypes: [],
       routesFile: {},
-      resourceOptions: [],
-    };
+      resourceOptions: []
+    }
   },
   watch: {
-    "formData.chosenPageType": function (newVal) {
-      this.comp = this.pageTypes[this.formData.chosenPageType].component;
-    },
+    'formData.chosenPageType': function(newVal) {
+      this.comp = this.pageTypes[this.formData.chosenPageType].component
+    }
   },
   created() {
     getResource({
       token: this.token,
-      kind: "Frontend",
-      name: "routes-" + this.name,
-      namespace: "default",
+      kind: 'Frontend',
+      name: 'routes-' + this.name,
+      namespace: 'default'
     }).then((response) => {
       if (this.$valid(response)) {
-        this.routesFile = response.data;
+        this.routesFile = response.data
       }
-    });
-    getResource({ kind: "Frontend", name: "pages", namespace: "default" }).then(
+    })
+    getResource({ kind: 'Frontend', name: 'pages', namespace: 'default' }).then(
       (response) => {
         if (this.$valid(response)) {
-          this.pageTypes = response.data.spec.pageTypes;
+          this.pageTypes = response.data.spec.pageTypes
         }
       }
-    );
-    getResource({ kind: "Frontend", name: "pages", namespace: "default" }).then(
+    )
+    getResource({ kind: 'Frontend', name: 'pages', namespace: 'default' }).then(
       (response) => {
         if (this.$valid(response)) {
-          this.pageTypes = response.data.spec.pageTypes;
+          this.pageTypes = response.data.spec.pageTypes
         }
       }
-    );
+    )
     getMeta({ token: this.token }).then((response) => {
       if (this.$valid(response)) {
-        const data = response.data;
+        const data = response.data
         for (const key in data) {
-          const curr = {};
-          curr.value = key;
-          curr.label = key;
-          this.resourceOptions.push(curr);
+          const curr = {}
+          curr.value = key
+          curr.label = key
+          this.resourceOptions.push(curr)
         }
       }
-    });
+    })
   },
   computed: {
-    ...mapGetters(["token", "name"]),
+    ...mapGetters(['token', 'name'])
   },
   methods: {
-    
+
     submitForm() {
-      this.$refs["elForm"].validate((valid) => {
-        if (!valid) return;
+      this.$refs['elForm'].validate((valid) => {
+        if (!valid) return
         // if valid
-        const alreadyCreate = [];
+        const alreadyCreate = []
         try {
           this.editTemplates.forEach((item) => {
-            console.log(item.jsonFileObj);
+            console.log(item.jsonFileObj)
             createResource({ token: this.token, json: item.jsonFileObj }).then(
               (response) => {
                 if (this.$valid(response)) {
-                  alreadyCreate.push(item.jsonFileObj);
+                  alreadyCreate.push(item.jsonFileObj)
                 } else {
-                  throw Error;
+                  throw Error
                 }
               }
-            );
-          });
+            )
+          })
           updateResource({ token: this.token, json: this.routesFile }).then(
             (response) => {
               if (this.$valid(response)) {
                 this.$message({
-                  message: "创建资源页面成功",
-                  type: "success",
-                  duration: 2000,
-                });
+                  message: '创建资源页面成功',
+                  type: 'success',
+                  duration: 2000
+                })
               }
             }
-          );
+          )
         } catch (e) {
           this.$message({
-            message: "创建资源页面失败",
-            type: "error",
-            duration: 2000,
-          });
+            message: '创建资源页面失败',
+            type: 'error',
+            duration: 2000
+          })
         }
-      });
+      })
     },
     resetForm() {
-      this.$refs["elForm"].resetFields();
+      this.$refs['elForm'].resetFields()
     },
     handleResourceChange(value) {
       for (const item of this.editTemplates) {
         item.jsonFileObj.metadata.name =
-          item.key.toLowerCase() + "-" + value.toLowerCase();
+          item.key.toLowerCase() + '-' + value.toLowerCase()
       }
     },
     handleGuideTypeChange(value) {
       getResource({
-        kind: "Frontend",
-        name: "wizard-" + value.toLowerCase(),
-        namespace: "default",
+        kind: 'Frontend',
+        name: 'wizard-' + value.toLowerCase(),
+        namespace: 'default'
       }).then((response) => {
         if (this.$valid(response)) {
-          const info = response.data.spec.data;
-          this.editTemplates = [];
+          const info = response.data.spec.data
+          this.editTemplates = []
           for (const key in info.keys) {
-            const temp = {};
-            temp.key = key;
-            temp.label = info.keys[key].label;
-            temp.show = info.keys[key].show;
-            temp.jsonFileObj = info.values[key];
-            temp.dialogVisible = false;
-            this.editTemplates.push(temp);
+            const temp = {}
+            temp.key = key
+            temp.label = info.keys[key].label
+            temp.show = info.keys[key].show
+            temp.jsonFileObj = info.values[key]
+            temp.dialogVisible = false
+            this.editTemplates.push(temp)
           }
         }
-      });
-    },
-  },
-};
+      })
+    }
+  }
+}
 </script>
