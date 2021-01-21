@@ -637,25 +637,25 @@ export default {
           })
         })
       } else {
-        // 当操作是更新 update 的情况
-        this.$router.push({
-          path: '/crossCloud/apiAnalysis/index',
-          params: {}
-        })
-        // this.actionDialogVisible = true
-        // getResource({
-        //   token: this.token,
-        //   name: name,
-        //   kind: this.catalog_operator,
-        //   namespace: this.namespace
-        // }).then((response) => {
-        //   this.listLoading = false
-        //   this.createJsonData = response.data
-        //   console.log(this.createJsonData)
+        //当操作是更新 update 的情况
+        // this.$router.push({
+        //   path: '/crossCloud/apiAnalysis/index',
+        //   params: {}
         // })
-        // for (var key in this.list) {
-        //   this.list[key].val = ''
-        // }
+        this.actionDialogVisible = true
+        getResource({
+          token: this.token,
+          name: name,
+          kind: this.catalog_operator,
+          namespace: this.namespace
+        }).then((response) => {
+          this.listLoading = false
+          this.createJsonData = response.data
+          console.log(this.createJsonData)
+        })
+        for (var key in this.list) {
+          this.list[key].val = ''
+        }
       }
     },
     create() {

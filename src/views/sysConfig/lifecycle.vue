@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    <div class="editor-custom-btn-container">
+    <!-- <div class="editor-custom-btn-container">
       <editorImage
         color="#1890ff"
         class="editor-upload-btn"
         @successCBK="imageSuccessCBK"
       />
-    </div>
+    </div> -->
     <div class="tab-container">
       <el-tabs
         v-model="activeName"
@@ -36,10 +36,13 @@
                   margin-left: 15px;
                 "
                 @click.native="analyze"
-                >分析</el-button
+                >安装</el-button
               >
-              <p style="line-height: 30px; height: 50px">
+              <!-- <p style="line-height: 30px; height: 50px">
                 当前SDK：{{ SDK }} &nbsp;&nbsp; 版本：{{ version }}
+              </p> -->
+              <p style="line-height: 30px; height: 50px">
+                当前软件：{{ SDK }}
               </p>
               <api-analysis
                 :message="parentMessage"
@@ -148,6 +151,7 @@ export default {
       catalog_kind: "catalog",
       frontend_kind: "Frontend",
       catalog_operator: "lifecycle",
+      //catalog_operator: "install",
       lifecycle_kind: "Template",
       lifecycle_operator: "container",
       api_kind: "api",
@@ -185,9 +189,10 @@ export default {
         }).then((response) => {
           if (this.validateRes(response) == 1) {
             this.sdkJson = response.data;
-            this.SDK = response.data.spec.data.git;
-            this.version = response.data.spec.data.version;
-            this.kind = response.data.spec.data.kind;
+            //this.SDK = response.data.spec.data.git;
+             this.SDK = this.activeName
+            // this.version = response.data.spec.data.version;
+            // this.kind = response.data.spec.data.kind;
 
             listResources({
               kind: this.templateKind,
@@ -259,8 +264,9 @@ export default {
         name: this.api_kind + "-" + this.activeName,
         namespace: this.namespace,
       }).then((response) => {
-        this.SDK = response.data.spec.data.git;
-        this.version = response.data.spec.data.version;
+        //this.SDK = response.data.spec.data.git;
+        this.SDK = this.activeName;
+        // this.version = response.data.spec.data.version;
         // listResources({
         //   kind: this.activeName + this.lifecycle_kind,
         //   namespace: this.namespace,
@@ -317,7 +323,7 @@ export default {
       console.log(this.sdkJson);
       this.sdkJson.metadata.name = this.api_kind + "-" + data.name;
       this.sdkJson.spec.data.git = data.git;
-      this.sdkJson.spec.data.version = data.version;
+      // this.sdkJson.spec.data.version = data.version;
 
       createResource({
         json: this.sdkJson,
