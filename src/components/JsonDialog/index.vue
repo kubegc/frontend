@@ -1,15 +1,18 @@
 <template>
   <el-dialog
-    :visible.sync="value"
+    :title="title"
+    :visible="value"
     width="70%"
+    @update:visible="close"
   >
     <JsonEditor
+      v-if="jsonEditor"
       :value="JSON.stringify(jsonFileObj, null, 2)"
-      @input="jsonFileObj = JSON.parse($event)"
+      @input="handleInput($event)"
     />
     <div slot="footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="close">确 定</el-button>
+      <el-button type="primary" @click="takeActionAndClose">确 定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -28,11 +31,27 @@ export default {
     value: {
       required: true,
       type: Boolean
+    },
+    jsonEditor: {
+      required: false,
+      type: Boolean,
+      default: true
+    },
+    title: {
+      required: false,
+      type: String
     }
   },
   methods: {
     close() {
-      this.value = false
+      this.$emit('update:value', !this.value)
+    },
+    handleInput(event) {
+      this.$emit('update:jsonFileObj', event)
+    },
+    takeActionAndClose() {
+      this.$emit('action')
+      this.$emit('update:value', !this.value)
     }
   }
 }

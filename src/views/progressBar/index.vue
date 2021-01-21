@@ -1,7 +1,11 @@
 <template>
   <div>
     <el-button @click="dialogVisible = true">测试</el-button>
-    <JsonDialog v-model="dialogVisible" :json-file-obj="routesFile" />
+    <JsonDialog
+      :value.sync="dialogVisible"
+      :json-file-obj="routesFile"
+      @update:jsonFileObj="routesFile = JSON.parse($event)"
+    />
   </div>
 </template>
 <script>

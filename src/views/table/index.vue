@@ -63,7 +63,8 @@
               }"
               tag="a"
               class="link"
-            >{{ getInputValue(scope.row.json, item.row) }}</router-link>
+            >{{ getInputValue(scope.row.json, item.row) }}
+            </router-link>
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
@@ -91,6 +92,20 @@
         :limit.sync="listQuery.limit"
         @pagination="getList"
       />
+      <JsonDialog
+        :title="createResource"
+        :value.sync="createDialogVisible"
+        :json-file-obj="createTemplate"
+        @update:jsonFileObj="createTemplate = JSON.parse($event)"
+        @action="create"
+      />
+      <JsonDialog
+        :title="updateResource"
+        :value.sync="actionDialogVisible"
+        :json-file-obj="createJsonData"
+        @update:jsonFileObj="createJsonData = JSON.parse($event)"
+        @action="applyOperation"
+      />
     </div>
   </div>
 </template>
@@ -104,14 +119,13 @@ import {
   updateResource
 } from '@/api/k8sResource'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import JsonEditor from '@/components/JsonEditor'
 import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'
-import { getList } from '@/api/table'
+import JsonDialog from '@/components/JsonDialog'
 
 export default {
   name: 'DynamicTable',
-  components: { Pagination, JsonEditor, DynamicForm },
+  components: { JsonDialog, Pagination, DynamicForm },
   props: {
     tabName: {
       type: String,
@@ -125,9 +139,7 @@ export default {
       activeName: '1',
       tableKey: 0,
       desc: '',
-
       formVisible: false,
-
       list: [],
       listLoading: true,
       columns: [],
@@ -144,6 +156,7 @@ export default {
       createJsonData: {},
       createDialogVisible: false,
       createResource: '创建对象',
+      updateResource: '更新对象',
       createTemplate: {},
       actionDialogVisible: false,
       responseJson: {},
@@ -392,7 +405,8 @@ export default {
           namespace: row.metadata.namespace
         }).then((response) => {
           if (this.$valid(response)) {
-            console.log(response)
+            this.createJsonData = response.data
+            this.actionDialogVisible = true
           }
         })
       } else if (event === 'delete') {

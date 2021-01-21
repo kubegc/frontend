@@ -60,7 +60,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
 
-      if (res.code === 50000) {
+      if (res.code === 50000 && res.message === 'java.lang.Exception: miss or wrong token') {
         MessageBox.confirm(res.message, '遇到问题', {
           confirmButtonText: '重新登录',
           type: 'warning'
