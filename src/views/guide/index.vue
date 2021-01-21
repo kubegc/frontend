@@ -1,21 +1,11 @@
 <template>
   <div class="app-container">
     <el-row :gutter="15">
-      <el-form
-        ref="elForm"
-        :model="formData"
-        :rules="rules"
-        size="medium"
-        label-width="130px"
-      >
-        <el-col :span="16">
-          <el-form-item label="页面类型" prop="chosenPageType">
-            <el-select
-              v-model="formData.chosenPageType"
-              placeholder="请选择"
-              filterable
-              @change="handleGuideTypeChange"
-            >
+      <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="130px">
+
+        <el-col :span="13">
+          <el-form-item label="新增页面类型" prop="chosenGuideType">
+            <el-select v-model="formData.chosenPageType" placeholder="请选择" @change="handleGuideTypeChange">
               <el-option
                 v-for="(value, key) in pageTypes"
                 :key="key"
@@ -26,14 +16,9 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="16">
+        <el-col v-if="canEdit" :span="12">
           <el-form-item label="资源名称" prop="resource">
-            <el-select
-              v-model="formData.resource"
-              placeholder="请选择"
-              filterable
-              @change="handleResourceChange"
-            >
+            <el-select v-model="formData.resource" placeholder="请选择" filterable @change="handleResourceChange">
               <el-option
                 v-for="item in resourceOptions"
                 :key="item.label"
@@ -44,8 +29,58 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="16">
-          <el-form-item prop="routers" label="菜单位置">
+        <el-col v-if="canEdit" :span="13">
+          <el-form-item
+            v-for="item in editTemplates"
+            :key="item.key"
+            :label="item.label"
+          >
+            <el-popover
+              v-if="item.show"
+              placement="right"
+              trigger="hover"
+            >
+              <el-image
+                style="width: 800px; height: 350px;"
+                :src="require('../../assets/' + formData.chosenPageType.toLowerCase() + '-' + item.key + '.jpg')"
+              />
+              <el-button
+                slot="reference"
+                type="text"
+                icon="el-icon-edit"
+                size="medium"
+                @click="item.dialogVisible = true"
+              > 点击编辑
+              </el-button>
+            </el-popover>
+
+            <el-button
+              v-else
+              type="text"
+              icon="el-icon-edit"
+              size="medium"
+              @click="item.dialogVisible = true"
+            > 点击编辑
+            </el-button>
+
+            <el-dialog
+              :visible.sync="item.dialogVisible"
+              width="70%"
+            >
+              <json-editor
+                :value="JSON.stringify(item.jsonFileObj, null, 2)"
+                @input="item.jsonFileObj = JSON.parse($event)"
+              />
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="item.dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="item.dialogVisible = false">确 定</el-button>
+              </div>
+            </el-dialog>
+          </el-form-item>
+        </el-col>
+
+        <el-col v-if="canEdit" :span="13">
+          <el-form-item label="路由">
             <routes-tree-view
               v-model="routesFile"
               :resource-name="formData.resource"
@@ -55,7 +90,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="24">
+        <el-col v-if="canEdit" :span="24">
           <el-form-item size="large">
             <el-button type="primary" round @click="submitForm">提交</el-button>
             <el-button round @click="resetForm">重置</el-button>
@@ -65,18 +100,14 @@
     </el-row>
   </div>
 </template>
-
 <script>
-import RoutesTreeView from '@/components/RoutesTreeView/index'
-import {
-  createResource,
-  getResource,
-  updateResource,
-  getMeta
-} from '@/api/k8sResource'
+import JsonEditor from '@/components/JsonEditorSpecial/index'
+import { createResource, getResource, updateResource, getMeta } from '@/api/k8sResource'
 import { mapGetters } from 'vuex'
+import RoutesTreeView from '@/components/RoutesTreeView/index'
+
 export default {
-  components: { RoutesTreeView },
+  components: { RoutesTreeView, JsonEditor },
   data() {
     return {
       formData: {
@@ -85,32 +116,77 @@ export default {
       },
       comp: '',
       rules: {
-        resource: [
-          {
-            required: true,
-            message: '请选择',
-            trigger: 'blur'
-          }
-        ],
-        routers: [
-          {
-            required: true,
-            message: '请配置',
-            trigger: 'blur'
-          }
-        ],
-        chosenPageType: [
-          {
-            required: true,
-            message: '请选择',
-            trigger: 'blur'
-          }
-        ]
+        resource: [{
+          required: true,
+          message: '请选择资源名称',
+          trigger: 'blur'
+        }],
+        chosenPageType: [{
+          required: true,
+          message: '请选择页面类型',
+          trigger: 'blur'
+        }]
       },
+      canEdit: false,
       editTemplates: [],
       pageTypes: [],
+      routeVisible: false,
       routesFile: {},
-      resourceOptions: []
+      resourceOptions: undefined,
+
+      createTemplates: [],
+      actionTemplates: [],
+      createTemplateJson: {
+        'apiVersion': 'cloudplus.io/v1alpha3',
+        'kind': 'ContainerTemplate',
+        'metadata': {
+          'name': ''
+        },
+        'spec': {
+          'data': {
+            'key': '',
+            'values': [{
+              'id': '',
+              'type': '',
+              'required': 'true',
+              'name': ''
+            }],
+            'template': {}
+          }
+        }
+      },
+      actionTemplateJson: {
+        'apiVersion': 'cloudplus.io/v1alpha3',
+        'kind': 'ContainerTemplate',
+        'metadata': {
+          'name': ''
+        },
+        'spec': {
+          'data': {
+            'key': '',
+            'values': [{
+              'id': '',
+              'type': '',
+              'required': 'true',
+              'action': '',
+              'name': ''
+            }],
+            'template': {}
+          }
+        }
+      },
+      createMetaJson: {
+        'apiVersion': 'cloudplus.io/v1alpha3',
+        'kind': 'ContainerTemplate',
+        'metadata': {
+          'name': ''
+        },
+        'spec': {
+          'data': {
+            'support': []
+          }
+        }
+      }
     }
   },
   watch: {
@@ -119,57 +195,34 @@ export default {
     }
   },
   created() {
-    getResource({
-      token: this.token,
-      kind: 'Frontend',
-      name: 'routes-' + this.name,
-      namespace: 'default'
-    }).then((response) => {
-      if (this.$valid(response)) {
-        this.routesFile = response.data
+    getResource({ token: this.token, kind: 'Frontend', name: 'routes-' + this.name, namespace: 'default' }).then(
+      response => {
+        if (this.$valid(response)) {
+          this.routesFile = response.data
+        }
       }
-    })
+    )
     getResource({ kind: 'Frontend', name: 'pages', namespace: 'default' }).then(
-      (response) => {
+      response => {
         if (this.$valid(response)) {
           this.pageTypes = response.data.spec.pageTypes
         }
       }
     )
-    getResource({ kind: 'Frontend', name: 'pages', namespace: 'default' }).then(
-      (response) => {
-        if (this.$valid(response)) {
-          this.pageTypes = response.data.spec.pageTypes
-        }
-      }
-    )
-    getMeta({ token: this.token }).then((response) => {
-      if (this.$valid(response)) {
-        const data = response.data
-        for (const key in data) {
-          const curr = {}
-          curr.value = key
-          curr.label = key
-          this.resourceOptions.push(curr)
-        }
-      }
-    })
   },
   computed: {
     ...mapGetters(['token', 'name'])
   },
   methods: {
-
     submitForm() {
-      this.$refs['elForm'].validate((valid) => {
+      this.$refs['elForm'].validate(valid => {
         if (!valid) return
         // if valid
         const alreadyCreate = []
         try {
-          this.editTemplates.forEach((item) => {
-            console.log(item.jsonFileObj)
+          this.editTemplates.forEach(item => {
             createResource({ token: this.token, json: item.jsonFileObj }).then(
-              (response) => {
+              response => {
                 if (this.$valid(response)) {
                   alreadyCreate.push(item.jsonFileObj)
                 } else {
@@ -179,7 +232,7 @@ export default {
             )
           })
           updateResource({ token: this.token, json: this.routesFile }).then(
-            (response) => {
+            response => {
               if (this.$valid(response)) {
                 this.$message({
                   message: '创建资源页面成功',
@@ -203,30 +256,47 @@ export default {
     },
     handleResourceChange(value) {
       for (const item of this.editTemplates) {
-        item.jsonFileObj.metadata.name =
-          item.key.toLowerCase() + '-' + value.toLowerCase()
+        item.jsonFileObj.metadata.name = item.key.toLowerCase() + '-' + value.toLowerCase()
       }
     },
     handleGuideTypeChange(value) {
-      getResource({
-        kind: 'Frontend',
-        name: 'wizard-' + value.toLowerCase(),
-        namespace: 'default'
-      }).then((response) => {
-        if (this.$valid(response)) {
-          const info = response.data.spec.data
-          this.editTemplates = []
-          for (const key in info.keys) {
-            const temp = {}
-            temp.key = key
-            temp.label = info.keys[key].label
-            temp.show = info.keys[key].show
-            temp.jsonFileObj = info.values[key]
-            temp.dialogVisible = false
-            this.editTemplates.push(temp)
+      this.canEdit = false
+      getResource({ kind: 'Frontend', name: 'wizard-' + value.toLowerCase(), namespace: 'default' }).then(
+        response => {
+          if (this.$valid(response)) {
+            // const guideName = 'wizard-' + value.toLowerCase()
+            // const info = response.data.items.filter(item => item.metadata.name === guideName)[0].spec.data
+            const info = response.data.spec.data
+            this.editTemplates = []
+            for (const key in info.keys) {
+              const temp = {}
+              temp.key = key
+              temp.label = info.keys[key].label
+              temp.show = info.keys[key].show
+              temp.jsonFileObj = info.values[key]
+              temp.dialogVisible = false
+              this.editTemplates.push(temp)
+            }
+
+            if (!this.resourceOptions) {
+              this.resourceOptions = []
+              getMeta({ token: this.token }).then(
+                response => {
+                  if (this.$valid(response)) {
+                    const data = response.data
+                    for (const key in data) {
+                      const curr = {}
+                      curr.value = key
+                      curr.label = key
+                      this.resourceOptions.push(curr)
+                    }
+                  }
+                })
+            }
+
+            this.canEdit = true
           }
-        }
-      })
+        })
     }
   }
 }

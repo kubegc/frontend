@@ -95,8 +95,8 @@
       <JsonDialog
         :title="createResource"
         :value.sync="createDialogVisible"
-        :json-file-obj="createTemplate"
-        @update:jsonFileObj="createTemplate = JSON.parse($event)"
+        :json-file-obj="createJsonStyle"
+        @update:jsonFileObj="createJsonStyle = JSON.parse($event)"
         @action="create"
       />
       <JsonDialog
@@ -157,7 +157,7 @@ export default {
       createDialogVisible: false,
       createResource: '创建对象',
       updateResource: '更新对象',
-      createTemplate: {},
+      createJsonStyle: {},
       actionDialogVisible: false,
       responseJson: {},
 
@@ -267,8 +267,8 @@ export default {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
           this.customizedAction = true
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
-          this.createTemplate = response.data.spec.data.template
-          console.log(this.createTemplate)
+          this.createJsonStyle = response.data.spec.data.template
+          console.log(this.createJsonStyle)
           // 生成之后就会变成填写字段信息表格的数据来源数组
           this.createTableData = []
           if (response.hasOwnProperty('data')) {
@@ -516,7 +516,7 @@ export default {
 
         // 这里是针对每一个属性进行一个循环
         for (let j = 0; j < propertiesRequired.length; j++) {
-          createTemplateTemp = this.createTemplate
+          createTemplateTemp = this.createJsonStyle
           const pathToProperty = propertiesRequired[j].split('.')
           // pathToProperty 数组中最后一个元素是我们的目标属性，所以要解析前面的中间属性
           for (let i = 0; i < pathToProperty.length - 1; i++) {
@@ -584,13 +584,13 @@ export default {
         }
       }
 
-      if (typeof this.createTemplate === 'string') {
-        this.createTemplate = JSON.parse(this.createTemplate)
+      if (typeof this.createJsonStyle === 'string') {
+        this.createJsonStyle = JSON.parse(this.createJsonStyle)
       }
       // 新建资源
       createResource({
         token: this.token,
-        json: this.createTemplate
+        json: this.createJsonStyle
       }).then((response) => {
         if (this.$valid(response)) {
           this._message('创建成功', 'success')
@@ -611,7 +611,8 @@ export default {
         namespace: 'default'
       }).then((response) => {
         if (this.$valid(response)) {
-          this.customizedAction = true
+          // this.customizedAction = true
+          this.createJsonStyle = response.data
         }
       })
     },
