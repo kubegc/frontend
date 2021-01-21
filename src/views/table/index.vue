@@ -93,11 +93,15 @@
         @pagination="getList"
       />
       <JsonDialog
+        :json-editor="ifJsonEditorCreate"
         :title="createResource"
         :value.sync="createDialogVisible"
-        :json-file-obj="createJsonStyle"
-        @update:jsonFileObj="createJsonStyle = JSON.parse($event)"
+        :json-file-obj="createJsonPattern"
+        :create-templates="createTemplates"
+        :create-table-data="createTableData"
+        @update:jsonFileObj="createJsonPattern = JSON.parse($event)"
         @action="create"
+        @selectChange="handleModel($event)"
       />
       <JsonDialog
         :title="updateResource"
@@ -132,7 +136,6 @@ export default {
       default: 'Pod'
     }
   },
-
   data() {
     return {
       pollingId: undefined,
@@ -155,9 +158,11 @@ export default {
       listJsonTemp: '',
       createJsonData: {},
       createDialogVisible: false,
+      ifJsonEditorCreate: true,
+      createTemplates: [],
       createResource: '创建对象',
       updateResource: '更新对象',
-      createJsonStyle: {},
+      createJsonPattern: {},
       actionDialogVisible: false,
       responseJson: {},
 
@@ -246,12 +251,12 @@ export default {
         this.desc = response.data.spec.desc
       }
     })
-    this.pollingId = setInterval(this.getList, 10000)
+    // this.pollingId = setInterval(this.getList, 10000)
   },
-  beforeDestroy() {
-    console.log(this.pollingId)
-    clearInterval(this.pollingId)
-  },
+  // beforeDestroy() {
+  //   console.log(this.pollingId)
+  //   clearInterval(this.pollingId)
+  // },
   methods: {
     // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
     // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
@@ -259,7 +264,7 @@ export default {
       // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
       getResource({
         token: this.token,
-        kind: 'Template-' + this.name.toLowerCase(),
+        kind: 'Template',
         name: this.kind.toLowerCase() + '-create.' + event,
         namespace: 'default'
       }).then((response) => {
@@ -267,8 +272,8 @@ export default {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
           this.customizedAction = true
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
-          this.createJsonStyle = response.data.spec.data.template
-          console.log(this.createJsonStyle)
+          this.createJsonPattern = response.data.spec.data.template
+          console.log(this.createJsonPattern)
           // 生成之后就会变成填写字段信息表格的数据来源数组
           this.createTableData = []
           if (response.hasOwnProperty('data')) {
@@ -516,7 +521,7 @@ export default {
 
         // 这里是针对每一个属性进行一个循环
         for (let j = 0; j < propertiesRequired.length; j++) {
-          createTemplateTemp = this.createJsonStyle
+          createTemplateTemp = this.createJsonPattern
           const pathToProperty = propertiesRequired[j].split('.')
           // pathToProperty 数组中最后一个元素是我们的目标属性，所以要解析前面的中间属性
           for (let i = 0; i < pathToProperty.length - 1; i++) {
@@ -584,13 +589,13 @@ export default {
         }
       }
 
-      if (typeof this.createJsonStyle === 'string') {
-        this.createJsonStyle = JSON.parse(this.createJsonStyle)
+      if (typeof this.createJsonPattern === 'string') {
+        this.createJsonPattern = JSON.parse(this.createJsonPattern)
       }
       // 新建资源
       createResource({
         token: this.token,
-        json: this.createJsonStyle
+        json: this.createJsonPattern
       }).then((response) => {
         if (this.$valid(response)) {
           this._message('创建成功', 'success')
@@ -602,8 +607,6 @@ export default {
     },
     // 获取创建资源的模板信息，models 存有下拉列表的选项数据
     createJson() {
-      this.createDialogVisible = true
-
       getResource({
         token: this.token,
         kind: 'Template',
@@ -612,7 +615,14 @@ export default {
       }).then((response) => {
         if (this.$valid(response)) {
           // this.customizedAction = true
-          this.createJsonStyle = response.data
+          if (response.data.spec && response.data.spec.data) {
+            this.createTemplates = response.data.spec.data.support
+            this.ifJsonEditorCreate = false
+          } else {
+            this.ifJsonEditorCreate = true
+            this.createJsonPattern = response.data
+          }
+          this.createDialogVisible = true
         }
       })
     },
@@ -650,7 +660,7 @@ export default {
       }).then((response) => {
         if (response.code === 20000) {
           this.getList()
-          for (var key in this.list) {
+          for (const key in this.list) {
             this.list[key].val = ''
           }
           this._message('更新成功', 'success')
@@ -714,10 +724,10 @@ export default {
         scope[longKey] = event
         return
       }
-      var keys = longKey.split('.')
-      var obj = scope
-      for (var i = 0; i < keys.length; i++) {
-        var element = keys[i]
+      const keys = longKey.split('.')
+      let obj = scope
+      for (let i = 0; i < keys.length; i++) {
+        const element = keys[i]
         if (element.indexOf('[') > 0) {
           obj = obj[element.substring(0, element.indexOf('['))]
           obj =
