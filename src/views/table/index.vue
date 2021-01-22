@@ -68,6 +68,12 @@
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
+            <svg-icon
+            v-if="item.kind === 'terminal'"
+            icon-class="pc"
+            class-name="custom-class"
+            @click="openTerminal(scope.row)"
+          />
             <el-select
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
@@ -126,6 +132,7 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'
 import JsonDialog from '@/components/JsonDialog'
+import { connectTerminal } from '@/api/commonKindMethod'
 
 export default {
   name: 'DynamicTable',
@@ -171,7 +178,8 @@ export default {
       customizedAction: false,
       propertiesInfo: [],
       message: {},
-      resourceInfo: ''
+      resourceInfo: '',
+      catalog_operator: 'Pod',
     }
   },
   computed: {
@@ -260,6 +268,15 @@ export default {
   methods: {
     // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
     // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
+    openTerminal(row) {
+      if (this.catalog_operator === 'Pod') {
+        this.$router.push({
+          path: '/resourceInfo/podTerminal',
+          query: { catalog_operator: this.catalog_operator, row: row }
+        })
+      }
+      connectTerminal(this.catalog_operator, row)
+    },
     handleModel(event) {
       // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
       getResource({

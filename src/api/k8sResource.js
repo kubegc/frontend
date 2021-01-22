@@ -84,9 +84,9 @@ export function queryTest(data) {
   return res
 }
 
-export function execDiff(data) {
+export function diffResource(data) {
   var res = request({
-    url: 'http://39.106.40.190:31100/dos-lab/crosscloud/execDiff',
+    url: '/kube/diffResource',
     method: 'post',
     data
   })

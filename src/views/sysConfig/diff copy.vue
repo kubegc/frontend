@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <el-form label-position="top">
-      <el-form-item label="云服务版本1">
+      <el-form-item label="云服务类型">
         <el-select
           filterable
           style="float: left"
-          v-model="value1"
+          v-model="value"
           placeholder="请选择"
-          @change="handle(value1)"
+          @change="handle(value)"
         >
           <el-option
             v-for="item in options"
@@ -19,30 +19,12 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="云服务版本2">
-        <el-select
-          filterable
-          style="float: left"
-          v-model="value2"
-          placeholder="请选择"
-          @change="handle2(value2)"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
-          </el-option>
-        </el-select>
-      </el-form-item>
-
-      <!-- <el-form-item label="版本1：">
+      <el-form-item label="版本1：">
         <el-input :rows="6" type="textarea" v-model="form.v1" />
       </el-form-item>
       <el-form-item label="版本2：">
         <el-input :rows="6" type="textarea" v-model="form.v2" />
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">差异分析</el-button>
         <el-button>取消</el-button>
@@ -66,7 +48,7 @@ import {
   updateResource,
   listResources,
   getMeta,
-  diffResource,
+  execDiff,
 } from "@/api/k8sResource";
 import axios from "axios";
 
@@ -81,10 +63,11 @@ export default {
   data() {
     return {
       options: [],
-      value1: "",
-      value2: "",
-      name1: "",
-      name2: "",
+      value: "",
+      form: {
+        v1: "",
+        v2: "",
+      },
       jsonObj: {},
       resTemp: [],
       id: "",
@@ -93,7 +76,7 @@ export default {
   },
   mounted() {
     listResources({
-      kind: "Template",
+      kind: "Account",
       page: 1,
       limit: 1000,
       labels: {},
@@ -101,60 +84,68 @@ export default {
       var res = response.data.items;
       this.resTemp = response.data.items;
       for (var i = 0; i < res.length; i++) {
-        var obj = res[i].metadata.name;
+        var obj = res[i].spec.kind;
         var temp = { value: obj, label: obj };
         this.options.push(temp);
       }
     });
   },
   methods: {
-    handle(value1) {
-      this.name1 = value1
-      
-    },
-    handle2(value2) {
-      this.name2 = value2
-      
+    handle(value) {
+      for (var i = 0; i < this.resTemp.length; i++) {
+        var obj = this.resTemp[i].spec;
+        var key = Object.keys(obj)[0];
+        if (value == key) {
+          this.form.desc = JSON.stringify(obj[value].lifecycle[value], null, 4);
+          this.requestPara = obj;
+          break;
+        }
+      }
     },
     onSubmit() {
-      diffResource({
-        kind1: 'Template',
-        namespace1: 'default',
-        kind2: 'Template',
-        namespace2: 'default',
-        name1: this.name1,
-        name2: this.name2
+      execDiff({
+        v1: JSON.parse(this.form.v1),
+        v2: JSON.parse(this.form.v2),
       }).then((response) => {
-        
+        var v1 = JSON.parse(this.form.v1).version;
+        var v2 = JSON.parse(this.form.v2).version;
         this.picData.name = this.value;
         this.picData.children = [];
         this.picData.itemStyle = {color: 'black',  borderColor: 'black'}
 
-        //this.jsonObj = response.data.changedAPI;
-        this.jsonObj1 = response.data.deprecatedAPI;
-        this.jsonObj2 = response.data.newAPI;
-       
-        
-          var children = [];
-          for(let ele in this.jsonObj1) {
-              //删除的
-            
-                  var kv = { name: ele, value: ele, itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red', width: 4} };
+        this.jsonObj = response.data.changedAPI;
+        var changeAPI = Object.keys(this.jsonObj);
+        for (var i = 0; i < changeAPI.length; i++) {
+           
+          var obj1 = this.jsonObj[changeAPI[i]][v1].lifecycle[changeAPI[i]]
+          var obj2 = this.jsonObj[changeAPI[i]][v2].lifecycle[changeAPI[i]]
 
-             
-              children.push(kv);
-          }
-          for(let ele in this.jsonObj2) {
-             
-                  var kv = { name: ele, value: ele, itemStyle: {color: 'green',  borderColor: 'green', borderWidth: 4}, lineStyle: {color: 'green', width: 4}, label: {color: 'green', fontSize: 14} };
+          var paramkey1 = Object.keys(obj1);
+          var paramkey2 = Object.keys(obj2);
+          let a = new Set(paramkey1);
+          let b = new Set(paramkey2);
+          let union = new Set([...a, ...b])
+          union = Array.from(union)
+          var children = [];
+          for(let ele in union) {
+              //删除的
+              if(paramkey1.includes(union[ele]) && !paramkey2.includes(union[ele])) {
+                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red', width: 4} };
+
+              //新增的
+              }else if(!paramkey1.includes(union[ele]) && paramkey2.includes(union[ele])) {
+                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'green',  borderColor: 'green', borderWidth: 4}, lineStyle: {color: 'green', width: 4}, label: {color: 'green', fontSize: 14} };
 
               //不变的
+              }else {
+                  var kv = { name: union[ele], value: obj2[union[ele]], itemStyle: {color: 'black',  borderColor: 'black'}};
               }
               children.push(kv);
-          
-this.picData.children = children
-         
-        
+          }
+
+          var obj = { name: changeAPI[i], children: children, itemStyle: {color: 'black',  borderColor: 'black'} };
+          this.picData.children.push(obj);
+        }
 
         this.drawLine();
       });
