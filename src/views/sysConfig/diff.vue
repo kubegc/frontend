@@ -95,7 +95,7 @@ export default {
     listResources({
       kind: "Template",
       page: 1,
-      limit: 1000,
+      limit: 25,
       labels: {},
     }).then((response) => {
       var res = response.data.items;
@@ -131,28 +131,28 @@ export default {
         this.picData.itemStyle = {color: 'black',  borderColor: 'black'}
 
         //this.jsonObj = response.data.changedAPI;
-        this.jsonObj1 = response.data.deprecatedAPI;
+        this.jsonObj1 = response.data.depreactedAPI;
         this.jsonObj2 = response.data.newAPI;
        
         
-          var children = [];
+          //var children = [];
           for(let ele in this.jsonObj1) {
               //删除的
             
-                  var kv = { name: ele, value: ele, itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red', width: 4} };
+                  let kv = { name: this.jsonObj1[ele], value: this.jsonObj1[ele], itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red', width: 2} };
 
              
-              children.push(kv);
+              this.picData.children.push(kv);
           }
           for(let ele in this.jsonObj2) {
              
-                  var kv = { name: ele, value: ele, itemStyle: {color: 'green',  borderColor: 'green', borderWidth: 4}, lineStyle: {color: 'green', width: 4}, label: {color: 'green', fontSize: 14} };
-
+                  let kv = { name: this.jsonObj2[ele], value: this.jsonObj2[ele], itemStyle: {color: 'green',  borderColor: 'green', borderWidth: 4}, lineStyle: {color: 'green', width: 2}, label: {color: 'green', fontSize: 14} };
+this.picData.children.push(kv);
               //不变的
               }
-              children.push(kv);
+              
           
-this.picData.children = children
+//this.picData.children = children
          
         
 
