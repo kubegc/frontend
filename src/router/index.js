@@ -92,6 +92,16 @@ export const constantRoutes = [
             component: () => import('@/views/dashboard/index'),
             meta: { title: 'welcome', icon: 'dashboard' }
           }]
+      },
+      {
+        path: 'resourceinfo',
+        component: Layout,
+        children: [
+          {
+            path: 'podTerminal',
+            component: () => import('@/views/resourceInfo/podTerminal'),
+            meta: { title: '终端'}
+          }]
       }
     ]
   },
