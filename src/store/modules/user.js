@@ -1,6 +1,7 @@
 import { login, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/k8sResource'
 import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
+import router from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -94,13 +95,14 @@ const actions = {
    */
   getRoutesConfig({ state }, role) {
     return new Promise(resolve => {
+      
       getResource({
         token: state.token,
         kind: 'Frontend',
         namespace: state.namespace,
         name: 'routes-' + role
       }).then(response => {
-        resolve(response.data)
+          resolve(response.data)
       })
     })
   }

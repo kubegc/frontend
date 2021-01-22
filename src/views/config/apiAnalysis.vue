@@ -42,11 +42,11 @@ export default {
   methods: {
     analyze() {
 
-      this.picData.name = this.data[0].type
-      //this.picData.name = 'VirtualMachine'
+      //this.picData.name = this.data[0].type
+      this.picData.name = '中科院软件所docker'
       this.picData.children = []
 
-      for(var i = 0; i < 50; i++) {
+      for(var i = 0; i < 30; i++) {
         var tmp = this.data[i].spec
         var key = Object.keys(tmp)[0]
         var param = tmp[key].lifecycle[key]
@@ -68,6 +68,17 @@ export default {
           i * 1000
         );
       }
+      setTimeout(
+          function() {
+            this.$notify({
+          title: "安装成功",
+          message: "中科院软件所docker",
+          type: "success",
+          duration: 3000
+        });
+          }.bind(this),
+          3 * 1000
+        );
     },
 
     validateRes(res) {

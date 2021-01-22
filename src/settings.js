@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'kubernetes-admin',
+  title: '基础分布式运行支撑平台',
 
   /**
    * @type {boolean} true | false

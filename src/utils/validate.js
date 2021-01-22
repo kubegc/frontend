@@ -16,10 +16,10 @@ export function isExternal(path) {
  * @returns {Boolean}
  */
 export function check(desc, value) {
-  var regexp = new RegExp(desc)
+  const regexp = new RegExp(desc)
   if (!regexp.test(value)) {
-      return false;
+    return false
   } else {
-      return true;
+    return true
   }
 }
