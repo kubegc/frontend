@@ -69,11 +69,11 @@
               getInputValue(scope.row.json, item.row)
             }}</span>
             <svg-icon
-            v-if="item.kind === 'terminal'"
-            icon-class="pc"
-            class-name="custom-class"
-            @click="openTerminal(scope.row)"
-          />
+              v-if="item.kind === 'terminal'"
+              icon-class="pc"
+              class-name="custom-class"
+              @click="openTerminal(scope.row)"
+            />
             <el-select
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
@@ -179,7 +179,7 @@ export default {
       propertiesInfo: [],
       message: {},
       resourceInfo: '',
-      catalog_operator: 'Pod',
+      catalog_operator: 'Pod'
     }
   },
   computed: {
