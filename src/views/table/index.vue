@@ -78,7 +78,7 @@
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
               placeholder="请选择"
-              @change="handleAction($event, scope.row.json)"
+              @change="handleActionChange($event, scope.row.json)"
             >
               <el-option
                 v-for="item in actions"
@@ -99,21 +99,24 @@
         @pagination="getList"
       />
       <JsonDialog
-        :json-editor="ifJsonEditorCreate"
-        :title="createResource"
+        :json-editor="ifJsonEditorForCreate"
+        :title="createResourceTitle"
         :value.sync="createDialogVisible"
         :json-file-obj="createJsonPattern"
         :create-templates="createTemplates"
-        :create-table-data="createTableData"
+        :form-data="createTableData"
         @update:jsonFileObj="createJsonPattern = JSON.parse($event)"
         @action="create"
         @selectChange="handleModel($event)"
       />
       <JsonDialog
-        :title="updateResource"
+        :if-create="false"
+        :json-editor="ifJsonEditorForUpdate"
+        :title="updateResourceTitle"
         :value.sync="actionDialogVisible"
-        :json-file-obj="createJsonData"
-        @update:jsonFileObj="createJsonData = JSON.parse($event)"
+        :json-file-obj="updateJsonData"
+        :form-data="Variables"
+        @update:jsonFileObj="updateJsonData = JSON.parse($event)"
         @action="applyOperation"
       />
     </div>
@@ -163,19 +166,19 @@ export default {
       kind: '',
       actions: [],
       listJsonTemp: '',
-      createJsonData: {},
+      updateJsonData: {},
       createDialogVisible: false,
-      ifJsonEditorCreate: true,
+      ifJsonEditorForCreate: true,
+      ifJsonEditorForUpdate: true,
       createTemplates: [],
-      createResource: '创建对象',
-      updateResource: '更新对象',
+      createResourceTitle: '创建对象',
+      updateResourceTitle: '更新对象',
       createJsonPattern: {},
       actionDialogVisible: false,
       responseJson: {},
 
       Variables: [],
       createTableData: [],
-      customizedAction: false,
       propertiesInfo: [],
       message: {},
       resourceInfo: '',
@@ -287,7 +290,6 @@ export default {
       }).then((response) => {
         if (this.$valid(response)) {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
-          this.customizedAction = true
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
           this.createJsonPattern = response.data.spec.data.template
           console.log(this.createJsonPattern)
@@ -416,9 +418,7 @@ export default {
       })
     },
 
-    handleAction(event, row) {
-      this.customizedAction = false
-
+    handleActionChange(event, row) {
       if (event === 'update') {
         getResource({
           token: this.token,
@@ -427,7 +427,9 @@ export default {
           namespace: row.metadata.namespace
         }).then((response) => {
           if (this.$valid(response)) {
-            this.createJsonData = response.data
+            this.updateJsonData = response.data
+            this.ifJsonEditorForUpdate = true
+            this.updateResourceTitle = '更新对象'
             this.actionDialogVisible = true
           }
         })
@@ -447,11 +449,12 @@ export default {
         getResource({
           token: this.token,
           kind: 'Template',
-          name: this.kind.toLowerCase() + '-' + event.toLowerCase()
+          name: this.kind.toLowerCase() + '-' + event.toLowerCase(),
+          namespace: 'default'
         }).then((response) => {
           if (this.$valid(response)) {
-            this.dialogTitle = response.data.spec.data.key
-            this.customizedAction = true
+            this.updateResourceTitle = response.data.spec.data.key
+            this.ifJsonEditorForUpdate = false
             // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
             // id是 spec.replicas
             // type 是字段的类型
@@ -473,6 +476,7 @@ export default {
                 }
               }
             }
+            this.actionDialogVisible = true
           }
         })
       }
@@ -634,9 +638,9 @@ export default {
           // this.customizedAction = true
           if (response.data.spec && response.data.spec.data) {
             this.createTemplates = response.data.spec.data.support
-            this.ifJsonEditorCreate = false
+            this.ifJsonEditorForCreate = false
           } else {
-            this.ifJsonEditorCreate = true
+            this.ifJsonEditorForCreate = true
             this.createJsonPattern = response.data
           }
           this.createDialogVisible = true
@@ -648,16 +652,16 @@ export default {
     applyOperation() {
       this.actionDialogVisible = false
       // createJsonData 是得到的这个资源的 json 文件，更新的时候需要在这里进行更改
-      if (typeof this.createJsonData === 'string') {
-        this.createJsonData = JSON.parse(this.createJsonData)
+      if (typeof this.updateJsonData === 'string') {
+        this.updateJsonData = JSON.parse(this.updateJsonData)
       }
 
-      let createJsonDataTmp = this.createJsonData
+      let createJsonDataTmp = this.updateJsonData
       for (const key in this.Variables) {
         const longkey = this.Variables[key].id.split('.')
         for (let i = 0; i < longkey.length - 1; i++) {
           createJsonDataTmp = createJsonDataTmp[longkey[i]]
-          console.log(this.createJsonData)
+          console.log(this.updateJsonData)
         }
         if (this.Variables[key].type === 'integer') {
           createJsonDataTmp[longkey[longkey.length - 1]] = Number(
@@ -673,7 +677,7 @@ export default {
 
       updateResource({
         token: this.token,
-        json: this.createJsonData
+        json: this.updateJsonData
       }).then((response) => {
         if (response.code === 20000) {
           this.getList()

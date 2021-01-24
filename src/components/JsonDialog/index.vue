@@ -11,16 +11,16 @@
       @input="handleInput($event)"
     />
     <div v-else>
-      <el-form>
+      <el-form v-if="ifCreate">
         <el-form-item :label="'请选择模板：'">
           <el-select v-model="templateType" placeholder="选择模版" @change="handleChange">
             <el-option v-for="item in createTemplates" :key="item.value" :label="item.name" :value="item.value" />
           </el-select>
         </el-form-item>
       </el-form>
-      <el-divider v-if="dividerVisible" content-position="center"><i class="el-icon-edit" /> 请完整填写下列相关信息</el-divider>
+      <el-divider v-if="!ifCreate || dividerVisible" content-position="center"><i class="el-icon-edit" /> 请完整填写下列相关信息</el-divider>
       <el-form label-width="auto" style="margin-top: 50px">
-        <el-form-item v-for="(formItem, index) in createTableData" :key="index" :label="formItem.nameVariable">
+        <el-form-item v-for="(formItem, index) in formData" :key="index" :label="formItem.nameVariable">
           <el-col :span="22">
             <el-radio-group v-if="formItem.type === 'bool'" v-model="formItem.value">
               <el-radio :label="true">true</el-radio>
@@ -71,9 +71,14 @@ export default {
       required: false,
       type: Array
     },
-    createTableData: {
+    formData: {
       required: false,
       type: Array
+    },
+    ifCreate: {
+      required: false,
+      type: Boolean,
+      default: true
     }
   },
   data() {
