@@ -4,7 +4,7 @@
       <el-button round @click="dialogVisible = true">编辑</el-button>
     </el-row>
     <el-row style="margin-top: 30px">
-      <el-col span="12">
+      <el-col :span="12">
         <routes-tree-view
           v-if="routesFile"
           ref="routesTreeView"
