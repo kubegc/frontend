@@ -186,8 +186,8 @@ export default {
       this.copyInfo()
       this.$refs['userAddedInfo'].validate(valid => {
         if (valid) {
-          for(const index in this.formData) {
-            this.formData[index] = this.formShadow[index]
+          for (const index in this.formData) {
+            this.formData[index].value = this.formShadow[index]
           }
           this.$emit('action')
           this.$emit('update:value', !this.value)
@@ -199,12 +199,9 @@ export default {
         this.dividerVisible = true
       }
       this.$emit('selectChange', this.templateType)
-    }
+    },
     copyInfo() {
       for (const key in this.formData) {
-        // if (this.formShadow[key] === undefined) {
-        //   this.formShadow[key] = this.formData[key].value
-        // }
         this.rules[key] = []
         if (this.formData[key].type === 'integer') {
           this.rules[key].push(this.integerRule)
