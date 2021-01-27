@@ -71,134 +71,131 @@
     </el-form>
 
     <div>
-      <el-button id="usernameRegExp" type="text" hidden=true></el-button>
-      <el-button id="usernameRegExpDesc" type="text" hidden=true></el-button>
-      <el-button id="passwordRegExp" type="text" hidden=true></el-button>
-      <el-button id="passwordRegExpDesc" type="text" hidden=true></el-button>
+      <el-button id="usernameRegExp" type="text" hidden="true" />
+      <el-button id="usernameRegExpDesc" type="text" hidden="true" />
+      <el-button id="passwordRegExp" type="text" hidden="true" />
+      <el-button id="passwordRegExpDesc" type="text" hidden="true" />
     </div>
   </div>
 </template>
 
 <script>
-import { check } from "@/utils/validate";
-import { getResource } from "@/api/k8sResource";
+import { check } from '@/utils/validate'
+import { getResource } from '@/api/k8sResource'
 
 export default {
-  name: "Login",
-  
+  name: 'Login',
+
   data() {
-     const validateUsername = (rule, value, callback) => {
+    const validateUsername = (rule, value, callback) => {
       if (!check(this.usernameRegExp, value)) {
-        callback(new Error(this.usernameRegExpDesc));
+        callback(new Error(this.usernameRegExpDesc))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     const validatePassword = (rule, value, callback) => {
       if (!check(this.passwordRegExp, value)) {
-        callback(new Error(this.passwordRegExpDesc));
+        callback(new Error(this.passwordRegExpDesc))
       } else {
-        callback();
+        callback()
       }
-    };
+    }
     return {
       loginForm: {
-        username: "admin",
-        password: "admin",
+        username: 'admin',
+        password: 'admin'
       },
       loginRules: {
         username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+          { required: true, trigger: 'blur', validator: validateUsername }
         ],
         password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+          { required: true, trigger: 'blur', validator: validatePassword }
+        ]
       },
       loading: false,
-      passwordType: "password",
+      passwordType: 'password',
       redirect: undefined,
       projectTitles: [],
-      chosenTitle: "",
-      usernameRegExp: "",
-      usernameRegExpDesc: "",
-      passwordRegExp: "",
-      passwordRegExpDesc: "", 
-    };
+      chosenTitle: '',
+      usernameRegExp: '',
+      usernameRegExpDesc: '',
+      passwordRegExp: '',
+      passwordRegExpDesc: ''
+    }
   },
   watch: {
     $route: {
-      handler: function (route) {
-
-        this.redirect = route.query && route.query.redirect;
+      handler: function(route) {
+        this.redirect = route.query && route.query.redirect
       },
-      immediate: true,
-    },
+      immediate: true
+    }
   },
-  
+
   created() {
     getResource({
-      token: "default",
-      kind: "Frontend",
-      namespace: "default",
-      name: "title-project",
+      token: 'default',
+      kind: 'Frontend',
+      namespace: 'default',
+      name: 'title-project'
     }).then((response) => {
-      this.projectTitles = response.data.spec.data;
-      this.chosenTitle = response.data.spec.data[0].label;
-    });
+      this.projectTitles = response.data.spec.data
+      this.chosenTitle = response.data.spec.data[0].label
+    })
 
     getResource({
-      token: "default",
-      kind: "RegExp",
-      namespace: "default",
-      name: "username",
+      token: 'default',
+      kind: 'RegExp',
+      namespace: 'default',
+      name: 'username'
     }).then((response) => {
-      this.usernameRegExp = response.data.spec.value;
-      this.usernameRegExpDesc = response.data.spec.desc;
-    });
+      this.usernameRegExp = response.data.spec.value
+      this.usernameRegExpDesc = response.data.spec.desc
+    })
 
     getResource({
-      token: "default",
-      kind: "RegExp",
-      namespace: "default",
-      name: "password",
+      token: 'default',
+      kind: 'RegExp',
+      namespace: 'default',
+      name: 'password'
     }).then((response) => {
-      this.passwordRegExp = response.data.spec.value;
-      this.passwordRegExpDesc = response.data.spec.desc;
-    });
+      this.passwordRegExp = response.data.spec.value
+      this.passwordRegExpDesc = response.data.spec.desc
+    })
   },
 
-  
   methods: {
     showPwd() {
-      if (this.passwordType === "password") {
-        this.passwordType = "";
+      if (this.passwordType === 'password') {
+        this.passwordType = ''
       } else {
-        this.passwordType = "password";
+        this.passwordType = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus();
-      });
+        this.$refs.password.focus()
+      })
     },
 
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true;
+          this.loading = true
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
+              this.$router.push({ path: this.redirect || '/' })
+              this.loading = false
             })
             .catch(() => {
-              
-              this.loading = false;
-            });
-        } 
-      });
-    },
-  },
-};
+              this.loading = false
+            })
+        }
+      })
+    }
+  }
+}
 </script>
 
 <style lang="scss">

@@ -301,9 +301,7 @@ export default {
             for (let i = 0; i < this.propertiesInfo.length; i++) {
               this.createTableData.push({})
               // 当前这个字段变量的名字
-              this.createTableData[i].nameVariable = this.propertiesInfo[
-                i
-              ].name
+              this.createTableData[i].name = this.propertiesInfo[i].name
               // 如果像是这种的
               // "metadata.name,
               //  metadata.labels.job-name,
@@ -464,9 +462,9 @@ export default {
               const nameVariables = response.data.spec.data.values
               for (var i = 0; i < nameVariables.length; i++) {
                 this.Variables.push({})
-                this.Variables[i].nameVariable = nameVariables[i].name
                 this.Variables[i].id = nameVariables[i].id
                 this.Variables[i].type = nameVariables[i].type
+                this.Variables[i].name = nameVariables[i].name
                 if (nameVariables[i].type === 'bool') {
                   this.Variables[i].value = true
                   this.Variables[i].placeholder = nameVariables[i].type

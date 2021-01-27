@@ -18,19 +18,26 @@
           </el-select>
         </el-form-item>
       </el-form>
-      <el-divider v-if="!ifCreate || dividerVisible" content-position="center"><i class="el-icon-edit" /> 请完整填写下列相关信息</el-divider>
-      <el-form label-width="auto" style="margin-top: 50px">
-        <el-form-item v-for="(formItem, index) in formData" :key="index" :label="formItem.nameVariable">
+      <el-divider v-if="!ifCreate || dividerVisible" content-position="center"><i class="el-icon-edit" /> 如需{{
+        title
+      }}，请完整填写下列相关信息
+      </el-divider>
+      <el-form ref="userAddedInfo" :model="formShadow" label-width="auto" style="margin-top: 50px" :rules="rules">
+        <el-form-item v-for="(formItem, index) in formData" :key="index" :label="formItem.name" :prop="index + ''">
           <el-col :span="22">
-            <el-radio-group v-if="formItem.type === 'bool'" v-model="formItem.value">
+            <el-radio-group v-if="formItem.type === 'bool'" v-model="formShadow[index]">
               <el-radio :label="true">true</el-radio>
               <el-radio :label="false">false</el-radio>
             </el-radio-group>
             <el-input
-              v-else
-              :value="formItem.value"
+              v-if="formItem.type === 'integer'"
+              v-model.number="formShadow[index]"
               :placeholder="formItem.placeholder"
-              @input="updateOriginValue(formItem, $event)"
+            />
+            <el-input
+              v-if="formItem.type === 'string'"
+              v-model="formShadow[index]"
+              :placeholder="formItem.placeholder"
             />
           </el-col>
         </el-form-item>
@@ -45,6 +52,8 @@
 
 <script>
 import JsonEditor from '@/components/JsonEditorSpecial'
+import { check } from '@/utils/validate'
+import { getResource } from '@/api/k8sResource'
 
 export default {
   name: 'JsonDialog',
@@ -82,16 +91,91 @@ export default {
     }
   },
   data() {
+    const stringValidator = (rule, value, callback) => {
+      console.log(value)
+      if (!check(this.stringRegExp, value)) {
+        callback(new Error(this.stringRegExpDesc))
+      } else {
+        callback()
+      }
+    }
+    const integerValidator = (rule, value, callback) => {
+      console.log(value)
+      if (!check(this.stringRegExp, value)) {
+        callback(new Error(this.stringRegExpDesc))
+      } else {
+        callback()
+      }
+    }
     return {
       templateType: '',
       width: '70%',
-      dividerVisible: false
+      dividerVisible: false,
+      formShadow: {
+        0: '',
+        1: '',
+        2: '',
+        3: '',
+        4: '',
+        5: '',
+        6: '',
+        7: '',
+        8: '',
+        9: '',
+        10: '',
+        11: '',
+        12: '',
+        13: '',
+        14: '',
+        15: ''
+      },
+      rules: {},
+      stringRegExp: '',
+      stringRegExpDesc: '',
+      integerRegExp: '',
+      integerRegExpDesc: '',
+      integerRule: { required: true, trigger: 'blur', validator: integerValidator },
+      stringRule: { required: true, trigger: 'blur', validator: stringValidator }
     }
   },
   watch: {
     jsonEditor: function(val) {
       val === true ? this.width = '70%' : this.width = '40%'
+    },
+    value: {
+      handler: function(val) {
+        if (val && !this.jsonEditor) {
+          for (let i = 0; i < this.formData.length; i++) {
+            this.formShadow[i] = this.formData[i].value
+          }
+          this.$nextTick(() => {
+            this.$refs['userAddedInfo'].clearValidate()
+          })
+        }
+      },
+      immediate: true
     }
+  },
+  created() {
+    getResource({
+      token: 'default',
+      kind: 'RegExp',
+      namespace: 'default',
+      name: 'username'
+    }).then((response) => {
+      this.stringRegExp = response.data.spec.value
+      this.stringRegExpDesc = response.data.spec.desc
+    })
+
+    getResource({
+      token: 'default',
+      kind: 'RegExp',
+      namespace: 'default',
+      name: 'username'
+    }).then((response) => {
+      this.integerRegExp = response.data.spec.value
+      this.integerRegExpDesc = response.data.spec.desc
+    })
   },
   methods: {
     close() {
@@ -101,8 +185,14 @@ export default {
       this.$emit('update:jsonFileObj', event)
     },
     takeActionAndClose() {
-      this.$emit('action')
-      this.$emit('update:value', !this.value)
+      this.copyInfo()
+      this.$refs['userAddedInfo'].validate(valid => {
+        console.log(valid)
+        if (valid) {
+          this.$emit('action')
+          this.$emit('update:value', !this.value)
+        }
+      })
     },
     handleChange() {
       if (this.dividerVisible === false) {
@@ -110,9 +200,23 @@ export default {
       }
       this.$emit('selectChange', this.templateType)
     },
-    updateOriginValue(obj, value) {
+    updateOriginValue(index, value) {
+      this.formShadow[index] = value
       this.$forceUpdate()
-      obj.value = value
+    },
+    copyInfo() {
+      for (const key in this.formData) {
+        // if (this.formShadow[key] === undefined) {
+        //   this.formShadow[key] = this.formData[key].value
+        // }
+        this.rules[key] = []
+        if (this.formData[key].type === 'integer') {
+          this.rules[key].push(this.integerRule)
+        }
+        if (this.formData[key].type === 'string') {
+          this.rules[key].push(this.stringRule)
+        }
+      }
     }
   }
 }
