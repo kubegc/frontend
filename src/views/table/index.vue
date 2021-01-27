@@ -274,7 +274,7 @@ export default {
     openTerminal(row) {
       if (this.catalog_operator === 'Pod') {
         this.$router.push({
-          path: '/resourceInfo/podTerminal',
+          path: '/charts/podTerminal',
           query: { catalog_operator: this.catalog_operator, row: row }
         })
       }

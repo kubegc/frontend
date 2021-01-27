@@ -94,14 +94,20 @@ export const constantRoutes = [
           }]
       },
       {
-        path: 'resourceinfo',
+        path: 'charts',
         component: Layout,
         children: [
           {
             path: 'podTerminal',
             component: () => import('@/views/resourceInfo/podTerminal'),
-            meta: { title: '终端'}
-          }]
+            meta: { title: '终端' }
+          },
+          {
+            path: 'podInfo',
+            component: () => import('@/views/charts/containerInfo'),
+            meta: { title: '详细信息' }
+          }
+        ]
       }
     ]
   },
