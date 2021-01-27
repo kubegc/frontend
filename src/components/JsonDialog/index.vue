@@ -92,7 +92,6 @@ export default {
   },
   data() {
     const stringValidator = (rule, value, callback) => {
-      console.log(value)
       if (!check(this.stringRegExp, value)) {
         callback(new Error(this.stringRegExpDesc))
       } else {
@@ -100,7 +99,6 @@ export default {
       }
     }
     const integerValidator = (rule, value, callback) => {
-      console.log(value)
       if (!check(this.stringRegExp, value)) {
         callback(new Error(this.stringRegExpDesc))
       } else {
@@ -187,8 +185,10 @@ export default {
     takeActionAndClose() {
       this.copyInfo()
       this.$refs['userAddedInfo'].validate(valid => {
-        console.log(valid)
         if (valid) {
+          for(const index in this.formData) {
+            this.formData[index] = this.formShadow[index]
+          }
           this.$emit('action')
           this.$emit('update:value', !this.value)
         }
@@ -199,11 +199,7 @@ export default {
         this.dividerVisible = true
       }
       this.$emit('selectChange', this.templateType)
-    },
-    updateOriginValue(index, value) {
-      this.formShadow[index] = value
-      this.$forceUpdate()
-    },
+    }
     copyInfo() {
       for (const key in this.formData) {
         // if (this.formShadow[key] === undefined) {
