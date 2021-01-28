@@ -60,12 +60,12 @@
                   // nodeName: scope.row.json.spec.nodeName,
                   // namespace: scope.row.json.metadata.namespace,
                   key: item.tag,
-                  value: getInputValue(scope.row.json, item.row)
+                  value: getInputValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1))
                 }
               }"
               tag="a"
               class="link"
-            ><el-link type="primary">{{ getInputValue(scope.row.json, item.row) }}</el-link>
+            ><el-link type="primary">{{ item.row.indexOf('@') === -1 ? getInputValue(scope.row.json, item.row) : item.label }}</el-link>
             </router-link>
             <el-link v-if="item.kind === 'externalLink'" type="primary" :href="getInputValue(scope.row.json, item.row)">{{ getInputValue(scope.row.json, item.row) }}</el-link>
             <span v-if="item.kind === undefined">{{

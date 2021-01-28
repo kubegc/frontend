@@ -99,11 +99,13 @@ export const constantRoutes = [
         children: [
           {
             path: 'podTerminal',
+            name: 'podTerminal',
             component: () => import('@/views/resourceInfo/podTerminal'),
             meta: { title: '终端' }
           },
           {
             path: 'podInfo',
+            name: 'podInfo',
             component: () => import('@/views/charts/containerInfo'),
             meta: { title: '详细信息' }
           }
