@@ -45,7 +45,7 @@
     </div>
     <div slot="footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" :disabled="(!ifCreate || dividerVisible) ? false : true" @click="takeActionAndClose">确 定</el-button>
+      <el-button type="primary" :disabled="(jsonEditor || !ifCreate || dividerVisible) ? false : true" @click="takeActionAndClose">确 定</el-button>
     </div>
   </el-dialog>
 </template>

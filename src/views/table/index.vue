@@ -51,20 +51,23 @@
         >
           <template slot-scope="scope">
             <router-link
-              v-if="item.kind == 'a'"
+              v-if="item.kind === 'internalLink'"
               :to="{
-                path: '/charts/podInfo',
-                query: {
-                  tabName: tabName,
-                  name: getInputValue(scope.row.json, item.row),
-                  nodeName: scope.row.json.spec.nodeName,
-                  namespace: scope.row.json.metadata.namespace,
-                },
+                name: item.link,
+                params: {
+                  // tabName: tabName,
+                  // name: getInputValue(scope.row.json, item.row),
+                  // nodeName: scope.row.json.spec.nodeName,
+                  // namespace: scope.row.json.metadata.namespace,
+                  key: item.tag,
+                  value: getInputValue(scope.row.json, item.row)
+                }
               }"
               tag="a"
               class="link"
-            >{{ getInputValue(scope.row.json, item.row) }}
+            ><el-link type="primary">{{ getInputValue(scope.row.json, item.row) }}</el-link>
             </router-link>
+            <el-link v-if="item.kind === 'externalLink'" type="primary" :href="getInputValue(scope.row.json, item.row)">{{ getInputValue(scope.row.json, item.row) }}</el-link>
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
@@ -176,13 +179,13 @@ export default {
       createJsonPattern: {},
       actionDialogVisible: false,
       responseJson: {},
-
       Variables: [],
       createTableData: [],
       propertiesInfo: [],
       message: {},
       resourceInfo: '',
-      catalog_operator: 'Pod'
+      catalog_operator: 'Pod',
+      createLabels: {}
     }
   },
   computed: {
@@ -192,6 +195,11 @@ export default {
   created() {
     this.kind = this.$route.name // 该资源的名字
 
+    if (this.$route.params) {
+      const key = this.$route.params.key
+      const value = this.$route.params.value
+      this.createLabels[key] = value
+    }
     // 获取上面搜索表单的信息
     getResource({
       token: this.token,
@@ -218,7 +226,8 @@ export default {
           token: this.token,
           kind: this.kind,
           limit: this.listQuery.limit,
-          page: this.listQuery.continue
+          page: this.listQuery.continue,
+          labels: this.createLabels
         }).then((response) => {
           if (this.$valid(response)) {
             this.listJsonTemp = response.data.items
@@ -781,10 +790,6 @@ export default {
 .link {
   color: red;
   cursor: pointer;
-}
-
-a:hover {
-  text-decoration: underline;
 }
 
 input {
