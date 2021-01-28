@@ -53,7 +53,7 @@
             <router-link
               v-if="item.kind == 'a'"
               :to="{
-                path: resourceInfo,
+                path: '/charts/podInfo',
                 query: {
                   tabName: tabName,
                   name: getInputValue(scope.row.json, item.row),
