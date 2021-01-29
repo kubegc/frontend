@@ -53,7 +53,7 @@
             <router-link
               v-if="item.kind === 'internalLink'"
               :to="{
-                name: item.link,
+                name: item.link.indexOf('@') === -1 ? item.link : getInputValue(scope.row.json, item.link.substring(1)),
                 params: {
                   // tabName: tabName,
                   // name: getInputValue(scope.row.json, item.row),
@@ -474,7 +474,7 @@ export default {
           }
         })
       }
-      
+
     },
     create() {
       let createTemplateTemp
