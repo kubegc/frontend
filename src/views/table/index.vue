@@ -301,7 +301,6 @@ export default {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
           this.createJsonPattern = response.data.spec.data.template
-          console.log(this.createJsonPattern)
           // 生成之后就会变成填写字段信息表格的数据来源数组
           this.createTableData = []
           if (response.hasOwnProperty('data')) {
@@ -487,48 +486,6 @@ export default {
           }
         })
       }
-
-      // if (event === "update") {
-
-      // } else if (event === "delete") {
-      //   deleteResource({
-      //     token: this.token,
-      //     kind: this.kind,
-      //     namespace: this.namespace,
-      //     name: row.metadata.name,
-      //   }).then((response) => {
-      //     if (this.$valid(response)) {
-      //       const deleteName = response.data.details
-      //         ? response.data.details.name
-      //         : response.data.metadata.name;
-      //       this.listLoading = true;
-      //       const id = setInterval(
-      //         function () {
-      //           getResource({
-      //             token: this.token,
-      //             name: deleteName,
-      //             kind: this.kind,
-      //             namespace: this.namespace,
-      //           }).then((response) => {
-      //             if (!this.$valid(response)) {
-      //               clearInterval(id);
-      //               // if (this.message) {
-      //               //   this.searchList(this.message)
-      //               // } else {
-      //               //   this.refresh()
-      //               // }
-      //               this.getList();
-      //               this._message("删除成功", "success");
-      //             }
-      //           });
-      //         }.bind(this),
-      //         500
-      //       );
-      //     }
-      //   });
-      // } else {
-      //   console.log("")
-      // }
     },
 
     create() {
@@ -544,7 +501,6 @@ export default {
         } else {
           propertiesRequired = []
           propertiesRequired.push(this.propertiesInfo[key].id)
-          console.log(propertiesRequired)
         }
 
         // 这里是针对每一个属性进行一个循环
