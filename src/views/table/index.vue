@@ -63,7 +63,6 @@
                   value: getInputValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1))
                 }
               }"
-              tag="a"
               class="link"
             ><el-link type="primary">{{ item.row.indexOf('@') === -1 ? getInputValue(scope.row.json, item.row) : item.label }}</el-link>
             </router-link>
@@ -139,7 +138,6 @@ import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'
 import JsonDialog from '@/components/JsonDialog'
 import { connectTerminal } from '@/api/commonKindMethod'
-
 export default {
   name: 'DynamicTable',
   components: { JsonDialog, Pagination, DynamicForm },
@@ -191,10 +189,8 @@ export default {
   computed: {
     ...mapGetters(['token'])
   },
-
   created() {
     this.kind = this.$route.name // 该资源的名字
-
     if (this.$route.params) {
       const key = this.$route.params.key
       const value = this.$route.params.value
@@ -211,7 +207,6 @@ export default {
       this.message = this.responseJson.model
       this.formVisible = true
     })
-
     // 获取表头信息
     getResource({
       token: this.token,
@@ -260,7 +255,6 @@ export default {
         })
       }
     })
-
     getResource({
       token: this.token,
       kind: 'Frontend',
@@ -273,10 +267,7 @@ export default {
     })
     // this.pollingId = setInterval(this.getList, 10000)
   },
-  // beforeDestroy() {
-  //   console.log(this.pollingId)
-  //   clearInterval(this.pollingId)
-  // },
+
   methods: {
     // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
     // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
@@ -301,6 +292,7 @@ export default {
           // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
           // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
           this.createJsonPattern = response.data.spec.data.template
+          console.log(this.createJsonPattern)
           // 生成之后就会变成填写字段信息表格的数据来源数组
           this.createTableData = []
           if (response.hasOwnProperty('data')) {
@@ -343,7 +335,6 @@ export default {
         }
       })
     },
-
     searchList() {
       this.list = []
       this.listJsonTemp = ''
@@ -369,7 +360,6 @@ export default {
             } else {
               this.actions = []
             }
-
             for (var i = 0; i < this.listJsonTemp.length; i++) {
               this.list.push({})
               this.list[i].json = this.listJsonTemp[i]
@@ -380,7 +370,6 @@ export default {
         })
       })
     },
-
     // 将表格的 list 和 action 进行更新
     getList() {
       // this.listLoading = true
@@ -423,7 +412,6 @@ export default {
         }
       })
     },
-
     handleActionChange(event, row) {
       if (event === 'update') {
         getResource({
@@ -486,8 +474,8 @@ export default {
           }
         })
       }
+      
     },
-
     create() {
       let createTemplateTemp
       let propertiesRequired
@@ -501,8 +489,8 @@ export default {
         } else {
           propertiesRequired = []
           propertiesRequired.push(this.propertiesInfo[key].id)
+          console.log(propertiesRequired)
         }
-
         // 这里是针对每一个属性进行一个循环
         for (let j = 0; j < propertiesRequired.length; j++) {
           createTemplateTemp = this.createJsonPattern
@@ -541,7 +529,6 @@ export default {
                   pathToProperty[pathToProperty.length - 1].indexOf('[')
                 )
               ]
-
             if (this.createTableData[key].type === 'integer') {
               createTemplateTemp[
                 parseInt(
@@ -572,7 +559,6 @@ export default {
           }
         }
       }
-
       if (typeof this.createJsonPattern === 'string') {
         this.createJsonPattern = JSON.parse(this.createJsonPattern)
       }
@@ -610,7 +596,6 @@ export default {
         }
       })
     },
-
     // 用于更新的 action 提交
     applyOperation() {
       this.actionDialogVisible = false
@@ -618,7 +603,6 @@ export default {
       if (typeof this.updateJsonData === 'string') {
         this.updateJsonData = JSON.parse(this.updateJsonData)
       }
-
       let createJsonDataTmp = this.updateJsonData
       for (const key in this.Variables) {
         const longkey = this.Variables[key].id.split('.')
@@ -637,7 +621,6 @@ export default {
         }
       }
       // this.createJsonData = JSON.parse(this.createJsonData);
-
       updateResource({
         token: this.token,
         json: this.updateJsonData
@@ -651,7 +634,6 @@ export default {
         }
       })
     },
-
     _message(message, type) {
       this.$message({
         message: message || '操作成功',
@@ -659,7 +641,6 @@ export default {
         duration: 3000
       })
     },
-
     getInputValue(scope, longKey) {
       if (JSON.stringify(scope) === '{}' || !longKey) {
         return ''
@@ -702,7 +683,6 @@ export default {
       // console.log(res)
       return res
     },
-
     updateInputValue(scope, longKey, event) {
       if (longKey.indexOf('.') < 0) {
         scope[longKey] = event
@@ -737,17 +717,14 @@ export default {
 .dynamic-form-container {
   margin-bottom: 30px;
 }
-
 .base-button-container {
   padding: 10px;
   margin-bottom: 22px;
 }
-
 .link {
   color: red;
   cursor: pointer;
 }
-
 input {
   height: 35px;
 }
