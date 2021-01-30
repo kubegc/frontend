@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '泛在云边端基础运行支撑平台',
+  title: '云边端基础运行支撑平台',
 
   /**
    * @type {boolean} true | false
