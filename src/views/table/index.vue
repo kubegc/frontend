@@ -64,18 +64,18 @@
                 }
               }"
               class="link"
-            ><el-link type="primary">{{ item.row.indexOf('@') === -1 ? getInputValue(scope.row.json, item.row) : item.label }}</el-link>
+            >
+              <el-link type="primary">{{ item.row.indexOf('@') === -1 ? getInputValue(scope.row.json, item.row) : item.label }}</el-link>
             </router-link>
             <el-link v-if="item.kind === 'externalLink'" type="primary" :href="getInputValue(scope.row.json, item.row)">{{ getInputValue(scope.row.json, item.row) }}</el-link>
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
-            <svg-icon
-              v-if="item.kind === 'terminal'"
-              icon-class="pc"
-              class-name="custom-class"
-              @click="openTerminal(scope.row)"
-            />
+            <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="item.link + getInputValue(scope.row.json, item.row)">
+              <svg-icon
+                icon-class="pc"
+              />
+            </el-link>
             <el-select
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
