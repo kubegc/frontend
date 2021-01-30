@@ -91,7 +91,6 @@ export default {
     }
   },
   data() {
-
     const formValidator0 = (rule, value, callback) => {
       if (!check(this.formRegExp[0], this.formData[0])) {
         callback(new Error(this.formDesc[0]))
@@ -227,7 +226,7 @@ export default {
         callback()
       }
     }
-    
+
     const integerValidator = (rule, value, callback) => {
       if (!check(this.defStringRegExp, value)) {
         callback(new Error(this.defStringRegExpDesc))
@@ -235,7 +234,7 @@ export default {
         callback()
       }
     }
-    
+
     return {
       templateType: '',
       width: '70%',
@@ -274,7 +273,7 @@ export default {
         12: { required: true, trigger: 'blur', validator: formValidator12 },
         13: { required: true, trigger: 'blur', validator: formValidator13 },
         14: { required: true, trigger: 'blur', validator: formValidator14 },
-        15: { required: true, trigger: 'blur', validator: formValidator15 },
+        15: { required: true, trigger: 'blur', validator: formValidator15 }
       },
       formDesc: {
         0: '',
@@ -321,20 +320,20 @@ export default {
       stringRule: { required: true, trigger: 'blur', validator: stringValidator }
     }
   },
-  
+
   watch: {
     jsonEditor: function(val) {
       val === true ? this.width = '70%' : this.width = '40%'
     },
-    
+
     value: {
       handler: function(val) {
         if (val && !this.jsonEditor) {
           for (let i = 0; i < this.formData.length; i++) {
             this.formShadow[i] = this.formData[i].value
-            console.log("---" + this.formShadow[i])
+            console.log('---' + this.formShadow[i])
           }
-          
+
           this.$nextTick(() => {
             this.$refs['userAddedInfo'].clearValidate()
           })
@@ -372,7 +371,7 @@ export default {
     handleInput(event) {
       this.$emit('update:jsonFileObj', event)
     },
-    
+
     takeActionAndClose() {
       this.copyInfo()
       this.$refs['userAddedInfo'].validate(valid => {
@@ -395,10 +394,19 @@ export default {
     copyInfo() {
       for (const key in this.formData) {
         this.rules[key] = []
-        if (this.formData[key].type === 'integer') {
+        if (this.formData[key].regexp) {
+          const validator = (rule, value, callback) => {
+            if (!check(this.formData[key].regexp, value)) {
+              callback(new Error(this.desc))
+            } else {
+              callback()
+            }
+          }
+          const rule = { required: true, trigger: 'blur', validator }
+          this.rules[key].push(rule)
+        } else if (this.formData[key].type === 'integer') {
           this.rules[key].push(this.integerRule)
-        }
-        if (this.formData[key].type === 'string') {
+        } else if (this.formData[key].type === 'string') {
           this.rules[key].push(this.stringRule)
         }
       }
