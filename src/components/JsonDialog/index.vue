@@ -181,8 +181,8 @@ export default {
               for (const index in this.formData) {
                 this.formData[index].value = this.formShadow[index]
               }
-              // this.$emit('action')
-              // this.$emit('update:value', !this.value)
+              this.$emit('action')
+              this.$emit('update:value', !this.value)
             }
           })
         })
