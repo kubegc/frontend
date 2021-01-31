@@ -613,21 +613,22 @@ export default {
       if (typeof this.updateJsonData === 'string') {
         this.updateJsonData = JSON.parse(this.updateJsonData)
       }
-      let tmp = this.updateJsonData
-      for (const key in this.Variables) {
-        const longkey = this.Variables[key].id.split('.')
-        for (let i = 0; i < longkey.length - 1; i++) {
-          tmp = tmp[longkey[i]]
-          console.log(tmp)
-        }
-        if (this.Variables[key].type === 'integer') {
-          tmp[longkey[longkey.length - 1]] = Number(
-            this.Variables[key].value
-          )
-        } else {
-          tmp[longkey[longkey.length - 1]] = this.Variables[
-            key
-          ].value
+      if (!this.ifJsonEditorForUpdate) {
+        let tmp = this.updateJsonData
+        for (const key in this.Variables) {
+          const longkey = this.Variables[key].id.split('.')
+          for (let i = 0; i < longkey.length - 1; i++) {
+            tmp = tmp[longkey[i]]
+          }
+          if (this.Variables[key].type === 'integer') {
+            tmp[longkey[longkey.length - 1]] = Number(
+              this.Variables[key].value
+            )
+          } else {
+            tmp[longkey[longkey.length - 1]] = this.Variables[
+              key
+            ].value
+          }
         }
       }
       // this.createJsonData = JSON.parse(this.createJsonData);
@@ -635,7 +636,7 @@ export default {
         token: this.token,
         json: this.updateJsonData
       }).then((response) => {
-        if (response.code === 20000) {
+        if (this.$valid(response)) {
           this.getList()
           for (const key in this.list) {
             this.list[key].val = ''

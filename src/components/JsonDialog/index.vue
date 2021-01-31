@@ -31,7 +31,7 @@
             </el-radio-group>
             <el-input
               v-if="formItem.type === 'integer'"
-              v-model.number="formShadow[index]"
+              v-model="formShadow[index]"
               :placeholder="formItem.placeholder"
             />
             <el-input
@@ -173,17 +173,23 @@ export default {
     },
 
     takeActionAndClose() {
-      this.copyInfo().then(() => {
-        this.$refs['userAddedInfo'].validate(valid => {
-          if (valid) {
-            for (const index in this.formData) {
-              this.formData[index].value = this.formShadow[index]
+      if (!this.jsonEditor) {
+        this.copyInfo().then(() => {
+          this.$refs['userAddedInfo'].validate(valid => {
+            console.log(valid)
+            if (valid) {
+              for (const index in this.formData) {
+                this.formData[index].value = this.formShadow[index]
+              }
+              // this.$emit('action')
+              // this.$emit('update:value', !this.value)
             }
-            this.$emit('action')
-            this.$emit('update:value', !this.value)
-          }
+          })
         })
-      })
+      } else {
+        this.$emit('action')
+        this.$emit('update:value', !this.value)
+      }
     },
 
     handleChange() {
