@@ -442,36 +442,46 @@ export default {
       } else {
         getResource({
           token: this.token,
-          kind: 'Template',
-          name: this.kind.toLowerCase() + '-' + event.toLowerCase(),
-          namespace: 'default'
+          kind: this.kind,
+          name: row.metadata.name,
+          namespace: row.metadata.namespace
         }).then((response) => {
           if (this.$valid(response)) {
-            this.updateResourceTitle = response.data.spec.data.key
-            this.ifJsonEditorForUpdate = false
-            // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
-            // id是 spec.replicas
-            // type 是字段的类型
-            // value 是这个字段默认的值，bool 是 true, string 是 ''
-            this.Variables = []
-            if (response.hasOwnProperty('data')) {
-              const nameVariables = response.data.spec.data.values
-              for (var i = 0; i < nameVariables.length; i++) {
-                this.Variables.push({})
-                this.Variables[i].id = nameVariables[i].id
-                this.Variables[i].type = nameVariables[i].type
-                this.Variables[i].name = nameVariables[i].name
-                this.Variables[i].regexp = nameVariables[i].regexp
-                if (nameVariables[i].type === 'bool') {
-                  this.Variables[i].value = true
-                  this.Variables[i].placeholder = nameVariables[i].type
-                } else {
-                  this.Variables[i].value = ''
-                  this.Variables[i].placeholder = nameVariables[i].type
+            this.updateJsonData = response.data
+            getResource({
+              token: this.token,
+              kind: 'Template',
+              name: this.kind.toLowerCase() + '-' + event.toLowerCase(),
+              namespace: 'default'
+            }).then((response) => {
+              if (this.$valid(response)) {
+                this.updateResourceTitle = response.data.spec.data.key
+                this.ifJsonEditorForUpdate = false
+                // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
+                // id是 spec.replicas
+                // type 是字段的类型
+                // value 是这个字段默认的值，bool 是 true, string 是 ''
+                this.Variables = []
+                if (response.hasOwnProperty('data')) {
+                  const nameVariables = response.data.spec.data.values
+                  for (var i = 0; i < nameVariables.length; i++) {
+                    this.Variables.push({})
+                    this.Variables[i].id = nameVariables[i].id
+                    this.Variables[i].type = nameVariables[i].type
+                    this.Variables[i].name = nameVariables[i].name
+                    this.Variables[i].regexp = nameVariables[i].regexp
+                    if (nameVariables[i].type === 'bool') {
+                      this.Variables[i].value = true
+                      this.Variables[i].placeholder = nameVariables[i].type
+                    } else {
+                      this.Variables[i].value = ''
+                      this.Variables[i].placeholder = nameVariables[i].type
+                    }
+                  }
                 }
+                this.actionDialogVisible = true
               }
-            }
-            this.actionDialogVisible = true
+            })
           }
         })
       }
@@ -603,19 +613,19 @@ export default {
       if (typeof this.updateJsonData === 'string') {
         this.updateJsonData = JSON.parse(this.updateJsonData)
       }
-      let createJsonDataTmp = this.updateJsonData
+      let tmp = this.updateJsonData
       for (const key in this.Variables) {
         const longkey = this.Variables[key].id.split('.')
         for (let i = 0; i < longkey.length - 1; i++) {
-          createJsonDataTmp = createJsonDataTmp[longkey[i]]
-          console.log(this.updateJsonData)
+          tmp = tmp[longkey[i]]
+          console.log(tmp)
         }
         if (this.Variables[key].type === 'integer') {
-          createJsonDataTmp[longkey[longkey.length - 1]] = Number(
+          tmp[longkey[longkey.length - 1]] = Number(
             this.Variables[key].value
           )
         } else {
-          createJsonDataTmp[longkey[longkey.length - 1]] = this.Variables[
+          tmp[longkey[longkey.length - 1]] = this.Variables[
             key
           ].value
         }

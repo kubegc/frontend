@@ -130,10 +130,6 @@ export default {
     value: {
       handler: function(val) {
         if (val && !this.jsonEditor) {
-          // for (let i = 0; i < this.formData.length; i++) {
-          //   this.formShadow[i] = this.formData[i].value
-          // }
-
           this.$nextTick(() => {
             this.$refs['userAddedInfo'].clearValidate()
             this.formShadow = {}
@@ -179,7 +175,6 @@ export default {
     takeActionAndClose() {
       this.copyInfo().then(() => {
         this.$refs['userAddedInfo'].validate(valid => {
-          console.log(valid)
           if (valid) {
             for (const index in this.formData) {
               this.formData[index].value = this.formShadow[index]
@@ -224,10 +219,6 @@ export default {
           this.rules[key].push(this.stringRule)
         }
       }
-    },
-    handleValueUpdate(index, value) {
-      this.$forceUpdate()
-      this.formShadow[index] = value
     }
   }
 }
