@@ -461,6 +461,7 @@ export default {
                 this.Variables[i].id = nameVariables[i].id
                 this.Variables[i].type = nameVariables[i].type
                 this.Variables[i].name = nameVariables[i].name
+                this.Variables[i].regexp = nameVariables[i].regexp
                 if (nameVariables[i].type === 'bool') {
                   this.Variables[i].value = true
                   this.Variables[i].placeholder = nameVariables[i].type

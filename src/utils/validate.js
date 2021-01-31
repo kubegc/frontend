@@ -17,7 +17,7 @@ export function isExternal(path) {
  */
 export function check(desc, value) {
   const regexp = new RegExp(desc)
-  if (!regexp.test(value)) {
+  if (value === undefined || !regexp.test(value)) {
     return false
   } else {
     return true
