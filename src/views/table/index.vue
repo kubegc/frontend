@@ -71,7 +71,7 @@
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
-            <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="item.link + getInputValue(scope.row.json, item.row)">
+            <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)">
               <svg-icon
                 icon-class="pc"
               />
@@ -271,14 +271,24 @@ export default {
   methods: {
     // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
     // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
-    openTerminal(row) {
-      if (this.catalog_operator === 'Pod') {
-        this.$router.push({
-          path: '/charts/podTerminal',
-          query: { catalog_operator: this.catalog_operator, row: row }
-        })
+    // openTerminal(row) {
+    //   if (this.catalog_operator === 'Pod') {
+    //     this.$router.push({
+    //       path: '/charts/podTerminal',
+    //       query: { catalog_operator: this.catalog_operator, row: row }
+    //     })
+    //   }
+    //   connectTerminal(this.catalog_operator, row)
+    // },
+    getTerminalAddr(json, item) {
+      const params = item.row.split(',')
+      const len = params.length
+      let addr = item.link
+      for (let i = 0; i < len; i++) {
+        const currParam = this.getInputValue(json, params[i])
+        addr = addr.replace('{' + (i + 1) + '}', currParam)
       }
-      connectTerminal(this.catalog_operator, row)
+      return addr
     },
     handleModel(event) {
       // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
