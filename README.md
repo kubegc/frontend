@@ -12,11 +12,11 @@
 # Plugins
 
 - 镜像插件
-  - [镜像存储仓库]: docker run -d --restart=always -p 5000:5000 -v /var/lib/registry:/var/lib/registry registry.cn-beijing.aliyuncs.com/dosproj/distribution:v2.7.1-arm64
-  - [镜像冗余分析]：docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock -p 5002:7001 registry.cn-beijing.aliyuncs.com/dosproj/dive:v0.9.2-arm64
+  - [镜像存储仓库]: docker run -d --restart=always -p 5000:5000 -v /var/lib/registry:/var/lib/registry registry.cn-beijing.aliyuncs.com/dosproj/distribution:v2.7.1-amd64
+  - [镜像冗余分析]：docker run -d --restart=always -v /var/run/docker.sock:/var/run/docker.sock -p 5002:7001 registry.cn-beijing.aliyuncs.com/dosproj/dive:v0.9.2-amd64
 - Web控制台
-  - [物理机web访问]：docker run -d --restart=always -p 31051:2222 registry.cn-beijing.aliyuncs.com/dosproj/webssh2:v0.3.1-arm64
-  - [容器Web访问]: docker run -d --restart=always -e "HOST_URL=0.0.0.0" -e "HOST_PORT=7002" --net=host registry.cn-beijing.aliyuncs.com/dosproj/docker-terminal:v1.0.0-arm64
+  - [物理机web访问]：docker run -d --restart=always -p 31051:2222 registry.cn-beijing.aliyuncs.com/dosproj/webssh2:v0.3.1-amd64
+  - [容器Web访问]: docker run -d --restart=always -e "HOST_URL=0.0.0.0" -e "HOST_PORT=7002" --net=host registry.cn-beijing.aliyuncs.com/dosproj/docker-terminal:v1.0.0-amd64
 
 # Commands
 
