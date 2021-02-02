@@ -71,7 +71,7 @@
             <span v-if="item.kind === undefined">{{
               getInputValue(scope.row.json, item.row)
             }}</span>
-            <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)">
+            <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)" target="_blank">
               <svg-icon
                 icon-class="pc"
               />
@@ -137,7 +137,6 @@ import Pagination from '@/components/Pagination' // secondary package based on e
 import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'
 import JsonDialog from '@/components/JsonDialog'
-import { connectTerminal } from '@/api/commonKindMethod'
 export default {
   name: 'DynamicTable',
   components: { JsonDialog, Pagination, DynamicForm },
@@ -418,6 +417,7 @@ export default {
               const end = this.list.length - 1
               this.list.splice(start, end)
             }
+            this.$forceUpdate()
           })
         }
       })
