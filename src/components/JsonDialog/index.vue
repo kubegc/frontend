@@ -31,7 +31,7 @@
             </el-radio-group>
             <el-input
               v-if="formItem.type === 'integer'"
-              v-model="formShadow[index]"
+              v-model.number="formShadow[index]"
               :placeholder="formItem.placeholder"
             />
             <el-input

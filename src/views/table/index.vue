@@ -108,7 +108,7 @@
         :value.sync="createDialogVisible"
         :json-file-obj="createJsonPattern"
         :create-templates="createTemplates"
-        :form-data="createTableData"
+        :form-data="createFormConfig"
         @update:jsonFileObj="createJsonPattern = JSON.parse($event)"
         @action="create"
         @selectChange="handleModel($event)"
@@ -119,7 +119,7 @@
         :title="updateResourceTitle"
         :value.sync="actionDialogVisible"
         :json-file-obj="updateJsonData"
-        :form-data="Variables"
+        :form-data="updateFormConfig"
         @update:jsonFileObj="updateJsonData = JSON.parse($event)"
         @action="applyOperation"
       />
@@ -178,11 +178,10 @@ export default {
       createJsonPattern: {},
       actionDialogVisible: false,
       responseJson: {},
-      Variables: [],
-      createTableData: [],
+      updateFormConfig: [],
+      createFormConfig: [],
       propertiesInfo: [],
       message: {},
-      resourceInfo: '',
       catalog_operator: 'Pod',
       createLabels: {}
     }
@@ -270,17 +269,6 @@ export default {
   },
 
   methods: {
-    // 创建资源选择模板的时候触发的函数，比如选择 simple 模板的时候，这里的 event 就是选择的 value，或者说是模板的名字
-    // 这里完成之后就是需要点击确定，转到 create() 来看接下来的逻辑
-    // openTerminal(row) {
-    //   if (this.catalog_operator === 'Pod') {
-    //     this.$router.push({
-    //       path: '/charts/podTerminal',
-    //       query: { catalog_operator: this.catalog_operator, row: row }
-    //     })
-    //   }
-    //   connectTerminal(this.catalog_operator, row)
-    // },
     getTerminalAddr(json, item) {
       const params = item.row.split(',')
       const len = params.length
@@ -300,47 +288,19 @@ export default {
         namespace: 'default'
       }).then((response) => {
         if (this.$valid(response)) {
-          // 这个 otherOperation 应该就是看有没有提供创建的模板所需要填写的字段的信息，没有的话就需要手动填写 json 字符串
-          // 这里的 RS 我理解为 Resource，就是创建这个资源的模板 template 字段的信息
+          // 就是创建这个资源的 json 模板
           this.createJsonPattern = response.data.spec.data.template
-          console.log(this.createJsonPattern)
           // 生成之后就会变成填写字段信息表格的数据来源数组
-          this.createTableData = []
+          this.createFormConfig = []
           if (response.hasOwnProperty('data')) {
-            // 字段信息的一个临时副本，其他方法会用的比如 create()
-            this.propertiesInfo = response.data.spec.data.values
-            for (let i = 0; i < this.propertiesInfo.length; i++) {
-              this.createTableData.push({})
-              // 当前这个字段变量的名字
-              this.createTableData[i].name = this.propertiesInfo[i].name
-              // 如果像是这种的
-              // "metadata.name,
-              //  metadata.labels.job-name,
-              //  spec.selector.matchLabels.job-name,
-              //  spec.template.metadata.labels.job-name,
-              //  spec.template.spec.containers[0].name"
-              if (this.propertiesInfo[i].id.indexOf(',') > 0) {
-                // 这里的意思是只取第一个，比如这里的 metadata.name
-                this.createTableData[i].id = this.propertiesInfo[
-                  i
-                ].id.substring(0, this.propertiesInfo[i].id.indexOf(','))
+            this.createFormConfig = response.data.spec.data.values
+            for (let i = 0; i < this.createFormConfig.length; i++) {
+              if (this.createFormConfig[i].type === 'bool') {
+                this.createFormConfig[i].value = true
               } else {
-                // 比如只有 metadata.name 这种的
-                this.createTableData[i].id = this.propertiesInfo[i].id
+                this.createFormConfig[i].value = ''
               }
-              this.createTableData[i].type = this.propertiesInfo[i].type
-              if (this.propertiesInfo[i].type === 'bool') {
-                this.createTableData[i].value = true
-                // 这里的 placeholder 是指在生成表格的时候，需要填写字段信息的 input 组件的 placeholder（我也不知道怎么翻译）
-                this.createTableData[i].placeholder = this.propertiesInfo[
-                  i
-                ].type
-              } else {
-                this.createTableData[i].value = ''
-                this.createTableData[i].placeholder = this.propertiesInfo[
-                  i
-                ].type
-              }
+              this.createFormConfig[i].placeholder = this.createFormConfig[i].type
             }
           }
         }
@@ -413,11 +373,6 @@ export default {
               this.list[i].actions = this.actions
               this.list[i].val = ''
             }
-            // if (this.list.length > this.listJsonTemp.length) {
-            //   const start = this.listJsonTemp.length
-            //   const end = this.list.length - 1
-            //   this.list.splice(start, end)
-            // }
           })
         }
       })
@@ -471,22 +426,16 @@ export default {
                 // id是 spec.replicas
                 // type 是字段的类型
                 // value 是这个字段默认的值，bool 是 true, string 是 ''
-                this.Variables = []
+                this.updateFormConfig = []
                 if (response.hasOwnProperty('data')) {
-                  const nameVariables = response.data.spec.data.values
-                  for (var i = 0; i < nameVariables.length; i++) {
-                    this.Variables.push({})
-                    this.Variables[i].id = nameVariables[i].id
-                    this.Variables[i].type = nameVariables[i].type
-                    this.Variables[i].name = nameVariables[i].name
-                    this.Variables[i].regexp = nameVariables[i].regexp
-                    if (nameVariables[i].type === 'bool') {
-                      this.Variables[i].value = true
-                      this.Variables[i].placeholder = nameVariables[i].type
+                  this.updateFormConfig = response.data.spec.data.values
+                  for (let i = 0; i < this.updateFormConfig.length; i++) {
+                    if (this.updateFormConfig[i].type === 'bool') {
+                      this.updateFormConfig[i].value = true
                     } else {
-                      this.Variables[i].value = ''
-                      this.Variables[i].placeholder = nameVariables[i].type
+                      this.updateFormConfig[i].value = ''
                     }
+                    this.updateFormConfig[i].placeholder = this.updateFormConfig[i].type
                   }
                 }
                 this.actionDialogVisible = true
@@ -497,91 +446,14 @@ export default {
       }
     },
     create() {
-      let createTemplateTemp
-      let propertiesRequired
       // 创建资源的 dialog 需要消失
       this.createDialogVisible = false
-      for (const key in this.createTableData) {
-        // 如果 id 是长长的一串
-        // 例如 ...,...,... 这种，就将这个长字符串按 ','  分成字符串数组 ['...','...','...']
-        if (this.propertiesInfo[key].id.indexOf(',') > 0) {
-          propertiesRequired = this.propertiesInfo[key].id.split(',')
-        } else {
-          propertiesRequired = []
-          propertiesRequired.push(this.propertiesInfo[key].id)
-          console.log(propertiesRequired)
-        }
-        // 这里是针对每一个属性进行一个循环
-        for (let j = 0; j < propertiesRequired.length; j++) {
-          createTemplateTemp = this.createJsonPattern
-          const pathToProperty = propertiesRequired[j].split('.')
-          // pathToProperty 数组中最后一个元素是我们的目标属性，所以要解析前面的中间属性
-          for (let i = 0; i < pathToProperty.length - 1; i++) {
-            // console.log(longkey[i]);
-            if (pathToProperty[i].indexOf('[') > 0) {
-              // 获得 example[index] 的 example 数组对象
-              createTemplateTemp =
-                createTemplateTemp[
-                  pathToProperty[i].substring(0, pathToProperty[i].indexOf('['))
-                ]
-              // 获得 example 数组对象里面的 index 索引下的对象
-              createTemplateTemp =
-                createTemplateTemp[
-                  parseInt(
-                    pathToProperty[i].substring(
-                      pathToProperty[i].indexOf('[') + 1,
-                      pathToProperty[i].indexOf(']')
-                    )
-                  )
-                ]
-              // console.log(createJsonDataTmp);
-            } else {
-              createTemplateTemp = createTemplateTemp[pathToProperty[i]]
-              // console.log(createJsonDataTmp);
-            }
-          }
-          // 处理目标属性，是 example 这种 还是 exapmle[index] 这种
-          if (pathToProperty[pathToProperty.length - 1].indexOf('[') > 0) {
-            createTemplateTemp =
-              createTemplateTemp[
-                pathToProperty[pathToProperty.length - 1].substring(
-                  0,
-                  pathToProperty[pathToProperty.length - 1].indexOf('[')
-                )
-              ]
-            if (this.createTableData[key].type === 'integer') {
-              createTemplateTemp[
-                parseInt(
-                  pathToProperty[pathToProperty.length - 1].substring(
-                    pathToProperty[pathToProperty.length - 1].indexOf('[') + 1,
-                    pathToProperty[pathToProperty.length - 1].indexOf(']')
-                  )
-                )
-              ] = Number(this.createTableData[key].value) // 这里的 value 就是用户填写的信息
-            } else {
-              createTemplateTemp[
-                parseInt(
-                  pathToProperty[pathToProperty.length - 1].substring(
-                    pathToProperty[pathToProperty.length - 1].indexOf('[') + 1,
-                    pathToProperty[pathToProperty.length - 1].indexOf(']')
-                  )
-                )
-              ] = this.createTableData[key].value
-            }
-          } else if (this.createTableData[key].type === 'integer') {
-            createTemplateTemp[
-              pathToProperty[pathToProperty.length - 1]
-            ] = Number(this.createTableData[key].value)
-          } else {
-            createTemplateTemp[
-              pathToProperty[pathToProperty.length - 1]
-            ] = this.createTableData[key].value
-          }
-        }
+      if (!this.ifJsonEditorForCreate){
+        this.updateJsonObj(this.createJsonPattern, this.createFormConfig)
       }
-      if (typeof this.createJsonPattern === 'string') {
-        this.createJsonPattern = JSON.parse(this.createJsonPattern)
-      }
+      // if (typeof this.createJsonPattern === 'string') {
+      //   this.createJsonPattern = JSON.parse(this.createJsonPattern)
+      // }
       // 新建资源
       createResource({
         token: this.token,
@@ -589,7 +461,6 @@ export default {
       }).then((response) => {
         if (this.$valid(response)) {
           this._message('创建成功', 'success')
-          this.successCreate = 'success'
           // this.refresh()
           this.getList()
         }
@@ -619,27 +490,11 @@ export default {
     // 用于更新的 action 提交
     applyOperation() {
       this.actionDialogVisible = false
-      // createJsonData 是得到的这个资源的 json 文件，更新的时候需要在这里进行更改
-      if (typeof this.updateJsonData === 'string') {
-        this.updateJsonData = JSON.parse(this.updateJsonData)
-      }
+      // if (typeof this.updateJsonData === 'string') {
+      //   this.updateJsonData = JSON.parse(this.updateJsonData)
+      // }
       if (!this.ifJsonEditorForUpdate) {
-        let tmp = this.updateJsonData
-        for (const key in this.Variables) {
-          const longkey = this.Variables[key].id.split('.')
-          for (let i = 0; i < longkey.length - 1; i++) {
-            tmp = tmp[longkey[i]]
-          }
-          if (this.Variables[key].type === 'integer') {
-            tmp[longkey[longkey.length - 1]] = Number(
-              this.Variables[key].value
-            )
-          } else {
-            tmp[longkey[longkey.length - 1]] = this.Variables[
-              key
-            ].value
-          }
-        }
+        this.updateJsonObj(this.updateJsonData, this.updateFormConfig)
       }
       // this.createJsonData = JSON.parse(this.createJsonData);
       updateResource({
@@ -648,9 +503,9 @@ export default {
       }).then((response) => {
         if (this.$valid(response)) {
           this.getList()
-          for (const key in this.list) {
-            this.list[key].val = ''
-          }
+          // for (const key in this.list) {
+          //   this.list[key].val = ''
+          // }
           this._message('更新成功', 'success')
         }
       })
@@ -704,31 +559,109 @@ export default {
       // console.log(res)
       return res
     },
-    updateInputValue(scope, longKey, event) {
-      if (longKey.indexOf('.') < 0) {
-        scope[longKey] = event
-        return
-      }
-      const keys = longKey.split('.')
-      let obj = scope
-      for (let i = 0; i < keys.length; i++) {
-        const element = keys[i]
-        if (element.indexOf('[') > 0) {
-          obj = obj[element.substring(0, element.indexOf('['))]
-          obj =
-            obj[
-              parseInt(
-                element.substring(
-                  element.indexOf('[') + 1,
-                  element.indexOf(']')
-                )
-              )
-            ]
+    // updateInputValue(scope, longKey, event) {
+    //   if (longKey.indexOf('.') < 0) {
+    //     scope[longKey] = event
+    //     return
+    //   }
+    //   const keys = longKey.split('.')
+    //   let obj = scope
+    //   for (let i = 0; i < keys.length; i++) {
+    //     const element = keys[i]
+    //     if (element.indexOf('[') > 0) {
+    //       obj = obj[element.substring(0, element.indexOf('['))]
+    //       obj =
+    //         obj[
+    //           parseInt(
+    //             element.substring(
+    //               element.indexOf('[') + 1,
+    //               element.indexOf(']')
+    //             )
+    //           )
+    //         ]
+    //     } else {
+    //       obj = obj[element]
+    //     }
+    //   }
+    //   obj[keys[keys.length - 1]] = event
+    // },
+    updateJsonObj(jsonObj, configArray) {
+      let jsonObjTemp
+      let propertiesRequired
+      for (const key in configArray) {
+        // 如果 id 是长长的一串
+        // 例如 ...,...,... 这种，就将这个长字符串按 ','  分成字符串数组 ['...','...','...']
+        if (configArray[key].id.indexOf(',') > 0) {
+          propertiesRequired = configArray[key].id.split(',')
         } else {
-          obj = obj[element]
+          propertiesRequired = []
+          propertiesRequired.push(configArray[key].id)
+        }
+        // 这里是针对每一个属性进行一个循环
+        for (let j = 0; j < propertiesRequired.length; j++) {
+          jsonObjTemp = jsonObj
+          const pathToProperty = propertiesRequired[j].split('.')
+          // pathToProperty 数组中最后一个元素是我们的目标属性，所以要解析前面的中间属性
+          for (let i = 0; i < pathToProperty.length - 1; i++) {
+            if (pathToProperty[i].indexOf('[') > 0) {
+              // 获得 example[index] 的 example 数组对象
+              jsonObjTemp =
+                jsonObjTemp[
+                  pathToProperty[i].substring(0, pathToProperty[i].indexOf('['))
+                  ]
+              // 获得 example 数组对象里面的 index 索引下的对象
+              jsonObjTemp =
+                jsonObjTemp[
+                  parseInt(
+                    pathToProperty[i].substring(
+                      pathToProperty[i].indexOf('[') + 1,
+                      pathToProperty[i].indexOf(']')
+                    )
+                  )
+                  ]
+            } else {
+              jsonObjTemp = jsonObjTemp[pathToProperty[i]]
+            }
+          }
+          // 处理目标属性，是 example 这种 还是 exapmle[index] 这种
+          if (pathToProperty[pathToProperty.length - 1].indexOf('[') > 0) {
+            jsonObjTemp =
+              jsonObjTemp[
+                pathToProperty[pathToProperty.length - 1].substring(
+                  0,
+                  pathToProperty[pathToProperty.length - 1].indexOf('[')
+                )
+                ]
+            if (configArray[key].type === 'integer') {
+              jsonObjTemp[
+                parseInt(
+                  pathToProperty[pathToProperty.length - 1].substring(
+                    pathToProperty[pathToProperty.length - 1].indexOf('[') + 1,
+                    pathToProperty[pathToProperty.length - 1].indexOf(']')
+                  )
+                )
+                ] = Number(configArray[key].value) // 这里的 value 就是用户填写的信息
+            } else {
+              jsonObjTemp[
+                parseInt(
+                  pathToProperty[pathToProperty.length - 1].substring(
+                    pathToProperty[pathToProperty.length - 1].indexOf('[') + 1,
+                    pathToProperty[pathToProperty.length - 1].indexOf(']')
+                  )
+                )
+                ] = configArray[key].value
+            }
+          } else if (configArray[key].type === 'integer') {
+            jsonObjTemp[
+              pathToProperty[pathToProperty.length - 1]
+              ] = Number(configArray[key].value)
+          } else {
+            jsonObjTemp[
+              pathToProperty[pathToProperty.length - 1]
+              ] = configArray[key].value
+          }
         }
       }
-      obj[keys[keys.length - 1]] = event
     }
   }
 }
