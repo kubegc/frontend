@@ -38,6 +38,7 @@
       </div>
 
       <el-table
+        ref="table"
         :key="tableKey"
         v-loading="listLoading"
         :data="list"
@@ -95,6 +96,7 @@
 
       <pagination
         v-show="total > 0"
+        :auto-scroll="false"
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
@@ -404,20 +406,18 @@ export default {
             namespace: 'default'
           }).then((response) => {
             this.$valid(response) ? this.actions = response.data.spec.data : this.actions = []
+            this.list = []
             for (let i = 0; i < this.listJsonTemp.length; i++) {
-              if (!this.list[i]) {
-                this.list.push({})
-              }
+              this.list.push({})
               this.list[i].json = this.listJsonTemp[i]
               this.list[i].actions = this.actions
               this.list[i].val = ''
             }
-            if (this.list.length > this.listJsonTemp.length) {
-              const start = this.listJsonTemp.length
-              const end = this.list.length - 1
-              this.list.splice(start, end)
-            }
-            this.$forceUpdate()
+            // if (this.list.length > this.listJsonTemp.length) {
+            //   const start = this.listJsonTemp.length
+            //   const end = this.list.length - 1
+            //   this.list.splice(start, end)
+            // }
           })
         }
       })
