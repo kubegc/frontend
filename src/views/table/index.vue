@@ -521,12 +521,8 @@ export default {
       if (JSON.stringify(scope) === '{}' || !longKey) {
         return ''
       }
-      if (longKey.indexOf('.') < 0) {
-        if (longKey === 'unknown') {
-          return '无'
-        } else {
-          return scope[longKey]
-        }
+      if (longKey.indexOf('.') === -1) {
+        return scope[longKey]
       }
       const keys = longKey.split('.')
       let res = scope
@@ -547,7 +543,7 @@ export default {
           }
         } else {
           // todo 这里代码有问题，if走不到
-          if (res && res[item]) {
+          if (res && res[item] !== undefined) {
             res = res[item]
             return true
           } else {
