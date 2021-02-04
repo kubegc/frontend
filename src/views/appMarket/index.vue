@@ -1,11 +1,13 @@
 <template>
   <div class="imageMarket-app-container">
-    <el-divider content-position="left">
-      <el-button icon="el-icon-circle-plus" type="text" @click="handleCreateDialogClick">{{
-          this.$route.meta.kind
-        }}
-      </el-button>
-    </el-divider>
+    <el-row style="margin-bottom: 20px"><el-tag effect="dark">功能描述<i class="header-icon el-icon-info" /></el-tag></el-row>
+    <el-row style="margin-bottom: 20px"><el-tag effect="dark" type="success">{{ desc }}</el-tag></el-row>
+    <el-row style="margin-bottom: 30px">
+      <el-button icon="el-icon-circle-plus" type="primary" round @click="handleCreateDialogClick">{{
+        this.$route.meta.kind
+      }}
+    </el-button>
+    </el-row>
     <el-dialog
       :visible.sync="createDialogVisible"
       width="70%"
@@ -109,11 +111,22 @@ export default {
         limit: 12
       },
       createDialogVisible: false,
-      createTemplate: {}
+      createTemplate: {},
+      desc: ''
     }
   },
   created() {
     this.getData()
+    getResource({
+      token: this.token,
+      kind: 'Frontend',
+      name: 'desc-' + this.$route.meta.kind.toLowerCase(),
+      namespace: 'default'
+    }).then((response) => {
+      if (this.$valid(response)) {
+        this.desc = response.data.spec.desc
+      }
+    })
   },
   methods: {
     handleClick(detail) {
@@ -196,23 +209,29 @@ export default {
   padding: 10px 20px;
   font-size: 14px;
   line-height: 1.67;
-}
 
-.el-card {
-  box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
-  0px 3px 6px 0px rgba(0, 0, 0, 0.12),
-  0px 5px 12px 4px rgba(0, 0, 0, 0.09);
-  margin-top: 30px;
-}
+  .el-card {
+    box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+    0px 3px 6px 0px rgba(0, 0, 0, 0.12),
+    0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+    margin-top: 30px;
+  }
 
-.el-card:hover {
-  box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
-  0px 9px 28px 0px rgba(0, 0, 0, 0.05),
-  0px 12px 48px 16px rgba(0, 0, 0, 0.03);
-  transform: translateY(-5px);
-  color: yellowgreen;
-  //border-top: #409EFF 1px solid;
-  border: #409EFF 1px solid;
-}
+  .el-card:hover {
+    box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+    0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+    0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+    transform: translateY(-5px);
+    color: yellowgreen;
+    //border-top: #409EFF 1px solid;
+    border: #409EFF 1px solid;
+  }
 
+  .el-tag {
+    box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);
+  }
+  .el-button{
+    box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);
+  }
+}
 </style>

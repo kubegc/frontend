@@ -23,14 +23,13 @@
         <el-button
           icon="el-icon-plus"
           type="primary"
-          class="filter-item"
+          class="buttonShadow"
           circle
           @click.native="createJson"
         />
 
         <el-button
           icon="el-icon-refresh"
-          class="filter-item"
           round
           @click.native="getList"
         >刷新页面
@@ -677,5 +676,8 @@ export default {
 }
 input {
   height: 35px;
+}
+.buttonShadow{
+  box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);
 }
 </style>

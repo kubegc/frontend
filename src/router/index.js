@@ -91,6 +91,12 @@ export const constantRoutes = [
             name: 'Welcome',
             component: () => import('@/views/dashboard/index'),
             meta: { title: 'welcome', icon: 'dashboard' }
+          },
+          {
+            path: 'DepAppMarket',
+            name: 'DepAppMarket',
+            component: () => import('@/views/appMarket/index'),
+            meta: { title: 'dep', icon: 'resources', kind: 'Deployment'}
           }]
       },
       {
