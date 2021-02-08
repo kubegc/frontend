@@ -15,4 +15,4 @@ mock/
 *.ntvs*
 *.njsproj
 *.sln
-*.log
+debug.log
