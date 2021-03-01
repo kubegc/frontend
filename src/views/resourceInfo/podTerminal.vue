@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { connectTerminal } from "@/api/commonKindMethod";
+import { connectTerminal } from "@/api/common";
 import JsonEditor from "@/components/JsonEditor";
 import request from '@/utils/request'
 
@@ -34,7 +34,7 @@ export default {
     console.log(this.logLink)
     this.podTerminalLink = connectTerminal(this.$route.query.catalog_operator, this.$route.query.row);
     console.log(this.podTerminalLink)
-   
+
   },
   methods: {}
 };

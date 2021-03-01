@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-import { AgetScheduleData } from "@/api/taskData";
+
 import {getResource, getScheduleData} from "@/api/k8sResource";
 import { setInterval } from "timers";
 import elDragDialog from "@/directive/el-drag-dialog";

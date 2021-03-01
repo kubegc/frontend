@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { getResource } from '@/api/k8sResource'
+import { metadata } from '@/api/common'
 import JsonEditor from '@/components/JsonEditorSpecial/index'
 export default {
   name: 'RoutesTreeView',
@@ -113,13 +113,10 @@ export default {
   created() {
     const routes = this.value.spec.routes
     this.treeData = this.generateTreeData(routes)
-    getResource({ kind: 'Metadata', namespace: 'default', name: 'icon' }).then(
-      response => {
-        if (this.$valid(response)) {
-          this.icons = response.data.spec.icons
-        }
-      }
-    )
+    console.log(metadata('icons'))
+    metadata('icons').then((res) => {
+      this.icons = res
+    })
   },
   methods: {
     generateTreeData(routes, parent) {

@@ -48,35 +48,9 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/progress', // deprecated
-    component: () => import('@/views/progress/progress')
-  },
-  {
-    path: '/progressBar',
-    component: () => import('@/views/progressBar/index')
-  },
-  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
-  },
-  {
-    path: '/routes', // deprecated
-    component: Base,
-    meta: { icon: 'routes', title: '向导路由' },
-    children: [
-      {
-        path: 'sidebar',
-        component: Layout,
-        children: [
-          {
-            path: 'guide',
-            component: () => import('@/views/guide/index'),
-            meta: { icon: 'tree', title: '向导' }
-          }
-        ]
-      }
-    ]
   },
   {
     path: '/',
@@ -97,6 +71,12 @@ export const constantRoutes = [
             name: 'DepAppMarket',
             component: () => import('@/views/appMarket/index'),
             meta: { title: 'dep', icon: 'resources', kind: 'Deployment'}
+          },
+          {
+            path: 'routesView',
+            name: 'routesView',
+            component: () => import('@/views/routesOperation/index'),
+            meta: { title: 'routesView', icon: 'resources' }
           }]
       },
       {
