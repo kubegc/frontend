@@ -13,84 +13,81 @@ export function metadata(name) {
   return res
 }
 
-export async function frontend(token, kind, listQuery) {
-  let res = {}
-  // 获取上面搜索表单的信息
-  res = await getResource({
-    token,
-    kind: 'Frontend',
-    name: 'formsearch-' + kind.toLowerCase(),
-    namespace: 'default'
-  }).then((response) => {
-    if (valid(response)) {
-      res.dynamicFormJson = response.data.spec.data
-      // res.message = this.responseJson.model
-      res.dynamicFormVisible = true
-      return res
-    }
-  })
-  // 获取表头信息
-  res = await getResource({
-    token,
-    kind: 'Frontend',
-    name: 'table' + '-' + kind.toLowerCase(),
-    namespace: 'default'
-  }).then((response) => {
-    if (valid(response)) {
-      res.tableColumns = response.data.spec.data
-      return res
-    }
-  })
-  // 获取表格数据
-  res = await listResources({
-    token,
-    kind,
-    limit: listQuery.limit,
-    page: listQuery.continue,
-    labels: listQuery.labels
-  }).then((response) => {
-    if (valid(response)) {
-      res.tableItems = response.data.items
-      res.tableItemsSize = response.data.metadata.totalCount
-      listQuery.continue = response.data.metadata.continue
-      // this.listLoading = false
-      return res
-    }
-  })
-
-  // 获取可以进行的操作
-  res = await getResource({
-    token,
-    kind: 'Frontend',
-    name: 'action-' + kind.toLowerCase(),
-    namespace: 'default'
-  }).then((response) => {
-    if (valid(response)) {
-      if (response.hasOwnProperty('data')) {
-        res.actions = response.data.spec.data
-      } else {
-        res.actions = []
-      }
-      return res
-    }
-  })
-
-  res = await getResource({
+export function frontend(token, kind, listQuery, tablePage) {
+  getResource({
     token,
     kind: 'Frontend',
     name: 'desc-' + kind.toLowerCase(),
     namespace: 'default'
   }).then((response) => {
     if (valid(response)) {
-      res.desc = response.data.spec.desc
-      return res
+      tablePage.desc = response.data.spec.desc
     }
   })
-
-  return res
+  // 获取上面搜索表单的信息
+  getResource({
+    token,
+    kind: 'Frontend',
+    name: 'formsearch-' + kind.toLowerCase(),
+    namespace: 'default'
+  }).then((response) => {
+    if (valid(response)) {
+      tablePage.dynamicFormJson = response.data.spec.data
+      // res.message = this.responseJson.model
+      tablePage.dynamicFormVisible = true
+    }
+  })
 }
-
-export async function frontendData(token, kind, listQuery) {
-
+export function frontendData(token, kind, listQuery, tablePage) {
+  listResources({
+    token,
+    kind,
+    limit: listQuery.limit,
+    page: listQuery.page,
+    labels: listQuery.labels
+  }).then((response) => {
+    if (valid(response)) {
+      tablePage.listLoading = true
+      tablePage.tableItems = response.data.items
+      tablePage.tableItemsSize = response.data.metadata.totalCount
+      listQuery.page = Number(response.data.metadata.continue) - 1
+      // this.listLoading = false
+      // 获取可以进行的操作
+      getResource({
+        token,
+        kind: 'Frontend',
+        name: 'action-' + kind.toLowerCase(),
+        namespace: 'default'
+      }).then((response) => {
+        if (valid(response)) {
+          if (response.hasOwnProperty('data')) {
+            tablePage.actions = response.data.spec.data
+          } else {
+            tablePage.actions = []
+          }
+          tablePage.tableData = []
+          // 这里的 tableData 就是最后传进 table 的 data prop的数据
+          for (let i = 0; i < tablePage.tableItems.length; i++) {
+            tablePage.tableData.push({})
+            tablePage.tableData[i].json = tablePage.tableItems[i]
+            tablePage.tableData[i].actions = tablePage.actions
+            tablePage.tableData[i].val = ''
+          }
+          // 获取表头信息
+          getResource({
+            token,
+            kind: 'Frontend',
+            name: 'table' + '-' + kind.toLowerCase(),
+            namespace: 'default'
+          }).then((response) => {
+            if (valid(response)) {
+              tablePage.tableColumns = response.data.spec.data
+              tablePage.listLoading = false
+            }
+          })
+        }
+      })
+    }
+  })
 }
 

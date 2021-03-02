@@ -1,20 +1,20 @@
 <template>
   <div>
     <div class="app-container" style="margin-bottom: 20px">
-      <el-collapse v-model="activeName" accordion>
+      <el-collapse v-model="tablePage.activeName" accordion>
         <el-collapse-item>
           <template slot="title">
             功能描述<i class="header-icon el-icon-info" />
           </template>
-          <div v-text="desc" />
+          <div v-text="tablePage.desc" />
         </el-collapse-item>
       </el-collapse>
     </div>
 
     <div class="app-container">
       <dynamic-form
-        v-if="dynamicFormVisible"
-        :form-data="dynamicFormJson"
+        v-if="tablePage.dynamicFormVisible"
+        :form-data="tablePage.dynamicFormJson"
         :kind="kind"
         @watchSearch="search($event)"
       />
@@ -31,20 +31,20 @@
         <el-button
           icon="el-icon-refresh"
           round
-          @click.native="getList"
+          @click.native="refresh"
         >刷新页面
         </el-button>
       </div>
 
       <el-table
         ref="table"
-        v-loading="listLoading"
-        :data="tableData"
+        v-loading="tablePage.listLoading"
+        :data="tablePage.tableData"
         highlight-current-row
         :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
       >
         <el-table-column
-          v-for="item in tableColumns"
+          v-for="item in tablePage.tableColumns"
           :key="item.key"
           :label="item.label"
         >
@@ -82,7 +82,7 @@
               @change="handleActionChange($event, scope.row.json)"
             >
               <el-option
-                v-for="item in actions"
+                v-for="item in tablePage.actions"
                 :key="item.key"
                 :label="item.key"
                 :value="item.type"
@@ -93,12 +93,12 @@
       </el-table>
 
       <pagination
-        v-show="tableItemsSize > 0"
+        v-show="tablePage.tableItemsSize > 0"
         :auto-scroll="false"
-        :total="tableItemsSize"
+        :total="tablePage.tableItemsSize"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
-        @pagination="getList"
+        @pagination="refresh"
       />
       <JsonDialog
         :json-editor="ifJsonEditorForCreate"
@@ -126,10 +126,9 @@
 </template>
 
 <script>
-import {frontend} from '@/api/common'
+import { frontend, frontendData } from '@/api/common'
 import {
   getResource,
-  listResources,
   deleteResource,
   createResource,
   updateResource
@@ -151,30 +150,31 @@ export default {
     return {
       // 轮询
       pollingId: undefined,
-      // 描述
-      activeName: '1',
-      desc: '',
-      // 查询表单
-      dynamicFormJson: {},
-      dynamicFormVisible: false,
-      // 动态表格
-      tableData: [],
-      listLoading: true,
-      tableItems: {},
-      tableColumns: [],
+      tablePage: {
+        // 描述
+        activeName: '1',
+        desc: '',
+        // 查询表单
+        dynamicFormJson: {},
+        dynamicFormVisible: false,
+        // 动态表格
+        tableData: [],
+        listLoading: true,
+        tableItems: {},
+        tableColumns: [],
+        tableItemsSize: 0,
+        // 操作集
+        actions: []
+      },
       listQuery: {
-        page: 1,
+        page: 0,
         limit: 10,
-        continue: 1,
         labels: {}
       },
-      tableItemsSize: 0,
-      // 操作集
-      actions: [],
       // 资源相关
       namespace: 'default',
       kind: '',
-     // 对话框
+      // 对话框
       updateJsonData: {},
       createDialogVisible: false,
       ifJsonEditorForCreate: true,
@@ -199,24 +199,8 @@ export default {
       const value = this.$route.params.value
       this.listQuery.labels[key] = value
     }
-    frontend(this.token, this.kind, this.listQuery).then(res => {
-      this.dynamicFormJson = res.dynamicFormJson
-      this.dynamicFormVisible = res.dynamicFormVisible
-      this.tableColumns = res.tableColumns
-      this.tableItems = res.tableItems
-      this.tableItemsSize = res.tableItemsSize
-      this.actions = res.actions
-      this.desc = res.desc
-      // 这里的 list 就是最后传进 table 的 data prop的数据
-      for (let i = 0; i < this.tableItems.length; i++) {
-        this.tableData.push({})
-        this.tableData[i].json = this.tableItems[i]
-        this.tableData[i].actions = this.actions
-        this.tableData[i].val = ''
-      }
-        this.listLoading = false
-    })
-
+    frontend(this.token, this.kind, this.listQuery, this.tablePage)
+    frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     // this.pollingId = setInterval(this.getList, 10000)
   },
 
@@ -259,76 +243,12 @@ export default {
       })
     },
     search(labels) {
-      this.tableData = []
-      this.tableItems = {}
-      this.listLoading = false
       this.listQuery.labels = labels
-      listResources({
-        token: this.token,
-        kind: this.kind,
-        labels: this.listQuery.labels,
-        limit: 10,
-        page: 1
-      }).then((response) => {
-        this.tableItems = response.data.items
-        this.tableItemsSize = response.data.metadata.totalCount
-        getResource({
-          token: this.token,
-          kind: 'Frontend',
-          name: 'action-' + this.kind.toLowerCase(),
-          namespace: 'default'
-        }).then((response) => {
-          if (this.$valid(response)) {
-            if (response.hasOwnProperty('data')) {
-              this.actions = response.data.spec.data
-            } else {
-              this.actions = []
-            }
-            for (var i = 0; i < this.tableItems.length; i++) {
-              this.tableData.push({})
-              this.tableData[i].json = this.tableItems[i]
-              this.tableData[i].actions = this.actions
-              this.tableData[i].val = ''
-            }
-          }
-        })
-      })
+      frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },
     // 将表格的 list 和 action 进行更新
-    getList() {
-      // this.listLoading = true
-      // this.list = []
-      listResources({
-        token: this.token,
-        kind: this.kind,
-        limit: this.listQuery.limit,
-        page: this.listQuery.page,
-        labels: this.listQuery.labels
-      }).then((response) => {
-        if (this.$valid(response)) {
-          this.tableItems = response.data.items
-          this.tableItemsSize = response.data.metadata.totalCount
-          // this.total = response.data.metadata.remainingItemCount + 10
-          // this.listQuery.page = this.listQuery.page + 1
-          this.listQuery.continue = response.data.metadata.continue
-          // this.listLoading = false
-          getResource({
-            token: this.token,
-            kind: 'Frontend',
-            name: 'action-' + this.kind.toLowerCase(),
-            namespace: 'default'
-          }).then((response) => {
-            this.$valid(response) ? this.actions = response.data.spec.data : this.actions = []
-            this.tableData = []
-            for (let i = 0; i < this.tableItems.length; i++) {
-              this.tableData.push({})
-              this.tableData[i].json = this.tableItems[i]
-              this.tableData[i].actions = this.actions
-              this.tableData[i].val = ''
-            }
-          })
-        }
-      })
+    refresh() {
+      frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },
     handleActionChange(event, row) {
       if (event === 'update') {
@@ -353,7 +273,7 @@ export default {
           namespace: row.metadata.namespace
         }).then((response) => {
           if (this.$valid(response)) {
-            this.getList()
+            this.refresh()
             this._message('删除成功', 'success')
           }
         }).bind(this)
@@ -401,7 +321,7 @@ export default {
     create() {
       // 创建资源的 dialog 需要消失
       this.createDialogVisible = false
-      if (!this.ifJsonEditorForCreate){
+      if (!this.ifJsonEditorForCreate) {
         this.updateJsonObj(this.createJsonPattern, this.createFormConfig)
       }
       // if (typeof this.createJsonPattern === 'string') {
@@ -415,7 +335,7 @@ export default {
         if (this.$valid(response)) {
           this._message('创建成功', 'success')
           // this.refresh()
-          this.getList()
+          this.refresh()
         }
       })
     },
@@ -455,7 +375,7 @@ export default {
         json: this.updateJsonData
       }).then((response) => {
         if (this.$valid(response)) {
-          this.getList()
+          this.refresh()
           // for (const key in this.list) {
           //   this.list[key].val = ''
           // }
@@ -557,7 +477,7 @@ export default {
               jsonObjTemp =
                 jsonObjTemp[
                   pathToProperty[i].substring(0, pathToProperty[i].indexOf('['))
-                  ]
+                ]
               // 获得 example 数组对象里面的 index 索引下的对象
               jsonObjTemp =
                 jsonObjTemp[
@@ -567,7 +487,7 @@ export default {
                       pathToProperty[i].indexOf(']')
                     )
                   )
-                  ]
+                ]
             } else {
               jsonObjTemp = jsonObjTemp[pathToProperty[i]]
             }
@@ -580,7 +500,7 @@ export default {
                   0,
                   pathToProperty[pathToProperty.length - 1].indexOf('[')
                 )
-                ]
+              ]
             if (configArray[key].type === 'integer') {
               jsonObjTemp[
                 parseInt(
@@ -589,7 +509,7 @@ export default {
                     pathToProperty[pathToProperty.length - 1].indexOf(']')
                   )
                 )
-                ] = Number(configArray[key].value) // 这里的 value 就是用户填写的信息
+              ] = Number(configArray[key].value) // 这里的 value 就是用户填写的信息
             } else {
               jsonObjTemp[
                 parseInt(
@@ -598,16 +518,16 @@ export default {
                     pathToProperty[pathToProperty.length - 1].indexOf(']')
                   )
                 )
-                ] = configArray[key].value
+              ] = configArray[key].value
             }
           } else if (configArray[key].type === 'integer') {
             jsonObjTemp[
               pathToProperty[pathToProperty.length - 1]
-              ] = Number(configArray[key].value)
+            ] = Number(configArray[key].value)
           } else {
             jsonObjTemp[
               pathToProperty[pathToProperty.length - 1]
-              ] = configArray[key].value
+            ] = configArray[key].value
           }
         }
       }
