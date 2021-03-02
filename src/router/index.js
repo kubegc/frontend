@@ -77,6 +77,12 @@ export const constantRoutes = [
             name: 'routesView',
             component: () => import('@/views/routesOperation/index'),
             meta: { title: 'routesView', icon: 'resources' }
+          },
+          {
+            path: 'schedule',
+            name: 'schedule',
+            component: () => import('@/views/schedule/schedule'),
+            meta: { title: '调度原理演示', icon: 'resources' }
           }]
       },
       {

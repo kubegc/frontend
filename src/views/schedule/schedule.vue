@@ -63,7 +63,7 @@ export default {
   mounted() {
     getResource({ token: this.token, kind: 'MCMF', name: 'simpleparameter', namespace: 'default' }).then(
       response => {
-        if (this.validateRes(response) == 1) {
+        if (this.$valid(response)) {
           this.json = response.data.spec.data
         }
       })

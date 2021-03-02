@@ -176,7 +176,6 @@ export default {
       if (!this.jsonEditor) {
         this.copyInfo().then(() => {
           this.$refs['userAddedInfo'].validate(valid => {
-            console.log(valid)
             if (valid) {
               for (const index in this.formData) {
                 this.formData[index].value = this.formShadow[index]
