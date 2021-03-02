@@ -140,12 +140,6 @@ import JsonDialog from '@/components/JsonDialog'
 export default {
   name: 'DynamicTable',
   components: { JsonDialog, Pagination, DynamicForm },
-  props: {
-    tabName: {
-      type: String,
-      default: 'Pod'
-    }
-  },
   data() {
     return {
       // 轮询

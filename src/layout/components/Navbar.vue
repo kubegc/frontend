@@ -41,7 +41,7 @@ export default {
               0px 3px 6px 0px rgba(0, 0, 0, 0.12),
               0px 5px 12px 4px rgba(0, 0, 0, 0.09);
   //z-index: 1001;
-  z-index: 25000;
+  z-index: 2001;
 
   .hamburger-container {
     line-height: 46px;

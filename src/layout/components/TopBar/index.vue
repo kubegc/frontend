@@ -80,7 +80,7 @@ export default {
   position: sticky;
   top: 0;
   //z-index: 1003;
-  z-index: 30000;
+  z-index: 2001;
   box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
   0px 9px 28px 0px rgba(0, 0, 0, 0.05),
   0px 12px 48px 16px rgba(0, 0, 0, 0.03);
