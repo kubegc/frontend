@@ -136,7 +136,7 @@ export default {
     submitForm() {
       this.$refs[this.initParams.formName].validate(valid => {
         if (valid) {
-          this.$emit('watchSearch')
+          this.$emit('watchSearch', this.formData.model)
         } else {
           console.log('error submit!!')
           return false

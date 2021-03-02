@@ -13,10 +13,10 @@
 
     <div class="app-container">
       <dynamic-form
-        v-if="formVisible"
-        :form-data="responseJson"
+        v-if="dynamicFormVisible"
+        :form-data="dynamicFormJson"
         :kind="kind"
-        @watchSearch="searchList"
+        @watchSearch="search($event)"
       />
 
       <div class="base-button-container">
@@ -38,14 +38,13 @@
 
       <el-table
         ref="table"
-        :key="tableKey"
         v-loading="listLoading"
-        :data="list"
+        :data="tableData"
         highlight-current-row
         :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
       >
         <el-table-column
-          v-for="item in columns"
+          v-for="item in tableColumns"
           :key="item.key"
           :label="item.label"
         >
@@ -94,9 +93,9 @@
       </el-table>
 
       <pagination
-        v-show="total > 0"
+        v-show="tableItemsSize > 0"
         :auto-scroll="false"
-        :total="total"
+        :total="tableItemsSize"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
         @pagination="getList"
@@ -127,6 +126,7 @@
 </template>
 
 <script>
+import {frontend} from '@/api/common'
 import {
   getResource,
   listResources,
@@ -149,24 +149,32 @@ export default {
   },
   data() {
     return {
+      // 轮询
       pollingId: undefined,
+      // 描述
       activeName: '1',
-      tableKey: 0,
       desc: '',
-      formVisible: false,
-      list: [],
+      // 查询表单
+      dynamicFormJson: {},
+      dynamicFormVisible: false,
+      // 动态表格
+      tableData: [],
       listLoading: true,
-      columns: [],
+      tableItems: {},
+      tableColumns: [],
       listQuery: {
         page: 1,
         limit: 10,
-        continue: 1
+        continue: 1,
+        labels: {}
       },
-      total: 0,
+      tableItemsSize: 0,
+      // 操作集
+      actions: [],
+      // 资源相关
       namespace: 'default',
       kind: '',
-      actions: [],
-      listJsonTemp: '',
+     // 对话框
       updateJsonData: {},
       createDialogVisible: false,
       ifJsonEditorForCreate: true,
@@ -176,13 +184,9 @@ export default {
       updateResourceTitle: '更新对象',
       createJsonPattern: {},
       actionDialogVisible: false,
-      responseJson: {},
       updateFormConfig: [],
       createFormConfig: [],
-      propertiesInfo: [],
-      message: {},
-      catalog_operator: 'Pod',
-      createLabels: {}
+      propertiesInfo: []
     }
   },
   computed: {
@@ -193,77 +197,26 @@ export default {
     if (this.$route.params && this.$route.params.key) {
       const key = this.$route.params.key
       const value = this.$route.params.value
-      this.createLabels[key] = value
+      this.listQuery.labels[key] = value
     }
-    // 获取上面搜索表单的信息
-    getResource({
-      token: this.token,
-      kind: 'Frontend',
-      name: 'formsearch-' + this.kind.toLowerCase(),
-      namespace: 'default'
-    }).then((response) => {
-      this.responseJson = response.data.spec.data
-      this.message = this.responseJson.model
-      this.formVisible = true
-    })
-    // 获取表头信息
-    getResource({
-      token: this.token,
-      kind: 'Frontend',
-      name: 'table' + '-' + this.kind.toLowerCase(),
-      namespace: 'default'
-    }).then((response) => {
-      if (this.$valid(response)) {
-        this.columns = response.data.spec.data
-        // 获取表格数据
-        listResources({
-          token: this.token,
-          kind: this.kind,
-          limit: this.listQuery.limit,
-          page: this.listQuery.continue,
-          labels: this.createLabels
-        }).then((response) => {
-          if (this.$valid(response)) {
-            this.listJsonTemp = response.data.items
-            this.total = response.data.metadata.totalCount
-            this.listQuery.continue = response.data.metadata.continue
-            this.listLoading = false
-            // 获取可以进行的操作
-            getResource({
-              token: this.token,
-              kind: 'Frontend',
-              name: 'action-' + this.kind.toLowerCase(),
-              namespace: 'default'
-            }).then((response) => {
-              if (this.$valid(response)) {
-                if (response.hasOwnProperty('data')) {
-                  this.actions = response.data.spec.data
-                } else {
-                  this.actions = []
-                }
-                // 这里的 list 就是最后传进 table 的 data prop的数据
-                for (let i = 0; i < this.listJsonTemp.length; i++) {
-                  this.list.push({})
-                  this.list[i].json = this.listJsonTemp[i]
-                  this.list[i].actions = this.actions
-                  this.list[i].val = ''
-                }
-              }
-            })
-          }
-        })
+    frontend(this.token, this.kind, this.listQuery).then(res => {
+      this.dynamicFormJson = res.dynamicFormJson
+      this.dynamicFormVisible = res.dynamicFormVisible
+      this.tableColumns = res.tableColumns
+      this.tableItems = res.tableItems
+      this.tableItemsSize = res.tableItemsSize
+      this.actions = res.actions
+      this.desc = res.desc
+      // 这里的 list 就是最后传进 table 的 data prop的数据
+      for (let i = 0; i < this.tableItems.length; i++) {
+        this.tableData.push({})
+        this.tableData[i].json = this.tableItems[i]
+        this.tableData[i].actions = this.actions
+        this.tableData[i].val = ''
       }
+        this.listLoading = false
     })
-    getResource({
-      token: this.token,
-      kind: 'Frontend',
-      name: 'desc-' + this.kind.toLowerCase(),
-      namespace: 'default'
-    }).then((response) => {
-      if (this.$valid(response)) {
-        this.desc = response.data.spec.desc
-      }
-    })
+
     // this.pollingId = setInterval(this.getList, 10000)
   },
 
@@ -305,19 +258,20 @@ export default {
         }
       })
     },
-    searchList() {
-      this.list = []
-      this.listJsonTemp = ''
+    search(labels) {
+      this.tableData = []
+      this.tableItems = {}
       this.listLoading = false
+      this.listQuery.labels = labels
       listResources({
         token: this.token,
         kind: this.kind,
-        labels: this.message,
+        labels: this.listQuery.labels,
         limit: 10,
         page: 1
       }).then((response) => {
-        this.listJsonTemp = response.data.items
-        this.total = response.data.metadata.totalCount
+        this.tableItems = response.data.items
+        this.tableItemsSize = response.data.metadata.totalCount
         getResource({
           token: this.token,
           kind: 'Frontend',
@@ -330,11 +284,11 @@ export default {
             } else {
               this.actions = []
             }
-            for (var i = 0; i < this.listJsonTemp.length; i++) {
-              this.list.push({})
-              this.list[i].json = this.listJsonTemp[i]
-              this.list[i].actions = this.actions
-              this.list[i].val = ''
+            for (var i = 0; i < this.tableItems.length; i++) {
+              this.tableData.push({})
+              this.tableData[i].json = this.tableItems[i]
+              this.tableData[i].actions = this.actions
+              this.tableData[i].val = ''
             }
           }
         })
@@ -349,11 +303,11 @@ export default {
         kind: this.kind,
         limit: this.listQuery.limit,
         page: this.listQuery.page,
-        labels: this.message
+        labels: this.listQuery.labels
       }).then((response) => {
         if (this.$valid(response)) {
-          this.listJsonTemp = response.data.items
-          this.total = response.data.metadata.totalCount
+          this.tableItems = response.data.items
+          this.tableItemsSize = response.data.metadata.totalCount
           // this.total = response.data.metadata.remainingItemCount + 10
           // this.listQuery.page = this.listQuery.page + 1
           this.listQuery.continue = response.data.metadata.continue
@@ -365,12 +319,12 @@ export default {
             namespace: 'default'
           }).then((response) => {
             this.$valid(response) ? this.actions = response.data.spec.data : this.actions = []
-            this.list = []
-            for (let i = 0; i < this.listJsonTemp.length; i++) {
-              this.list.push({})
-              this.list[i].json = this.listJsonTemp[i]
-              this.list[i].actions = this.actions
-              this.list[i].val = ''
+            this.tableData = []
+            for (let i = 0; i < this.tableItems.length; i++) {
+              this.tableData.push({})
+              this.tableData[i].json = this.tableItems[i]
+              this.tableData[i].actions = this.actions
+              this.tableData[i].val = ''
             }
           })
         }
