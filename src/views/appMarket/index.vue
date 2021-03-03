@@ -34,6 +34,7 @@
     </el-row>
     <el-row
       :gutter="20"
+      v-loading="tablePage.listLoading"
     >
       <el-col
         v-for="(item, index) in tablePage.tableData"
@@ -80,6 +81,7 @@
     </el-row>
     <el-row style="margin-top: 30px">
       <pagination
+        :auto-scroll="false"
         v-show="tablePage.tableItemsSize > listQuery.limit"
         :total="tablePage.tableItemsSize"
         :page.sync="listQuery.page"
