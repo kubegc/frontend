@@ -1,6 +1,6 @@
 import { getResource, listResources } from '@/api/k8sResource'
 export default function valid(response) {
-  return response.data !== null && response.data !== 404 && response.data.code !== 404
+  return response.data && response.data !== null && response.data !== 404 && response.data.code !== 404
 }
 export function metadata(name) {
   const res = getResource({ kind: 'Metadata', namespace: 'default', name }).then(
@@ -50,8 +50,6 @@ export function frontendData(token, kind, listQuery, tablePage) {
       tablePage.listLoading = true
       tablePage.tableItems = response.data.items
       tablePage.tableItemsSize = response.data.metadata.totalCount
-      listQuery.page = Number(response.data.metadata.continue) - 1
-      // this.listLoading = false
       // 获取可以进行的操作
       getResource({
         token,

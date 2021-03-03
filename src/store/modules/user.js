@@ -95,14 +95,13 @@ const actions = {
    */
   getRoutesConfig({ state }, role) {
     return new Promise(resolve => {
-      
       getResource({
         token: state.token,
         kind: 'Frontend',
         namespace: state.namespace,
         name: 'routes-' + role
       }).then(response => {
-          resolve(response.data)
+        resolve(response.data)
       })
     })
   }

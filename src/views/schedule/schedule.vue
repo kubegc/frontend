@@ -57,9 +57,6 @@ export default {
       }
     }
   },
-  computed: {
-    ...mapGetters(['token'])
-  },
   mounted() {
     getResource({ token: this.token, kind: 'MCMF', name: 'simpleparameter', namespace: 'default' }).then(
       response => {
