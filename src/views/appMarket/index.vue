@@ -4,14 +4,7 @@
       <el-tag style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);" effect="dark"><i class="header-icon el-icon-info" /> 功能描述：{{ tablePage.desc }}</el-tag>
     </el-row>
 
-    <el-row style="margin-bottom: 2vh">
-      <dynamic-form
-        v-if="tablePage.dynamicFormVisible"
-        :form-data="tablePage.dynamicFormJson"
-        :kind="kind"
-        @watchSearch="search($event)"
-      />
-    </el-row>
+
     <el-row style="margin-bottom: 5vh">
       <el-button icon="el-icon-plus" type="primary" circle @click="createJson" />
       <el-button
@@ -24,8 +17,16 @@
     <el-divider />
 
     <el-row>
+<!--      <el-row style="margin-bottom: 2vh">-->
+        <dynamic-form
+          v-if="tablePage.dynamicFormVisible"
+          :form-data="tablePage.dynamicFormJson"
+          :kind="kind"
+          @watchSearch="search($event)"
+        />
+<!--      </el-row>-->
       <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
-        <el-radio-button label="上海" />
+        <el-radio-button label="上海"></el-radio-button>
         <el-radio-button label="北京" />
         <el-radio-button label="广州" />
         <el-radio-button label="深圳" />
@@ -80,7 +81,7 @@
                           :value="i.type"
                         />
                       </el-select>
-                      <el-tag v-else>{{getInputValue(item.json, labelItem.row)}}</el-tag>
+                      <el-tag size="small" v-else>{{getInputValue(item.json, labelItem.row)}}</el-tag>
                     </el-form-item>
                   </el-form>
                 </el-row>
