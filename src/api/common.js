@@ -88,4 +88,42 @@ export function frontendData(token, kind, listQuery, tablePage) {
     }
   })
 }
+export function getInputValue(scope, longKey) {
+  if (JSON.stringify(scope) === '{}' || !longKey) {
+    return ''
+  }
+  if (longKey.indexOf('.') === -1) {
+    return scope[longKey]
+  }
+  const keys = longKey.split('.')
+  let res = scope
+  keys.every((item) => {
+    if (item.indexOf('[') > 0) {
+      res = res[item.substring(0, item.indexOf('['))]
+      if (res === undefined || res.length === 0) {
+        res = 'unknown'
+        return false
+      } else {
+        res =
+          res[
+            parseInt(
+              item.substring(item.indexOf('[') + 1, item.indexOf(']'))
+            )
+            ]
+        return true
+      }
+    } else {
+      // todo 这里代码有问题，if走不到
+      if (res && res[item] !== undefined) {
+        res = res[item]
+        return true
+      } else {
+        res = '无'
+        return false
+      }
+    }
+  })
+
+  return res
+}
 

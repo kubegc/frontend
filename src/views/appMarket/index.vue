@@ -1,7 +1,7 @@
 <template>
   <div class="imageMarket-app-container">
     <el-row style="margin-bottom: 5vh">
-      <el-tag effect="dark"><i class="header-icon el-icon-info" /> 功能描述：{{ tablePage.desc }}</el-tag>
+      <el-tag style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);" effect="dark"><i class="header-icon el-icon-info" /> 功能描述：{{ tablePage.desc }}</el-tag>
     </el-row>
 
     <el-row style="margin-bottom: 2vh">
@@ -33,8 +33,8 @@
 
     </el-row>
     <el-row
-      :gutter="20"
       v-loading="tablePage.listLoading"
+      :gutter="20"
     >
       <el-col
         v-for="(item, index) in tablePage.tableData"
@@ -46,7 +46,7 @@
             <p>{{ item.json.metadata.name }}</p>
           </div>
           <el-card>
-            <el-row :gutter="20">
+            <el-row>
               <el-col :span="8">
                 <el-image
                   style="border-radius: 2px;"
@@ -54,35 +54,60 @@
                   :fit="'fit'"
                 />
               </el-col>
+
               <el-col :span="16">
-                <div style="display: block;overflow: hidden;height: 90px">
-                  <p style="margin: 0;"><strong>{{ item.json.metadata.name }}</strong></p>
-                  <p v-if="item.describe" style="margin: 0;color: gray;overflow: hidden">
-                    {{ item.describe }}
-                  </p>
-                </div>
+<!--                <el-row>-->
+<!--                  <div style="display: block;overflow: hidden;">-->
+<!--                    <p style="margin: 0;"><strong>{{ item.json.metadata.name }}</strong></p>-->
+<!--                    <p v-if="item.describe" style="margin: 0;color: gray;overflow: hidden">-->
+<!--                      {{ item.describe }}-->
+<!--                    </p>-->
+<!--                  </div>-->
+<!--                </el-row>-->
+                <el-row>
+                  <el-form label-position="right" label-width="7vw">
+                    <el-form-item v-for="(labelItem, key) in tablePage.tableColumns" :label="labelItem.label" :key="key">
+                      <el-select
+                        size="mini"
+                        v-if="labelItem.kind === 'action'"
+                        placeholder="请选择"
+                        @change="handleActionChange($event, item.json)"
+                      >
+                        <el-option
+                          v-for="i in tablePage.actions"
+                          :key="i.key"
+                          :label="i.key"
+                          :value="i.type"
+                        />
+                      </el-select>
+                      <el-tag v-else>{{getInputValue(item.json, labelItem.row)}}</el-tag>
+                    </el-form-item>
+                  </el-form>
+                </el-row>
+
               </el-col>
             </el-row>
-            <el-row style="margin-top: 20px">
-              <el-col v-if="item.developer" :span="12">
-                <span style="color: black">
-                  {{ '开发者：' + item.developer }}
-                </span>
-              </el-col>
-              <el-col :span="12">
-                <span style="color: black">
-                  {{ 'apiVersion: ' + item.json.apiVersion }}
-                </span>
-              </el-col>
-            </el-row>
+
+            <!--            <el-row style="margin-top: 20px">-->
+            <!--              <el-col v-if="item.developer" :span="12">-->
+            <!--                <span style="color: black">-->
+            <!--                  {{ '开发者：' + item.developer }}-->
+            <!--                </span>-->
+            <!--              </el-col>-->
+            <!--              <el-col :span="12">-->
+            <!--                <span style="color: black">-->
+            <!--                  {{ 'apiVersion: ' + item.json.apiVersion }}-->
+            <!--                </span>-->
+            <!--              </el-col>-->
+            <!--            </el-row>-->
           </el-card>
         </el-tooltip>
       </el-col>
     </el-row>
     <el-row style="margin-top: 30px">
       <pagination
-        :auto-scroll="false"
         v-show="tablePage.tableItemsSize > listQuery.limit"
+        :auto-scroll="false"
         :total="tablePage.tableItemsSize"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
@@ -116,8 +141,8 @@
 </template>
 
 <script>
-import { frontend, frontendData } from '@/api/common'
-import { createResource, getResource, listResources, updateResource } from '@/api/k8sResource'
+import { frontend, frontendData, getInputValue } from '@/api/common'
+import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/k8sResource'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
 import DynamicForm from '@/components/DynamicForm'
@@ -284,6 +309,75 @@ export default {
           this.createDialogVisible = true
         }
       })
+    },
+    getInputValue,
+    handleActionChange(event, row) {
+      if (event === 'update') {
+        getResource({
+          token: this.token,
+          kind: this.kind,
+          name: row.metadata.name,
+          namespace: row.metadata.namespace
+        }).then((response) => {
+          if (this.$valid(response)) {
+            this.updateJsonData = response.data
+            this.ifJsonEditorForUpdate = true
+            this.updateResourceTitle = '更新对象'
+            this.actionDialogVisible = true
+          }
+        })
+      } else if (event === 'delete') {
+        deleteResource({
+          token: this.token,
+          kind: this.kind,
+          name: row.metadata.name,
+          namespace: row.metadata.namespace
+        }).then((response) => {
+          if (this.$valid(response)) {
+            this.refresh()
+            this._message('删除成功', 'success')
+          }
+        }).bind(this)
+      } else {
+        getResource({
+          token: this.token,
+          kind: this.kind,
+          name: row.metadata.name,
+          namespace: row.metadata.namespace
+        }).then((response) => {
+          if (this.$valid(response)) {
+            this.updateJsonData = response.data
+            getResource({
+              token: this.token,
+              kind: 'Template',
+              name: this.kind.toLowerCase() + '-' + event.toLowerCase(),
+              namespace: 'default'
+            }).then((response) => {
+              if (this.$valid(response)) {
+                this.updateResourceTitle = response.data.spec.data.key
+                this.ifJsonEditorForUpdate = false
+                // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
+                // id是 spec.replicas
+                // type 是字段的类型
+                // value 是这个字段默认的值，bool 是 true, string 是 ''
+                this.updateFormConfig = []
+                if (response.hasOwnProperty('data')) {
+                  this.updateFormConfig = response.data.spec.data.values
+                  for (let i = 0; i < this.updateFormConfig.length; i++) {
+                    if (this.updateFormConfig[i].type === 'bool') {
+                      this.updateFormConfig[i].value = true
+                    } else {
+                      this.updateFormConfig[i].value = ''
+                    }
+                    this.updateFormConfig[i].placeholder = this.updateFormConfig[i].type
+                  }
+                }
+                this.actionDialogVisible = true
+              }
+            })
+          }
+        })
+      }
     }
   }
 }
@@ -293,7 +387,7 @@ export default {
 .imageMarket-app-container {
   padding: 10px 20px;
   font-size: 14px;
-  line-height: 1.67;
+  //line-height: 1.67;
 .el-row{
   .el-card {
     box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
@@ -312,9 +406,10 @@ export default {
     border: #1f1f1f 1px solid;
   }
 }
-
-  .el-tag {
-    box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);
+  .el-form-item{
+    margin-bottom: 0;
+    font-size: 6px;
+    overflow: hidden;
   }
 }
 </style>
