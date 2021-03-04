@@ -6,7 +6,7 @@
 
 
     <el-row style="margin-bottom: 5vh">
-      <el-button icon="el-icon-plus" type="primary" circle @click="createJson" />
+      <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
       <el-button
         icon="el-icon-refresh"
         round
@@ -48,7 +48,7 @@
           </div>
           <el-card>
             <el-row>
-              <el-col :span="8">
+              <el-col :span="8" style="margin-top: 20%">
                 <el-image
                   style="border-radius: 2px;"
                   :src="require('../../assets' + (item.avatar ? item.avatar : '/avatar.jpg'))"
@@ -57,22 +57,15 @@
               </el-col>
 
               <el-col :span="16">
-<!--                <el-row>-->
-<!--                  <div style="display: block;overflow: hidden;">-->
-<!--                    <p style="margin: 0;"><strong>{{ item.json.metadata.name }}</strong></p>-->
-<!--                    <p v-if="item.describe" style="margin: 0;color: gray;overflow: hidden">-->
-<!--                      {{ item.describe }}-->
-<!--                    </p>-->
-<!--                  </div>-->
-<!--                </el-row>-->
                 <el-row>
                   <el-form label-position="right" label-width="7vw">
                     <el-form-item v-for="(labelItem, key) in tablePage.tableColumns" :label="labelItem.label" :key="key">
                       <el-select
                         size="mini"
                         v-if="labelItem.kind === 'action'"
+                        v-model="item.val"
                         placeholder="请选择"
-                        @change="handleActionChange($event, item.json)"
+                        @change="handleActionChange($event, item.json, token, kind, listQuery, tablePage, updateAbout)"
                       >
                         <el-option
                           v-for="i in tablePage.actions"
@@ -88,19 +81,6 @@
 
               </el-col>
             </el-row>
-
-            <!--            <el-row style="margin-top: 20px">-->
-            <!--              <el-col v-if="item.developer" :span="12">-->
-            <!--                <span style="color: black">-->
-            <!--                  {{ '开发者：' + item.developer }}-->
-            <!--                </span>-->
-            <!--              </el-col>-->
-            <!--              <el-col :span="12">-->
-            <!--                <span style="color: black">-->
-            <!--                  {{ 'apiVersion: ' + item.json.apiVersion }}-->
-            <!--                </span>-->
-            <!--              </el-col>-->
-            <!--            </el-row>-->
           </el-card>
         </el-tooltip>
       </el-col>
@@ -117,33 +97,32 @@
     </el-row>
 
     <JsonDialog
-      :json-editor="ifJsonEditorForCreate"
-      :title="createResourceTitle"
-      :value.sync="createDialogVisible"
-      :json-file-obj="createJsonPattern"
-      :create-templates="createTemplates"
-      :form-data="createFormConfig"
+      :json-editor="createAbout.ifJsonEditorForCreate"
+      :title="createAbout.createResourceTitle"
+      :value.sync="createAbout.createDialogVisible"
+      :json-file-obj="createAbout.createJsonPattern"
+      :create-templates="createAbout.createTemplates"
+      :form-data="createAbout.createFormConfig"
       @update:jsonFileObj="createJsonPattern = JSON.parse($event)"
-      @action="create"
-      @selectChange="handleModel($event)"
+      @action="create(token, kind, listQuery, tablePage, createAbout)"
+      @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
     />
     <JsonDialog
       :if-create="false"
-      :json-editor="ifJsonEditorForUpdate"
-      :title="updateResourceTitle"
-      :value.sync="actionDialogVisible"
-      :json-file-obj="updateJsonData"
-      :form-data="updateFormConfig"
+      :json-editor="updateAbout.ifJsonEditorForUpdate"
+      :title="updateAbout.updateResourceTitle"
+      :value.sync="updateAbout.actionDialogVisible"
+      :json-file-obj="updateAbout.updateJsonData"
+      :form-data="updateAbout.updateFormConfig"
       @update:jsonFileObj="updateJsonData = JSON.parse($event)"
-      @action="applyOperation"
+      @action="applyOperation(token, kind, listQuery, tablePage, updateAbout)"
     />
   </div>
 
 </template>
 
 <script>
-import { frontend, frontendData, getInputValue } from '@/api/common'
-import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/k8sResource'
+import { frontend, frontendData, getInputValue, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
 import DynamicForm from '@/components/DynamicForm'
@@ -152,9 +131,7 @@ export default {
   components: { Pagination, JsonDialog, DynamicForm },
   data() {
     return {
-      cardsData: [],
       chosenRadioName: 'all',
-      total: 0,
       listQuery: {
         page: 1,
         limit: 12,
@@ -176,18 +153,22 @@ export default {
         actions: []
       },
       kind: '',
-      updateJsonData: {},
-      createDialogVisible: false,
-      ifJsonEditorForCreate: true,
-      ifJsonEditorForUpdate: true,
-      createTemplates: [],
-      createResourceTitle: '创建对象',
-      updateResourceTitle: '更新对象',
-      createJsonPattern: {},
-      actionDialogVisible: false,
-      updateFormConfig: [],
-      createFormConfig: [],
-      propertiesInfo: []
+      createAbout: {
+        createDialogVisible: false,
+        ifJsonEditorForCreate: true,
+        createTemplates: [],
+        createResourceTitle: '创建对象',
+        createJsonPattern: {},
+        createFormConfig: []
+      },
+      updateAbout: {
+        updateJsonData: {},
+        ifJsonEditorForUpdate: true,
+        updateResourceTitle: '更新对象',
+        actionDialogVisible: false,
+        updateFormConfig: [],
+        propertiesInfo: []
+      }
     }
   },
   created() {
@@ -214,172 +195,12 @@ export default {
     resetListQuery() {
       this.listQuery.page = 1
     },
-    handleModel(event) {
-      // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
-      getResource({
-        token: this.token,
-        kind: 'Template',
-        name: this.kind.toLowerCase() + '-create.' + event,
-        namespace: 'default'
-      }).then((response) => {
-        if (this.$valid(response)) {
-          // 就是创建这个资源的 json 模板
-          this.createJsonPattern = response.data.spec.data.template
-          // 生成之后就会变成填写字段信息表格的数据来源数组
-          this.createFormConfig = []
-          if (response.hasOwnProperty('data')) {
-            this.createFormConfig = response.data.spec.data.values
-            for (let i = 0; i < this.createFormConfig.length; i++) {
-              if (this.createFormConfig[i].type === 'bool') {
-                this.createFormConfig[i].value = true
-              } else {
-                this.createFormConfig[i].value = ''
-              }
-              this.createFormConfig[i].placeholder = this.createFormConfig[i].type
-            }
-          }
-        }
-      })
-    },
-    create() {
-      // 创建资源的 dialog 需要消失
-      this.createDialogVisible = false
-      if (!this.ifJsonEditorForCreate) {
-        this.updateJsonObj(this.createJsonPattern, this.createFormConfig)
-      }
-      // if (typeof this.createJsonPattern === 'string') {
-      //   this.createJsonPattern = JSON.parse(this.createJsonPattern)
-      // }
-      // 新建资源
-      createResource({
-        token: this.token,
-        json: this.createJsonPattern
-      }).then((response) => {
-        if (this.$valid(response)) {
-          this._message('创建成功', 'success')
-          // this.refresh()
-          this.refresh()
-        }
-      })
-    },
-    applyOperation() {
-      this.actionDialogVisible = false
-      // if (typeof this.updateJsonData === 'string') {
-      //   this.updateJsonData = JSON.parse(this.updateJsonData)
-      // }
-      if (!this.ifJsonEditorForUpdate) {
-        this.updateJsonObj(this.updateJsonData, this.updateFormConfig)
-      }
-      // this.createJsonData = JSON.parse(this.createJsonData);
-      updateResource({
-        token: this.token,
-        json: this.updateJsonData
-      }).then((response) => {
-        if (this.$valid(response)) {
-          this.refresh()
-          // for (const key in this.list) {
-          //   this.list[key].val = ''
-          // }
-          this._message('更新成功', 'success')
-        }
-      })
-    },
-    _message(message, type) {
-      this.$message({
-        message: message || '操作成功',
-        type: type || 'info',
-        duration: 3000
-      })
-    },
-    createJson() {
-      getResource({
-        token: this.token,
-        kind: 'Template',
-        name: this.kind.toLowerCase() + '-' + 'create',
-        namespace: 'default'
-      }).then((response) => {
-        if (this.$valid(response)) {
-          // this.customizedAction = true
-          if (response.data.spec && response.data.spec.data) {
-            this.createTemplates = response.data.spec.data.support
-            this.ifJsonEditorForCreate = false
-          } else {
-            this.ifJsonEditorForCreate = true
-            this.createJsonPattern = response.data
-          }
-          this.createDialogVisible = true
-        }
-      })
-    },
+    handleCreateTemplateChange,
+    create,
+    applyOperation,
+    createJson,
     getInputValue,
-    handleActionChange(event, row) {
-      if (event === 'update') {
-        getResource({
-          token: this.token,
-          kind: this.kind,
-          name: row.metadata.name,
-          namespace: row.metadata.namespace
-        }).then((response) => {
-          if (this.$valid(response)) {
-            this.updateJsonData = response.data
-            this.ifJsonEditorForUpdate = true
-            this.updateResourceTitle = '更新对象'
-            this.actionDialogVisible = true
-          }
-        })
-      } else if (event === 'delete') {
-        deleteResource({
-          token: this.token,
-          kind: this.kind,
-          name: row.metadata.name,
-          namespace: row.metadata.namespace
-        }).then((response) => {
-          if (this.$valid(response)) {
-            this.refresh()
-            this._message('删除成功', 'success')
-          }
-        }).bind(this)
-      } else {
-        getResource({
-          token: this.token,
-          kind: this.kind,
-          name: row.metadata.name,
-          namespace: row.metadata.namespace
-        }).then((response) => {
-          if (this.$valid(response)) {
-            this.updateJsonData = response.data
-            getResource({
-              token: this.token,
-              kind: 'Template',
-              name: this.kind.toLowerCase() + '-' + event.toLowerCase(),
-              namespace: 'default'
-            }).then((response) => {
-              if (this.$valid(response)) {
-                this.updateResourceTitle = response.data.spec.data.key
-                this.ifJsonEditorForUpdate = false
-                // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
-                // id是 spec.replicas
-                // type 是字段的类型
-                // value 是这个字段默认的值，bool 是 true, string 是 ''
-                this.updateFormConfig = []
-                if (response.hasOwnProperty('data')) {
-                  this.updateFormConfig = response.data.spec.data.values
-                  for (let i = 0; i < this.updateFormConfig.length; i++) {
-                    if (this.updateFormConfig[i].type === 'bool') {
-                      this.updateFormConfig[i].value = true
-                    } else {
-                      this.updateFormConfig[i].value = ''
-                    }
-                    this.updateFormConfig[i].placeholder = this.updateFormConfig[i].type
-                  }
-                }
-                this.actionDialogVisible = true
-              }
-            })
-          }
-        })
-      }
-    }
+    handleActionChange
   }
 }
 </script>
