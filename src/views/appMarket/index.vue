@@ -58,7 +58,7 @@
 
               <el-col :span="16">
                 <el-row>
-                  <el-form label-position="right" label-width="7vw">
+                  <el-form label-position="right" label-width="6vw">
                     <el-form-item v-for="(labelItem, key) in tablePage.tableColumns" :label="labelItem.label" :key="key">
                       <el-select
                         size="mini"
@@ -233,5 +233,10 @@ export default {
     font-size: 6px;
     overflow: hidden;
   }
+::v-deep {
+  .el-form-item__label {
+    font-size: 1vmin;
+  }
+}
 }
 </style>
