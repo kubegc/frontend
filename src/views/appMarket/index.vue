@@ -118,7 +118,7 @@
       :json-file-obj="createAbout.createJsonPattern"
       :create-templates="createAbout.createTemplates"
       :form-data="createAbout.createFormConfig"
-      @update:jsonFileObj="createJsonPattern = JSON.parse($event)"
+      @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
       @action="create(token, kind, listQuery, tablePage, createAbout)"
       @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
     />
@@ -129,7 +129,7 @@
       :value.sync="updateAbout.actionDialogVisible"
       :json-file-obj="updateAbout.updateJsonData"
       :form-data="updateAbout.updateFormConfig"
-      @update:jsonFileObj="updateJsonData = JSON.parse($event)"
+      @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
       @action="applyOperation(token, kind, listQuery, tablePage, updateAbout)"
     />
   </div>
