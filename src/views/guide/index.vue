@@ -102,7 +102,7 @@
 </template>
 <script>
 import JsonEditor from '@/components/JsonEditorSpecial/index'
-import { createResource, getResource, updateResource, getMeta } from '@/api/k8sResource'
+import { createResource, getResource, updateResource, getMeta } from '@/api/kubernetes'
 import { mapGetters } from 'vuex'
 import RoutesTreeView from '@/components/RoutesTreeView/index'
 

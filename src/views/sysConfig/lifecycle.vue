@@ -118,7 +118,7 @@ import {
   getResource,
   updateResource,
   getMeta,
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 import apiAnalysis from "@/views/config/apiAnalysis";
 import editorImage from "./components/EditorImage";
 
@@ -199,7 +199,7 @@ export default {
               page: 1,
               limit: 1000,
               labels: {
-                
+
               },
             }).then((response) => {
               if (this.validateRes(response) == 1) {

@@ -49,7 +49,7 @@ import {
   listResources,
   getMeta,
   execDiff,
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 import axios from "axios";
 
 let echarts = require("echarts");
@@ -116,7 +116,7 @@ export default {
         this.jsonObj = response.data.changedAPI;
         var changeAPI = Object.keys(this.jsonObj);
         for (var i = 0; i < changeAPI.length; i++) {
-           
+
           var obj1 = this.jsonObj[changeAPI[i]][v1].lifecycle[changeAPI[i]]
           var obj2 = this.jsonObj[changeAPI[i]][v2].lifecycle[changeAPI[i]]
 

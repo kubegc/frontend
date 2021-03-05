@@ -14,7 +14,7 @@
         </el-card>
       </el-col>
     </el-row>
-    
+
     <el-dialog v-el-drag-dialog :visible.sync="dialogTableVisible" :title="json.kind" @dragDialog="handleDrag">
           <el-select ref="select" v-model="modelType" style="margin-top:0px;margin-bottom:20px;"  @change="refreshData">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"  />
@@ -34,7 +34,7 @@ import EditableJson from '@/components/EditableJson'
 import {
   getJsonData,
   listResources
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 
 
 export default {
@@ -53,7 +53,7 @@ export default {
       list3: [],
       dialogTableVisible: false,
       options: [
-        
+
       ],
       modelType: '',
       value: [],
@@ -67,7 +67,7 @@ export default {
 
     }
   },
-  
+
   mounted() {
   },
   created() {
@@ -86,13 +86,13 @@ export default {
               }
               }
             })
-         
+
     // getJsonData({viewerName: "templates"}).then(response => {
     //   this.value = response.data;
     //   console.log(this.value)
     // })
-    
-  
+
+
   },
 
   methods: {
@@ -118,7 +118,7 @@ export default {
     refreshData(val) {
       console.log(val)
       if(val == 'priority'){
-        this.json = this.value[this.index+3]       
+        this.json = this.value[this.index+3]
       }else if(val == 'default') {
         this.json = this.value[this.index]
       }

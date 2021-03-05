@@ -67,7 +67,7 @@ import {
   listResources,
   getMeta,
   diffResource,
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 import axios from "axios";
 
 let echarts = require("echarts");
@@ -110,11 +110,11 @@ export default {
   methods: {
     handle(value1) {
       this.name1 = value1
-      
+
     },
     handle2(value2) {
       this.name2 = value2
-      
+
     },
     onSubmit() {
       diffResource({
@@ -125,7 +125,7 @@ export default {
         name1: this.name1,
         name2: this.name2
       }).then((response) => {
-        
+
         this.picData.name = this.value;
         this.picData.children = [];
         this.picData.itemStyle = {color: 'black',  borderColor: 'black'}
@@ -133,28 +133,28 @@ export default {
         //this.jsonObj = response.data.changedAPI;
         this.jsonObj1 = response.data.depreactedAPI;
         this.jsonObj2 = response.data.newAPI;
-       
-        
+
+
           //var children = [];
           for(let ele in this.jsonObj1) {
               //删除的
-            
+
                   let kv = { name: this.jsonObj1[ele], value: this.jsonObj1[ele], itemStyle: {color: 'red', borderColor: 'red', borderType: 'dotted'}, lineStyle: {color: 'red', width: 2} };
 
-             
+
               this.picData.children.push(kv);
           }
           for(let ele in this.jsonObj2) {
-             
+
                   let kv = { name: this.jsonObj2[ele], value: this.jsonObj2[ele], itemStyle: {color: 'green',  borderColor: 'green', borderWidth: 4}, lineStyle: {color: 'green', width: 2}, label: {color: 'green', fontSize: 14} };
 this.picData.children.push(kv);
               //不变的
               }
-              
-          
+
+
 //this.picData.children = children
-         
-        
+
+
 
         this.drawLine();
       });

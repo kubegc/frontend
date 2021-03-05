@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { getResource } from '@/api/k8sResource'
+import { getResource } from '@/api/kubernetes'
 import { mapGetters } from 'vuex'
 
 export default {

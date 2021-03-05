@@ -25,7 +25,7 @@
 <script>
 import {
   getResource
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 import { mapGetters } from "vuex";
 import InnerPane from "./components/showTestcase";
 

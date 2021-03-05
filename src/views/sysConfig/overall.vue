@@ -34,20 +34,20 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item 
+      <el-form-item
       v-for="(domain, index) in dynamicValidateForm.domains"
     :label="'版本' + index"
     :key="domain.value">
         <el-input :rows="6" type="textarea" v-model="domain.value" />
       </el-form-item>
-      
+
       <el-form-item>
         <el-button type="primary" @click="onSubmit">确定</el-button>
         <el-button @click="addDomain">新增</el-button>
         <el-button>取消</el-button>
       </el-form-item>
     </el-form>
-      
+
     </el-dialog>
   </div>
 </template>
@@ -62,7 +62,7 @@ import {
   listResources,
   getMeta,
   execDiff,
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 import axios from "axios";
 
 let echarts = require("echarts");
@@ -187,13 +187,13 @@ export default {
       keyChart.on('click', function (params) {
     if (params.dataIndex === 1) {
          _self.analyze()
-        
+
     }else if(params.dataIndex === 0) {
         _self.createDialogVisible = true
     }
-    
+
 });
-  
+
 
     listResources({
       kind: "Account",
@@ -215,7 +215,7 @@ export default {
       handleDrag() {
       this.$refs.select.blur()
     },
-      
+
       addDomain() {
         this.dynamicValidateForm.domains.push({
           value: '',
@@ -272,12 +272,12 @@ export default {
           i * 1000
         );
       }
-      
-               
-            
+
+
+
             });
 
-      
+
     },
 
     onSubmit() {
@@ -299,7 +299,7 @@ export default {
         this.jsonObj = response.data.changedAPI;
         var changeAPI = Object.keys(this.jsonObj);
         for (var i = 0; i < changeAPI.length; i++) {
-           
+
           var obj1 = this.jsonObj[changeAPI[i]][v1].lifecycle[changeAPI[i]]
           var obj2 = this.jsonObj[changeAPI[i]][v2].lifecycle[changeAPI[i]]
 
@@ -334,7 +334,7 @@ export default {
         this.createDialogVisible = false
       });
         }
-      
+
     },
 
     drawLineSingle(i) {

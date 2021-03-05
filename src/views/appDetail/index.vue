@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getResource } from '@/api/k8sResource'
+import { getResource } from '@/api/kubernetes'
 
 export default {
   data() {

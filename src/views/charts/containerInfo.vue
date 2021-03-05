@@ -81,7 +81,7 @@
 import { mapGetters } from "vuex";
 import { getMonitorInfo } from "@/utils/getResource";
 import JsonEditor from "@/components/JsonEditor";
-import { getResource } from '@/api/k8sResource'
+import { getResource } from '@/api/kubernetes'
 
 export default {
   name: "containerInfo",
@@ -132,7 +132,7 @@ export default {
     getResource({name: this.resourceName, kind: this.tabName, namespace: this.namespace }).then(response => {
       if (this.validateRes(response) == 1) {
         this.listLoading = false;
-        this.value = response.data      
+        this.value = response.data
       }
     });
   },

@@ -37,7 +37,7 @@
 
 <script>
 import RoutesTreeView from '@/components/RoutesTreeView/index'
-import { getResource, updateResource } from '@/api/k8sResource'
+import { getResource, updateResource } from '@/api/kubernetes'
 import JsonEditor from '@/components/JsonEditorSpecial/index'
 export default {
   components: { RoutesTreeView, JsonEditor },

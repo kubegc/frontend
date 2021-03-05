@@ -129,7 +129,7 @@ import {
   getResource,
   updateResource,
   deleteResource
-} from "@/api/k8sResource";
+} from "@/api/kubernetes";
 import { mapGetters } from "vuex";
 import elDragDialog from "@/directive/el-drag-dialog";
 import EditableJson from "@/components/EditableJson";

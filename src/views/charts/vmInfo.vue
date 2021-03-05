@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="20">    
+    <el-row :gutter="20">
       <el-col :span="13" style="margin-bottom:32px;">
         <el-card>
                     <span style="display:inline-block; margin-bottom:10px; fontSize:16px; font-weight:bold">yaml配置</span>
@@ -9,9 +9,9 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="11" style="margin-bottom:32px;"> 
-        <el-card>  
-                    <span style="display:inline-block; margin-bottom:10px; fontSize:16px; font-weight:bold">监控信息</span>     
+      <el-col :span="11" style="margin-bottom:32px;">
+        <el-card>
+                    <span style="display:inline-block; margin-bottom:10px; fontSize:16px; font-weight:bold">监控信息</span>
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="24">
               <iframe class="rate_iframe" :src="monitor_rs.cpu"></iframe>
@@ -32,14 +32,14 @@
           </el-col>
         </el-row>
       </el-card>
-      <el-card> 
+      <el-card>
         <el-row>
           <el-col :span="24">
             <iframe class="IO_iframe" :src="monitor_rs.network"></iframe>
           </el-col>
-        </el-row>  
-      </el-card>      
-      </el-col>   
+        </el-row>
+      </el-card>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -51,7 +51,7 @@ import JsonEditor from '@/components/JsonEditor'
 import {
   getResource,
   listResources
-} from '@/api/k8sResource'
+} from '@/api/kubernetes'
 
 export default {
   name: 'vmInfo',
@@ -90,7 +90,7 @@ export default {
     this.kind = this.$route.query.tabName
 
     this.monitor_rs = getMonitorInfo(this.viewerName, this.vmName, null)
-          
+
     getResource({kind: this.frontend_kind , name: this.table_kind + '-' +this.kind.toLowerCase()}).then(response => {
       if (this.validateRes(response) == 1) {
       this.columns = response.data
@@ -115,7 +115,7 @@ export default {
 
   },
   mounted() {
-    
+
   },
   methods: {
     validateRes(res) {
@@ -131,7 +131,7 @@ export default {
         return 0
       }
     },
-   
+
     getList() {
       this.listLoading = true
     },
@@ -167,14 +167,14 @@ export default {
                 res = res[parseInt(element.substring(element.indexOf('\[')+1,element.indexOf('\]')))]
             } else {
                 res = ""
-            }           
+            }
         }
         else{
             if(res[element]) {
                 res = res[element]
             }else {
                 res = ""
-            }          
+            }
         }
       });
       //console.log(res)
@@ -183,7 +183,7 @@ export default {
     updateInputValue(scope,longKey,event){
       if( longKey.indexOf('\.') < 0 ){
          scope[longKey] = event
-         return 
+         return
       }
       var keys = longKey.split("\.")
       var obj = scope

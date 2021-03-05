@@ -10,7 +10,7 @@
 <script>
 import displayItem from '@/views/operation/displayItem'
 
-import { listResources } from '@/api/k8sResource'
+import { listResources } from '@/api/kubernetes'
 export default {
   components: {
     displayItem

@@ -19,7 +19,7 @@
 </template>
 <script>
 
-import {getResource, getScheduleData} from "@/api/k8sResource";
+import {getResource, getScheduleData} from "@/api/kubernetes";
 import { setInterval } from "timers";
 import elDragDialog from "@/directive/el-drag-dialog";
 import EditableJson from "@/components/EditableJson";

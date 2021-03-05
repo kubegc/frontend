@@ -126,7 +126,8 @@
 </template>
 
 <script>
-import { frontend, frontendData, getInputValue, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
+import { frontend, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
+import { getInputValue } from '@/api/parser'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'

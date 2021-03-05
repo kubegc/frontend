@@ -81,7 +81,7 @@
 
 <script>
 import { check } from '@/utils/validate'
-import { getResource } from '@/api/k8sResource'
+import { getResource } from '@/api/kubernetes'
 
 export default {
   name: 'Login',

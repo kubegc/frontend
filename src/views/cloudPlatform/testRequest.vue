@@ -37,7 +37,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import JsonEditor from '@/components/JsonEditorSpecial/index'
-import { createResource, getResource, updateResource, listResources, queryTest, getMeta } from '@/api/k8sResource'
+import { createResource, getResource, updateResource, listResources, queryTest, getMeta } from '@/api/kubernetes'
 import axios from 'axios'
 
 export default {

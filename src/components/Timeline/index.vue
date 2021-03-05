@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { listResources } from "@/api/k8sResource";
+import { listResources } from "@/api/kubernetes";
 
 export default {
   computed: {},

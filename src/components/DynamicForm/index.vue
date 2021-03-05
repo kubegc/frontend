@@ -76,7 +76,7 @@
 <script>
 import {
   getMockObj
-} from '@/api/k8sResource'
+} from '@/api/kubernetes'
 
 export default {
   name: 'DynamicForm',
