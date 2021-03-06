@@ -159,7 +159,7 @@ export default {
           meta: {
             title: this.routeContent.title,
             icon: this.routeContent.icon,
-            kind: this.pageType === 'appMarket' ? this.resourceName : undefined
+            kind: this.pageType === 'cards' ? this.resourceName : undefined
           }
         }
         routesTemp.push(routeContentTemp)

@@ -51,13 +51,13 @@
                 <p>{{ item.json.metadata.name }}</p>
               </div>
               <el-card class="exhibition">
-                <el-row style="margin-bottom: 20px;" type="flex" justify="center">
-                  <el-col>
-                  <el-image
-                    style="border-radius: 2px;"
-                    :src="require('../../assets' + (item.avatar ? item.avatar : '/avatar.jpg'))"
-                    :fit="'fit'"
-                  />
+                <el-row style="margin-bottom: 20px;">
+                  <el-col style="height: 60px;text-align:center">
+                    <el-image
+                      style="border-radius: 2px;max-height: 100%;max-width: 80%;"
+                      :src="require('../../assets' + (item.json.spec.basic.picture ? '/cards/' + item.json.spec.basic.picture : '/avatar.jpg'))"
+                      :fit="'fit'"
+                    />
                   </el-col>
                 </el-row>
 
@@ -96,9 +96,11 @@
                 </el-form-item>
               </el-form>
             </el-row>
+            <el-divider v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc">详情</el-divider>
+            <el-tag style="overflow: hidden" v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc"> {{ this.detailItem.json.spec.basic.desc}}</el-tag>
           </el-card>
         </el-col>
-        </transition>
+      </transition>
 
     </el-row>
     <el-row style="margin-top: 30px">
@@ -189,7 +191,7 @@ export default {
       detailVisible: false,
       // leftCardSpan: 3,
       leftGutter: 20,
-      detailItem: {}
+      detailItem: {},
     }
   },
   created() {
@@ -223,14 +225,24 @@ export default {
     getInputValue,
     handleActionChange,
     showDetail(detailItem) {
-      this.leftSpan = 18
-      // this.leftCardSpan = 3
-      this.leftGutter = 10
-      this.detailItem = detailItem
-      setTimeout(() => {
-        this.detailVisible = true
-      }, 280)
-      // this.detailVisible = true
+      if (!this.detailItem.json || this.detailItem.json.metadata.name === detailItem.json.metadata.name) {
+        this.leftSpan = this.leftSpan === 24 ? 18 : 24
+        this.leftGutter = this.leftGutter === 20 ? 10 : 20
+        this.detailItem = detailItem
+        setTimeout(() => {
+          this.detailVisible = !this.detailVisible
+        }, 280)
+        // this.detailVisible = true
+      } else {
+        this.detailItem = detailItem
+        if (this.leftSpan === 24 && this.leftGutter === 20) {
+          this.leftSpan = 18
+          this.leftGutter = 10
+          setTimeout(() => {
+            this.detailVisible = !this.detailVisible
+          }, 280)
+        }
+      }
     }
   }
 }
@@ -251,12 +263,10 @@ export default {
   }
 
   .exhibition:focus {
-    box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
-    0px 9px 28px 0px rgba(0, 0, 0, 0.05),
-    0px 12px 48px 16px rgba(0, 0, 0, 0.03);
-    transform: translateY(-5px);
-    color: yellowgreen;
-    //border-top: #409EFF 1px solid;
+    //box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+    //0px 9px 28px 0px rgba(0, 0, 0, 0.05),
+    //0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+    //transform: translateY(-5px);
     border: #409EFF 1px solid;
   }
 }
