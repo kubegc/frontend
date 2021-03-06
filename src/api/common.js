@@ -254,4 +254,17 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
     })
   }
 }
+export function getTags(vueComponentObject){
+  getResource({
+    token: vueComponentObject.token,
+    kind: 'Frontend',
+    namespace: 'default',
+    name: 'tags-' + vueComponentObject.kind.toLowerCase()
+  }).then(response => {
+    if (valid(response)) {
+      vueComponentObject.tags = response.data.spec.tags
+      vueComponentObject.label = response.data.spec.label
+    }
+  })
+}
 

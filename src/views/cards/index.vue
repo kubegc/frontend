@@ -26,10 +26,8 @@
 
     <el-row>
       <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
-        <el-radio-button label="上海" />
-        <el-radio-button label="北京" />
-        <el-radio-button label="广州" />
-        <el-radio-button label="深圳" />
+        <el-radio-button label="所有"></el-radio-button>
+        <el-radio-button v-for="(item, key) in tags" :key="key" :label="item" />
       </el-radio-group>
     </el-row>
 
@@ -139,7 +137,7 @@
 </template>
 
 <script>
-import { frontend, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
+import { frontend, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags } from '@/api/common'
 import { getInputValue } from '@/api/parser'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
@@ -149,7 +147,7 @@ export default {
   components: { Pagination, JsonDialog, DynamicForm },
   data() {
     return {
-      chosenRadioName: 'all',
+      chosenRadioName: '所有',
       listQuery: {
         page: 1,
         limit: 12,
@@ -192,12 +190,15 @@ export default {
       // leftCardSpan: 3,
       leftGutter: 20,
       detailItem: {},
+      tags: [],
+      label: ''
     }
   },
   created() {
     this.kind = this.$route.meta.kind
     frontend(this.token, this.kind, this.listQuery, this.tablePage)
     frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+    getTags(this)
   },
   computed: {
     ...mapGetters(['token'])
@@ -205,19 +206,24 @@ export default {
   methods: {
     search(labels) {
       this.listQuery.labels = labels
+      if (this.chosenRadioName === '所有') {
+        this.listQuery.labels[this.label] = ''
+      }else {
+        this.listQuery.labels[this.label] = this.chosenRadioName
+      }
       frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },
     refresh() {
       frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },
-    handleRadioClick(tab) {
-      const type = tab.name
-      this.getData(type)
-      this.resetListQuery()
+    handleRadioClick(tag) {
+      if (tag === '所有') {
+        tag = ''
+      }
+      this.listQuery.labels[this.label] = tag
+      this.refresh()
     },
-    resetListQuery() {
-      this.listQuery.page = 1
-    },
+
     handleCreateTemplateChange,
     create,
     applyOperation,
@@ -243,7 +249,8 @@ export default {
           }, 280)
         }
       }
-    }
+    },
+    getTags
   }
 }
 </script>
