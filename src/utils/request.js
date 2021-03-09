@@ -22,6 +22,7 @@ service.interceptors.request.use(
   //   return config
   // },
   config => {
+    console.log(config)
     if (config.data && !config.data.token) {
       config.data.token = store.getters.token
     }
