@@ -113,7 +113,6 @@ export default {
   created() {
     const routes = this.value.spec.routes
     this.treeData = this.generateTreeData(routes)
-    console.log(metadata('icons'))
     metadata('icons').then((res) => {
       this.icons = res
     })
@@ -138,7 +137,6 @@ export default {
       return res
     },
     append(node) {
-      console.log(node)
       this.routeAddVisible = true
       this.submitRequire = node
     },

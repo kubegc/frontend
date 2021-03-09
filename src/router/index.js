@@ -33,16 +33,6 @@ import Layout from '@/layout/layout'
  */
 export const constantRoutes = [
   {
-    path: '/wizzard',
-    component: () => import('@/views/wizzard/index'),
-    hidden: true
-  },
-  {
-    path: '/table',
-    component: () => import('@/views/table/index'),
-    hidden: true
-  },
-  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
@@ -64,75 +54,23 @@ export const constantRoutes = [
             path: 'welcome',
             name: 'Welcome',
             component: () => import('@/views/dashboard/index'),
-            meta: { title: 'welcome', icon: 'dashboard' }
+            meta: { title: 'welcome', icon: 'dashboard', source: 'grafana' }
           },
           {
             path: 'DepAppMarket',
             name: 'DepAppMarket',
             component: () => import('@/views/cards/index'),
-            meta: { title: 'dep', icon: 'resources', kind: 'Image'}
+            meta: { title: 'dep', icon: 'resources', kind: 'Image' }
           },
           {
             path: 'routesView',
             name: 'routesView',
             component: () => import('@/views/routesOperation/index'),
             meta: { title: 'routesView', icon: 'resources' }
-          },
-          {
-            path: 'schedule',
-            name: 'schedule',
-            component: () => import('@/views/schedule/schedule'),
-            meta: { title: '调度原理演示', icon: 'resources' }
           }]
-      },
-      {
-        path: 'charts',
-        component: Layout,
-        children: [
-          {
-            path: 'podTerminal',
-            name: 'podTerminal',
-            component: () => import('@/views/resourceInfo/podTerminal'),
-            meta: { title: '终端' }
-          },
-          {
-            path: 'podInfo',
-            name: 'podInfo',
-            component: () => import('@/views/charts/containerInfo'),
-            meta: { title: '详细信息' }
-          }
-        ]
       }
     ]
-  },
-  {
-    path: '/pipeline', // deprecated
-    component: () => import('@/views/pipeline/pipeline'),
-    meta: { icon: 'pipeline', title: '多云协作框架' }
-  },
-  {
-    path: '/testRequest', // deprecated
-    component: () => import('@/views/cloudPlatform/testRequest'),
-    meta: { icon: 'cloud', title: '请求云服务' }
-  },
-  {
-    path: '/diff', // deprecated
-    component: () => import('@/views/sysConfig/diff'),
-    meta: { icon: 'cloud', title: '兼容性分析' }
-  },
-  {
-    path: '/overall', // deprecated
-    component: () => import('@/views/sysConfig/overall'),
-    meta: { icon: 'cloud', title: '智能服务演化' }
-  },
-
-  {
-    path: '/framework-construction', // deprecated
-    component: () => import('@/views/pipeline/framework-construction'),
-    meta: { icon: 'pipeline', title: '多云协作框架' }
-
   }
-
 ]
 
 const createRouter = () => new Router({

@@ -1,34 +1,23 @@
 <template>
   <div class="dashboard-container">
-    <!-- <div class="dashboard-text">name: {{ name }}</div>
-    <div class="dashboard-text">roles: <span v-for="r in role" :key="r">{{ r }}</span></div> -->
-    <iframe class="iframe" id="iframe" :src="grafanaLink"></iframe>
+    <iframe id="iframe" class="iframe" :src="sourceLink" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { getGrafanaLink } from '@/utils/getResource'
+
+import { getSourceLink } from '@/utils/getResource'
 
 export default {
   name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name',
-      'role'
-    ])
-  },
   data() {
     return {
-      grafanaLink: ''
+      sourceLink: ''
 
     }
   },
-  mounted() { 
-      this.grafanaLink = getGrafanaLink() 
-  },
-  methods: {
-    
+  mounted() {
+    this.sourceLink = getSourceLink(this.$route.meta.source)
   }
 }
 </script>
