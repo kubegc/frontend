@@ -1,7 +1,7 @@
 import { login, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/kubernetes'
 import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
-import router from '@/router'
+import router, { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
@@ -73,6 +73,7 @@ const actions = {
   logout({ dispatch }) {
     return new Promise(resolve => {
       dispatch('resetToken').then(() => {
+        resetRouter()
         removeValue('name')
         removeValue('role')
         resolve()

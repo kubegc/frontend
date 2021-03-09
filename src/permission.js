@@ -28,7 +28,7 @@ router.beforeEach(async(to, from, next) => {
       try {
         if (store.getters.role) {
           if (to.path === '/') {
-            next({ path: '/in/welcome' })
+            next({ path: homepage(store.getters.add_routes) })
           }
           next()
         } else {
@@ -69,3 +69,26 @@ router.afterEach(() => {
   // finish progress bar
   NProgress.done()
 })
+
+function homepage(curr) {
+  console.log(curr)
+  let hp = ''
+  for (let i = 0; i < curr.length; i++) {
+    const c = curr[i]
+    if (c.component) {
+      if (c.children) {
+        const rtn = homepage(c.children)
+        if (rtn !== '') {
+          hp += (c.path + '/' + rtn)
+          return hp
+        }
+      } else {
+        hp += c.path
+        return hp
+      }
+    } else {
+      return hp
+    }
+  }
+  return hp
+}
