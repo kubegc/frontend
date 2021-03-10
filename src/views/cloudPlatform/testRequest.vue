@@ -2,19 +2,18 @@
   <div class="container">
     <el-form label-position="top">
       <el-form-item label="方法列表">
-        <el-select filterable style="float: left" v-model="value" placeholder="请选择" @change="handle(value)">
+        <el-select v-model="value" filterable style="float: left" placeholder="请选择" @change="handle(value)">
           <el-option
             v-for="item in options"
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          >
-          </el-option>
+          />
         </el-select>
       </el-form-item>
 
       <el-form-item label="请求参数：">
-        <el-input :rows="6" type="textarea" v-model="form.desc"/>
+        <el-input v-model="form.desc" :rows="6" type="textarea" />
         <el-row style="margin-top: 30px">
           <el-col>
             <el-button type="primary" @click="onSubmit">发送请求</el-button>
@@ -25,9 +24,10 @@
     </el-form>
     <el-dialog :visible.sync="dialogVisible" width="70%" height="50%">
       <span slot="title">返回内容</span>
-      <json-editor style="width:100%;"
-                   :value="JSON.stringify(jsonString, null, 2)"
-                   @input="jsonString  = JSON.parse($event)"
+      <json-editor
+        style="width:100%;"
+        :value="JSON.stringify(jsonString, null, 2)"
+        @input="jsonString = JSON.parse($event)"
       />
       <el-button slot="footer" type="primary" @click="dialogVisible = false">确 定</el-button>
     </el-dialog>
@@ -78,13 +78,12 @@ export default {
         var temp = { 'value': key, 'label': key }
         this.options.push(temp)
       }
-
-    }),
-      getResource({
-        kind: 'Metadata', name: 'cloudid', namespace: 'default'
-      }).then((response) => {
-        this.id = response.data.spec.id
-      })
+    })
+    getResource({
+      kind: 'Metadata', name: 'cloudid', namespace: 'default'
+    }).then((response) => {
+      this.id = response.data.spec.id
+    })
   },
   methods: {
     handle(value) {
@@ -96,7 +95,6 @@ export default {
           this.requestPara = obj
           break
         }
-
       }
     },
     onSubmit() {

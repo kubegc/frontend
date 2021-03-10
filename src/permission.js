@@ -71,7 +71,6 @@ router.afterEach(() => {
 })
 
 function homepage(curr) {
-  console.log(curr)
   let hp = ''
   for (let i = 0; i < curr.length; i++) {
     const c = curr[i]
