@@ -6,7 +6,7 @@
 
 <script>
 
-import { getSourceLink } from '@/utils/getResource'
+import { getGrafanaLink } from '@/utils/getResource'
 
 export default {
   name: 'Dashboard',
@@ -17,7 +17,7 @@ export default {
     }
   },
   mounted() {
-    this.sourceLink = getSourceLink(this.$route.meta.source)
+    this.grafanaLink = getGrafanaLink()
   }
 }
 </script>

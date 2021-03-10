@@ -1,137 +1,149 @@
 <template>
+
   <div class="imageMarket-app-container">
-    <el-row style="margin-bottom: 5vh">
-      <el-tag style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);" effect="dark"><i class="header-icon el-icon-info" /> 功能描述：{{ tablePage.desc }}</el-tag>
-    </el-row>
+    <div class="app-container" style="margin-bottom: 20px">
+      <el-collapse v-model="tablePage.activeName" accordion>
+        <el-collapse-item>
+          <template slot="title">
+            功能描述<i class="header-icon el-icon-info" />
+          </template>
+          <div v-text="tablePage.desc" />
+        </el-collapse-item>
+      </el-collapse>
+    </div>
+    <!-- <el-row style="margin-bottom: 5vh">
+      <el-tag style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);"><i class="header-icon el-icon-info" /> 功能描述：{{ tablePage.desc }}</el-tag>
+    </el-row> -->
+  <div class="app-container" style="margin-bottom: 20px">
+      <el-row>
+        <dynamic-form
+          v-if="tablePage.dynamicFormVisible"
+          :form-data="tablePage.dynamicFormJson"
+          :kind="kind"
+          @watchSearch="search($event)"
+        />
+      </el-row>
 
-    <el-row style="margin-bottom: 5vh">
-      <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
-      <el-button
-        icon="el-icon-refresh"
-        round
-        @click.native="refresh"
-      >刷新页面
-      </el-button>
-    </el-row>
-    <el-divider />
+      <el-row style="margin-bottom: 5vh">
+        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
+        <el-button
+          icon="el-icon-refresh"
+          round
+          @click.native="refresh"
+        >刷新页面
+        </el-button>
+      </el-row>
+      <!-- <el-divider /> -->
 
-    <el-row>
-      <dynamic-form
-        v-if="tablePage.dynamicFormVisible"
-        :form-data="tablePage.dynamicFormJson"
-        :kind="kind"
-        @watchSearch="search($event)"
-      />
-    </el-row>
+      <el-row>
+        <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
+          <el-radio-button label="所有"></el-radio-button>
+          <el-radio-button v-for="(item, key) in tags" :key="key" :label="item" />
+        </el-radio-group>
+      </el-row>
 
-    <el-row>
-      <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
-        <el-radio-button label="所有"></el-radio-button>
-        <el-radio-button v-for="(item, key) in tags" :key="key" :label="item" />
-      </el-radio-group>
-    </el-row>
-
-    <el-row :gutter="10">
-      <el-col :span="leftSpan" style="transition: all 0.28s;">
-        <el-row
-          v-loading="tablePage.listLoading"
-          :gutter="leftGutter"
-        >
-          <el-col
-            v-for="(item, index) in tablePage.tableData"
-            :key="index"
-            style="cursor: pointer"
-            :span="4"
-            @click.native="showDetail(item)"
+      <el-row :gutter="10">
+        <el-col :span="leftSpan" style="transition: all 0.28s;">
+          <el-row
+            v-loading="tablePage.listLoading"
+            :gutter="leftGutter"
           >
-            <el-tooltip placement="top">
-              <div slot="content">
-                <p>{{ item.json.metadata.name }}</p>
-              </div>
-              <el-card class="exhibition">
-                <el-row style="margin-bottom: 20px;">
-                  <el-col style="height: 60px;text-align:center">
-                    <el-image
-                      style="border-radius: 2px;max-height: 100%;max-width: 80%;"
-                      :src="require('../../assets' + (item.json.spec.basic.picture ? '/cards/' + item.json.spec.basic.picture : '/avatar.jpg'))"
-                      :fit="'fit'"
-                    />
-                  </el-col>
-                </el-row>
+            <el-col
+              v-for="(item, index) in tablePage.tableData"
+              :key="index"
+              style="cursor: pointer"
+              :span="6"
+              @click.native="showDetail(item)"
+            >
+              <el-tooltip placement="top">
+                <div slot="content">
+                  <p>{{ item.json.metadata.name }}</p>
+                </div>
+                <el-card class="exhibition">
+                  <el-row style="margin-bottom: 20px;">
+                    <el-col style="text-align:center">
+                      <el-image
+                        style="border-radius: 2px;max-height: 80%;max-width: 80%;"
+                        :src="require('../../assets' + (item.json.picture ? '/cards/' + item.json.picture : '/avatar.jpg'))"
+                        :fit="'fit'"
+                      />
+                    </el-col>
+                  </el-row>
 
-                <el-row type="flex" justify="center" style="text-align:center">
+                  <el-row type="flex" justify="center" style="text-align:center">
 
-                  <el-tag>{{ item.json.metadata.name }}</el-tag>
-                </el-row>
-              </el-card>
-            </el-tooltip>
-          </el-col>
-        </el-row>
+                    <el-tag>{{ item.json.metadata.name }}</el-tag>
+                  </el-row>
+                </el-card>
+              </el-tooltip>
+            </el-col>
+          </el-row>
 
-      </el-col>
-
-      <transition name="el-zoom-in-top">
-        <el-col v-show="detailVisible" :span="24 - leftSpan">
-          <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
-            <el-row>
-              <el-form>
-                <el-form-item v-for="(labelItem, key) in tablePage.tableColumns" :key="key" :label="labelItem.label">
-                  <el-select
-                    v-if="labelItem.kind === 'action'"
-                    v-model="detailItem.val"
-                    size="mini"
-                    placeholder="请选择"
-                    @change="handleActionChange($event, detailItem.json, token, kind, listQuery, tablePage, updateAbout)"
-                  >
-                    <el-option
-                      v-for="i in tablePage.actions"
-                      :key="i.key"
-                      :label="i.key"
-                      :value="i.type"
-                    />
-                  </el-select>
-                  <el-tag v-else size="small">{{ getInputValue(detailItem.json, labelItem.row) }}</el-tag>
-                </el-form-item>
-              </el-form>
-            </el-row>
-            <el-divider v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc">详情</el-divider>
-            <el-tag style="overflow: hidden" v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc"> {{ this.detailItem.json.spec.basic.desc}}</el-tag>
-          </el-card>
         </el-col>
-      </transition>
 
-    </el-row>
-    <el-row style="margin-top: 30px">
-      <pagination
-        v-show="tablePage.tableItemsSize > listQuery.limit"
-        :auto-scroll="false"
-        :total="tablePage.tableItemsSize"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="refresh"
+        <transition name="el-zoom-in-top">
+          <el-col v-show="detailVisible" :span="24 - leftSpan">
+            <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
+              <el-row>
+                <el-form>
+                  <el-form-item v-for="(labelItem, key) in tablePage.tableColumns" :key="key" :label="labelItem.label">
+                    <el-select
+                      v-if="labelItem.kind === 'action'"
+                      v-model="detailItem.val"
+                      size="mini"
+                      placeholder="请选择"
+                      @change="handleActionChange($event, detailItem.json, token, kind, listQuery, tablePage, updateAbout)"
+                    >
+                      <el-option
+                        v-for="i in tablePage.actions"
+                        :key="i.key"
+                        :label="i.key"
+                        :value="i.type"
+                      />
+                    </el-select>
+                    <el-tag v-else size="small">{{ getInputValue(detailItem.json, labelItem.row) }}</el-tag>
+                  </el-form-item>
+                </el-form>
+              </el-row>
+              <el-divider v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc">详情</el-divider>
+              <el-tag style="overflow: hidden" v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc"> {{ this.detailItem.json.spec.basic.desc}}</el-tag>
+            </el-card>
+          </el-col>
+        </transition>
+
+      </el-row>
+      <el-row style="margin-top: 30px">
+        <pagination
+          v-show="tablePage.tableItemsSize > listQuery.limit"
+          :auto-scroll="false"
+          :total="tablePage.tableItemsSize"
+          :page.sync="listQuery.page"
+          :limit.sync="listQuery.limit"
+          @pagination="refresh"
+        />
+      </el-row>
+      <JsonDialog
+        :json-editor="createAbout.ifJsonEditorForCreate"
+        :title="createAbout.createResourceTitle"
+        :value.sync="createAbout.createDialogVisible"
+        :json-file-obj="createAbout.createJsonPattern"
+        :create-templates="createAbout.createTemplates"
+        :form-data="createAbout.createFormConfig"
+        @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
+        @action="create(token, kind, listQuery, tablePage, createAbout)"
+        @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
       />
-    </el-row>
-    <JsonDialog
-      :json-editor="createAbout.ifJsonEditorForCreate"
-      :title="createAbout.createResourceTitle"
-      :value.sync="createAbout.createDialogVisible"
-      :json-file-obj="createAbout.createJsonPattern"
-      :create-templates="createAbout.createTemplates"
-      :form-data="createAbout.createFormConfig"
-      @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-      @action="create(token, kind, listQuery, tablePage, createAbout)"
-      @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
-    />
-    <JsonDialog
-      :if-create="false"
-      :json-editor="updateAbout.ifJsonEditorForUpdate"
-      :title="updateAbout.updateResourceTitle"
-      :value.sync="updateAbout.actionDialogVisible"
-      :json-file-obj="updateAbout.updateJsonData"
-      :form-data="updateAbout.updateFormConfig"
-      @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-      @action="applyOperation(token, kind, listQuery, tablePage, updateAbout)"
-    />
+      <JsonDialog
+        :if-create="false"
+        :json-editor="updateAbout.ifJsonEditorForUpdate"
+        :title="updateAbout.updateResourceTitle"
+        :value.sync="updateAbout.actionDialogVisible"
+        :json-file-obj="updateAbout.updateJsonData"
+        :form-data="updateAbout.updateFormConfig"
+        @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
+        @action="applyOperation(token, kind, listQuery, tablePage, updateAbout)"
+      />
+  </div>
   </div>
 
 </template>
@@ -195,7 +207,7 @@ export default {
     }
   },
   created() {
-    this.kind = this.$route.meta.kind
+    this.kind = this.$route.name
     frontend(this.token, this.kind, this.listQuery, this.tablePage)
     frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     getTags(this)

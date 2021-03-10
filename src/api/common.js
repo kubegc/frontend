@@ -89,11 +89,11 @@ export function frontendData(token, kind, listQuery, tablePage) {
     }
   })
 }
-export function handleCreateTemplateChange(template, token, kind, createAbout){
+export function handleCreateTemplateChange(template, token, kind, createAbout) {
   // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
   getResource({
     token,
-    kind: 'Template',
+    kind: 'doslab.io.Template',
     name: kind.toLowerCase() + '-create.' + template,
     namespace: 'default'
   }).then((response) => {
@@ -116,7 +116,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout){
     }
   })
 }
-export function create(token, kind, listQuery, tablePage, createAbout){
+export function create(token, kind, listQuery, tablePage, createAbout) {
   // 创建资源的 dialog 需要消失
   createAbout.createDialogVisible = false
   if (!createAbout.ifJsonEditorForCreate) {
@@ -166,10 +166,10 @@ export function message(message, type) {
     duration: 3000
   })
 }
-export function createJson(token, kind, createAbout){
+export function createJson(token, kind, createAbout) {
   getResource({
     token,
-    kind: 'Template',
+    kind: 'doslab.io.Template',
     name: kind.toLowerCase() + '-' + 'create',
     namespace: 'default'
   }).then((response) => {
@@ -224,7 +224,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
         updateAbout.updateJsonData = response.data
         getResource({
           token,
-          kind: 'Template',
+          kind: 'doslab.io.Template',
           name: kind.toLowerCase() + '-' + action.toLowerCase(),
           namespace: 'default'
         }).then((response) => {
@@ -254,7 +254,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
     })
   }
 }
-export function getTags(vueComponentObject){
+export function getTags(vueComponentObject) {
   getResource({
     token: vueComponentObject.token,
     kind: 'Frontend',
