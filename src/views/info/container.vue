@@ -14,28 +14,28 @@
           <span style="display:inline-block; margin-bottom:10px; fontSize:16px; font-weight:bold">监控信息</span>
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="24">
-              <iframe class="rate_iframe" :src="monitor_rs.cpu"></iframe>
+              <iframe class="rate_iframe" :src="monitor_rs.cpu" />
             </el-col>
           </el-row>
         </el-card>
         <el-card>
           <el-row type="flex" class="row-bg">
             <el-col :span="24">
-              <iframe class="rate_iframe" :src="monitor_rs.memory"></iframe>
+              <iframe class="rate_iframe" :src="monitor_rs.memory" />
             </el-col>
           </el-row>
         </el-card>
         <el-card>
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="24">
-              <iframe class="rate_iframe" :src="monitor_rs.fs"></iframe>
+              <iframe class="rate_iframe" :src="monitor_rs.fs" />
             </el-col>
           </el-row>
         </el-card>
         <el-card>
           <el-row>
             <el-col :span="24">
-              <iframe class="IO_iframe" :src="monitor_rs.network"></iframe>
+              <iframe class="IO_iframe" :src="monitor_rs.network" />
             </el-col>
           </el-row>
         </el-card>
@@ -78,160 +78,156 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { getMonitorInfo } from "@/utils/getResource";
-import JsonEditor from "@/components/JsonEditor";
+import { mapGetters } from 'vuex'
+import { getMonitorInfo } from '@/utils/getResource'
+import JsonEditor from '@/components/JsonEditor'
 import { getResource } from '@/api/kubernetes'
 
 export default {
-  name: "containerInfo",
+  name: 'ContainerInfo',
   components: { JsonEditor },
   data() {
     return {
       tableKey: 0,
       list: null,
-      activeTab: "activity",
-      key: "",
+      activeTab: 'activity',
+      key: '',
       monitor_rs: {},
-      node: "",
-      objectName: "link",
-      viewerName: "Pod",
-      nodeName: "",
-      podList: "",
-      listQuery: "",
-      listLoading: "",
-      columns: "",
+      node: '',
+      objectName: 'link',
+      viewerName: 'Pod',
+      nodeName: '',
+      podList: '',
+      listQuery: '',
+      listLoading: '',
+      columns: '',
       value: {},
-      tabName: "",
-      table_kind: "table",
-      frontend_kind: "Frontend",
-      resourceName: "",
-      namespace: "kube-system"
-    };
+      tabName: '',
+      table_kind: 'table',
+      frontend_kind: 'doslab.io.Frontend',
+      resourceName: '',
+      namespace: 'kube-system'
+    }
   },
   computed: {
-    ...mapGetters(["name", "avatar", "roles"])
+    ...mapGetters(['name', 'avatar', 'roles'])
   },
   created() {
-    this.resourceName = this.$route.query.name;
-    this.nodeName = this.$route.query.nodeName;
-    this.tabName = this.$route.query.tabName;
-    this.outTabName = this.$route.query.outTabName;
-    this.namespace = this.$route.query.namespace;
-
-    console.log(this.tabName)
+    this.resourceName = this.$route.query.name
+    this.nodeName = this.$route.query.nodeName
+    this.tabName = this.$route.query.tabName
+    this.outTabName = this.$route.query.outTabName
+    this.namespace = this.$route.query.namespace
 
     this.monitor_rs = getMonitorInfo(
       this.outTabName,
       this.nodeName,
       this.resourceName
-    );
+    )
 
-    console.log(this.monitor_rs)
-
-    getResource({name: this.resourceName, kind: this.tabName, namespace: this.namespace }).then(response => {
-      if (this.validateRes(response) == 1) {
-        this.listLoading = false;
+    getResource({ name: this.resourceName, kind: this.tabName, namespace: this.namespace }).then(response => {
+      if (this.validateRes(response) === 1) {
+        this.listLoading = false
         this.value = response.data
       }
-    });
+    })
   },
   mounted() {},
   methods: {
     validateRes(res) {
-      if (res.code == 20000) {
-        return 1;
+      if (res.code === 20000) {
+        return 1
       } else {
         this.$notify({
-          title: "error",
+          title: 'error',
           message: res.data,
-          type: "warning",
+          type: 'warning',
           duration: 3000
-        });
-        return 0;
+        })
+        return 0
       }
     },
 
     getList() {
-      this.listLoading = true;
+      this.listLoading = true
     },
     handleFilter() {
-      this.listQuery.pageNum = 1;
-      this.getList();
+      this.listQuery.pageNum = 1
+      this.getList()
     },
     sortChange(data) {
-      const { prop, order } = data;
-      if (prop === "id") {
-        this.sortByID(order);
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
       }
     },
     sortByID(order) {
-      this.handleFilter();
+      this.handleFilter()
     },
     getInputValue(scope, longKey) {
-      if (JSON.stringify(scope) == "{}") {
-        return "";
+      if (JSON.stringify(scope) === '{}') {
+        return ''
       }
       if (
-        longKey == "" ||
-        longKey == undefined ||
-        longKey == null ||
+        longKey === '' ||
+        longKey === undefined ||
+        longKey === null ||
         !longKey
       ) {
-        return "";
+        return ''
       }
-      if (longKey.indexOf(".") < 0) {
-        return scope[longKey];
+      if (longKey.indexOf('.') < 0) {
+        return scope[longKey]
       }
-      var keys = longKey.split(".");
-      var res = scope;
+      var keys = longKey.split('.')
+      var res = scope
       keys.forEach(element => {
-        if (element.indexOf("[") > 0) {
-          res = res[element.substring(0, element.indexOf("["))];
+        if (element.indexOf('[') > 0) {
+          res = res[element.substring(0, element.indexOf('['))]
           res =
             res[
               parseInt(
                 element.substring(
-                  element.indexOf("[") + 1,
-                  element.indexOf("]")
+                  element.indexOf('[') + 1,
+                  element.indexOf(']')
                 )
               )
-            ];
+            ]
         } else {
-          res = res[element];
+          res = res[element]
         }
-      });
-      //console.log(res)
-      return res;
+      })
+      // console.log(res)
+      return res
     },
     updateInputValue(scope, longKey, event) {
-      if (longKey.indexOf(".") < 0) {
-        scope[longKey] = event;
-        return;
+      if (longKey.indexOf('.') < 0) {
+        scope[longKey] = event
+        return
       }
-      var keys = longKey.split(".");
-      var obj = scope;
+      var keys = longKey.split('.')
+      var obj = scope
       for (var i = 0; i < keys.length - 1; i++) {
-        var element = keys[i];
-        if (element.indexOf("[") > 0) {
-          obj = obj[element.substring(0, element.indexOf("["))];
+        var element = keys[i]
+        if (element.indexOf('[') > 0) {
+          obj = obj[element.substring(0, element.indexOf('['))]
           obj =
             obj[
               parseInt(
                 element.substring(
-                  element.indexOf("[") + 1,
-                  element.indexOf("]")
+                  element.indexOf('[') + 1,
+                  element.indexOf(']')
                 )
               )
-            ];
+            ]
         } else {
-          obj = obj[element];
+          obj = obj[element]
         }
       }
-      obj[keys[keys.length - 1]] = event;
+      obj[keys[keys.length - 1]] = event
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
 .iframe {
