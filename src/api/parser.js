@@ -1,4 +1,26 @@
-export function getInputValue(scope, longKey) {
+export function getInputValue(scope, key) {
+  if (JSON.stringify(scope) === '{}' || !key) {
+    return ''
+  }
+  var value = ''
+  var strArry = key.split('+')
+  for (let i = 0; i < strArry.length; i++) {
+    var longKey = strArry[i]
+    if (strArry.length === 2) {
+      var v = getValue(scope, longKey)
+      var k = v.indexOf('/')
+      if (k !== -1) {
+        value = value + '.' + v.substring(0, k)
+      } else {
+        value = value + '.' + v
+      }
+    } else {
+      value = value + '.' + getValue(scope, longKey)
+    }
+  }
+  return value.substring(1)
+}
+export function getValue(scope, longKey) {
   if (JSON.stringify(scope) === '{}' || !longKey) {
     return ''
   }
