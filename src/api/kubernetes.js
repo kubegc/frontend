@@ -49,12 +49,11 @@ export function getMeta(params) {
 }
 
 export function getScheduleData(data) {
-return request({
+  return request({
     url: 'mcmf/solveBase',
     method: 'post',
     data
   })
-
 }
 
 export function getKinds(data) {

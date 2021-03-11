@@ -1,17 +1,31 @@
 <template>
   <div class="app-container" style="height: 100%">
     <el-row :gutter="20">
-      <el-col :span="13" style="margin-bottom:32px;">
+      <el-col :span="13" style="margin-bottom: 32px">
         <el-card>
-          <span style="display:inline-block; margin-bottom:10px; fontSize:16px; font-weight:bold">yaml配置</span>
+          <span
+            style="
+              display: inline-block;
+              margin-bottom: 10px;
+              fontsize: 16px;
+              font-weight: bold;
+            "
+          >yaml配置</span>
           <div class="card-editor-container">
             <json-editor ref="jsonEditor" v-model="value" />
           </div>
         </el-card>
       </el-col>
-      <el-col :span="11" style="margin-bottom:32px;">
+      <el-col :span="11" style="margin-bottom: 32px">
         <el-card>
-          <span style="display:inline-block; margin-bottom:10px; fontSize:16px; font-weight:bold">监控信息</span>
+          <span
+            style="
+              display: inline-block;
+              margin-bottom: 10px;
+              fontsize: 16px;
+              font-weight: bold;
+            "
+          >监控信息</span>
           <el-row type="flex" class="row-bg" justify="center">
             <el-col :span="24">
               <iframe class="rate_iframe" :src="monitor_rs.cpu" />
@@ -84,7 +98,7 @@ import JsonEditor from '@/components/JsonEditor'
 import { getResource } from '@/api/kubernetes'
 
 export default {
-  name: 'ContainerInfo',
+  name: 'Info',
   components: { JsonEditor },
   data() {
     return {
@@ -125,7 +139,11 @@ export default {
       this.resourceName
     )
 
-    getResource({ name: this.resourceName, kind: this.tabName, namespace: this.namespace }).then(response => {
+    getResource({
+      name: this.resourceName,
+      kind: this.tabName,
+      namespace: this.namespace
+    }).then((response) => {
       if (this.validateRes(response) === 1) {
         this.listLoading = false
         this.value = response.data
@@ -181,7 +199,7 @@ export default {
       }
       var keys = longKey.split('.')
       var res = scope
-      keys.forEach(element => {
+      keys.forEach((element) => {
         if (element.indexOf('[') > 0) {
           res = res[element.substring(0, element.indexOf('['))]
           res =
