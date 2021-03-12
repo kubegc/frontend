@@ -1,12 +1,11 @@
 export function getMonitorInfo(url, namespace, name) {
-  let monitor_rsmonitor_rs = {
-    'cpu': prefix + '57'
-    'memory': prefix + '65',
-    'fs': prefix + '73',
-    'network': prefix + '63'
-  }
-  
-  return monitor_rs
+  // let monitor_rsmonitor_rs = {
+  //   'cpu': prefix + '57'
+  //   'memory': prefix + '65',
+  //   'fs': prefix + '73',
+  //   'network': prefix + '63'
+  // }
+  return ''
 }
 
 export function getGrafanaLink() {
