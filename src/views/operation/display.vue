@@ -3,7 +3,7 @@
     <displayItem
       v-for="speedup in speedups"
       :speedup="speedup"
-      :index= "speedup.index"
+      :index="speedup.index"
     />
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
     }
   },
   created() {
-    listResources({ token: 'default', kind: 'Operation' }).then(response => {
+    listResources({ token: 'default', kind: 'Operation', limit: 100 }).then(response => {
       const operationList = response.data.items
       for (var i = 0; i < operationList.length; i++) {
         this.speedups.push({
