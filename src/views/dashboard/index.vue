@@ -16,8 +16,12 @@ export default {
 
     }
   },
-  mounted() {
-    this.sourceLink = getSourceLink(this.$route.meta.source)
+  created() {
+    if (this.$route.meta.source.length > 4 && this.$route.meta.source.substring(0, 4) === 'http') {
+      this.sourceLink = this.$route.meta.source
+    } else {
+      this.sourceLink = getSourceLink(this.$route.meta.source)
+    }
   }
 }
 </script>

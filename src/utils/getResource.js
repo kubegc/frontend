@@ -19,7 +19,7 @@ export function getLokiLink() {
 }
 
 export function getSupersetLink() {
-  return '/r/16'
+  return 'http://124.70.64.232:31003/r/26'
 }
 export function getSourceLink(sourceName) {
   switch (sourceName) {
@@ -30,7 +30,7 @@ export function getSourceLink(sourceName) {
     case 'superset':
       return getSupersetLink()
     default:
-      return document.location.href()
+      return ''
   }
 }
 
