@@ -1,7 +1,5 @@
 <template>
-  <div class="dashboard-container">
     <iframe id="iframe" class="iframe" :src="sourceLink" />
-  </div>
 </template>
 
 <script>
@@ -27,15 +25,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
-}
 .iframe{
   width: 100%;
   height: 1000px;
