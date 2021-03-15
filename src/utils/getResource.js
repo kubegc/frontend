@@ -19,7 +19,7 @@ export function getLokiLink() {
 }
 
 export function getSupersetLink() {
-  return 'http://124.70.64.232:31003/superset/welcome/'
+  return 'http://124.70.64.232:31003/superset/dashboard/1/'
 }
 export function getSourceLink(sourceName) {
   switch (sourceName) {
