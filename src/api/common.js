@@ -93,7 +93,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
   // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
   getResource({
     token,
-    kind: 'doslab.io.Template',
+    kind: 'Template',
     name: kind.toLowerCase() + '-create.' + template,
     namespace: 'default'
   }).then((response) => {
@@ -169,7 +169,7 @@ export function message(message, type) {
 export function createJson(token, kind, createAbout) {
   getResource({
     token,
-    kind: 'doslab.io.Template',
+    kind: 'Template',
     name: kind.toLowerCase() + '-' + 'create',
     namespace: 'default'
   }).then((response) => {
@@ -224,7 +224,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
         updateAbout.updateJsonData = response.data
         getResource({
           token,
-          kind: 'doslab.io.Template',
+          kind: 'Template',
           name: kind.toLowerCase() + '-' + action.toLowerCase(),
           namespace: 'default'
         }).then((response) => {
