@@ -1,18 +1,17 @@
 <template>
   <div class="full-form">
-    <!-- <h3>{{initParams.title}}</h3> -->
     <el-form
       :ref="initParams.formName"
       class="formStyle"
       :rules="initParams.rules"
       :model="initParams.model"
-      label-position="left"
-      label-width="80px"
+      label-position="right"
+      label-width="100px"
       :style="initParams.formStyle"
     >
       <el-form-item
-        v-for="efi in items"
-        :key="efi.key"
+        v-for="(efi, key) in initParams.items"
+        :key="key"
         :label="efi.label"
         :prop="efi.prop"
         :style="efi.itemStyle"
@@ -64,11 +63,6 @@
         {{ initParams.submitButton }}
       </el-button>
       <el-button round @click="resetForm()">{{ initParams.resetButton }}</el-button>
-      <a v-if="initParams.items.length > initParams.expand" style="margin-left: 10px" @click="dropDown">
-        {{ dropDownContent }}
-        <Icon :type="dropDownIcon" />
-      </a>
-      <span>{{ loading }}</span>
     </el-form>
   </div>
 </template>
@@ -89,21 +83,10 @@ export default {
   data() {
     return {
       initParams: {},
-      loading: '',
-      dropDownContent: '收起',
-      dropDownIcon: 'ios-arrow-down',
-      drop: true,
       defaultProps: {
         children: 'children',
         label: 'title'
       }
-    }
-  },
-  computed: {
-    items: function() {
-      return this.initParams.items.filter(function(item) {
-        return item.drop
-      })
     }
   },
   watch: {
@@ -146,20 +129,6 @@ export default {
     resetForm() {
       this.$refs[this.initParams.formName].resetFields()
     },
-    dropDown() {
-      if (this.drop) {
-        this.dropDownContent = '展开'
-        this.dropDownIcon = 'ios-arrow-down'
-      } else {
-        this.dropDownContent = '收起'
-        this.dropDownIcon = 'ios-arrow-up'
-      }
-      for (let i = this.initParams.expand; i < this.initParams.items.length; i++) {
-        this.initParams.items[i].drop = !this.drop
-      }
-      console.log(this.items)
-      this.drop = !this.drop
-    },
     promiseDataSource(itemName) {
       this.loading = 'start' + itemName
       getMockObj(
@@ -186,7 +155,6 @@ export default {
   min-height: 100%;
   height: auto;
   overflow: hidden;
-  margin-bottom: 22px;
 }
 
 .permission-tree {
@@ -218,9 +186,6 @@ export default {
 }
 .el-form-item + .el-form-item {
   margin-left: 10px;
-}
-.el-form-item{
-  margin-bottom: 0;
 }
 
 </style>
