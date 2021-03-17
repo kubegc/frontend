@@ -95,7 +95,7 @@ export default {
     listResources({
       kind: "Template",
       page: 1,
-      limit: 25,
+      limit: 100,
       labels: {},
     }).then((response) => {
       var res = response.data.items;
