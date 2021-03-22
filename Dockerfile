@@ -3,4 +3,4 @@ MAINTAINER ISCAS {lichengzhi99,tangting17,xuyuanjia2017,yangchen19,huyi19,wuheng
 COPY . /home/kubernetes-admin
 WORKDIR /home/kubernetes-admin
 RUN npm install --registry=https://registry.npm.taobao.org
-
+CMD ["npm", "run", "dev"]
