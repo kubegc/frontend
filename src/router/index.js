@@ -51,12 +51,6 @@ export const constantRoutes = [
         component: Layout,
         children: [
           {
-            path: 'welcome',
-            name: 'Welcome',
-            component: () => import('@/views/dashboard/index'),
-            meta: { title: 'welcome', icon: 'dashboard', source: 'grafana' }
-          },
-          {
             path: 'DepAppMarket',
             name: 'DepAppMarket',
             component: () => import('@/views/cards/index'),
