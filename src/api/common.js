@@ -1,8 +1,22 @@
 import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
+/** *****************************
+ *
+ *
+ * response handlers
+ *
+ *
+ ********************************/
 export default function valid(response) {
   return response.data && response.data !== null && response.data !== 404 && response.data.code !== 404
 }
+/** *****************************
+ *
+ *
+ * various values
+ *
+ *
+ ********************************/
 export function dropdownValues(name, values) {
   const res = getResource({ kind: 'ConfigMap', namespace: 'default', name }).then(
     response => {
@@ -13,6 +27,73 @@ export function dropdownValues(name, values) {
   )
   return res
 }
+export function getInputValue(scope, key) {
+  if (JSON.stringify(scope) === '{}' || !key) {
+    return ''
+  }
+  var value = ''
+  var strArry = key.split('+')
+  for (let i = 0; i < strArry.length; i++) {
+    var longKey = strArry[i]
+    if (strArry.length === 2) {
+      var v = getValue(scope, longKey)
+      var k = v.indexOf('/')
+      if (k !== -1) {
+        value = value + '.' + v.substring(0, k)
+      } else {
+        value = value + '.' + v
+      }
+    } else {
+      value = value + '.' + getValue(scope, longKey)
+    }
+  }
+  return value.substring(1)
+}
+export function getValue(scope, longKey) {
+  if (JSON.stringify(scope) === '{}' || !longKey) {
+    return ''
+  }
+  if (longKey.indexOf('.') === -1) {
+    return scope[longKey]
+  }
+  const keys = longKey.split('.')
+  let res = scope
+  keys.every((item) => {
+    if (item.indexOf('[') > 0) {
+      res = res[item.substring(0, item.indexOf('['))]
+      if (res === undefined || res.length === 0) {
+        res = 'unknown'
+        return false
+      } else {
+        res =
+          res[
+            parseInt(
+              item.substring(item.indexOf('[') + 1, item.indexOf(']'))
+            )
+          ]
+        return true
+      }
+    } else {
+      // todo 这里代码有问题，if走不到
+      if (res && res[item] !== undefined) {
+        res = res[item]
+        return true
+      } else {
+        res = '无'
+        return false
+      }
+    }
+  })
+
+  return res
+}
+/** *****************************
+ *
+ *
+ * frontend metadata and data
+ *
+ *
+ ********************************/
 export function frontendMeta(token, kind, tablePage) {
   getResource({
     token,
@@ -88,6 +169,13 @@ export function frontendData(token, kind, listQuery, tablePage) {
     }
   })
 }
+/** *****************************
+ *
+ *
+ * lifecycle
+ *
+ *
+ ********************************/
 export function handleCreateTemplateChange(template, token, kind, createAbout) {
   // 获取创建的模板信息，里面可能会有创建这资源所需要填写的字段的信息
   getResource({
@@ -265,66 +353,6 @@ export function getTags(vueComponentObject) {
       vueComponentObject.label = response.data.spec.label
     }
   })
-}
-export function getInputValue(scope, key) {
-  if (JSON.stringify(scope) === '{}' || !key) {
-    return ''
-  }
-  var value = ''
-  var strArry = key.split('+')
-  for (let i = 0; i < strArry.length; i++) {
-    var longKey = strArry[i]
-    if (strArry.length === 2) {
-      var v = getValue(scope, longKey)
-      var k = v.indexOf('/')
-      if (k !== -1) {
-        value = value + '.' + v.substring(0, k)
-      } else {
-        value = value + '.' + v
-      }
-    } else {
-      value = value + '.' + getValue(scope, longKey)
-    }
-  }
-  return value.substring(1)
-}
-export function getValue(scope, longKey) {
-  if (JSON.stringify(scope) === '{}' || !longKey) {
-    return ''
-  }
-  if (longKey.indexOf('.') === -1) {
-    return scope[longKey]
-  }
-  const keys = longKey.split('.')
-  let res = scope
-  keys.every((item) => {
-    if (item.indexOf('[') > 0) {
-      res = res[item.substring(0, item.indexOf('['))]
-      if (res === undefined || res.length === 0) {
-        res = 'unknown'
-        return false
-      } else {
-        res =
-          res[
-            parseInt(
-              item.substring(item.indexOf('[') + 1, item.indexOf(']'))
-            )
-          ]
-        return true
-      }
-    } else {
-      // todo 这里代码有问题，if走不到
-      if (res && res[item] !== undefined) {
-        res = res[item]
-        return true
-      } else {
-        res = '无'
-        return false
-      }
-    }
-  })
-
-  return res
 }
 export function updateJsonObj(jsonObj, configArray) {
   let jsonObjTemp
