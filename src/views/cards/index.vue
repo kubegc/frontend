@@ -149,7 +149,7 @@
 </template>
 
 <script>
-import { frontend, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags } from '@/api/common'
 import { getInputValue } from '@/api/parser'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
@@ -208,7 +208,7 @@ export default {
   },
   created() {
     this.kind = this.$route.name
-    frontend(this.token, this.kind, this.listQuery, this.tablePage)
+    frontendMeta(this.token, this.kind, this.tablePage)
     frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     getTags(this)
   },

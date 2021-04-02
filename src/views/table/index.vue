@@ -126,7 +126,7 @@
 </template>
 
 <script>
-import { frontend, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
 import { getInputValue } from '@/api/parser'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import DynamicForm from '@/components/DynamicForm'
@@ -191,7 +191,7 @@ export default {
       const value = this.$route.params.value
       this.listQuery.labels[key] = value
     }
-    frontend(this.token, this.kind, this.listQuery, this.tablePage)
+    frontendMeta(this.token, this.kind, this.tablePage)
     frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     // this.pollingId = setInterval(this.getList, 10000)
   },

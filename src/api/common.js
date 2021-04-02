@@ -14,7 +14,7 @@ export function metadata(name) {
   )
   return res
 }
-export function frontend(token, kind, listQuery, tablePage) {
+export function frontendMeta(token, kind, tablePage) {
   getResource({
     token,
     kind: 'Frontend',
