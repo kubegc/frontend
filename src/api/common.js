@@ -3,7 +3,7 @@ import Message from 'element-ui/packages/message/src/main'
 /** *****************************
  *
  *
- * response handlers
+ * common cases
  *
  *
  ********************************/
@@ -17,39 +17,20 @@ export default function valid(response) {
  *
  *
  ********************************/
+// TODO
 export function dropdownValues(name, values) {
-  const res = getResource({ kind: 'ConfigMap', namespace: 'default', name }).then(
-    response => {
+  getResource({
+    kind: 'ConfigMap',
+    namespace: 'default',
+    name })
+    .then(response => {
       if (valid(response)) {
         values = response.data.spec
       }
     }
-  )
-  return res
+    )
 }
-export function getInputValue(scope, key) {
-  if (JSON.stringify(scope) === '{}' || !key) {
-    return ''
-  }
-  var value = ''
-  var strArry = key.split('+')
-  for (let i = 0; i < strArry.length; i++) {
-    var longKey = strArry[i]
-    if (strArry.length === 2) {
-      var v = getValue(scope, longKey)
-      var k = v.indexOf('/')
-      if (k !== -1) {
-        value = value + '.' + v.substring(0, k)
-      } else {
-        value = value + '.' + v
-      }
-    } else {
-      value = value + '.' + getValue(scope, longKey)
-    }
-  }
-  return value.substring(1)
-}
-export function getValue(scope, longKey) {
+export function getInputValue(scope, longKey) {
   if (JSON.stringify(scope) === '{}' || !longKey) {
     return ''
   }
@@ -95,6 +76,7 @@ export function getValue(scope, longKey) {
  *
  ********************************/
 export function frontendMeta(token, kind, tablePage) {
+  // 获取描述元信息
   getResource({
     token,
     kind: 'Frontend',
@@ -105,7 +87,7 @@ export function frontendMeta(token, kind, tablePage) {
       tablePage.desc = response.data.spec.desc
     }
   })
-  // 获取上面搜索表单的信息
+  // 获取搜索表单元信息
   getResource({
     token,
     kind: 'Frontend',
@@ -114,7 +96,6 @@ export function frontendMeta(token, kind, tablePage) {
   }).then((response) => {
     if (valid(response)) {
       tablePage.dynamicFormJson = response.data.spec.data
-      // res.message = this.responseJson.model
       tablePage.dynamicFormVisible = true
     }
   })

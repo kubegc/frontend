@@ -2,23 +2,21 @@
 
   <div class="imageMarket-app-container">
     <div class="app-container" style="margin-bottom: 20px">
-      <el-collapse v-model="tablePage.activeName" accordion>
+      <el-collapse v-model="page.activeName" accordion>
         <el-collapse-item>
           <template slot="title">
             功能描述<i class="header-icon el-icon-info" />
           </template>
-          <div v-text="tablePage.desc" />
+          <div v-text="page.desc" />
         </el-collapse-item>
       </el-collapse>
     </div>
-    <!-- <el-row style="margin-bottom: 5vh">
-      <el-tag style="box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);"><i class="header-icon el-icon-info" /> 功能描述：{{ tablePage.desc }}</el-tag>
-    </el-row> -->
+
   <div class="app-container" style="margin-bottom: 20px">
       <el-row>
         <dynamic-form
-          v-if="tablePage.dynamicFormVisible"
-          :form-data="tablePage.dynamicFormJson"
+          v-if="page.dynamicFormVisible"
+          :form-data="page.dynamicFormJson"
           :kind="kind"
           @watchSearch="search($event)"
         />
@@ -45,11 +43,11 @@
       <el-row :gutter="10">
         <el-col :span="leftSpan" style="transition: all 0.28s;">
           <el-row
-            v-loading="tablePage.listLoading"
+            v-loading="page.listLoading"
             :gutter="leftGutter"
           >
             <el-col
-              v-for="(item, index) in tablePage.tableData"
+              v-for="(item, index) in page.tableData"
               :key="index"
               style="cursor: pointer"
               :span="6"
@@ -86,16 +84,16 @@
             <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
               <el-row>
                 <el-form>
-                  <el-form-item v-for="(labelItem, key) in tablePage.tableColumns" :key="key" :label="labelItem.label">
+                  <el-form-item v-for="(labelItem, key) in page.tableColumns" :key="key" :label="labelItem.label">
                     <el-select
                       v-if="labelItem.kind === 'action'"
                       v-model="detailItem.val"
                       size="mini"
                       placeholder="请选择"
-                      @change="handleActionChange($event, detailItem.json, token, kind, listQuery, tablePage, updateAbout)"
+                      @change="handleActionChange($event, detailItem.json, token, kind, listQuery, page, updateAbout)"
                     >
                       <el-option
-                        v-for="i in tablePage.actions"
+                        v-for="i in page.actions"
                         :key="i.key"
                         :label="i.key"
                         :value="i.type"
@@ -114,9 +112,9 @@
       </el-row>
       <el-row style="margin-top: 30px">
         <pagination
-          v-show="tablePage.tableItemsSize > listQuery.limit"
+          v-show="page.tableItemsSize > listQuery.limit"
           :auto-scroll="false"
-          :total="tablePage.tableItemsSize"
+          :total="page.tableItemsSize"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
           @pagination="refresh"
@@ -130,7 +128,7 @@
         :create-templates="createAbout.createTemplates"
         :form-data="createAbout.createFormConfig"
         @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-        @action="create(token, kind, listQuery, tablePage, createAbout)"
+        @action="create(token, kind, listQuery, page, createAbout)"
         @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
       />
       <JsonDialog
@@ -141,7 +139,7 @@
         :json-file-obj="updateAbout.updateJsonData"
         :form-data="updateAbout.updateFormConfig"
         @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperation(token, kind, listQuery, tablePage, updateAbout)"
+        @action="applyOperation(token, kind, listQuery, page, updateAbout)"
       />
   </div>
   </div>
@@ -165,7 +163,7 @@ export default {
         labels: {}
       },
       createTemplate: {},
-      tablePage: {
+      page: {
         desc: '',
         // 查询表单
         dynamicFormJson: {},
@@ -207,8 +205,8 @@ export default {
   },
   created() {
     this.kind = this.$route.name
-    frontendMeta(this.token, this.kind, this.tablePage)
-    frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+    frontendMeta(this.token, this.kind, this.page)
+    frontendData(this.token, this.kind, this.listQuery, this.page)
     getTags(this)
   },
   computed: {
@@ -222,10 +220,10 @@ export default {
       }else {
         this.listQuery.labels[this.label] = this.chosenRadioName
       }
-      frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+      frontendData(this.token, this.kind, this.listQuery, this.page)
     },
     refresh() {
-      frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+      frontendData(this.token, this.kind, this.listQuery, this.page)
     },
     handleRadioClick(tag) {
       if (tag === '所有') {
