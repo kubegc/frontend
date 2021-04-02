@@ -147,7 +147,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags, getInputValue } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags, getTextValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
 import DynamicForm from '@/components/DynamicForm'
@@ -237,7 +237,7 @@ export default {
     create,
     applyOperation,
     createJson,
-    getInputValue,
+    getInputValue: getTextValue,
     handleActionChange,
     showDetail(detailItem) {
       if (!this.detailItem.json || this.detailItem.json.metadata.name === detailItem.json.metadata.name) {

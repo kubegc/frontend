@@ -1,5 +1,6 @@
 import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
+import { push } from 'echarts/src/component/dataZoom/history'
 /** *****************************
  *
  *
@@ -30,24 +31,20 @@ export function dropdownValues(name, values) {
     }
     )
 }
-export function getInputValue(scope, longKey) {
+export function getTextValue(scope, longKey) {
   if (JSON.stringify(scope) === '{}' || !longKey) {
-    return ''
+    return '无'
   }
-  if (longKey.indexOf('.') === -1) {
-    return scope[longKey]
-  }
-  const keys = longKey.split('.')
-  let res = scope
-  keys.every((item) => {
+  let result = scope
+  longKey.split('.').every((item) => {
     if (item.indexOf('[') > 0) {
-      res = res[item.substring(0, item.indexOf('['))]
-      if (res === undefined || res.length === 0) {
-        res = 'unknown'
+      result = result[item.substring(0, item.indexOf('['))]
+      if (result === undefined || result.length === 0) {
+        result = '无'
         return false
       } else {
-        res =
-          res[
+        result =
+          result[
             parseInt(
               item.substring(item.indexOf('[') + 1, item.indexOf(']'))
             )
@@ -55,18 +52,28 @@ export function getInputValue(scope, longKey) {
         return true
       }
     } else {
-      // todo 这里代码有问题，if走不到
-      if (res && res[item] !== undefined) {
-        res = res[item]
+      if (result && result[item] !== undefined) {
+        result = result[item]
         return true
       } else {
-        res = '无'
+        result = '无'
         return false
       }
     }
   })
-
-  return res
+  if (result instanceof Object || result instanceof Array) {
+    const objResult = new Set()
+    for (const key in result) {
+      if (result[key] === '') {
+        continue
+      }
+      objResult.add(result[key])
+    }
+    console.log(objResult)
+    return objResult
+  } else {
+    return result
+  }
 }
 /** *****************************
  *

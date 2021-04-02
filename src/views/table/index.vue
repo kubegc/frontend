@@ -49,28 +49,42 @@
           :label="item.label"
         >
           <template slot-scope="scope">
+            <!-- tag -->
+            <div v-if="item.kind === 'tag'">
+              <el-row  v-for="(tag, i) in getTextValue(scope.row.json, item.row)" :key="i" >
+                <el-tooltip :content="JSON.stringify(tag)"><el-tag> {{ tag }} </el-tag></el-tooltip>
+              </el-row>
+            </div>
+            <!-- internalLink -->
             <router-link
               v-if="item.kind === 'internalLink'"
               :to="{
-                name: item.link.indexOf('@') === -1 ? item.link : getInputValue(scope.row.json, item.link.substring(1)),
+                name: item.link.indexOf('@') === -1 ? item.link : getTextValue(scope.row.json, item.link.substring(1)),
                 params: {
                   key: item.tag,
-                  value: item.tag ? getInputValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1)) : undefined
+                  value: item.tag ? getTextValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1)) : undefined
                 }
               }"
               class="link"
             >
-              <el-link type="primary">{{ item.row.indexOf('@') === -1 ? getInputValue(scope.row.json, item.row) : item.label }}</el-link>
+              <el-link type="primary">{{
+                  item.row.indexOf('@') === -1 ? getTextValue(scope.row.json, item.row) : item.label
+                }}</el-link>
             </router-link>
-            <el-link v-if="item.kind === 'externalLink'" type="primary" :href="getInputValue(scope.row.json, item.row)">{{ getInputValue(scope.row.json, item.row) }}</el-link>
+            <!-- externalLink -->
+            <el-link v-if="item.kind === 'externalLink'" type="primary" :href="getTextValue(scope.row.json, item.row)">{{
+                getTextValue(scope.row.json, item.row)
+              }}</el-link>
             <span v-if="item.kind === undefined">{{
-              getInputValue(scope.row.json, item.row)
-            }}</span>
+                getTextValue(scope.row.json, item.row)
+              }}</span>
+            <!-- terminal -->
             <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)" target="_blank">
               <svg-icon
                 icon-class="pc"
               />
             </el-link>
+            <!-- action -->
             <el-select
               v-if="item.kind === 'action'"
               v-model="scope.row.val"
@@ -122,7 +136,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getInputValue } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTextValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import DynamicForm from '@/components/DynamicForm'
 import JsonDialog from '@/components/JsonDialog'
@@ -198,7 +212,7 @@ export default {
       const len = params.length
       let addr = item.link
       for (let i = 0; i < len; i++) {
-        const currParam = this.getInputValue(json, params[i])
+        const currParam = this.getTextValue(json, params[i])
         addr = addr.replace('{' + (i + 1) + '}', currParam)
       }
       return addr
@@ -218,7 +232,7 @@ export default {
     createJson,
     // 用于更新的 action 提交
     applyOperation,
-    getInputValue
+    getTextValue
   }
 }
 </script>
