@@ -2,7 +2,7 @@ import { createResource, deleteResource, getResource, listResources, updateResou
 import { updateJsonObj } from '@/api/parser'
 import Message from 'element-ui/packages/message/src/main'
 export default function valid(response) {
-  return response.data && response.data !== null && response.data !== 404 && response.data.code !== 404
+  return response && response.data && response.data !== null && response.data !== 404 && response.data.code !== 404
 }
 export function metadata(name) {
   const res = getResource({ kind: 'Metadata', namespace: 'default', name }).then(
@@ -182,6 +182,10 @@ export function createJson(token, kind, createAbout) {
         createAbout.ifJsonEditorForCreate = true
         createAbout.createJsonPattern = response.data
       }
+      createAbout.createDialogVisible = true
+    } else {
+      createAbout.ifJsonEditorForCreate = true
+      createAbout.createJsonPattern = {}
       createAbout.createDialogVisible = true
     }
   })

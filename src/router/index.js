@@ -67,6 +67,11 @@ export const constantRoutes = [
             name: 'routesView',
             component: () => import('@/views/routesOperation/index'),
             meta: { title: 'routesView', icon: 'resources' }
+          },
+          {
+            path: 'py',
+            component: () => import('@/views/py/index'),
+            meta: { title: 'python', icon: 'resources' }
           }]
       }
     ]
