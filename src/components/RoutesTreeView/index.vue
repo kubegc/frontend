@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { metadata } from '@/api/common'
+import { dropdownValues } from '@/api/common'
 import JsonEditor from '@/components/JsonEditorSpecial/index'
 export default {
   name: 'RoutesTreeView',
@@ -113,9 +113,7 @@ export default {
   created() {
     const routes = this.value.spec.routes
     this.treeData = this.generateTreeData(routes)
-    metadata('icons').then((res) => {
-      this.icons = res
-    })
+    dropdownValues('icons', this.icons)
   },
   methods: {
     generateTreeData(routes, parent) {

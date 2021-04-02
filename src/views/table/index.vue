@@ -54,10 +54,6 @@
               :to="{
                 name: item.link.indexOf('@') === -1 ? item.link : getInputValue(scope.row.json, item.link.substring(1)),
                 params: {
-                  // tabName: tabName,
-                  // name: getInputValue(scope.row.json, item.row),
-                  // nodeName: scope.row.json.spec.nodeName,
-                  // namespace: scope.row.json.metadata.namespace,
                   key: item.tag,
                   value: item.tag ? getInputValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1)) : undefined
                 }
@@ -126,14 +122,12 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange } from '@/api/common'
-import { getInputValue } from '@/api/parser'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getInputValue } from '@/api/common'
+import Pagination from '@/components/Pagination'
 import DynamicForm from '@/components/DynamicForm'
-import { mapGetters } from 'vuex'
 import JsonDialog from '@/components/JsonDialog'
+import { mapGetters } from 'vuex'
 export default {
-  name: 'DynamicTable',
   components: { JsonDialog, Pagination, DynamicForm },
   data() {
     return {
@@ -186,8 +180,15 @@ export default {
   },
   created() {
     this.kind = this.$route.name // 该资源的名字
-    frontendMeta(this.token, this.kind, this.tablePage)
-    frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+    frontendMeta(
+      this.token,
+      this.kind,
+      this.tablePage)
+    frontendData(
+      this.token,
+      this.kind,
+      this.listQuery,
+      this.tablePage)
     // this.pollingId = setInterval(this.getList, 10000)
   },
 

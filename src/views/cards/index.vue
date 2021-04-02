@@ -149,8 +149,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags } from '@/api/common'
-import { getInputValue } from '@/api/parser'
+import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTags, getInputValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
 import DynamicForm from '@/components/DynamicForm'
