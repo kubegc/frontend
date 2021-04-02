@@ -4,11 +4,20 @@
       <el-col :span="18" :offset="3">
         <el-card>
           <el-col :span="18">
-            <el-form :model="jsonObj">
+            <el-form :model="jsonObj" label-position="top">
               <el-form-item label="配置1"><el-input v-model="jsonObj.conf1"/></el-form-item>
               <el-form-item label="配置2"><el-input v-model="jsonObj.conf2"/></el-form-item>
               <el-form-item label="配置3"><el-input v-model="jsonObj.conf3"/></el-form-item>
               <el-form-item label="配置4"><el-input v-model="jsonObj.conf4"/></el-form-item>
+              <el-form-item label="起止时间日期">
+                <el-date-picker
+                  v-model="jsonObj.time"
+                  type="datetimerange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                />
+              </el-form-item>
               <el-form-item><el-button type="primary" size="small" @click="save">保存配置</el-button></el-form-item>
             </el-form>
           </el-col>
@@ -24,7 +33,6 @@
                   :on-change="handleSelect"
                 >
                   <el-button type="primary" size="small">载入配置</el-button>
-                  <div slot="tip" class="el-upload__tip">上传json文件</div>
                 </el-upload>
               </el-form-item>
               <el-form-item><el-button type="success" size="small">运行程序</el-button></el-form-item>
@@ -61,7 +69,7 @@ export default {
       saveAs(blob, 'config.json')
     }
   }
-}
+} 
 </script>
 
 <style scoped>
