@@ -227,13 +227,20 @@ export default {
     updateTestcase() {
       this.dialogTableVisible = false
       var res = this.toRawJson(this.json)
-      updateJsonData({
-        operator: 'update',
-        json: JSON.parse(res),
-        kind: this.kind
-      }).then(response => {
-        console.log(response.code)
-      })
+
+       updateResource({ json: JSON.parse(res) }).then(
+        response => {
+           console.log(response.code)
+        }
+      )
+
+      // updateJsonData({
+      //   operator: 'update',
+      //   json: JSON.parse(res),
+      //   kind: this.kind
+      // }).then(response => {
+      //   console.log(response.code)
+      // })
     },
 
     toRawJson(val) {

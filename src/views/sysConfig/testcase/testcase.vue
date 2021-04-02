@@ -61,7 +61,7 @@ export default {
     console.log(this.$route)
     getResource({
       kind: this.frontend_kind,
-      name: this.catalog_kind + '-' + this.$route.name,
+      name: this.catalog_kind + '-' + this.$route.meta.name,
       namespace: this.namespace
     }).then(response => {
       if (this.validateRes(response) == 1) {

@@ -54,7 +54,7 @@ export default {
         desc: ''
       },
       jsonString: {},
-      cloud_kind: 'AliyunECS',
+      cloud_kind: 'AliyunVM',
       resTemp: [],
       requestPara: {},
       id: '',
@@ -63,7 +63,7 @@ export default {
   },
   mounted() {
     listResources({
-      kind: 'Template',
+      kind: 'Api',
       page: 1,
       limit: 1000,
       labels: {

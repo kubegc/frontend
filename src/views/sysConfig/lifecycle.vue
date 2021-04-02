@@ -175,7 +175,7 @@ export default {
 
         getResource({
           kind: this.frontend_kind,
-          name: this.api_kind + '-' + this.activeName,
+          name: this.api_kind + '-' + this.activeName.toLowerCase(),
           namespace: this.namespace
         }).then((response) => {
           if (this.validateRes(response) == 1) {
@@ -184,11 +184,12 @@ export default {
             this.version = response.data.spec.data.version
 
             listResources({
-              kind: 'Template',
+              //kind: 'Template',
+              kind:'Api',
               page: 1,
               limit: 1000,
               labels: {
-                type: this.cloud_kind
+                 type: this.activeName
               }
             }).then((response) => {
               if (this.validateRes(response) == 1) {
@@ -231,11 +232,12 @@ export default {
     },
     analyzeTemplete() {
       listResources({
-        kind: 'Template',
+        //kind: 'Template',
+        kind:'Api',
         page: 1,
         limit: 1000,
         labels: {
-          type: this.cloud_kind
+          type: this.activeName
         }
       }).then((response) => {
         if (this.validateRes(response) == 1) {
@@ -250,7 +252,7 @@ export default {
       console.log(tab.name, event)
       getResource({
         kind: this.frontend_kind,
-        name: this.api_kind + '-' + this.activeName,
+        name: this.api_kind + '-' + this.activeName.toLowerCase(),
         namespace: this.namespace
       }).then((response) => {
         this.SDK = response.data.spec.data.git
@@ -267,6 +269,21 @@ export default {
         //   }
         //   console.log(this.value);
         // });
+        listResources({
+              //kind: 'Template',
+              kind:'Api',
+              page: 1,
+              limit: 1000,
+              labels: {
+                 type: this.activeName
+              }
+            }).then((response) => {
+              if (this.validateRes(response) == 1) {
+                // this.value = response.data.items;
+                this.dataTemp = response.data.items
+                // console.log(this.value);
+              }
+            })
       })
     },
     showDialog(index) {
