@@ -186,11 +186,6 @@ export default {
   },
   created() {
     this.kind = this.$route.name // 该资源的名字
-    if (this.$route.params && this.$route.params.key) {
-      const key = this.$route.params.key
-      const value = this.$route.params.value
-      this.listQuery.labels[key] = value
-    }
     frontendMeta(this.token, this.kind, this.tablePage)
     frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     // this.pollingId = setInterval(this.getList, 10000)
