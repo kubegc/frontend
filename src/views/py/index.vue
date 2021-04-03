@@ -27,21 +27,25 @@
                   <div slot="tip" class="el-upload__tip">上传json文件</div>
                 </el-upload>
               </el-form-item>
-              <el-form-item><el-button type="success" size="small">运行程序</el-button></el-form-item>
+              <el-form-item><el-button type="success" size="small" @click="run">运行程序</el-button></el-form-item>
             </el-form>
           </el-col>
         </el-card>
       </el-col>
     </el-row>
+    <el-row>
+      <el-image :src="src" />
+    </el-row>
   </div>
 </template>
 
 <script>
-import { saveAs } from 'file-saver'
+import { execFunc, saveConfig } from '@/api/pypage'
 export default {
   data() {
     return {
-      jsonObj: {}
+      jsonObj: {},
+      src: undefined
     }
   },
   methods: {
@@ -51,14 +55,26 @@ export default {
     handleSelect(file, fileList) {
       const reader = new FileReader()
       reader.onload = () => {
-        console.log(reader.result)
         this.jsonObj = JSON.parse(reader.result)
       }
       reader.readAsText(file.raw)
     },
     save() {
-      const blob = new Blob([JSON.stringify(this.jsonObj, null, 2)], { type: 'application/json;charset=utf-8'})
-      saveAs(blob, 'config.json')
+      saveConfig(this.jsonObj).then(
+        response => {
+          if (response.data === 'success') {
+            console.log('hhhh')
+          }
+        }
+      )
+    },
+    run() {
+      execFunc().then(response => {
+        if (response.data === 'success') {
+          this.src = undefined
+          this.src = 'http://localhost:5000/image'
+        }
+      })
     }
   }
 }
