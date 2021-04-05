@@ -55,7 +55,7 @@ service.interceptors.response.use(
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
       Message({
-        message: '操作失败：',
+        message: '操作失败：' + res.message,
         type: 'error',
         duration: 5 * 1000
       })
