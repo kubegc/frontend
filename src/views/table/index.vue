@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, create, applyOperation, createJson, handleActionChange, getTextValue } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTextValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import DynamicForm from '@/components/DynamicForm'
 import JsonDialog from '@/components/JsonDialog'
@@ -227,7 +227,7 @@ export default {
       frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },
     handleActionChange,
-    create,
+    create: createObject,
     // 获取创建资源的模板信息，models 存有下拉列表的选项数据
     createJson,
     // 用于更新的 action 提交

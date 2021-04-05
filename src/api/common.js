@@ -1,6 +1,6 @@
 import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
-import { push } from 'echarts/src/component/dataZoom/history'
+// eslint-disable-next-line no-unused-vars
 /** *****************************
  *
  *
@@ -9,7 +9,16 @@ import { push } from 'echarts/src/component/dataZoom/history'
  *
  ********************************/
 export default function valid(response) {
-  return response.data && response.data !== null && response.data !== 404 && response.data.code !== 404
+  // eslint-disable-next-line no-prototype-builtins
+  return response != null && response.hasOwnProperty('code') && response.code === 20000
+}
+
+export function message(message, type) {
+  Message({
+    message: message,
+    type: type,
+    duration: 3000
+  })
 }
 /** *****************************
  *
@@ -69,7 +78,6 @@ export function getTextValue(scope, longKey) {
       }
       objResult.add(result[key])
     }
-    console.log(objResult)
     return objResult
   } else {
     return result
@@ -87,7 +95,7 @@ export function frontendMeta(token, kind, tablePage) {
   getResource({
     token,
     kind: 'Frontend',
-    name: 'desc-' + kind.toLowerCase(),
+    name: 'desc-' + kind,
     namespace: 'default'
   }).then((response) => {
     if (valid(response)) {
@@ -98,7 +106,7 @@ export function frontendMeta(token, kind, tablePage) {
   getResource({
     token,
     kind: 'Frontend',
-    name: 'formsearch-' + kind.toLowerCase(),
+    name: 'formsearch-' + kind,
     namespace: 'default'
   }).then((response) => {
     if (valid(response)) {
@@ -123,10 +131,11 @@ export function frontendData(token, kind, listQuery, tablePage) {
       getResource({
         token,
         kind: 'Frontend',
-        name: 'action-' + kind.toLowerCase(),
+        name: 'action-' + kind,
         namespace: 'default'
       }).then((response) => {
         if (valid(response)) {
+          // eslint-disable-next-line no-prototype-builtins
           if (response.hasOwnProperty('data')) {
             tablePage.actions = response.data.spec.data
           } else {
@@ -144,7 +153,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
           getResource({
             token,
             kind: 'Frontend',
-            name: 'table' + '-' + kind.toLowerCase(),
+            name: 'table' + '-' + kind,
             namespace: 'default'
           }).then((response) => {
             if (valid(response)) {
@@ -169,7 +178,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
   getResource({
     token,
     kind: 'doslab.io.Template',
-    name: kind.toLowerCase() + '-create.' + template,
+    name: kind + '-create.' + template,
     namespace: 'default'
   }).then((response) => {
     if (valid(response)) {
@@ -177,6 +186,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
       createAbout.createJsonPattern = response.data.spec.data.template
       // 生成之后就会变成填写字段信息表格的数据来源数组
       createAbout.createFormConfig = []
+      // eslint-disable-next-line no-prototype-builtins
       if (response.hasOwnProperty('data')) {
         createAbout.createFormConfig = response.data.spec.data.values
         for (let i = 0; i < createAbout.createFormConfig.length; i++) {
@@ -191,7 +201,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
     }
   })
 }
-export function create(token, kind, listQuery, tablePage, createAbout) {
+export function createObject(token, kind, listQuery, tablePage, createAbout) {
   // 创建资源的 dialog 需要消失
   createAbout.createDialogVisible = false
   if (!createAbout.ifJsonEditorForCreate) {
@@ -227,25 +237,18 @@ export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
   }).then((response) => {
     if (valid(response)) {
       frontendData(token, kind, listQuery, tablePage)
-      // for (const key in this.list) {
-      //   this.list[key].val = ''
-      // }
       message('更新成功', 'success')
+    } else {
+      message('更新失败', 'error')
     }
   })
 }
-export function message(message, type) {
-  Message({
-    message: message || '操作成功',
-    type: type || 'info',
-    duration: 3000
-  })
-}
+
 export function createJson(token, kind, createAbout) {
   getResource({
     token,
     kind: 'doslab.io.Template',
-    name: kind.toLowerCase() + '-' + 'create',
+    name: kind + '-' + 'create',
     namespace: 'default'
   }).then((response) => {
     if (valid(response)) {
@@ -300,7 +303,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
         getResource({
           token,
           kind: 'doslab.io.Template',
-          name: kind.toLowerCase() + '-' + action.toLowerCase(),
+          name: kind + '-' + action,
           namespace: 'default'
         }).then((response) => {
           if (valid(response)) {
@@ -311,6 +314,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
             // type 是字段的类型
             // value 是这个字段默认的值，bool 是 true, string 是 ''
             updateAbout.updateFormConfig = []
+            // eslint-disable-next-line no-prototype-builtins
             if (response.hasOwnProperty('data')) {
               updateAbout.updateFormConfig = response.data.spec.data.values
               for (let i = 0; i < updateAbout.updateFormConfig.length; i++) {
@@ -334,7 +338,7 @@ export function getTags(vueComponentObject) {
     token: vueComponentObject.token,
     kind: 'Frontend',
     namespace: 'default',
-    name: 'tags-' + vueComponentObject.kind.toLowerCase()
+    name: 'tags-' + vueComponentObject.kind
   }).then(response => {
     if (valid(response)) {
       vueComponentObject.tags = response.data.spec.tags

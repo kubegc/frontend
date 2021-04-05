@@ -58,13 +58,12 @@ export default {
   },
   mounted() {},
   created() {
-    console.log(this.$route)
     getResource({
       kind: this.frontend_kind,
       name: this.catalog_kind + '-' + this.$route.name,
       namespace: this.namespace
     }).then(response => {
-      if (this.validateRes(response) == 1) {
+      if (this.validateRes(response) === 1) {
         this.tabMapOptions = response.data.spec.data.tabMapOptions
         this.activeName = response.data.spec.data.activeName
       }
