@@ -11,7 +11,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-import valid from '@/api/common'
+import validResponse from '@/api/common'
 import VuePipeline from 'vue-pipeline'
 
 import '@/icons' // icon
@@ -29,7 +29,7 @@ import '@/permission' // permission control
 //   const { mockXHR } = require('../mock')
 //   mockXHR()
 // }
-Vue.prototype.$valid = valid
+Vue.prototype.$valid = validResponse
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

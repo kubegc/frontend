@@ -8,11 +8,10 @@ import Message from 'element-ui/packages/message/src/main'
  *
  *
  ********************************/
-export default function valid(response) {
+export default function validResponse(response) {
   // eslint-disable-next-line no-prototype-builtins
   return response != null && response.hasOwnProperty('code') && response.code === 20000
 }
-
 export function message(message, type) {
   Message({
     message: message,
@@ -34,7 +33,7 @@ export function dropdownValues(name, values) {
     namespace: 'default',
     name })
     .then(response => {
-      if (valid(response)) {
+      if (validResponse(response)) {
         values = response.data.spec
       }
     }
@@ -142,7 +141,7 @@ export function frontendMeta(token, kind, tablePage) {
     name: 'desc-' + kind,
     namespace: 'default'
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       tablePage.desc = response.data.spec.desc
     }
   })
@@ -153,7 +152,7 @@ export function frontendMeta(token, kind, tablePage) {
     name: 'formsearch-' + kind,
     namespace: 'default'
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       tablePage.dynamicFormJson = response.data.spec.data
       tablePage.dynamicFormVisible = true
     }
@@ -167,7 +166,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
     page: listQuery.page,
     labels: listQuery.labels
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       tablePage.listLoading = true
       tablePage.tableItems = response.data.items
       tablePage.tableItemsSize = response.data.metadata.totalCount
@@ -178,7 +177,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
         name: 'action-' + kind,
         namespace: 'default'
       }).then((response) => {
-        if (valid(response)) {
+        if (validResponse(response)) {
           // eslint-disable-next-line no-prototype-builtins
           if (response.hasOwnProperty('data')) {
             tablePage.actions = response.data.spec.data
@@ -200,7 +199,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
             name: 'table' + '-' + kind,
             namespace: 'default'
           }).then((response) => {
-            if (valid(response)) {
+            if (validResponse(response)) {
               tablePage.tableColumns = response.data.spec.data
               tablePage.listLoading = false
             }
@@ -215,7 +214,7 @@ export function components(token) {
   getComponents({
     token
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       return response.data
     }
   })
@@ -235,7 +234,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
     name: kind + '-create.' + template,
     namespace: 'default'
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       // 就是创建这个资源的 json 模板
       createAbout.createJsonPattern = response.data.spec.data.template
       // 生成之后就会变成填写字段信息表格的数据来源数组
@@ -269,7 +268,7 @@ export function createObject(token, kind, listQuery, tablePage, createAbout) {
     token,
     json: createAbout.createJsonPattern
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       message('创建成功', 'success')
       frontendData(token, kind, listQuery, tablePage)
       // refresh()
@@ -289,7 +288,7 @@ export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
     token,
     json: updateAbout.updateJsonData
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       frontendData(token, kind, listQuery, tablePage)
       message('更新成功', 'success')
     } else {
@@ -305,7 +304,7 @@ export function createJson(token, kind, createAbout) {
     name: kind + '-' + 'create',
     namespace: 'default'
   }).then((response) => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       // this.customizedAction = true
       if (response.data.spec && response.data.spec.data) {
         createAbout.createTemplates = response.data.spec.data.support
@@ -326,7 +325,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
       name: row.metadata.name,
       namespace: row.metadata.namespace
     }).then((response) => {
-      if (valid(response)) {
+      if (validResponse(response)) {
         updateAbout.updateJsonData = response.data
         updateAbout.ifJsonEditorForUpdate = true
         updateAbout.updateResourceTitle = '更新对象'
@@ -340,7 +339,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
       name: row.metadata.name,
       namespace: row.metadata.namespace
     }).then((response) => {
-      if (valid(response)) {
+      if (validResponse(response)) {
         frontendData(token, kind, listQuery, tablePage)
         message('删除成功', 'success')
       }
@@ -352,7 +351,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
       name: row.metadata.name,
       namespace: row.metadata.namespace
     }).then((response) => {
-      if (valid(response)) {
+      if (validResponse(response)) {
         updateAbout.updateJsonData = response.data
         getResource({
           token,
@@ -360,7 +359,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
           name: kind + '-' + action,
           namespace: 'default'
         }).then((response) => {
-          if (valid(response)) {
+          if (validResponse(response)) {
             updateAbout.updateResourceTitle = response.data.spec.data.key
             updateAbout.ifJsonEditorForUpdate = false
             // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
@@ -394,7 +393,7 @@ export function getTags(vueComponentObject) {
     namespace: 'default',
     name: 'tags-' + vueComponentObject.kind
   }).then(response => {
-    if (valid(response)) {
+    if (validResponse(response)) {
       vueComponentObject.tags = response.data.spec.tags
       vueComponentObject.label = response.data.spec.label
     }

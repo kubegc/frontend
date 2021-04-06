@@ -112,7 +112,6 @@ import {
   getResource,
   updateResource
 } from '@/api/kubernetes'
-import apiAnalysis from '@/views/config/apiAnalysis'
 import editorImage from './components/EditorImage'
 
 export default {
@@ -120,7 +119,6 @@ export default {
   directives: { elDragDialog },
   components: {
     EditableJson,
-    apiAnalysis,
     editorImage
   },
   props: {
