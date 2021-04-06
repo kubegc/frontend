@@ -5,6 +5,7 @@ import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
+import { getComponents } from '@/api/kubernetes'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
@@ -29,8 +30,22 @@ router.beforeEach(async(to, from, next) => {
         if (store.getters.role) {
           if (to.path === '/') {
             next({ path: homepage(store.getters.add_routes) })
+          } else {
+            console.log(from.name)
+            if (to.name) {
+              console.log(to)
+              getComponents({ token: hasToken }).then(response => {
+                console.log(response.data)
+                if (response.data.indexOf(to.name) !== -1) {
+                  next()
+                } else {
+                  this.$message.error('路由不存在，请联系管理员')
+                }
+              })
+            } else {
+              next()
+            }
           }
-          next()
         } else {
           // get user info
           const { role } = await store.dispatch('user/getInfo')

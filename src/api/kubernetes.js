@@ -40,6 +40,19 @@ export function listResources(data) {
   })
 }
 
+export function getComponents(params) {
+  return request({
+    url: '/kube/getComponents',
+    type: 'get',
+    params
+  })
+}
+
+/* ********************************
+ *
+ *Depreacted
+ *
+ * *********************************/
 export function getMeta(params) {
   return request({
     url: '/kube/getMeta',
@@ -54,24 +67,6 @@ export function getScheduleData(data) {
     method: 'post',
     data
   })
-}
-
-export function getKinds(data) {
-  var res = request({
-    url: 'atomic/getKinds',
-    method: 'get',
-    params: data
-  })
-  return res
-}
-
-export function getJsonData(data) {
-  var res = request({
-    url: 'res/query',
-    method: 'get',
-    params: data
-  })
-  return res
 }
 
 export function queryTest(data) {

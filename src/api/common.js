@@ -1,4 +1,4 @@
-import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/kubernetes'
+import { createResource, deleteResource, getResource, listResources, updateResource, getComponents } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
 // eslint-disable-next-line no-unused-vars
 /** *****************************
@@ -80,8 +80,45 @@ export function getTextValue(scope, longKey) {
     }
     return objResult
   } else {
+    if (result === 'Running') {
+      result = '运行中'
+    } else if (result === 'Terminating') {
+      result = '销毁中'
+    } else if (result === 'Pending') {
+      result = '挂起中'
+    } else if (result === 'Succeeded') {
+      result = '执行完成'
+    } else if (result === 'Completed') {
+      result = '执行完成'
+    } else if (result === 'Failed') {
+      result = '执行失败'
+    } else if (result === 'Unknown') {
+      result = '未知状态'
+    }
     return result
   }
+}
+export function getComplexValue(scope, key) {
+  if (JSON.stringify(scope) === '{}' || !key) {
+    return ''
+  }
+  let value = ''
+  const strArry = key.split('+')
+  for (let i = 0; i < strArry.length; i++) {
+    const longKey = strArry[i]
+    if (strArry.length === 2) {
+      const v = getTextValue(scope, longKey)
+      const k = v.indexOf('/')
+      if (k !== -1) {
+        value = value + '.' + v.substring(0, k)
+      } else {
+        value = value + '.' + v
+      }
+    } else {
+      value = value + '.' + getTextValue(scope, longKey)
+    }
+  }
+  return value.substring(1)
 }
 /** *****************************
  *
@@ -163,6 +200,16 @@ export function frontendData(token, kind, listQuery, tablePage) {
           })
         }
       })
+    }
+  })
+}
+
+export function components(token) {
+  getComponents({
+    token
+  }).then((response) => {
+    if (valid(response)) {
+      return response.data
     }
   })
 }

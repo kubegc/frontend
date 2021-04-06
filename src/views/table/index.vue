@@ -57,36 +57,34 @@
             </div>
             <!-- internalLink -->
             <router-link
-              v-if="item.kind === 'internalLink'"
+              v-else-if="item.kind === 'internalLink'"
               :to="{
-                name: item.link.indexOf('@') === -1 ? item.link : getTextValue(scope.row.json, item.link.substring(1)),
+                name: item.link.indexOf('@') === -1 ? item.link : getComplexValue(scope.row.json, item.link.substring(1)),
                 params: {
                   key: item.tag,
-                  value: item.tag ? getTextValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1)) : undefined
+                  value: item.tag ? getComplexValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1)) : undefined
                 }
               }"
-              class="link"
+
             >
               <el-link type="primary">{{
-                  item.row.indexOf('@') === -1 ? getTextValue(scope.row.json, item.row) : item.label
+                  item.row.indexOf('@') === -1 ? getComplexValue(scope.row.json, item.row) : item.label
                 }}</el-link>
             </router-link>
             <!-- externalLink -->
-            <el-link v-if="item.kind === 'externalLink'" type="primary" :href="getTextValue(scope.row.json, item.row)">{{
+            <el-link v-else-if="item.kind === 'externalLink'" type="primary" :href="getTextValue(scope.row.json, item.row)">{{
                 getTextValue(scope.row.json, item.row)
               }}</el-link>
-            <span v-if="item.kind === undefined">{{
-                getTextValue(scope.row.json, item.row)
-              }}</span>
+
             <!-- terminal -->
-            <el-link v-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)" target="_blank">
+            <el-link v-else-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)" target="_blank">
               <svg-icon
                 icon-class="pc"
               />
             </el-link>
             <!-- action -->
             <el-select
-              v-if="item.kind === 'action'"
+              v-else-if="item.kind === 'action'"
               v-model="scope.row.val"
               placeholder="请选择"
               @change="handleActionChange($event, scope.row.json, token, kind, listQuery, tablePage, updateAbout)"
@@ -98,6 +96,9 @@
                 :value="item.type"
               />
             </el-select>
+            <span v-else>{{
+                getTextValue(scope.row.json, item.row)
+              }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -136,7 +137,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTextValue } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTextValue, getComplexValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import DynamicForm from '@/components/DynamicForm'
 import JsonDialog from '@/components/JsonDialog'
@@ -232,7 +233,8 @@ export default {
     createJson,
     // 用于更新的 action 提交
     applyOperation,
-    getTextValue
+    getTextValue,
+    getComplexValue
   }
 }
 </script>
