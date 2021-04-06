@@ -40,6 +40,35 @@ export function dropdownValues(name, values) {
     }
     )
 }
+export function getComplexOrDefValue(scope, longKey, defKey) {
+  const value = getComplexValue(scope, longKey)
+  if (value.startsWith('无') && defKey) {
+    return getTextValue(scope, defKey)
+  }
+  return value
+}
+export function getComplexValue(scope, key) {
+  if (JSON.stringify(scope) === '{}' || !key) {
+    return ''
+  }
+  let value = ''
+  const strAry = key.split('+')
+  for (let i = 0; i < strAry.length; i++) {
+    const longKey = strAry[i]
+    if (strAry.length === 2) {
+      const v = getTextValue(scope, longKey)
+      const k = v.indexOf('/')
+      if (k !== -1) {
+        value = value + '.' + v.substring(0, k)
+      } else {
+        value = value + '.' + v
+      }
+    } else {
+      value = value + '.' + getTextValue(scope, longKey)
+    }
+  }
+  return value.substring(1)
+}
 export function getTextValue(scope, longKey) {
   if (JSON.stringify(scope) === '{}' || !longKey) {
     return '无'
@@ -97,28 +126,6 @@ export function getTextValue(scope, longKey) {
     }
     return result
   }
-}
-export function getComplexValue(scope, key) {
-  if (JSON.stringify(scope) === '{}' || !key) {
-    return ''
-  }
-  let value = ''
-  const strArry = key.split('+')
-  for (let i = 0; i < strArry.length; i++) {
-    const longKey = strArry[i]
-    if (strArry.length === 2) {
-      const v = getTextValue(scope, longKey)
-      const k = v.indexOf('/')
-      if (k !== -1) {
-        value = value + '.' + v.substring(0, k)
-      } else {
-        value = value + '.' + v
-      }
-    } else {
-      value = value + '.' + getTextValue(scope, longKey)
-    }
-  }
-  return value.substring(1)
 }
 /** *****************************
  *

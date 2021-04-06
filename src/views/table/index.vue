@@ -59,16 +59,15 @@
             <router-link
               v-else-if="item.kind === 'internalLink'"
               :to="{
-                name: item.link.indexOf('@') === -1 ? item.link : getComplexValue(scope.row.json, item.link.substring(1)),
+                name: item.link.indexOf('@') === -1 ? item.link : getComplexOrDefValue(scope.row.json, item.link.substring(1), item.def),
                 params: {
                   key: item.tag,
-                  value: item.tag ? getComplexValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1)) : undefined
+                  value: item.tag ? getComplexOrDefValue(scope.row.json, item.row.indexOf('@') === -1 ? item.row : item.row.substring(1), item.def) : undefined
                 }
               }"
-
             >
               <el-link type="primary">{{
-                  item.row.indexOf('@') === -1 ? getComplexValue(scope.row.json, item.row) : item.label
+                  item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : item.label
                 }}</el-link>
             </router-link>
             <!-- externalLink -->
@@ -97,7 +96,7 @@
               />
             </el-select>
             <span v-else>{{
-                getTextValue(scope.row.json, item.row)
+                getComplexOrDefValue(scope.row.json, item.row, item.def)
               }}</span>
           </template>
         </el-table-column>
@@ -137,7 +136,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTextValue, getComplexValue } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTextValue, getComplexOrDefValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import DynamicForm from '@/components/DynamicForm'
 import JsonDialog from '@/components/JsonDialog'
@@ -195,6 +194,11 @@ export default {
   },
   created() {
     this.kind = this.$route.name // 该资源的名字
+    if (this.$route.params && this.$route.params.key) {
+      const key = this.$route.params.key
+      const value = this.$route.params.value
+      this.listQuery.labels[key] = value
+    }
     frontendMeta(
       this.token,
       this.kind,
@@ -234,7 +238,7 @@ export default {
     // 用于更新的 action 提交
     applyOperation,
     getTextValue,
-    getComplexValue
+    getComplexOrDefValue
   }
 }
 </script>

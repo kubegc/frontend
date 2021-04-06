@@ -10,6 +10,11 @@ import { getComponents } from '@/api/kubernetes'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
 
+router.beforeResolve(async(to, from, next) => {
+  console.log(to)
+  next()
+})
+
 router.beforeEach(async(to, from, next) => {
   // start progress bar
   NProgress.start()
@@ -31,11 +36,8 @@ router.beforeEach(async(to, from, next) => {
           if (to.path === '/') {
             next({ path: homepage(store.getters.add_routes) })
           } else {
-            console.log(from.name)
             if (to.name) {
-              console.log(to)
               getComponents({ token: hasToken }).then(response => {
-                console.log(response.data)
                 if (response.data.indexOf(to.name) !== -1) {
                   next()
                 } else {
