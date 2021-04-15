@@ -55,12 +55,6 @@ export const constantRoutes = [
             name: 'DepAppMarket',
             component: () => import('@/views/cards/index'),
             meta: { title: 'dep', icon: 'resources', kind: 'Image' }
-          },
-          {
-            path: 'routesView',
-            name: 'routesView',
-            component: () => import('@/views/routesOperation/index'),
-            meta: { title: 'routesView', icon: 'resources' }
           }]
       }
     ]
