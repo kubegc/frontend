@@ -31,17 +31,17 @@ router.beforeEach(async(to, from, next) => {
           if (to.path === '/') {
             next({ path: homepage(store.getters.add_routes) })
           } else {
-            if (to.name) {
-              getComponents({ token: hasToken }).then(response => {
-                if (response.data.indexOf(to.name) !== -1) {
-                  next()
-                } else {
-                  this.$message.error('路由不存在，请联系管理员')
-                }
-              })
-            } else {
+            // if (to.name) {
+            //   getComponents({ token: hasToken }).then(response => {
+            //     if (response.data.indexOf(to.name) !== -1) {
+            //       next()
+            //     } else {
+            //       this.$message.error('路由不存在，请联系管理员')
+            //     }
+            //   })
+            // } else {
               next()
-            }
+            // }
           }
         } else {
           // get user info

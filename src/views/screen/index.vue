@@ -223,8 +223,8 @@ export default {
     )
   },
   methods: {
-    goin() {
-      location.reload()
+    goto() {
+      this.$router.push({ name: 'Pod' })
     },
     me(i, n) {
       this.f[i + '-' + (n - 1)] = true
