@@ -1,14 +1,16 @@
 <template>
- <div>
-   <el-row v-for="(item, i) in result.layout" :key="i" :gutter="10">
-     <el-col :span="24/item" v-for="n in item">
-<!--       <el-link href="www.baidu.com">-->
-         <div :id="i + '-' + (n - 1)" class="grid-content bg-purple"></div>
-<!--       </el-link>-->
-
-     </el-col>
-   </el-row>
- </div>
+  <div>
+    <el-row v-for="(item, i) in result.layout" :key="i" :gutter="10">
+      <el-col v-for="n in item" :key="i + '-' + (n - 1)" :span="24/item" style="cursor: pointer" @mouseenter.native="me(i, n)" @mouseleave.native="ml(i, n)">
+        <el-card shadow="hover">
+            <div v-if="f[i + '-' + (n - 1)]" slot="header" class="clearfix">
+              <el-button style="float: right; padding: 3px 0" type="text" @click="goto">跳转</el-button>
+            </div>
+          <div :id="i + '-' + (n - 1)" class="grid-content bg-purple" />
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -18,11 +20,11 @@ export default {
   data() {
     return {
       result: {
-        layout: [2,3,2],
+        layout: [2, 3, 2],
         views: {
-          "0-0": {
-            "type": "",
-            "data": {
+          '0-0': {
+            'type': '',
+            'data': {
               xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -36,9 +38,9 @@ export default {
               }]
             }
           },
-          "0-1": {
-            "type": "",
-            "data": {
+          '0-1': {
+            'type': '',
+            'data': {
               legend: {
                 data: ['高度(km)与气温(°C)变化关系']
               },
@@ -60,7 +62,7 @@ export default {
               },
               yAxis: {
                 type: 'category',
-                axisLine: {onZero: false},
+                axisLine: { onZero: false },
                 axisLabel: {
                   formatter: '{value} km'
                 },
@@ -80,14 +82,14 @@ export default {
                     shadowBlur: 10,
                     shadowOffsetY: 8
                   },
-                  data:[15, -50, -56.5, -46.5, -22.1, -2.5, -27.7, -55.7, -76.5]
+                  data: [15, -50, -56.5, -46.5, -22.1, -2.5, -27.7, -55.7, -76.5]
                 }
               ]
             }
           },
-          "1-0": {
-            "type": "",
-            "data": {
+          '1-0': {
+            'type': '',
+            'data': {
               title: {
                 text: '基础雷达图'
               },
@@ -106,12 +108,12 @@ export default {
                   }
                 },
                 indicator: [
-                  { name: '销售（sales）', max: 6500},
-                  { name: '管理（Administration）', max: 16000},
-                  { name: '信息技术（Information Techology）', max: 30000},
-                  { name: '客服（Customer Support）', max: 38000},
-                  { name: '研发（Development）', max: 52000},
-                  { name: '市场（Marketing）', max: 25000}
+                  { name: '销售（sales）', max: 6500 },
+                  { name: '管理（Administration）', max: 16000 },
+                  { name: '信息技术（Information Techology）', max: 30000 },
+                  { name: '客服（Customer Support）', max: 38000 },
+                  { name: '研发（Development）', max: 52000 },
+                  { name: '市场（Marketing）', max: 25000 }
                 ]
               },
               series: [{
@@ -131,9 +133,9 @@ export default {
               }]
             }
           },
-          "1-1": {
-            "type": "",
-            "data": {
+          '1-1': {
+            'type': '',
+            'data': {
               xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -147,9 +149,9 @@ export default {
               }]
             }
           },
-          "1-2": {
-            "type": "",
-            "data": {
+          '1-2': {
+            'type': '',
+            'data': {
               xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -163,9 +165,9 @@ export default {
               }]
             }
           },
-          "2-0": {
-            "type": "",
-            "data": {
+          '2-0': {
+            'type': '',
+            'data': {
               xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -179,9 +181,9 @@ export default {
               }]
             }
           },
-          "2-1": {
-            "type": "",
-            "data": {
+          '2-1': {
+            'type': '',
+            'data': {
               xAxis: {
                 type: 'category',
                 data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -196,30 +198,42 @@ export default {
             }
           }
         }
-      }
+      },
+      f: {}
     }
   },
   mounted() {
     const container = []
-    for(let i = 0; i < this.result.layout.length; i ++){
-      for(let j = 0; j < this.result.layout[i]; j ++){
-       const obj = {}
-       obj.key = i + '-' + j
-       const curr = document.getElementById(i + '-' + j)
-       obj.value = echarts.init(curr)
-       container.push(obj)
+    for (let i = 0; i < this.result.layout.length; i++) {
+      for (let j = 0; j < this.result.layout[i]; j++) {
+        const obj = {}
+        obj.key = i + '-' + j
+        const curr = document.getElementById(i + '-' + j)
+        obj.value = echarts.init(curr)
+        container.push(obj)
       }
     }
-    console.log(container)
+
     this.$nextTick(
       () => {
-        for(let j = 0; j < container.length; j ++){
-          console.log()
+        for (let j = 0; j < container.length; j++) {
           container[j].value.setOption(this.result.views[container[j].key].data)
         }
-
       }
     )
+  },
+  methods: {
+    goin() {
+      location.reload()
+    },
+    me(i, n) {
+      this.f[i + '-' + (n - 1)] = true
+      this.$forceUpdate()
+    },
+    ml(i, n) {
+      this.f[i + '-' + (n - 1)] = false
+      this.$forceUpdate()
+    }
   }
 }
 </script>
@@ -250,4 +264,5 @@ export default {
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
-}</style>
+}
+</style>

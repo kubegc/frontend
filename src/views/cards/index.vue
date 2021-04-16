@@ -12,7 +12,7 @@
       </el-collapse>
     </div>
 
-  <div class="app-container" style="margin-bottom: 20px">
+    <div class="app-container" style="margin-bottom: 20px">
       <el-row>
         <dynamic-form
           v-if="page.dynamicFormVisible"
@@ -141,7 +141,7 @@
         @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
         @action="applyOperation(token, kind, listQuery, page, updateAbout)"
       />
-  </div>
+    </div>
   </div>
 
 </template>
