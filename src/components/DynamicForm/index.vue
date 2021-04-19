@@ -74,10 +74,6 @@
 </template>
 
 <script>
-import {
-  getMockObj
-} from '@/api/kubernetes'
-
 export default {
   name: 'DynamicForm',
   props: {

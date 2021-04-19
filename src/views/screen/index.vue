@@ -1,10 +1,10 @@
 <template>
   <div>
     <el-row v-for="(item, i) in result.layout" :key="i" :gutter="10">
-      <el-col v-for="n in item" :key="i + '-' + (n - 1)" :span="24/item" style="cursor: pointer" @mouseenter.native="me(i, n)" @mouseleave.native="ml(i, n)">
+      <el-col v-for="n in item" :key="i + '-' + (n - 1)" :span="24/item" style="cursor: pointer" @mouseenter.native="enable(i, n)" @mouseleave.native="disable(i, n)">
         <el-card shadow="hover">
             <div v-if="f[i + '-' + (n - 1)]" slot="header" class="clearfix">
-              <el-button style="float: right; padding: 3px 0" type="text" @click="goto">跳转</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="goto">详情</el-button>
             </div>
           <div :id="i + '-' + (n - 1)" class="grid-content bg-purple" />
         </el-card>
@@ -203,21 +203,21 @@ export default {
     }
   },
   mounted() {
-    const container = []
+    const containers = []
     for (let i = 0; i < this.result.layout.length; i++) {
       for (let j = 0; j < this.result.layout[i]; j++) {
         const obj = {}
         obj.key = i + '-' + j
         const curr = document.getElementById(i + '-' + j)
         obj.value = echarts.init(curr)
-        container.push(obj)
+        containers.push(obj)
       }
     }
 
     this.$nextTick(
       () => {
-        for (let j = 0; j < container.length; j++) {
-          container[j].value.setOption(this.result.views[container[j].key].data)
+        for (let k = 0; k < containers.length; k++) {
+          containers[k].value.setOption(this.result.views[containers[k].key].data)
         }
       }
     )
@@ -226,11 +226,11 @@ export default {
     goto() {
       this.$router.push({ name: 'Pod' })
     },
-    me(i, n) {
+    enable(i, n) {
       this.f[i + '-' + (n - 1)] = true
       this.$forceUpdate()
     },
-    ml(i, n) {
+    disable(i, n) {
       this.f[i + '-' + (n - 1)] = false
       this.$forceUpdate()
     }
