@@ -1,6 +1,7 @@
-import { createResource, deleteResource, getResource, listResources, updateResource, getComponents } from '@/api/kubernetes'
+import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
 // eslint-disable-next-line no-unused-vars
+/* eslint-disable */
 /** *****************************
  *
  *

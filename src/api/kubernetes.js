@@ -40,27 +40,6 @@ export function listResources(data) {
   })
 }
 
-export function getComponents(params) {
-  return request({
-    url: '/kube/getComponents',
-    type: 'get',
-    params
-  })
-}
-
-/* ********************************
- *
- *Depreacted
- *
- * *********************************/
-export function getMeta(params) {
-  return request({
-    url: '/kube/getMeta',
-    type: 'get',
-    params
-  })
-}
-
 export function getScheduleData(data) {
   return request({
     url: 'mcmf/solveBase',
@@ -69,20 +48,3 @@ export function getScheduleData(data) {
   })
 }
 
-export function queryTest(data) {
-  var res = request({
-    url: 'http://39.106.40.190:31100/dos-lab/crosscloud/execRequest',
-    method: 'post',
-    data
-  })
-  return res
-}
-
-export function diffResource(data) {
-  var res = request({
-    url: '/kube/diffResource',
-    method: 'post',
-    data
-  })
-  return res
-}
