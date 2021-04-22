@@ -1,4 +1,4 @@
-import { createResource, deleteResource, getResource, listResources, updateResource } from '@/api/kubernetes'
+import { createResource, deleteResource, getResource, listResources, updateResource, getScreen } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
 // eslint-disable-next-line no-unused-vars
 /* eslint-disable */
@@ -217,6 +217,16 @@ export function components(token) {
   }).then((response) => {
     if (validResponse(response)) {
       return response.data
+    }
+  })
+}
+export function screenData(name) {
+  // 获取描述元信息
+  return getScreen({
+    name: name,
+  }).then((response) => {
+    if (validResponse(response)) {
+     return response.data.spec
     }
   })
 }

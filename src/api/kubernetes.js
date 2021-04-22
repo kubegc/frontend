@@ -40,6 +40,14 @@ export function listResources(data) {
   })
 }
 
+export function getScreen(params) {
+  return request({
+    url: '/echart/getScreen',
+    type: 'get',
+    params
+  })
+}
+
 export function getScheduleData(data) {
   return request({
     url: 'mcmf/solveBase',
