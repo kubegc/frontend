@@ -35,7 +35,7 @@
 
       <el-row>
         <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
-          <el-radio-button label="所有"></el-radio-button>
+          <el-radio-button label="所有" />
           <el-radio-button v-for="(item, key) in tags" :key="key" :label="item" />
         </el-radio-group>
       </el-row>
@@ -62,9 +62,13 @@
                     <el-col style="text-align:center">
                       <el-image
                         style="border-radius: 2px;max-height: 80%;max-width: 80%;"
-                        :src="require('../../assets' + (item.json.picture ? '/cards/' + item.json.picture : '/avatar.jpg'))"
+                        :src="item.json.metadata.imageurl"
                         :fit="'fit'"
-                      />
+                      >
+                        <div slot="error">
+                          <i class="el-icon-picture-outline" />
+                        </div>
+                      </el-image>
                     </el-col>
                   </el-row>
 
@@ -104,7 +108,7 @@
                 </el-form>
               </el-row>
               <el-divider v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc">详情</el-divider>
-              <el-tag style="overflow: hidden" v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc"> {{ this.detailItem.json.spec.basic.desc}}</el-tag>
+              <el-tag v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc" style="overflow: hidden"> {{ this.detailItem.json.spec.basic.desc }}</el-tag>
             </el-card>
           </el-col>
         </transition>
@@ -217,7 +221,7 @@ export default {
       this.listQuery.labels = labels
       if (this.chosenRadioName === '所有') {
         this.listQuery.labels[this.label] = ''
-      }else {
+      } else {
         this.listQuery.labels[this.label] = this.chosenRadioName
       }
       frontendData(this.token, this.kind, this.listQuery, this.page)
@@ -269,13 +273,13 @@ export default {
   padding: 10px 20px;
   font-size: 14px;
   //line-height: 1.67;
+
 .el-row{
   .exhibition {
     box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
     0px 3px 6px 0px rgba(0, 0, 0, 0.12),
     0px 5px 12px 4px rgba(0, 0, 0, 0.09);
     margin-top: 30px;
-
   }
 
   .exhibition:focus {

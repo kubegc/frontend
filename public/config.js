@@ -1,3 +1,3 @@
 window.g = {
-    baseURL: 'http://127.0.0.1:30308/kubesys'
+    baseURL: 'http://133.133.135.48:30308/kubesys'
 }
