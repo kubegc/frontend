@@ -36,7 +36,7 @@
       <el-row>
         <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
           <el-radio-button label="所有" />
-          <el-radio-button v-for="(item, key) in tags" :key="key" :label="item" />
+          <el-radio-button v-for="(value, name) in tags" :key="value" :label="name" />
         </el-radio-group>
       </el-row>
 
@@ -229,11 +229,11 @@ export default {
     refresh() {
       frontendData(this.token, this.kind, this.listQuery, this.page)
     },
-    handleRadioClick(tag) {
-      if (tag === '所有') {
-        tag = ''
+    handleRadioClick(name) {
+      if (name === '所有') {
+        name = ''
       }
-      this.listQuery.labels[this.label] = tag
+      this.listQuery.labels[this.label] = this.tags[name]
       this.refresh()
     },
 
