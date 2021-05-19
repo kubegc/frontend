@@ -9,6 +9,15 @@
 - huyi19@otcaix.iscas.ac.cn
 - wuheng@otcaix.iscas.ac.cn
 
+
+# Coomands
+
+```
+npm install
+npm run build:prod
+```
+
+
 # Plugins
 
 - 镜像插件
@@ -18,12 +27,12 @@
   - [物理机web访问]：docker run -d --restart=always -p 31051:2222 registry.cn-beijing.aliyuncs.com/dosproj/webssh2:v0.3.1-amd64
   - [容器Web访问]: docker run -d --restart=always -p 31052:31052 -e "host=39.106.40.190:" -e "token=xxx" registry.cn-beijing.aliyuncs.com/dosproj/container-terminal:v1.1.0-amd64
 
-# Commands
-
-- http://39.106.40.190:5002/?image=tomcat
-
 # RoadMap
 
 - 2021.3: Support Table and Blcok
 - 2021.4：Support Wizard
 - 2021.5：Support Template
+
+# Others
+
+- http://39.106.40.190:5002/?image=tomcat

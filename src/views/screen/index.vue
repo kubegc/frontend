@@ -90,7 +90,7 @@ export default {
 }
 .grid-content {
   border-radius: 4px;
-  min-height: 150px;
+  min-height: 200px;
   max-height: 300px;
 }
 .row-bg {
