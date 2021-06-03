@@ -1,0 +1,5 @@
+version="3.0.0"
+
+docker build . -t registry.cn-beijing.aliyuncs.com/doslab/kubernetes-dashboard:v$version-arm64
+
+docker push registry.cn-beijing.aliyuncs.com/doslab/kubernetes-dashboard:v$version-arm64
