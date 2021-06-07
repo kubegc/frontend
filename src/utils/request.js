@@ -2,9 +2,6 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 
-if (process.env.NODE_ENV === 'production') {
-  window.g.baseURL = process.env.VUE_APP_BASE_API
-}
 // create an axios instance
 const service = axios.create({
   baseURL: window.g.baseURL, // url = base url + request url

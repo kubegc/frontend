@@ -292,6 +292,8 @@ export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
   //   this.updateJsonData = JSON.parse(this.updateJsonData)
   // }
   if (!updateAbout.ifJsonEditorForUpdate) {
+    console.log(JSON.stringify(updateAbout.updateJsonData))
+    console.log(JSON.stringify(updateAbout.updateFormConfig))
     updateJsonObj(updateAbout.updateJsonData, updateAbout.updateFormConfig)
   }
   // this.createJsonData = JSON.parse(this.createJsonData);
@@ -378,6 +380,9 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
             // type 是字段的类型
             // value 是这个字段默认的值，bool 是 true, string 是 ''
             updateAbout.updateFormConfig = []
+            if (response.data.spec.data.template.hasOwnProperty("operator")) {
+              updateAbout.updateJsonData["operator"] = response.data.spec.data.template.operator
+            }
             // eslint-disable-next-line no-prototype-builtins
             if (response.hasOwnProperty('data')) {
               updateAbout.updateFormConfig = response.data.spec.data.values
