@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-wizzard"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "页面配置可根据页面样式模板，选取Kubernetes注册的资源，自动生成页面并放置到导航和菜单栏中。",
+		"type": "description"
+	}
+}

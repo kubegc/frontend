@@ -1,0 +1,17 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: datas.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .metadata.creationTimestamp
+    name: created
+    type: string
+  group: doslab.io
+  names:
+    kind: Data
+    plural: datas
+    singular: data
+  scope: Namespaced
+  version: v1

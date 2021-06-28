@@ -1,0 +1,39 @@
+{
+	"metadata":{
+		"name":"service-inner",
+		"namespace":"default"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"title":"运维服务",
+				"content":[
+					{
+						"address":"http://39.106.124.113:31001/graph",
+						"name":"prometheus"
+					},
+					{
+						"address":"http://39.106.124.113:31000/d/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=5s",
+						"name":"grafana"
+					}
+				]
+			},
+			{
+				"title":"DevOps服务",
+				"content":[
+					{
+						"address":"http://39.106.124.113:31001/graph",
+						"name":"jekins"
+					},
+                                        {
+                                                "address":"https://39.106.124.113:31763/login (admin/argocd-server-b54756f69-p7scx）",
+                                                "name":"argo"
+                                        }
+				]
+			}
+		],
+		"type":"service"
+	}
+}

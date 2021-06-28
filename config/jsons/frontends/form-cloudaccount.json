@@ -1,0 +1,78 @@
+---
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "form-cloudaccount",
+        "namespace": "default"
+    },
+    "spec": {
+      "data": {
+            "formName": "",
+            "title": "",
+            "expand": 0,
+            "rules":{
+                "name":[{ required: true, message: '必须要填写账户名', trigger: 'change' }],
+                "provider":[{ required: true, message: '请选择云提供商', trigger: 'change' }]
+            },
+            "model":{
+                name:"",
+                provider:""
+            },
+            "formStyle": {
+            },
+            "items":[
+                { "type": "input", "key": 1, "label": "账户名:", "ph": "", "prop": "name","drop":true, itemStyle: ""},
+                { "type": "radio-group", "key": 2, "label": "云提供商:", "ph": "", "prop": "provider","drop":true, itemStyle: ""}
+            ],
+            "datasource":[
+                {"key": 1, 
+                 "label":"Alibaba Cloud", 
+                 "value":"aliyunvm",
+                 "logo":"aliyun.jpg", 
+                 "account":[
+                    {"key":3, "label":"API Key:", "ph": "", "prop": "accessKey", "accessKey":"", "rule": [{ required: true, message: '请填写apikey', trigger: 'change' }]},
+                    {"key":4, "label":"Secret Key", "ph": "", "prop": "secretKey", "secretKey":"", "rule": [{ required: true, message: '请填写密钥', trigger: 'change' }]},
+                    {"key":5, "label":"Zone", "ph": "", "prop": "zone", "zone":"", "rule": [{ required: true, message: '请填写区域', trigger: 'change' }]}
+                ]},
+                {"key": 2, 
+                 "label":"Amazon Web Services", 
+                 "value":"amazonvm",
+                 "logo":"amazon.jpg",
+                 "account":[
+                    {"key":3, "label":"API Key:", "ph": "", "prop": "apikey", "apikey":"", "rule": [{ required: true, message: '请填写apikey', trigger: 'change' }]},
+                    {"key":4, "label":"Secret Key", "ph": "", "prop": "secretkey", "secretkey":"", "rule": [{ required: true, message: '请填写密钥', trigger: 'change' }]}
+                ]},
+                {"key": 3, 
+                 "label":"Baidu Cloud", 
+                 "value":"baiduvm",
+                 "logo":"baidu.png",
+                 "account":[
+                    {"key":3, "label":"API Key:", "ph": "", "prop": "apikey", "apikey":"", "rule": [{ required: true, message: '请填写apikey', trigger: 'change' }]},
+                    {"key":4, "label":"Secret Key", "ph": "", "prop": "secretkey", "secretkey":"", "rule": [{ required: true, message: '请填写密钥', trigger: 'change' }]}
+                ]},
+                {"key": 4, 
+                 "label":"Tencent Cloud", 
+                 "value":"tencentvm",
+                 "logo":"tencent.jpg",
+                 "account":[
+                    {"key":3, "label":"API Key:", "ph": "", "prop": "apikey", "apikey":"", "rule": [{ required: true, message: '请填写apikey', trigger: 'change' }]},
+                    {"key":4, "label":"Secret Key", "ph": "", "prop": "secretkey", "secretkey":"", "rule": [{ required: true, message: '请填写密钥', trigger: 'change' }]}
+                ]},
+                {"key": 5, 
+                 "label":"JDK Cloud", 
+                 "value":"jdkvm",
+                 "logo":"jdk.jpg",
+                 "account":[
+                    {"key":3, "label":"API Key:", "ph": "", "prop": "apikey", "apikey":"", "rule": [{ required: true, message: '请填写apikey', trigger: 'change' }]},
+                    {"key":4, "label":"Secret Key", "ph": "", "prop": "secretkey", "secretkey":"", "rule": [{ required: true, message: '请填写密钥', trigger: 'change' }]}
+                ]}
+            ],
+            "submitButton": "确定",
+            "resetButton": "取消",
+            "icon": ""
+        },
+      "type": "form"
+    }
+}
+---

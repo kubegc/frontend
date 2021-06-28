@@ -1,0 +1,15 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-namespace-resourcelimit",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[],
+		"type":"table"
+	}
+}

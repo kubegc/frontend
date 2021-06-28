@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-doslab.io.log"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Log用来记录平台的操作历史信息。",
+		"type": "description"
+	}
+}

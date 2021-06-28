@@ -1,0 +1,6 @@
+apiVersion: kubeovn.io/v1
+kind: Vlan
+metadata:
+  name: product
+spec:
+  vlanId: 10

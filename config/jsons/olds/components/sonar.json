@@ -1,0 +1,13 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Component",
+  "metadata": {
+    "name": "sonar"
+  },
+  "spec": {
+    "desc": "CI/CD或者DevOps工具中代码质量扫描工具",
+    "url": "http://39.106.40.190:31041/",
+    "username": "admin",
+    "password": "admin123"
+  }
+}

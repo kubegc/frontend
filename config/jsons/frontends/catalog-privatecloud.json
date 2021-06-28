@@ -1,0 +1,28 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"catalog-privatecloud",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"activeName":"container",
+			"tabMapOptions":[
+				{
+					"label":"container",
+					"key":"container"
+				},
+				{
+					"label":"virtualmachine",
+					"key":"virtualmachine"
+				}
+			],
+			"createdTime":0
+		},
+		"type":"catalog"
+	}
+}

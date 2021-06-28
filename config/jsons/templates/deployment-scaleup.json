@@ -1,0 +1,23 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Template",
+    "metadata": {
+        "name": "deployment-scaleup",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": {
+            "key": "扩容",
+            "values": [
+                {
+                    "action": "replace",
+                    "id": "spec.replicas",
+                    "name": "实例数",
+                    "required": "true",
+                    "type": "integer",
+                    "regexp": "number"
+                }
+            ]
+        }
+    }
+}

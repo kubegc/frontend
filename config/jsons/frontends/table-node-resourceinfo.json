@@ -1,0 +1,26 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-node-resourceinfo",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"label":"Pod CIDR",
+				"row":"spec.podCIDR",
+				"key":1
+			},
+			{
+				"label":"地址",
+				"row":"status.addresses.[0].address",
+				"key":2
+			}
+		],
+		"type":"table"
+	}
+}

@@ -1,0 +1,20 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: screens.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.type
+    name: TYPE
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  group: doslab.io
+  names:
+    kind: Screen
+    plural: screens
+    singular: screen
+  scope: Namespaced
+  version: v1

@@ -1,0 +1,11 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Alg",
+  "metadata": {
+    "name": "aladdin"
+  },
+  "spec": {
+    "desc": "基于图的调度算法,可以模拟各种调度算法，用于评价调度算法效果",
+    "image": "registry.cn-beijing.aliyuncs.com/doslab/aladdin:1.0.0"
+  }
+}

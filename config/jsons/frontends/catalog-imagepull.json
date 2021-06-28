@@ -1,0 +1,28 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"catalog-imagepull",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"activeName":"defaultImagePull",
+			"tabMapOptions":[
+				{
+					"label":"默认镜像拉取",
+					"key":"defaultImagePull"
+				},
+				{
+					"label":"按需镜像拉取",
+					"key":"lazyImagePull"
+				}
+			],
+			"createdTime":0
+		},
+		"type":"catalog"
+	}
+}

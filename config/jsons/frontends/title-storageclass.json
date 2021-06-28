@@ -1,0 +1,31 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"title-storageclass",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"name":"metadata",
+				"index":1,
+				"title":"元数据"
+			},
+			{
+				"name":"resourceinfo",
+				"index":2,
+				"title":"资源信息"
+			},
+			{
+				"name":"persistentvolume",
+				"index":3,
+				"title":"Persistent Volumes"
+			}
+		],
+		"type":"title"
+	}
+}

@@ -1,0 +1,41 @@
+{
+"apiVersion":"doslab.io/v1",
+  "kind":"Frontend",
+  "metadata":{
+    "additionalProperties":{},
+    "finalizers":[],
+    "managedFields":[],
+    "name":"table-cloudcontroller",
+    "ownerReferences":[]
+  },
+  "spec":{
+    "data":[
+      {
+        "label":"账户名",
+        "row":"metadata.name",
+        "key":1,
+        "width": "300px"
+      },
+      {
+        "label":"类型",
+        "row":"spec.data.kind",
+        "key":2,
+        "width": "300px"
+      },
+      {
+        "label":"命名空间",
+        "row":"metadata.namespace",
+        "key":3,
+        "width": "300px"
+      },
+      {
+        "kind":"action",
+        "label":"Actions",
+        "row":"",
+        "key":4,
+        "width":"400px"
+      }
+    ],
+    "type":"table"
+  }
+}

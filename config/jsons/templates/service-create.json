@@ -1,0 +1,14 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "svc-create"
+	},
+	"spec": {
+		"data": {
+			"support": [
+				"simple"
+			]
+		}
+	}
+}

@@ -1,0 +1,13 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Component",
+  "metadata": {
+    "name": "jenkins"
+  },
+  "spec": {
+    "desc": "CI/CD或者DevOps工具",
+    "url": "http://39.106.40.190:31031/",
+    "username": "admin",
+    "password": "admin"
+  }
+}

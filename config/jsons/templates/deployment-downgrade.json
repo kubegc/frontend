@@ -1,0 +1,19 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "deployment-downgrade"
+	},
+	"spec": {
+		"data": {
+			"key": "回滚",
+			"values": [{
+				"id": "spec.template.spec.containers[0].image",
+				"type": "string",
+				"required": "true",
+				"action": "replace",
+				"name": "版本号"
+			}]
+		}
+	}
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "solo-service3",
+    "namespace": "default"
+  },
+  "spec": {
+    "selector": {
+      "type": "solo"
+    },
+    "type": "NodePort",
+    "ports": [
+      {
+        "protocol": "TCP",
+        "targetPort": 8080,
+        "port": 8080
+      }
+    ]
+  }
+}

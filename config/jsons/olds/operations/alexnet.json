@@ -1,0 +1,11 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Operation",
+  "metadata": {
+    "name": "operation"
+  },
+  "spec": {
+     "speedup":{"aa":1, "bb":2},
+     "task": 1.5
+  }
+}

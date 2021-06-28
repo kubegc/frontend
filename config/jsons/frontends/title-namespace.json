@@ -1,0 +1,36 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"title-namespace",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"name":"metadata",
+				"index":1,
+				"title":"元数据"
+			},
+			{
+				"name":"status",
+				"index":2,
+				"title":"资源信息"
+			},
+			{
+				"name":"resourcelimit",
+				"index":3,
+				"title":"资源限额"
+			},
+			{
+				"name":"activity",
+				"index":4,
+				"title":"活动"
+			}
+		],
+		"type":"title"
+	}
+}

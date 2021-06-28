@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-vlan"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Vlan用于表示二层网络，通常需要交换机硬件配合完成。",
+		"type": "description"
+	}
+}

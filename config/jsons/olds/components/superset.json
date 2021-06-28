@@ -1,0 +1,13 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Component",
+  "metadata": {
+    "name": "superset"
+  },
+  "spec": {
+    "desc": "运维系统监测统计管理",
+    "url": "http://39.106.40.190:31003",
+    "username": "admin",
+    "password": "admin"
+  }
+}

@@ -1,0 +1,24 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Image",
+	"metadata": {
+		"name": "abaqus"
+	},
+	"spec": {
+		"basic": {
+			"arch": "amd64",
+			"image": "",
+			"id": "",
+			"parent": "",
+			"subclass": "aerospace",
+			"picture": "abaqus.png",
+			"desc": "Abaqus是一套用于有限元分析（FEA）和计算机辅助工程（CAE）的软件。Abaqus用于汽车、航空航天和工业产品行业。Abaqus还提供了一个很好的多物理能力集合，例如耦合声学结构、压电和结构孔隙能力，使得它对于需要耦合多个场的生产级模拟具有吸引力。。"
+		},
+		"osInfo": {
+			"localtime": "UTC0",
+			"name": "alpine",
+			"url": "https://alpinelinux.org/",
+			"version": "3.9.0"
+		}
+	}
+}

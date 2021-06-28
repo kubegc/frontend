@@ -1,0 +1,110 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Frontend",
+	"metadata": {
+		"name": "wizard-nodetable",
+		"namespace": "default"
+	},
+	"spec": {
+		"data": {
+			"keys": {
+				"table": {
+					"label": "编辑列表项",
+					"show": true
+				},
+				"formsearch": {
+					"label": "编辑搜索栏",
+					"show": true
+				},
+				"action": {
+					"label": "编辑操作集",
+					"show": true
+				}
+			},
+			"values": {
+				"table": {
+					"apiVersion": "doslab.io/v1",
+					"kind": "Frontend",
+					"metadata": {
+						"name": "table",
+						"namespace": "default"
+					},
+					"spec": {
+						"data": [{
+								"key": 1,
+								"label": "Pod名",
+								"row": "metadata.name"
+							},
+							{
+								"key": 5,
+								"label": "创建时间",
+								"row": "metadata.creationTimestamp"
+							},
+							{
+								"key": 7,
+								"kind": "action",
+								"label": "更多操作",
+								"row": ""
+							}
+						],
+						"type": "table"
+					}
+				},
+				"formsearch": {
+					"apiVersion": "doslab.io/v1",
+					"kind": "Frontend",
+					"metadata": {
+						"name": "formsearch",
+						"namespace": "default"
+					},
+					"spec": {
+						"data": {
+							"expand": 2,
+							"formName": "search",
+							"formStyle": {
+								"display": "inline"
+							},
+							"icon": "el-icon-search",
+							"items": [{
+								"drop": true,
+								"itemStyle": "display:inline-block;margin-right:10px",
+								"key": 1,
+								"label": "资源名称:",
+								"ph": "",
+								"prop": "metadata#name",
+								"type": "input"
+							}],
+							"model": {
+								"metadata#name": ""
+							},
+							"resetButton": "重置信息",
+							"submitButton": "搜索",
+							"title": "查询"
+						},
+						"type": "formsearch"
+					}
+				},
+				"action": {
+					"apiVersion": "doslab.io/v1",
+					"kind": "Frontend",
+					"metadata": {
+						"name": "action",
+						"namespace": "default"
+					},
+					"spec": {
+						"data": [{
+							"key": "更新",
+							"type": "update"
+						}, {
+							"key": "删除",
+							"type": "delete"
+						}],
+						"type": "action"
+					}
+				}
+
+			}
+		},
+		"type": "wizard"
+	}
+}

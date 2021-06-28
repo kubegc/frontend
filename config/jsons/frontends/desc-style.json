@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-style"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "页面样式用于配置您所看到的页面元素，通常以action, table等前缀开头，以Pod, Node等资源类型结尾，如action-pod，具体action, table等修改的页面元素请查看《页面模板》功能。",
+		"type": "description"
+	}
+}

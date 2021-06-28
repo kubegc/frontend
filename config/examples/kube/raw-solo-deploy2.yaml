@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solo-server2
+  namespace: default
+  labels:
+    app: solo-server2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solo-server2
+  template:
+    metadata:
+      labels:
+        app: solo-server2
+        type: sole
+    spec:
+      containers:
+      - image: b3log/solo
+        imagePullPolicy: IfNotPresent
+        name: solo-server
+        ports:
+        - containerPort: 31235
+        env:
+        - name: RUNTIME_DB
+          value: "MYSQL"
+        - name: JDBC_USERNAME
+          value: "root"
+        - name: JDBC_PASSWORD
+          value: "123456"
+        - name: JDBC_DRIVER
+          value: "com.mysql.cj.jdbc.Driver"
+        - name: JDBC_URL
+          value: "jdbc:mysql://mysql-svc.default:3306/solo?useUnicode=yes&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC"
+        args: [ "--listen_port=8080","--server_scheme=http","--server_host=133.133.134.92"]
+      restartPolicy: Always
+

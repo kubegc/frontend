@@ -1,0 +1,51 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "pv-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建PV",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "PV名称"
+			},{
+                                "id": "spec.nfs.path",
+                                "type": "string",
+                                "required": "true",
+                                "name": "NFS - Server 路径"
+                        },{ 
+                                "id": "spec.nfs.server",
+                                "type": "string",
+                                "required": "true",
+                                "name": "NFS - Server 地址"
+                        }],
+			"template": {
+                                "apiVersion": "v1",
+                                "kind": "PersistentVolume",
+                                "metadata": {
+                                "name": "string"
+                              },
+                                "spec": {
+                                "accessModes": [
+                                "ReadWriteMany"
+                             ],
+                                "capacity": {
+                                "storage": "10Gi"
+                                },
+                                "nfs": {
+                                "path": "string",
+                                "server": "string"
+                                },
+                               "persistentVolumeReclaimPolicy": "Retain",
+                               "volumeMode": "Filesystem"
+                               }
+                          }
+
+                        }
+		}
+	}
+}

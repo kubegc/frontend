@@ -1,0 +1,18 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"api-azurevm",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"git":"https://github.com/aws/aws-sdk-java.git",
+			"version":"1.11.725"
+		},
+		"type":"api"
+	}
+}

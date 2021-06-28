@@ -1,0 +1,35 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-plugin",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "kind": "internalLink",
+                "link": "@kind",
+                "label": "类型",
+                "row": "kind"
+            },
+            {
+                "key": 2,
+                "label": "版本信息",
+                "row": "apiVersion"
+            },
+            {
+                "key": 3,
+                "label": "数据表",
+                "row": "plural"
+            },
+            {
+                "key": 5,
+                "label": "支持操作",
+                "row": "verbs"
+            }
+        ],
+        "type": "table"
+    }
+}

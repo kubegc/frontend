@@ -1,0 +1,66 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-node-status",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"label":"机器 ID",
+				"row":"nodeInfo.machineID",
+				"key":1
+			},
+			{
+				"label":"系统 UUID",
+				"row":"nodeInfo.systemUUID",
+				"key":2
+			},
+			{
+				"label":"启动 ID",
+				"row":"nodeInfo.bootID",
+				"key":3
+			},
+			{
+				"label":"内核版本",
+				"row":"nodeInfo.kernelVersion",
+				"key":4
+			},
+			{
+				"label":"操作系统镜像",
+				"row":"nodeInfo.osImage",
+				"key":5
+			},
+			{
+				"label":"容器 runtime 版本",
+				"row":"nodeInfo.containerRuntimeVersion",
+				"key":6
+			},
+			{
+				"label":"kubelet 版本",
+				"row":"nodeInfo.kubeletVersion",
+				"key":7
+			},
+			{
+				"label":"kube-proxy 版本",
+				"row":"nodeInfo.kubeProxyVersion",
+				"key":8
+			},
+			{
+				"label":"操作系统",
+				"row":"nodeInfo.operatingSystem",
+				"key":9
+			},
+			{
+				"label":"架构",
+				"row":"nodeInfo.architecture",
+				"key":10
+			}
+		],
+		"type":"table"
+	}
+}

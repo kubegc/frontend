@@ -1,0 +1,13 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Component",
+  "metadata": {
+    "name": "prometheus"
+  },
+  "spec": {
+    "desc": "运维系统统一监测软件",
+    "url": "http://39.106.40.190:31001",
+    "username": "",
+    "password": ""
+  }
+}

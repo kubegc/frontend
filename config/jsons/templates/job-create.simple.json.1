@@ -1,0 +1,72 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "job-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建job",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "任务名"
+			},{
+                                "id": "metadata.namespace",
+                                "type": "string",
+                                "required": "true",
+                                "name": "命名空间"
+                         },{
+                                "id": "spec.template.spec.containers[0].command",
+                                "type": "string",
+                                "required": "true",
+                                "name": "执行脚本 / 执行命令"
+                         },{
+                                "id": "spec.template.spec.containers[0].image",
+                                "type": "string",
+                                "required": "true",
+                                "name": "镜像名称"
+                               }],
+			"template": {
+                                "apiVersion": "batch/v1",
+                                "kind": "Job",
+                                "metadata": {
+                                "labels": {
+                                "job-name": "test-job"
+                                 },
+                                "name": "string",
+                                "namespace": "string"
+                                  },
+                                "spec": {
+                                "selector": {
+                                "matchLabels": {
+                                "job-name": "test-job"
+                            }
+                             },
+                                "template": {
+                                "metadata": {
+                                "creationTimestamp": null,
+                                "labels": {
+                                "job-name": "test-job"
+                          }
+                            },
+                                "spec": {
+                                "containers": [
+                            {
+                                "command": [
+                                  "string"
+                        ],
+                        "image": "string",
+                        "imagePullPolicy": "Always",
+                        "name": "test-job"
+                    }
+                ]
+            }
+        }
+    }
+
+                        }
+		}
+	}
+}

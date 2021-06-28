@@ -1,0 +1,18 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"api-virtualmachine",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"git":"https://github.com/uit-plus/kubeext-jdk",
+			"version":"1.6.3"
+		},
+		"type":"api"
+	}
+}

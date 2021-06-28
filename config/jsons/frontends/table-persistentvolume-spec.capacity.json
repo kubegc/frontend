@@ -1,0 +1,26 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-persistentvolume-spec.capacity",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"label":"类别",
+				"row":"storage.amount",
+				"key":1
+			},
+			{
+				"label":"数量",
+				"row":"storage.format",
+				"key":2
+			}
+		],
+		"type":"table"
+	}
+}

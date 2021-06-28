@@ -1,0 +1,30 @@
+{
+	"metadata":{
+		"name":"service-outer",
+		"namespace":"default"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"title":"开发框架",
+				"content":[
+					{
+						"address":"https://github.com/doslab/webfrk",
+						"name":"k8s服务化框架"
+					},
+					{
+						"address":"https://github.com/doslab/jkubefrk",
+						"name":"k8s operator框架"
+					},
+					{
+						"address":"https://github.com/doslab/kubeext-nodeless",
+						"name":"k8s 边缘接入框架"
+					}
+				]
+			}
+		],
+		"type":"service"
+	}
+}

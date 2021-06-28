@@ -1,0 +1,37 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-doslab.io.user",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "label": "用户名",
+                "row": "metadata.name"
+            },
+            {
+                "key": 2,
+                "kind": "internalLink",
+                "label": "角色名",
+                "link": "doslab.io.UserRole",
+                "row": "spec.role.name",
+                "tag": "metadata#name"
+            },
+            {
+                "key": 5,
+                "label": "创建时间",
+                "row": "metadata.creationTimestamp"
+            },
+            {
+                "key": 7,
+                "kind": "action",
+                "label": "更多操作",
+                "row": ""
+            }
+        ],
+        "type": "table"
+    }
+}

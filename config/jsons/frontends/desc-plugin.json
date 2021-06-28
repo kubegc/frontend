@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-plugin"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "插件是指注册到Kubernetes的所有类型Kind，包括自定义CRD。",
+		"type": "description"
+	}
+}

@@ -1,0 +1,11 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Alg",
+  "metadata": {
+    "name": "prophet"
+  },
+  "spec": {
+    "desc": "基于随机游走的根因定位算法, 用于评价运行效果",
+    "image": "registry.cn-beijing.aliyuncs.com/doslab/prophet:1.0.0"
+  }
+}

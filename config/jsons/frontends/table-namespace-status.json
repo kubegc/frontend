@@ -1,0 +1,21 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-namespace-status",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"label":"状态",
+				"row":"phase",
+				"key":1
+			}
+		],
+		"type":"table"
+	}
+}

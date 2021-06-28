@@ -1,0 +1,46 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-vlan",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "label": "vlan名",
+                "row": "metadata.name",
+                "style": "width:150px;",
+                "width": "120"
+            },
+            {
+                "key": 2,
+                "label": "vlan ID",
+                "row": "spec.vlanId",
+                "style": "width:250px;",
+                "width": "150"
+            },
+            {
+                "key": 9,
+                "label": "容器子网",
+                "row": "spec.subnet",
+                "width": "120"
+            },
+            { 
+                "key": 8,
+                "label": "创建时间",
+                "row": "metadata.creationTimestamp",
+                "width": "220"
+            },
+            {
+                "key": 11,
+                "kind": "action",
+                "label": "更多操作",
+                "row": "",
+                "width": "130"
+            }
+        ],
+        "type": "table"
+    }
+}

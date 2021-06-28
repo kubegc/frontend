@@ -1,0 +1,19 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: functions.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  group: doslab.io
+  names:
+    kind: Function
+    plural: functions
+    shortNames:
+    - function
+    singular: function
+  scope: Namespaced
+  version: v1

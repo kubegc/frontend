@@ -1,0 +1,11 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "RegExp",
+  "metadata": {
+    "name": "number"
+  },
+  "spec": {
+     "value": "^[1-9]$",
+     "desc": "取值范围是1到9"
+  }
+}

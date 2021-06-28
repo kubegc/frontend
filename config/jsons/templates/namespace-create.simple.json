@@ -1,0 +1,27 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Template",
+  "metadata": {
+    "name": "namespace-create.simple"
+  },
+  "spec": {
+    "data": {
+      "key": "创建Namespace",
+      "values": [
+        {
+          "id": "metadata.name",
+          "type": "string",
+          "required": "true",
+          "name": "Namespace名"
+        }
+      ],
+      "template": {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+          "name": "string"
+        }
+      }
+    }
+  }
+}

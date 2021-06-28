@@ -1,0 +1,35 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Frontend",
+  "metadata": {
+    "name": "wizard-appmarket",
+    "namespace": "default"
+  },
+  "spec": {
+    "data": {
+      "keys": {
+        "detailSpec": {
+          "label": "编辑资源展示详情",
+          "show": false
+        }
+      },
+      "values": {
+        "detailSpec": {
+          "apiVersion": "doslab.io/v1",
+          "kind": "Frontend",
+          "metadata": {
+            "name": "detailspec"
+          },
+          "spec": {
+            "detailSpec": [
+              "metadata.name",
+              "metadata.namespace"
+            ]
+          }
+        }
+
+      }
+    },
+    "type": "wizard"
+  }
+}

@@ -1,0 +1,330 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachines.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.domain.uuid.text
+    name: UUID
+    type: string
+  - JSONPath: .spec.domain._type
+    name: TYPE
+    type: string
+  - JSONPath: .spec.domain.vcpu._current
+    name: CPU
+    type: string
+  - JSONPath: .spec.domain.currentMemory.text
+    name: RAM(KB)
+    type: string
+  - JSONPath: .spec.powerstate
+    name: STATUS
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: MESSAGE
+    type: string
+  - JSONPath: .spec.image
+    name: IMAGE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachine
+    plural: virtualmachines
+    shortNames:
+    - vm
+    - vms
+    singular: virtualmachine
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinenetworks.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.type
+    name: TYPE
+    type: string
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineNetwork
+    plural: virtualmachinenetworks
+    shortNames:
+    - vmn
+    - vmns
+    singular: virtualmachinenetwork
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachineimages.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.domain.uuid.text
+    name: UUID
+    type: string
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  - JSONPath: .spec.image
+    name: IMAGE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineImage
+    plural: virtualmachineimages
+    shortNames:
+    - vmi
+    - vmis
+    singular: virtualmachineimage
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinedisks.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.volume.format
+    name: TYPE
+    type: string  
+  - JSONPath: .spec.volume.filename
+    name: PATH
+    type: string  
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineDisk
+    plural: virtualmachinedisks
+    shortNames:
+    - vmd
+    - vmds
+    singular: virtualmachinedisk
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinediskimages.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.volume.format
+    name: TYPE
+    type: string  
+  - JSONPath: .spec.volume.current
+    name: PATH
+    type: string  
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineDiskImage
+    plural: virtualmachinediskimages
+    shortNames:
+    - vmdi
+    - vmdis
+    singular: virtualmachinediskimage
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinesnapshots.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.domainsnapshot.name.text
+    name: NAME
+    type: string
+  - JSONPath: .spec.domainsnapshot.domain.name.text
+    name: VM
+    type: string  
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineSnapshot
+    plural: virtualmachinesnapshots
+    shortNames:
+    - vmsn
+    - vmsns
+    singular: virtualmachinesnapshot
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinepools.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.pool.content
+    name: CONTENT
+    type: string  
+  - JSONPath: .spec.pool.path
+    name: PATH
+    type: string
+  - JSONPath: .spec.pool.autostart
+    name: AUTOSTART
+    type: string
+  - JSONPath: .spec.pool.capacity
+    name: CAPACITY
+    type: integer
+  - JSONPath: .spec.pool.state
+    name: STATE
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachinePool
+    plural: virtualmachinepools
+    shortNames:
+    - vmp
+    - vmps
+    singular: virtualmachinepool
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinedisksnapshots.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.volume.format
+    name: TYPE
+    type: string  
+  - JSONPath: .spec.volume.filename
+    name: PATH
+    type: string 
+  - JSONPath: .spec.volume.full_backing_filename
+    name: BACKING STORE
+    type: string 
+  - JSONPath: .spec.status.conditions.state.waiting.reason
+    name: STATUS
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  - JSONPath: .spec.nodeName
+    name: NODE
+    type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineDiskSnapshot
+    plural: virtualmachinedisksnapshots
+    shortNames:
+      - vmdsn
+      - vmdsns
+    singular: virtualmachinedisksnapshot
+  scope: Namespaced
+  version: v1
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  labels:
+    kubevirt.io: ""
+  name: virtualmachinebackups.doslab.io
+spec:
+  additionalPrinterColumns:
+    - JSONPath: .spec.backup.domain
+      name: DOMAIN
+      type: string
+    - JSONPath: .spec.backup.pool
+      name: POOL
+      type: string
+    - JSONPath: .spec.backup.disk
+      name: DISK
+      type: string
+    - JSONPath: .spec.backup.full
+      name: FULL
+      type: string
+    - JSONPath: .spec.status.conditions.state.waiting.reason
+      name: STATUS
+      type: string
+    - JSONPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    - JSONPath: .spec.nodeName
+      name: NODE
+      type: string
+  group: doslab.io
+  names:
+    kind: VirtualMachineBackup
+    plural: virtualmachinebackups
+    shortNames:
+      - vmb
+      - vmbs
+    singular: virtualmachinebackup
+  scope: Namespaced
+  version: v1

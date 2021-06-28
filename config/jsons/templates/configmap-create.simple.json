@@ -1,0 +1,42 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "configmap-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建configmap",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "configmap名称"
+			},{
+
+                               "id": "data.name",
+                                "type": "string",
+                                "required": "true",
+                                "name": "配置文件内容"
+},{
+                               "id": "metadata.namespace",
+                                "type": "string",
+                                "required": "true",
+                                "name": "命名空间"
+
+}],
+			"template": {
+                                "apiVersion": "v1",
+                                "data": {
+                                   "name": "string"
+    },
+                             "kind": "ConfigMap",
+                             "metadata": {
+                             "name": "string",
+                             "namespace": "string"
+    }
+
+                        }
+		}
+	}
+}

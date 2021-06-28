@@ -1,0 +1,56 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "pvc-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建PVC",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "PVC名称"
+			},{
+                               "id": "metadata.namespace",
+                                "type": "string",
+                                "required": "true",
+                                "name": "命名空间"
+                        },{
+                               "id": "spec.resources.requests.storage",
+                                "type": "string",
+                                "required": "true",
+                                "name": "存储大小"
+                        },{
+                               "id": "spec.storageClassName",
+                                "type": "string",
+                                "required": "false",
+                                "name": "存储池名称"
+                            }],
+
+			"template": {
+                                "apiVersion": "v1",
+                                "kind": "PersistentVolumeClaim",
+                                "metadata": {
+                                "name": "string",
+                                "namespace": "string"
+                               },
+                               "spec": {
+                                  "accessModes": [
+                                  "ReadWriteMany"
+                                  ],
+                                 "resources": {
+                                 "requests": {
+                                 "storage": "string"
+                                  }
+                                 },
+                              "storageClassName": "string"
+    }
+                        }
+                          }
+
+                        }
+		}
+	}
+}

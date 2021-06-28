@@ -1,0 +1,36 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "formsearch-data",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": {
+            "expand": 2,
+            "formName": "search",
+            "formStyle": {
+                "display": "inline"
+            },
+            "icon": "el-icon-search",
+            "items": [
+                {
+                    "drop": true,
+                    "itemStyle": "display:inline-block;margin-right:10px",
+                    "key": 1,
+                    "label": "用户名:",
+                    "ph": "",
+                    "prop": "metadata#name",
+                    "type": "input"
+                }
+            ],
+            "model": {
+                "metadata#name": ""
+            },
+            "resetButton": "重置信息",
+            "submitButton": "搜索",
+            "title": "查询"
+        },
+        "type": "formsearch"
+    }
+}

@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: solo-service2
+  namespace: default
+spec:
+  selector:
+    app: solo-server2
+  type: NodePort
+  ports:
+    - protocol: TCP
+      targetPort: 8080
+      port: 8080
+

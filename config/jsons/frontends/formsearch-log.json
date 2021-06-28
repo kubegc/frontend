@@ -1,0 +1,36 @@
+{
+	"metadata":{
+		"name":"formsearch-doslab.io.log",
+		"namespace":"default"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"expand":2,
+			"submitButton":"搜索",
+			"formName":"search",
+			"formStyle":{
+				"display":"inline"
+			},
+			"icon":"el-icon-search",
+			"model":{
+				"spec#user":""
+			},
+			"title":"查询",
+			"items":[
+				{
+					"drop":true,
+					"prop":"spec#user",
+					"ph":"",
+					"itemStyle":"display:inline-block;margin-right:10px",
+					"label":"用户名:",
+					"type":"input",
+					"key":1
+				}
+			],
+			"resetButton":"重置信息"
+		},
+		"type":"formsearch"
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"title-clusterrole",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"name":"metadata",
+				"index":1,
+				"title":"元数据"
+			},
+			{
+				"name":"rules",
+				"index":2,
+				"title":"规则"
+			}
+		],
+		"type":"title"
+	}
+}

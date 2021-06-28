@@ -1,0 +1,48 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "aliyunvm-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建Aliyun",
+			"values": [{
+				"id": "spec.lifecycle.createInstanceRequest.imageId",
+				"type": "string",
+				"required": "true",
+				"name": "镜像名"
+			},{
+
+                               "id": "spec.lifecycle.createInstanceRequest.instanceType",
+                                "type": "string",
+                                "required": "true",
+                                "name": "镜像类型"
+},{
+                               "id": "spec.lifecycle.createInstanceRequest.regionId",
+                                "type": "string",
+                                "required": "true",
+                                "name": ""
+
+}],
+			"template": {
+    "apiVersion": "doslab.io/v1",
+    "kind": "AliyunVM",
+    "metadata": {
+        "name": "string"
+    },
+    "spec": {
+            "lifecycle": {
+                "createInstanceRequest": {
+                    "imageId": "centos_6_10_x64_20G_alibase_20200103.vhd",
+                    "instanceType": "ecs.t5-lc2m1.nano",
+                    "regionId": "cn-hangzhou"
+                }
+        },
+        "nodeName": "cloud.ali3",
+        "type": "AliyunVM"
+    }
+}
+		}
+	}
+}

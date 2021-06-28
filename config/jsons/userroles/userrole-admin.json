@@ -1,0 +1,21 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "UserRole",
+  "metadata": {
+    "name": "admin",
+    "namespace": "default"
+  },
+  "rules": [
+    {
+      "apiGroups": [
+        "*"
+      ],
+      "resources": [
+        "*"
+      ],
+      "verbs": [
+        "*"
+      ]
+    }
+  ]
+}

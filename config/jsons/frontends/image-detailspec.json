@@ -1,0 +1,14 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Frontend",
+  "metadata": {
+    "name": "detailspec-image"
+  },
+  "spec": {
+    "detailSpec": [
+      "spec.tools.nproc",
+      "spec.tools.ldd",
+      "spec.depends.dependsOn"
+    ]
+  }
+}

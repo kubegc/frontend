@@ -1,0 +1,12 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Data",
+  "metadata": {
+    "name": "alibaba-data"
+  },
+  "spec": {
+     "url": "https://github.com/alibaba/clusterdata",
+     "desc": "阿里巴巴生成集群数据集",
+     "alg": "aladdin"
+     }
+}

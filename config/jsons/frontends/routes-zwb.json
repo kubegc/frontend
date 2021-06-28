@@ -1,0 +1,123 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Frontend",
+	"metadata": {
+		"name": "routes-admin",
+		"namespace": "default"
+	},
+	"spec": {
+		"routes": [{
+				"children": [{
+						"children": [{
+								"children": [{
+										"component": "/table/index",
+										"meta": {
+											"icon": "example",
+											"title": "用户信息"
+										},
+										"name": "User",
+										"path": "user"
+									},
+									{
+										"component": "/table/index",
+										"meta": {
+											"icon": "eye-open",
+											"title": "系统日志"
+										},
+										"name": "Log",
+										"path": "log"
+									}
+								],
+								"component": "Layout",
+								"meta": {
+									"icon": "resources",
+									"title": "系统管理"
+								},
+								"path": "appPanel"
+							}, {
+								"component": "/wizzard/index",
+								"meta": {
+									"icon": "node",
+									"title": "页面模板"
+								},
+								"name": "Model",
+								"path": "model"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "eye",
+									"title": "Pod"
+								},
+								"name": "Pod",
+								"path": "pod"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "eye",
+									"title": "Deployment"
+								},
+								"name": "Deployment",
+								"path": "deployment"
+							}
+						],
+						"component": "Layout",
+						"meta": {
+							"icon": "resources",
+							"title": "开发模式"
+						},
+						"path": "resourcesPanel"
+					},
+					{
+						"children": [{
+							"component": "/guide/index",
+							"meta": {
+								"icon": "resources",
+								"title": "面板配置"
+							},
+							"path": "index"
+						}],
+						"component": "Layout",
+						"path": "evolve"
+					}
+				],
+				"component": "Base",
+				"meta": {
+					"icon": "routes",
+					"title": "系统配置"
+				},
+				"path": "/systemConfig"
+			},
+			{
+				"children": [{
+					"children": [{
+						"component": "/table/index",
+						"meta": {
+							"icon": "node",
+							"title": "数据集合"
+						},
+						"name": "Data",
+						"path": "data"
+					}, {
+						"component": "schedule/schedule",
+						"meta": {
+							"icon": "eye",
+							"title": "调度原理"
+						},
+						"name": "Schedule",
+						"path": "schedule"
+					}],
+					"component": "Layout",
+					"path": "appDetail"
+				}],
+				"component": "Base",
+				"meta": {
+					"icon": "routes",
+					"title": "关键技术"
+				},
+				"path": "/coreTech"
+			}
+		]
+	}
+}

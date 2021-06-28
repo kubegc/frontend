@@ -1,0 +1,23 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "deployment-create"
+	},
+	"type": "container",
+	"spec": {
+		"data": {
+			"support": [{
+				"name": "创建应用",
+				"value": "simple"
+			}, {
+				"name": "创建带配置文件的应用",
+				"value": "tomcat"
+			}, {
+				"name": "创建带存储的应用",
+				"value": "mysql"
+
+			}]
+		}
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"catalog-priorityandoverlay",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"activeName":"defaultSched",
+			"tabMapOptions":[
+				{
+					"label":"默认调度",
+					"key":"defaultSched"
+				},
+				{
+					"label":"优先级调度",
+					"key":"prioritySched"
+				},
+				{
+					"label":"超分",
+					"key":"overpSched"
+				}
+			],
+			"createdTime":0
+		},
+		"type":"catalog"
+	}
+}

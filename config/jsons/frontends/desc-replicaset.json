@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-apps.replicaset"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "ReplicaSet是一些控制模块的父类，如可以控制Deployment。",
+		"type": "description"
+	}
+}

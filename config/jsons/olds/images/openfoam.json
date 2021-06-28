@@ -1,0 +1,24 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Image",
+	"metadata": {
+		"name": "openfoam"
+	},
+	"spec": {
+		"basic": {
+			"arch": "amd64",
+			"image": "",
+			"id": "",
+			"parent": "",
+			"subclass": "aerospace",
+			"picture": "openfoam.png",
+			"desc": "OpenFOAM是一个完全由C++编写的面向对象的CFD类库，采用类似于我们日常习惯的方法在软件中描述偏微分方程的有限体积离散化，支持多面体网格（比如CD-adapco公司推出的CCM+生成的多面体网格），因而可以处理复杂的几何外形，其自带的snappyHexMesh可以快速高效的划分六面体+多面体网格，网格质量高。"
+		},
+		"osInfo": {
+			"localtime": "UTC0",
+			"name": "alpine",
+			"url": "https://alpinelinux.org/",
+			"version": "3.9.0"
+		}
+	}
+}

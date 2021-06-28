@@ -1,0 +1,36 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-namespace-metadata",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"label":"名字",
+				"row":"name",
+				"key":1
+			},
+			{
+				"label":"创建时间",
+				"row":"creationTimestamp",
+				"key":2
+			},
+			{
+				"label":"经过的时间",
+				"row":"creationTimestamp",
+				"key":3
+			},
+			{
+				"label":"UID",
+				"row":"uid",
+				"key":4
+			}
+		],
+		"type":"table"
+	}
+}

@@ -1,0 +1,85 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-node",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "kind": "externalLink",
+                "label": "主机名",
+                "link": "",
+                "row": "metadata.name",
+                "style": "width:150px;",
+                "type": "input",
+                "width": "120"
+            },
+            {
+                "key": 2,
+                "kind": "internalLink",
+                "label": "运行实例",
+                "link": "Pod",
+                "row": "@metadata.name",
+                "style": "width:250px;",
+                "tag": "spec#nodeName",
+                "type": "select",
+                "width": "150"
+            },
+            {
+                "key": 4,
+                "label": "IP地址",
+                "row": "status.addresses[0].address",
+                "width": "150"
+            },
+            {
+                "key": 9,
+                "label": "CPU",
+                "row": "status.capacity.cpu",
+                "width": "120"
+            },
+            {
+                "key": 5,
+                "label": "内存",
+                "row": "status.capacity.memory",
+                "width": "120"
+            },
+            {
+                "key": 6,
+                "label": "最大实例数",
+                "row": "status.capacity.pods",
+                "width": "120"
+            },
+            {
+                "key": 7,
+                "label": "操作系统",
+                "row": "status.nodeInfo.osImage",
+                "width": "220"
+            },
+            {
+                "key": 8,
+                "label": "创建时间",
+                "row": "status.conditions[0].lastHeartbeatTime",
+                "width": "220"
+            },
+            {
+                "key": 10,
+                "kind": "terminal",
+                "label": "远程连接",
+                "link": "http://39.106.40.190:31051/ssh/host/{1}",
+                "row": "status.addresses[0].address",
+                "width": "130"
+            },
+            {
+                "key": 11,
+                "kind": "action",
+                "label": "更多操作",
+                "row": "",
+                "width": "130"
+            }
+        ],
+        "type": "table"
+    }
+}

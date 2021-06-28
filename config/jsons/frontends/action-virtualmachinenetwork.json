@@ -1,0 +1,52 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"action-virtualmachinenetwork",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"deleteBridge",
+				"key":"删除二层桥接网络"
+			},
+			{
+				"type":"setBridgeVlan",
+				"key":"设置二层网桥的vlan ID"
+			},
+			{
+				"type":"delBridgeVlan",
+				"key":"删除二层网桥的vlan ID"
+			},
+			{
+				"type":"bindPortVlan",
+				"key":"给虚拟机绑定vlan ID"
+			},
+			{
+				"type":"unbindPortVlan",
+				"key":"解除虚拟机的vlan ID"
+			},
+			{
+				"type":"createSwitch",
+				"key":"创建三层网络交换机"
+			},
+			{
+				"type":"modifySwitch",
+				"key":"修改三层网络交换机配置"
+			},
+			{
+				"type":"bindFip",
+				"key":"绑定外网IP"
+			},
+			{
+				"type":"unbindFip",
+				"key":"解绑定外网IP"
+			}
+		],
+		"type":"action"
+	}
+}

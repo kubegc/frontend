@@ -1,0 +1,20 @@
+{
+	"metadata":{
+		"name":"action-doslab.io.frontend"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"delete",
+				"key":"删除"
+			},
+			{
+				"type":"update",
+				"key":"更新"
+			}
+		],
+		"type":"action"
+	}
+}

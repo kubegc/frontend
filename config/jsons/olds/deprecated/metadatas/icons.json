@@ -1,0 +1,27 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Metadata",
+	"metadata": {
+		"name": "icons"
+	},
+        "type": "icon",
+	"spec": {
+           "icons": [
+              "dashboard",
+              "example",
+              "eye-open",
+              "eye",
+              "form",
+              "link",
+              "nested",
+              "node",
+              "password",
+              "pc",
+              "resources",
+              "routes",
+              "table",
+              "tree",
+              "user"
+           ]
+	}
+}

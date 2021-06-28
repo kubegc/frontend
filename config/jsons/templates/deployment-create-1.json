@@ -1,0 +1,14 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "deployment-create"
+	},
+	"spec": {
+		"data": {
+			"support": [
+				"创建应用1"
+			]
+		}
+	}
+}

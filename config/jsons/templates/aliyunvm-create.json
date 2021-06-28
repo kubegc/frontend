@@ -1,0 +1,14 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "aliyunvm-create"
+	},
+	"spec": {
+		"data": {
+			"support": [
+				"simple"
+			]
+		}
+	}
+}

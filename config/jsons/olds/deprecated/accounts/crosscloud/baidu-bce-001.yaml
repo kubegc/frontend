@@ -1,0 +1,20 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Account",
+	"metadata": {
+		"name": "baidu-bce-001"
+	},
+        "type": "PublicCloud",
+        "avatar": "/clouds/baidu.png",
+	"spec": {
+		"version": "1.0.0",
+		"kind": "BaiduBCE",
+		"client": "com.baidubce.services.bcc.BccClient",
+		"initClient": "new com.baidubce.services.bcc.BccClient(new com.baidubce.BceClientConfiguration().withCredentials(new com.baidubce.auth.DefaultBceCredentials(map.get(\"accessKey\"), map.get(\"secretKey\"))));",
+		"dependency": [{
+			"artifactId": "bce-java-sdk",
+			"groupId": "com.baidubce",
+			"version": "0.10.136"
+		}]
+	}
+}

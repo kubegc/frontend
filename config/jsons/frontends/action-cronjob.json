@@ -1,0 +1,24 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"action-cronjob",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"delete",
+				"key":"删除"
+			},
+			{
+				"type":"update",
+				"key":"更新"
+			}
+		],
+		"type":"action"
+	}
+}

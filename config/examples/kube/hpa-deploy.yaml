@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-apache
+  labels:
+    app: hpa-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: php-apache
+      app: hpa-test
+  template:
+    metadata:
+      labels:
+        name: php-apache
+        app: hpa-test
+    spec:
+      containers:
+      - name: php-apache
+        image: mirrorgooglecontainers/hpa-example:latest
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 0.005
+            memory: 64Mi
+          limits:
+            cpu: 0.05
+            memory: 128Mi

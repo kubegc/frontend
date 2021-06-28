@@ -1,0 +1,32 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"action-virtualmachinesnapshot",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"deleteSnapshot",
+				"key":"删除虚拟机和挂载到虚拟机的云盘快照"
+			},
+			{
+				"type":"revertVirtualMachine",
+				"key":"恢复成虚拟机和挂载到虚拟机的云盘快照"
+			},
+			{
+				"type":"copySnapshot",
+				"key":"全拷贝快照到文件"
+			},
+			{
+				"type":"mergeSnapshot",
+				"key":"合并快照到叶子节点"
+			}
+		],
+		"type":"action"
+	}
+}

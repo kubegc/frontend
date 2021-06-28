@@ -1,0 +1,28 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"catalog-pod",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"activeName":"monitor",
+			"tabMapOptions":[
+				{
+					"label":"监控结果",
+					"key":"monitor"
+				},
+				{
+					"label":"镜像分析",
+					"key":"imageAnalysis"
+				}
+			],
+			"createdTime":0
+		},
+		"type":"catalog"
+	}
+}

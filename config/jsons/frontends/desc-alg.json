@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-alg"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Alg是算法的简称，用于课题关键成果的演示",
+		"type": "description"
+	}
+}

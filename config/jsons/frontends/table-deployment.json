@@ -1,0 +1,58 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-apps.deployment",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "kind": "internalLink",
+                "label": "deployment名",
+                "link": "Pod",
+                "row": "metadata.name",
+                "tag": "metadata#name",
+                "style": "width:150px;",
+                "type": "input",
+                "width": "200"
+            },
+            {
+                "key": 10,
+                "kind": "internalLink",
+                "label": "命名空间",
+                "link": "Namespace",
+                "row": "metadata.namespace",
+                "tag": "metadata#name",
+                "width": "150"
+            },
+            {
+                "key": 4,
+                "label": "创建Pod数",
+                "row": "status.replicas",
+                "width": "150"
+            },
+            {
+                "key": 5,
+                "label": "正常Pod数",
+                "row": "status.readyReplicas",
+                "width": "150"
+            },
+            {
+                "key": 6,
+                "label": "创建时间",
+                "row": "metadata.creationTimestamp",
+                "width": "180"
+            },
+            {
+                "key": 7,
+                "kind": "action",
+                "label": "更多操作",
+                "row": "",
+                "width": "130"
+            }
+        ],
+        "type": "table"
+    }
+}

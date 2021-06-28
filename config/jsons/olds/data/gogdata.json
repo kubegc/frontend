@@ -1,0 +1,12 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Data",
+  "metadata": {
+    "name": "google-data"
+  },
+  "spec": {
+     "url": "https://github.com/google/cluster-data",
+     "desc": "谷歌生成集群数据集",
+     "alg": "aladdin"
+     }
+}

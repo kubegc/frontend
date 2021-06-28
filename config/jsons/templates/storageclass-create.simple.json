@@ -1,0 +1,32 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "storageclass-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建StorageClass",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "存储池名称"
+			}],
+			"template": {
+                                "apiVersion": "storage.k8s.io/v1",
+                                "kind": "StorageClass",
+                                "metadata": {
+                                "name": "string"
+                             },
+                                "parameters": {
+                                "archiveOnDelete": "false"
+                             },
+                                "provisioner": "fuseim.pri/ifs",
+                                "reclaimPolicy": "Delete",
+                                "volumeBindingMode": "Immediate"
+
+                        }
+		}
+	}
+}

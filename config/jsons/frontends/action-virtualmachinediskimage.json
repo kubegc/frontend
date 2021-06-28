@@ -1,0 +1,24 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"action-virtualmachinediskimage",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"convertDiskImageToDisk",
+				"key":"将云盘镜像转化为云盘"
+			},
+			{
+				"type":"deleteDiskImage",
+				"key":"删除云盘镜像"
+			}
+		],
+		"type":"action"
+	}
+}

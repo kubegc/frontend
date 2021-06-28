@@ -1,0 +1,25 @@
+{
+	"metadata":{
+		"name":"action-aliyunvm",
+		"namespace":"default"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"startinstance",
+				"key":"启动"
+			},
+			{
+				"type":"stopinstance",
+				"key":"停止"
+			},
+			{
+				"type":"deleteinstance",
+				"key":"删除"
+			}
+		],
+		"type":"action"
+	}
+}

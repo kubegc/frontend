@@ -1,0 +1,117 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Metadata",
+	"metadata": {
+		"name": "aws-specs"
+	},
+	"type": "specs",
+	"spec": [{
+			"name": "r4.large",
+			"memory": "15.25",
+			"cpu": "2",
+			"ssd": ""
+		},
+		{
+			"name": "r4.xlarge",
+			"memory": "30.5",
+			"cpu": "4",
+			"ssd": ""
+		},
+		{
+			"name": "r4.2xlarge",
+			"memory": "61",
+			"cpu": "8",
+			"ssd": ""
+		},
+		{
+			"name": "r3.large",
+			"memory": "15.25",
+			"cpu": "2",
+			"ssd": "1x32"
+		},
+		{
+			"name": "3.xlarge",
+			"memory": "30.5",
+			"cpu": "4",
+			"ssd": "1x80"
+		},
+		{
+			"name": "r3.2xlarge",
+			"memory": "61",
+			"cpu": "8",
+			"ssd": "1x160"
+		},
+		{
+			"name": "m4.large",
+			"memory": "8",
+			"cpu": "2",
+			"ssd": "EBS only"
+		},
+		{
+			"name": "m4.xlarge",
+			"memory": "16",
+			"cpu": "4",
+			"ssd": "EBS only"
+		},
+		{
+			"name": "m4.2xlarge",
+			"memory": "32",
+			"cpu": "8",
+			"ssd": "EBS only"
+		},
+		{
+			"name": "m3.large",
+			"memory": "7.5",
+			"cpu": "2",
+			"ssd": "32"
+		},
+		{
+			"name": "m3.xlarge",
+			"memory": "15",
+			"cpu": "4",
+			"ssd": "80"
+		},
+		{
+			"name": "m3.2xlarge",
+			"memory": "30",
+			"cpu": "8",
+			"ssd": "160"
+		},
+		{
+			"name": "c4.large",
+			"memory": "3.75",
+			"cpu": "2",
+			"ssd": ""
+		},
+		{
+			"name": "c4.xlarge",
+			"memory": "7.5",
+			"cpu": "4",
+			"ssd": ""
+		},
+		{
+			"name": "c4.2xlarge",
+			"memory": "15",
+			"cpu": "8",
+			"ssd": ""
+		},
+		{
+			"name": "c3.large",
+			"memory": "3.75",
+			"cpu": "2",
+			"ssd": "32"
+		},
+		{
+			"name": "c3.xlarge",
+			"memory": "7.5",
+			"cpu": "4",
+			"ssd": "80"
+		},
+		{
+			"name": "c3.2xlarge",
+			"memory": "15",
+			"cpu": "8",
+			"ssd": "160"
+		}
+	]
+}

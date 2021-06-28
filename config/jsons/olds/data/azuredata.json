@@ -1,0 +1,12 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Data",
+  "metadata": {
+    "name": "microservices-data"
+  },
+  "spec": {
+     "url": "https://github.com/NetManAIOps/AIOps-Challenge-2020-Data.git",
+     "desc": "微服务异常数据集",
+     "alg": "prophet"
+     }
+}

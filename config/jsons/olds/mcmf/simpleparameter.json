@@ -1,0 +1,73 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "MCMF",
+	"metadata": {
+		"additionalProperties": {},
+		"finalizers": [],
+		"managedFields": [],
+		"name": "simpleparameter",
+		"ownerReferences": []
+	},
+	"spec": {
+		"data": {
+			"json": {
+				"tasks": [{
+						"index": 1,
+						"cpu": 4,
+						"cost": 10,
+						"application": 6
+					},
+					{
+						"index": 2,
+						"cpu": 2,
+						"cost": 5,
+						"application": 6
+					},
+					{
+						"index": 3,
+						"cpu": 2,
+						"cost": 3,
+						"application": 6
+					},
+					{
+						"index": 4,
+						"cpu": 3,
+						"cost": 1,
+						"application": 7
+					},
+					{
+						"index": 5,
+						"cpu": 5,
+						"cost": 1,
+						"application": 7
+					}
+				],
+				"applications": [{
+						"index": 6,
+						"cost": 1
+					},
+					{
+						"index": 7,
+						"cost": 1
+					}
+				],
+				"machines": [{
+						"index": 8,
+						"cpu": 8,
+						"cost": 0
+					},
+					{
+						"index": 9,
+						"cpu": 8,
+						"cost": 0
+					},
+					{
+						"index": 10,
+						"cpu": 8,
+						"cost": 0
+					}
+				]
+			}
+		}
+	}
+}

@@ -1,0 +1,20 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Frontend",
+  "metadata": {
+    "name": "pages",
+    "namespace": "default"
+  },
+  "spec": {
+    "pageTypes": {
+      "nodeTable": {
+        "label": "表单展示",
+        "component": "/charts/nodeTable"
+      },
+      "appMarket": {
+        "label": "平铺展示",
+        "component": "/appMarket/index"
+      }
+    }
+  }
+}

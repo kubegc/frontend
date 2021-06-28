@@ -1,0 +1,20 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Account",
+	"metadata": {
+		"name": "tencent-cvm-001"
+	},
+        "type": "PublicCloud",
+        "avatar": "/clouds/tencent.jpg",
+	"spec": {
+		"version": "1.0.0",
+		"kind": "TencentCVM",
+		"client": "com.tencentcloudapi.cvm.v20170312.CvmClient",
+		"initClient": "new com.tencentcloudapi.cvm.v20170312.CvmClient(new com.tencentcloudapi.common.Credential(map.get(\"accessKey\"), map.get(\"secretKey\")) , map.get(\"zone\"))",
+		"dependency": [{
+			"artifactId": "tencentcloud-sdk-java",
+			"groupId": "com.tencentcloudapi",
+			"version": "3.1.157"
+		}]
+	}
+}

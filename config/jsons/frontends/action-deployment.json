@@ -1,0 +1,25 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "action-apps.deployment",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": "删除",
+                "type": "delete"
+            },
+            {
+                "key": "更新",
+                "type": "update"
+            },
+            {
+                "key": "扩容",
+                "type": "scaleup"
+            }
+        ],
+        "type": "action"
+    }
+}

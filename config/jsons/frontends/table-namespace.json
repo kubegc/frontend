@@ -1,0 +1,55 @@
+{
+	"metadata":{
+		"name":"table-namespace"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"width":"200",
+				"style":"width:250px;",
+				"label":"名字",
+				"row":"metadata.name",
+				"key":1
+			},
+                        {
+                		"key": 10,
+                		"kind": "internalLink",
+                		"label": "运行的Pods",
+                		"link": "Pod",
+                		"row": "@metadata.name",
+                		"style": "width:250px;",
+                		"tag": "metadata#namespace",
+                		"type": "select",
+                		"width": "150"
+            		},
+			{
+				"width":"150",
+				"label":"标签",
+				"row":"unknown",
+				"key":2
+			},
+			{
+				"width":"150",
+				"label":"运行阶段",
+				"row":"status.phase",
+				"key":3
+			},
+			{
+				"width":"150",
+				"label":"创建时间",
+				"row":"metadata.creationTimestamp",
+				"key":4
+			},
+			{
+				"kind":"action",
+				"width":"130",
+				"label":"更多操作",
+				"row":"",
+				"key":5
+			}
+		],
+		"type":"table"
+	}
+}

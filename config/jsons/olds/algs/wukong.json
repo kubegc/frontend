@@ -1,0 +1,11 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Alg",
+  "metadata": {
+    "name": "wukong"
+  },
+  "spec": {
+    "desc": "知识驱动的多云的API评价算法",
+    "image": "registry.cn-beijing.aliyuncs.com/doslab/wukong:1.0.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Account",
+	"metadata": {
+		"name": "aliyun-ecs-001"
+	},
+        "type": "PublicCloud",
+        "avatar": "/clouds/aliyun.jpg",
+	"spec": {
+		"version": "1.0.0",
+		"kind": "AliyunECS",
+		"client": "com.aliyuncs.DefaultAcsClient",
+		"initClient": "new com.aliyuncs.DefaultAcsClient(com.aliyuncs.profile.DefaultProfile.getProfile(map.get(\"zone\"), map.get(\"accessKey\"), map.get(\"secretKey\")));",
+		"dependency": [{
+				"artifactId": "aliyun-java-sdk-core",
+				"groupId": "com.aliyun",
+				"version": "4.5.13"
+			},
+			{
+				"artifactId": "aliyun-java-sdk-ecs",
+				"groupId": "com.aliyun",
+				"version": "4.21.0"
+			}
+		]
+	}
+}

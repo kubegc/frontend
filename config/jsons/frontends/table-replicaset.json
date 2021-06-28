@@ -1,0 +1,61 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-apps.replicaset",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"kind":"internalLink",
+				"width":"200",
+				"link":"Pod",
+				"style":"width:150px;",
+				"label":"ReplicaSet名",
+				"row":"metadata.name",
+                                "tag": "metadata#name",
+				"type":"input",
+				"key":1
+			},
+                        {
+                		"key": 10,
+                		"kind": "internalLink",
+                		"label": "命名空间",
+                		"link": "Namespace",
+                		"row": "metadata.namespace",
+                		"tag": "metadata#name",
+                		"width": "150"
+            		},
+			{
+				"width":"150",
+				"label":"创建Pod数",
+				"row":"status.replicas",
+				"key":4
+			},
+			{
+				"width":"150",
+				"label":"正常Pod数",
+				"row":"status.readyReplicas",
+				"key":5
+			},
+			{
+				"width":"180",
+				"label":"创建时间",
+				"row":"metadata.creationTimestamp",
+				"key":9
+			},
+			{
+				"kind":"action",
+				"width":"130",
+				"label":"更多操作",
+				"row":"",
+				"key":10
+			}
+		],
+		"type":"table"
+	}
+}

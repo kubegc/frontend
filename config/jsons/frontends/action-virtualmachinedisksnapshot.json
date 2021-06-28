@@ -1,0 +1,24 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"action-virtualmachinedisksnapshot",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"revertDiskExternalSnapshot",
+				"key":"从云盘外部快照恢复"
+			},
+			{
+				"type":"deleteDiskExternalSnapshot",
+				"key":"删除云盘外部快照"
+			}
+		],
+		"type":"action"
+	}
+}

@@ -1,0 +1,70 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-subnet",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "label": "网络名",
+                "row": "metadata.name",
+                "style": "width:150px;",
+                "width": "120"
+            },
+            {
+                "key": 2,
+                "label": "CIDR",
+                "row": "spec.cidrBlock",
+                "style": "width:250px;",
+                "width": "150"
+            },
+            {
+                "key": 4,
+                "label": "网关",
+                "row": "spec.gateway",
+                "width": "150"
+            },
+            {
+                "key": 9,
+                "label": "网关类型",
+                "row": "spec.gatewayType",
+                "width": "120"
+            },
+            {
+                "key": 5,
+                "label": "网络协议",
+                "row": "spec.protocol",
+                "width": "120"
+            },
+            {
+                "key": 6,
+                "label": "二层网络",
+                "row": "spec.underlayGateway",
+                "width": "120"
+            },
+            {
+                "key": 7,
+                "label": "可用IP数",
+                "row": "status.v4availableIPs",
+                "width": "220"
+            },
+            {
+                "key": 8,
+                "label": "创建时间",
+                "row": "metadata.creationTimestamp",
+                "width": "220"
+            },
+            {
+                "key": 11,
+                "kind": "action",
+                "label": "更多操作",
+                "row": "",
+                "width": "130"
+            }
+        ],
+        "type": "table"
+    }
+}

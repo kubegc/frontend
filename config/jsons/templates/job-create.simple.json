@@ -1,0 +1,76 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Template",
+  "metadata": {
+    "name": "job-create.simple"
+  },
+  "spec": {
+    "data": {
+      "key": "创建job",
+      "values": [
+        {
+          "id": "metadata.name,metadata.labels.job-name,spec.selector.matchLabels.job-name,spec.template.metadata.labels.job-name,spec.template.spec.containers[0].name",
+          "type": "string",
+          "required": "true",
+          "name": "任务名"
+        },
+        {
+          "id": "metadata.namespace",
+          "type": "string",
+          "required": "true",
+          "name": "命名空间"
+        },
+        {
+          "id": "spec.template.spec.containers[0].command[0]",
+          "type": "string",
+          "required": "true",
+          "name": "执行命令"
+        },
+        {
+          "id": "spec.template.spec.containers[0].image",
+          "type": "string",
+          "required": "true",
+          "name": "镜像名称"
+        }
+      ],
+      "template": {
+        "apiVersion": "batch/v1",
+        "kind": "Job",
+        "metadata": {
+          "labels": {
+            "job-name": "string"
+          },
+          "name": "string",
+          "namespace": "string"
+        },
+        "spec": {
+          "selector": {
+            "matchLabels": {
+              "job-name": "string"
+            }
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "job-name": "string"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "string"
+                  ],
+                  "image": "string",
+                  "imagePullPolicy": "Always",
+                  "name": "string"
+                }
+              ],
+              "restartPolicy": "Never"
+            }
+          }
+        }
+      }
+    }
+  }
+}

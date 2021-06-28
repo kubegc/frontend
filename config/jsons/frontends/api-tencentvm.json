@@ -1,0 +1,18 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"api-tencentvm",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"git":"https://github.com/TencentCloud/tencentcloud-sdk-java",
+			"version":"3.1.0"
+		},
+		"type":"api"
+	}
+}

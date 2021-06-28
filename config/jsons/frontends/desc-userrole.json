@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-doslab.io.userrole"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "用户角色用于描述取得该角色的用户可以对哪些资源进行哪些操作，这里的资源如Pod, Node，操作如增删改查。",
+		"type": "description"
+	}
+}

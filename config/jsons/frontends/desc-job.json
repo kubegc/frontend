@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-batch.job"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Job是Kubernetes原生概念，任务运行一段时间即可完成。",
+		"type": "description"
+	}
+}

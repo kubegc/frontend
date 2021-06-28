@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-doslab.io.user"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "用户信息用于创建、修改、删除用户，该系统采用的是基于角色的权限控制模型。",
+		"type": "description"
+	}
+}

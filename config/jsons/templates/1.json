@@ -1,0 +1,39 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "labels": {
+            "job-name": "test-job"
+        },
+        "name": "test-job",
+        "namespace": "default"
+    },
+    "spec": {
+        "selector": {
+            "matchLabels": {
+                "job-name": "test-job"
+            }
+        },
+        "template": {
+            "metadata": {
+                "labels": {
+                    "job-name": "test-job"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "date"
+                        ],
+                        "image": "busybox",
+                        "imagePullPolicy": "Always",
+                        "name": "test-job"
+                    }
+                ],
+                "restartPolicy": "Never"
+            }
+        }
+    }
+    }
+

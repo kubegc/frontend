@@ -1,0 +1,37 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-clusterrole",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"kind":"a",
+				"width":"800",
+				"label":"名字",
+				"row":"metadata.name",
+				"type":"input",
+				"key":1
+			},
+			{
+				"width":"350",
+				"label":"创建时间",
+				"row":"metadata.creationTimestamp",
+				"key":2
+			},
+			{
+				"kind":"action",
+				"width":"130",
+				"label":"更多操作",
+				"row":"",
+				"key":3
+			}
+		],
+		"type":"table"
+	}
+}

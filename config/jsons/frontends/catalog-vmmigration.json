@@ -1,0 +1,24 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"catalog-vmmigration",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"activeName":"vmmigration",
+			"tabMapOptions":[
+				{
+					"label":"虚拟机迁移",
+					"key":"vmmigration"
+				}
+			],
+			"createdTime":0
+		},
+		"type":"catalog"
+	}
+}

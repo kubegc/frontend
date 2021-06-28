@@ -1,0 +1,36 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "aliyunvm-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建Aliyun",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "实例名"
+			}],
+			"template": {
+				"apiVersion": "doslab.io/v1",
+				"kind": "AliyunVM",
+				"metadata": {
+					"name": "string"
+				},
+				"spec": {
+					"lifecycle": {
+						"createInstanceRequest": {
+							"imageId": "centos_6_10_x64_20G_alibase_20200103.vhd",
+							"instanceType": "ecs.t5-lc2m1.nano",
+							"regionId": "cn-hangzhou"
+						}
+					},
+					"nodeName": "AliyunVM",
+					"type": "AliyunVM"
+				}
+			}
+		}
+	}
+}

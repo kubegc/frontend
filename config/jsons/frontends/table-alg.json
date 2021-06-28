@@ -1,0 +1,39 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-alg",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "label": "算法名",
+                "row": "metadata.name"
+            },
+            {
+                "key": 2,
+                "label": "描述",
+                "row": "spec.desc"
+            },
+            {
+                "key": 3,
+                "label": "镜像",
+                "row": "spec.image"
+            },
+            {
+                "key": 5,
+                "label": "创建时间",
+                "row": "metadata.creationTimestamp"
+            },
+            {
+                "key": 7,
+                "kind": "action",
+                "label": "更多操作",
+                "row": ""
+            }
+        ],
+        "type": "table"
+    }
+}

@@ -1,0 +1,27 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Account",
+	"metadata": {
+		"name": "jdcloud-vm-001"
+	},
+        "type": "PublicCloud",
+        "avatar": "/clouds/jd.png",
+	"spec": {
+	  "version": "1.0.0",
+	  "kind": "JDCloudVM",
+	  "client": "com.jdcloud.sdk.service.vm.client.VmClient",
+	  "initClient": "com.jdcloud.sdk.service.vm.client.VmClient.builder().credentialsProvider(new com.jdcloud.sdk.auth.StaticCredentialsProvider(map.get(\"accessKey\"), map.get(\"secretKey\"))).build();",
+	  "dependency": [
+		{
+			"artifactId": "core",
+			"groupId": "com.jdcloud.sdk",
+			"version": "2.2.2"
+		},
+		{
+			"artifactId": "vm",
+			"groupId": "com.jdcloud.sdk",
+			"version": "1.3.4"
+		}
+	]
+    }
+}

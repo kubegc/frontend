@@ -1,0 +1,123 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Template",
+  "metadata": {
+    "name": "sts-create.simple"
+  },
+  "spec": {
+    "data": {
+      "key": "创建sts",
+      "values": [
+        {
+          "id": "metadata.name",
+          "type": "string",
+          "required": "true",
+          "name": "应用名称"
+        },
+        {
+          "id": "metadata.namespace",
+          "type": "string",
+          "required": "true",
+          "name": "命名空间"
+        },
+        {
+          "id": "spec.template.spec.containers[0].image",
+          "type": "string",
+          "required": "true",
+          "name": "镜像名称"
+        },
+        {
+          "id": "spec.template.spec.containers[0].ports[0].containerPort",
+          "type": "integer",
+          "required": "true",
+          "name": "应用端口"
+        }
+      ],
+      "template": {
+        "apiVersion": "apps/v1",
+        "kind": "StatefulSet",
+        "metadata": {
+          "name": "string",
+          "namespace": "string"
+        },
+        "spec": {
+          "podManagementPolicy": "OrderedReady",
+          "replicas": 3,
+          "revisionHistoryLimit": 10,
+          "selector": {
+            "matchLabels": {
+              "app": "nginx"
+            }
+          },
+          "serviceName": "nginx",
+          "template": {
+            "metadata": {
+              "creationTimestamp": null,
+              "labels": {
+                "app": "nginx"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "image": "string",
+                  "imagePullPolicy": "Always",
+                  "name": "nginx",
+                  "ports": [
+                    {
+                      "containerPort": "integer",
+                      "name": "web",
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "resources": {},
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/usr/share/nginx/html",
+                      "name": "www"
+                    }
+                  ]
+                }
+              ],
+              "dnsPolicy": "ClusterFirst",
+              "restartPolicy": "Always",
+              "schedulerName": "default-scheduler",
+              "securityContext": {},
+              "terminationGracePeriodSeconds": 10
+            }
+          },
+          "updateStrategy": {
+            "rollingUpdate": {
+              "partition": 0
+            },
+            "type": "RollingUpdate"
+          },
+          "volumeClaimTemplates": [
+            {
+              "apiVersion": "v1",
+              "kind": "PersistentVolumeClaim",
+              "metadata": {
+                "creationTimestamp": null,
+                "name": "www"
+              },
+              "spec": {
+                "accessModes": [
+                  "ReadWriteOnce"
+                ],
+                "resources": {
+                  "requests": {
+                    "storage": "1Gi"
+                  }
+                },
+                "storageClassName": "test",
+                "volumeMode": "Filesystem"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

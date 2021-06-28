@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-image"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Image是应用数据的集合，是只读的。",
+		"type": "description"
+	}
+}

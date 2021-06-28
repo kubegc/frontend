@@ -1,0 +1,13 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Component",
+  "metadata": {
+    "name": "loki"
+  },
+  "spec": {
+    "desc": "运维系统日志收集软件",
+    "url": "",
+    "username": "",
+    "password": ""
+  }
+}

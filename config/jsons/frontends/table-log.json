@@ -1,0 +1,58 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-doslab.io.log",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"width":"150",
+                                "kind": "internalLink",
+                                "link": "User",
+                                "tag": "metadata#name",
+				"label":"用户名",
+				"row":"spec.user",
+				"type":"input",
+				"key":1
+			},
+			{
+				"width":"150",
+				"label":"开始时间",
+				"row":"spec.date",
+				"key":2
+			},
+                        {
+                                "width":"100",
+                                "label":"请求耗时",
+                                "row":"spec.duration",
+                                "key":3
+                        },
+			{
+				"width":"250",
+				"label":"请求路径",
+				"row":"spec.url",
+				"key":4
+			},
+			{
+				"width":"150",
+                                "kind": "internalLink",
+                                "link": "@spec.type",
+				"label": "请求类型",
+				"row":"spec.type",
+				"key":5
+			},
+                        {
+                                "width":"150",
+                                "label": "请求资源",
+                                "row":"spec.resource",
+                                "key":5
+                        }
+		],
+		"type":"table"
+	}
+}

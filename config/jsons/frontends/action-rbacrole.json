@@ -1,0 +1,26 @@
+{
+  "apiVersion":"doslab.io/v1",
+  "kind":"Frontend",
+  "metadata":{
+    "additionalProperties":{},
+    "finalizers":[],
+    "managedFields":[],
+    "name":"action-rbacrole",
+    "ownerReferences":[]
+  },
+  "spec":{
+    "data":[
+      {
+        "value":"edit",
+        "key":"编辑",
+        "type":"primary"
+      },
+      {
+        "type":"danger",
+        "key":"删除",
+        "value":"delete"
+      }
+    ],
+    "type":"action"
+  }
+}

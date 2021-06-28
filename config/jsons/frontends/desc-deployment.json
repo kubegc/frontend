@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-apps.deployment"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Deployment是Pod的集合，且多个Pod是等价的。",
+		"type": "description"
+	}
+}

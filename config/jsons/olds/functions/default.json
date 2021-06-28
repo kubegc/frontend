@@ -1,0 +1,85 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Function",
+	"metadata": {
+		"name": "default"
+	},
+        "type": "system",
+	"spec": {
+  "apiVersion": "apps/v1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "kube-api-mapper",
+    "namespace": "kube-system",
+    "labels": {
+      "name": "kube-api-mapper"
+    }
+  },
+  "spec": {
+    "replicas": 1,
+    "selector": {
+      "matchLabels": {
+        "name": "kube-api-mapper"
+      }
+    },
+    "template": {
+      "metadata": {
+        "labels": {
+          "name": "kube-api-mapper"
+        }
+      },
+      "spec": {
+        "nodeSelector": {
+          "node-role.kubernetes.io/master": ""
+        },
+        "tolerations": [
+          {
+            "key": "node-role.kubernetes.io/master",
+            "effect": "NoSchedule"
+          }
+        ],
+        "containers": [
+          {
+            "name": "kube-api-mapper",
+            "image": "registry.cn-beijing.aliyuncs.com/doslab/kubernetes-api-mapper:v1.4.0-amd64",
+            "imagePullPolicy": "IfNotPresent",
+            "command": [
+              "java",
+              "-jar",
+              "kubernetes-api-mapper.jar"
+            ],
+            "env": [
+              {
+                "name": "jdbcUrl",
+                "value": "jdbc:postgresql://39.106.40.190:30306/postgres?useUnicode=true&characterEncoding=UTF8&connectTimeout=2000&socketTimeout=6000&autoReconnect=true&&serverTimezone=Asia/Shanghai"
+              },
+              {
+                "name": "kubeUrl",
+                "value": "https://39.106.40.190:6443"
+              },
+              {
+                "name": "token",
+                "value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IlN3QnhWT05UYVcxb3VfVE1sOUdzZGtHN2FmUnhtTXZGcFBZaGxxNUVwYXMifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJrdWJlcm5ldGVzLWNsaWVudC10b2tlbi1td3M1ZiIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJrdWJlcm5ldGVzLWNsaWVudCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjQ2OWYxMzMxLWIzYjYtNGUwYS1hODhkLTEyYTU2ZWZkMGM5MCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTprdWJlcm5ldGVzLWNsaWVudCJ9.ewqPeEcdno1u37u9E_t3vaCUQF65uchfZQUZxyWyxfBejJMSUKFvrU8DCRcqGglIrRMBlFnKzI8zE_Jy1pp6U5H8puAOfm3tSX_l8EgtfH9ewzHZoX2haQYxWj2dsOZaLx91OXcN9Uqgif8uYpkv8MaVNL6jBC2_fTXwe4mzeyDyAH3OIv3uekbLlSrm7RWGo6kOC2NiNqfSrPXRVRmev5MD3sYagvzfqq6ESw78DcNpIfr3LxK1xm-dOcnEaQVfdVmtaj7ZiGjsA2oHmYpAiRvG1MTMB8HxeAjir2GiYaFHmi0u4rlxH0MbI8QHY62Y3TEi4scRtf-DJIihqNuyGQ"
+              }
+            ],
+            "volumeMounts": [
+              {
+                "name": "containertemplate",
+                "mountPath": "/home/kubernetes-api-mapper/jsons"
+              }
+            ]
+          }
+        ],
+        "volumes": [
+          {
+            "name": "containertemplate",
+            "hostPath": {
+              "path": "/var/lib/pdos"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
+}

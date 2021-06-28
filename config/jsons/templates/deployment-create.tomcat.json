@@ -1,0 +1,70 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "deployment-create.tomcat"
+	},
+        "type": "container",
+	"spec": {
+		"data": {
+			"key": "创建Tomcat",
+			"values": [{
+				"id": "metadata.name,metadata.labels.tag,spec.template.spec.containers[0].name,spec.selector.matchLabels.tag,spec.template.metadata.labels.tag",
+				"type": "string",
+				"required": "true",
+				"name": "应用名"
+			}, {
+                                "id": "metadata.namespace",
+                                "type": "string",
+                                "required": "true",
+                                "name": "namespace"
+                        }, {
+				"id": "spec.template.spec.containers[0].image",
+				"type": "string",
+				"required": "true",
+				"name": "镜像名"
+			}, {
+				"id": "spec.replicas",
+				"type": "integer",
+				"required": "true",
+				"name": "实例数"
+			}],
+			"template": {
+				"apiVersion": "apps/v1",
+				"kind": "Deployment",
+				"metadata": {
+					"name": "string",
+                                        "namespace": "string",
+					"labels": {
+						"tag": "string"
+					}
+				},
+				"spec": {
+					"selector": {
+						"matchLabels": {
+							"tag": "string"
+						}
+					},
+					"replicas": "integer",
+					"template": {
+						"metadata": {
+							"labels": {
+								"tag": "string"
+							}
+						},
+						"spec": {
+							"containers": [{
+								"image": "string",
+								"imagePullPolicy": "IfNotPresent",
+								"name": "string",
+								"ports": [{
+									"containerPort": 8080
+								}]
+							}]
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,18 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"api-baiduvm",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"git":"https://github.com/baidubce/bce-sdk-java",
+			"version":"0.10.95"
+		},
+		"type":"api"
+	}
+}

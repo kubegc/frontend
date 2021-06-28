@@ -1,0 +1,11 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "RegExp",
+  "metadata": {
+    "name": "username"
+  },
+  "spec": {
+     "value": "[a-z0-9-.]{4,16}",
+     "desc": "用户名规则: 支持小写字母、数字、中划线和点，长度在4-16个字符之间"
+  }
+}

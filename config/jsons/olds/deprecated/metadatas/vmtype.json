@@ -1,0 +1,10 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Metadata",
+	"metadata": {
+		"name": "vmtype-specs"
+	},
+	"type": "specs",
+	"spec": [{"cpu": "2", "memory": "3.75", "name": "c3.large "}, {"cpu": "4", "memory": "7.5", "name": "c3.xlarge "}, {"cpu": "8", "memory": "15", "name": "c3.2xlarge "}, {"cpu": "2", "memory": "7.5", "name": "m3.large "}, {"cpu": "4", "memory": "15", "name": "m3.xlarge "}, {"cpu": "8", "memory": "30", "name": "m3.2xlarge "}, {"cpu": "2", "memory": "15.25", "name": "r3.large "}, {"cpu": "4", "memory": "30.5", "name": "r3.xlarge "}, {"cpu": "8", "memory": "61", "name": "r3.2xlarge "}, {"cpu": "2", "memory": "3.75", "name": "c4.large "}, {"cpu": "4", "memory": "7.5", "name": "c4.xlarge "}, {"cpu": "8", "memory": "15", "name": "c4.2xlarge "}, {"cpu": "2", "memory": "8", "name": "m4.large "}, {"cpu": "4", "memory": "16", "name": "m4.xlarge "}, {"cpu": "8", "memory": "32", "name": "m4.2xlarge "}, {"cpu": "2", "memory": "15.25", "name": "r4.large "}, {"cpu": "4", "memory": "30.5", "name": "r4.xlarge "}, {"cpu": "8", "memory": "61", "name": "r4.2xlarge "}]
+		
+}

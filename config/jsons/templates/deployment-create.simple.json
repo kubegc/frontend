@@ -1,0 +1,84 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Template",
+    "metadata": {
+        "name": "deployment-create.simple",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": {
+            "key": "创建Tomcat11111",
+            "template": {
+                "apiVersion": "apps/v1",
+                "kind": "Deployment",
+                "metadata": {
+                    "labels": {
+                        "tag": "string"
+                    },
+                    "name": "string",
+                    "namespace": "string"
+                },
+                "spec": {
+                    "replicas": "integer",
+                    "selector": {
+                        "matchLabels": {
+                            "tag": "string"
+                        }
+                    },
+                    "template": {
+                        "metadata": {
+                            "labels": {
+                                "tag": "string"
+                            }
+                        },
+                        "spec": {
+                            "containers": [
+                                {
+                                    "image": "string",
+                                    "imagePullPolicy": "IfNotPresent",
+                                    "name": "string",
+                                    "ports": [
+                                        {
+                                            "containerPort": 8080
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "values": [
+                {
+                    "id": "metadata.name,metadata.labels.tag,spec.template.spec.containers[0].name,spec.selector.matchLabels.tag,spec.template.metadata.labels.tag",
+                    "name": "应用名",
+                    "regexp": "username",
+                    "required": "true",
+                    "type": "string"
+                },
+                {
+                    "id": "metadata.namespace",
+                    "name": "namespace",
+                    "regexp": "username",
+                    "required": "true",
+                    "type": "string"
+                },
+                {
+                    "id": "spec.template.spec.containers[0].image",
+                    "name": "镜像名",
+                    "regexp": "username",
+                    "required": "true",
+                    "type": "string"
+                },
+                {
+                    "id": "spec.replicas",
+                    "name": "实例数",
+                    "regexp": "username",
+                    "required": "true",
+                    "type": "integer"
+                }
+            ]
+        }
+    },
+    "type": "container"
+}

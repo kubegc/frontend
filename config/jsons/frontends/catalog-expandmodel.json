@@ -1,0 +1,28 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"catalog-expandmodel",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":{
+			"activeName":"metadata",
+			"tabMapOptions":[
+				{
+					"label":"metadata",
+					"key":"metadata"
+				},
+				{
+					"label":"nodeless",
+					"key":"nodeless"
+				}
+			],
+			"createdTime":0
+		},
+		"type":"catalog"
+	}
+}

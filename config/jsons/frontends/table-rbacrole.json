@@ -1,0 +1,29 @@
+{
+  "apiVersion":"doslab.io/v1",
+  "kind":"Frontend",
+  "metadata":{
+    "additionalProperties":{},
+    "finalizers":[],
+    "managedFields":[],
+    "name":"table-rbacrole",
+    "ownerReferences":[]
+  },
+  "spec":{
+    "data":[
+      {
+        "label":"角色名",
+        "row":"spec.name",
+        "key":1,
+        "width": "300px"
+      },
+      {
+        "kind":"action",
+        "label":"Actions",
+        "row":"",
+        "key":2,
+        "width":"400px"
+      }
+    ],
+    "type":"table"
+  }
+}

@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-data"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "Data用于表示研发过程中使用的开源数据集。",
+		"type": "description"
+	}
+}

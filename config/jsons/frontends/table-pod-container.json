@@ -1,0 +1,31 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-pod-container",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"width":"200",
+				"style":"width:250px;",
+				"label":"名字",
+				"row":"name",
+				"type":"input",
+				"key":1
+			},
+			{
+				"width":"150",
+				"label":"镜像",
+				"row":"image",
+				"key":2 ,
+                                "kind":"a"
+			}
+		],
+		"type":"table"
+	}
+}

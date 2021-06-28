@@ -1,0 +1,31 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"table-persistentvolume-spec",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"label":"类别",
+				"row":"spec.claimRef.name",
+				"key":1
+			},
+			{
+				"label":"服务器",
+				"row":"nfs.server",
+				"key":2
+			},
+			{
+				"label":"路径",
+				"row":"nfs.path",
+				"key":3
+			}
+		],
+		"type":"table"
+	}
+}

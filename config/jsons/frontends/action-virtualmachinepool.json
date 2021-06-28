@@ -1,0 +1,32 @@
+{
+	"metadata":{
+		"finalizers":[],
+		"managedFields":[],
+		"name":"action-virtualmachinepool",
+		"additionalProperties":{},
+		"ownerReferences":[]
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"data":[
+			{
+				"type":"autoStartPool",
+				"key":"开机启动存储池"
+			},
+			{
+				"type":"startPool",
+				"key":"启动存储池"
+			},
+			{
+				"type":"stopPool",
+				"key":"停止存储池"
+			},
+			{
+				"type":"deletePool",
+				"key":"删除存储池"
+			}
+		],
+		"type":"action"
+	}
+}

@@ -1,0 +1,72 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "svc-create.simple"
+	},
+	"spec": {
+		"data": {
+			"key": "创建SVC",
+			"values": [{
+				"id": "metadata.name",
+				"type": "string",
+				"required": "true",
+				"name": "SVC名称"
+			},{
+                                "id": "metadata.namespace",
+                                "type": "string",
+                                "required": "true",
+                                "name": "命名空间"
+                        },{
+                                "id": "spec.type",
+                                "type": "string",
+                                "required": "true",
+                                "name": "Service 类型"
+                        },{ 
+                                "id": "spec.ports[0].port",
+                                "type": "integer",
+                                "required": "true",
+                                "name": "内部访问端口"
+                        },{
+                                "id": "spec.ports[0].targetPort",
+                                "type": "integer",
+                                "required": "true",
+                                "name": "容器端口"
+                        },{
+                                "id": "spec.selector.app",
+                                "type": "string",
+                                "required": "true",
+                                "name": "关联应用名称"
+                        }],
+			"template": {
+                                "apiVersion": "v1",
+                                "kind": "Service",
+                                "metadata": {
+                                "labels": {
+                                "app": "test"
+                         },
+                                "name": "string",
+                                "namespace": "string"
+                         },
+                                "spec": {
+                                "ports": [
+                                   {
+                                 "name": "80-8001",
+                                 "port": "integer",
+                                 "protocol": "TCP",
+                                 "targetPort": "integer"
+                        }
+                        ],
+                                 "selector": {
+                                 "app": "string"
+                                   },
+                                 "sessionAffinity": "None",
+                                 "type": "string"
+                        }
+
+                          }
+
+                        }
+		}
+	}
+}

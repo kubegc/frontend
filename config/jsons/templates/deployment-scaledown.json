@@ -1,0 +1,19 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Template",
+	"metadata": {
+		"name": "deployment-scaledown"
+	},
+	"spec": {
+		"data": {
+			"key": "缩容",
+			"values": [{
+				"id": "spec.replicas",
+				"type": "integer",
+				"required": "true",
+				"action": "replace",
+				"name": "实例数"
+			}]
+		}
+	}
+}

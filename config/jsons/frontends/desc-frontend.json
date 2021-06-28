@@ -1,0 +1,11 @@
+{
+	"metadata":{
+		"name":"desc-doslab.io.frontend"
+	},
+	"apiVersion":"doslab.io/v1",
+	"kind":"Frontend",
+	"spec":{
+		"desc": "frontend是页面布局的元描述文件。",
+		"type": "description"
+	}
+}

@@ -1,0 +1,48 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-doslab.io.component",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "label": "组件",
+                "kind": "internalLink",
+                "link": "Pod",
+                "tag": "metadata#name",
+                "row": "metadata.name"
+            },
+            {
+                "key": 2,
+                "label": "组件描述",
+                "row": "spec.desc"
+            },
+            {
+                "key": 3,
+                "kind": "externalLink",
+                "label": "组件地址",
+                "row": "spec.url"
+            },
+            {
+                "key": 4,
+                "label": "组件用户",
+                "row": "spec.username"
+            },
+            {
+                "key": 5,
+                "label": "创建时间",
+                "row": "metadata.creationTimestamp"
+            },
+            {
+                "key": 7,
+                "kind": "action",
+                "label": "更多操作",
+                "row": ""
+            }
+        ],
+        "type": "table"
+    }
+}

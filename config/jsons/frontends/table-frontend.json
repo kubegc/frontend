@@ -1,0 +1,38 @@
+{
+    "apiVersion": "doslab.io/v1",
+    "kind": "Frontend",
+    "metadata": {
+        "name": "table-doslab.io.frontend",
+        "namespace": "default"
+    },
+    "spec": {
+        "data": [
+            {
+                "key": 1,
+                "label": "资源名",
+                "row": "metadata.name",
+                "width": "120"
+            },
+            {
+                "key": 2,
+                "label": "描述信息",
+                "row": "spec.desc",
+                "width": "150"
+            },
+            {
+                "key": 4,
+                "label": "类型名",
+                "row": "spec.type",
+                "width": "150"
+            },
+            { 
+                "key": 11,
+                "kind": "action",
+                "label": "更多操作",
+                "row": "",
+                "width": "130"
+            }
+        ],
+        "type": "table"
+    }
+}

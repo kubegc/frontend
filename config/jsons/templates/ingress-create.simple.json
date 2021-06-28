@@ -1,0 +1,70 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "Template",
+  "metadata": {
+    "name": "ingress-create.simple"
+  },
+  "spec": {
+    "data": {
+      "key": "创建Ingress",
+      "values": [
+        {
+          "id": "metadata.name",
+          "type": "string",
+          "required": "true",
+          "name": "Ingress 名称"
+        },
+        {
+          "id": "metadata.namespace",
+          "type": "string",
+          "required": "true",
+          "name": "命名空间"
+        },
+        {
+          "id": "spec.rules[0].host",
+          "type": "string",
+          "required": "true",
+          "name": "访问域名"
+        },
+        {
+          "id": "spec.rules[0].http.paths[0].backend.serviceName",
+          "type": "string",
+          "required": "true",
+          "name": "绑定Service名称"
+        },
+        {
+          "id": "spec.rules[0].http.paths[0].backend.servicePort",
+          "type": "integer",
+          "required": "true",
+          "name": "绑定Service 端口"
+        }
+      ],
+      "template": {
+        "apiVersion": "extensions/v1beta1",
+        "kind": "Ingress",
+        "metadata": {
+          "name": "string",
+          "namespace": "string"
+        },
+        "spec": {
+          "rules": [
+            {
+              "host": "string",
+              "http": {
+                "paths": [
+                  {
+                    "backend": {
+                      "serviceName": "string",
+                      "servicePort": "integer"
+                    },
+                    "path": "/"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

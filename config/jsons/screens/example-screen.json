@@ -1,0 +1,27 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Screen",
+	"metadata": {
+		"name": "example-screen",
+		"namespace": "default"
+	},
+	"spec": {
+		"layout": [4],
+		"views": {
+			"0-0": {
+                               "type": "text",
+				"name": "集群内存",
+				"value": "sum(status.capacity.memory)",
+				"unit": "GB",
+				"link": "Node"
+			},
+			"0-1": {
+				"type": "gauge",
+				"name": "已分配内存(GB)",
+				"max": "sum(status.capacity.memory)",
+				"value": "sum(status.capacity.memory)-sum(status.allocatable.memory)",
+				"link": "Node"
+			}
+		}
+	}
+}

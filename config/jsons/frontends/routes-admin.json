@@ -1,0 +1,236 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Frontend",
+	"metadata": {
+		"name": "routes-admin",
+		"namespace": "default"
+	},
+	"spec": {
+		"routes": [{
+				"children": [{
+						"children": [{
+							"component": "/screen/index",
+							"meta": {
+								"icon": "resources",
+								"title": "系统概览"
+							},
+                                                        "name": "system-screen",
+							"path": "sysGauge"
+						}],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "系统大屏"
+						},
+						"path": "sysScreen"
+					}, {
+						"children": [{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "飞腾主机"
+								},
+								"name": "Node",
+								"path": "node"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "课题组件"
+								},
+								"name": "doslab.io.Component",
+								"path": "component"
+							},
+							{
+								"component": "/cards/index",
+								"meta": {
+									"icon": "resources",
+									"title": "平台配置"
+								},
+								"name": "doslab.io.Frontend",
+								"path": "frontend"
+							}
+						],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "基本信息"
+						},
+						"path": "basicInfo"
+					},
+					{
+						"children": [{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "用户信息"
+								},
+								"name": "doslab.io.User",
+								"path": "user"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "用户角色"
+								},
+								"name": "doslab.io.UserRole",
+								"path": "userrole"
+							},
+							{
+								"meta": {
+									"icon": "resources",
+									"title": "监控大屏"
+								},
+								"path": "http://119.8.188.235:31002/d/JABGX_-mz/cluster-monitoring-for-kubernetes?orgId=1&refresh=10s&from=now-24h&to=now&kiosk"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "系统日志"
+								},
+								"name": "doslab.io.Log",
+								"path": "log"
+							}
+						],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "其它信息"
+						},
+						"path": "extInfo"
+					}
+				],
+				"component": "Base",
+				"meta": {
+					"icon": "routes",
+					"title": "环境信息"
+				},
+				"path": "/systemConfig"
+			},
+			{
+				"children": [{
+						"children": [{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "Pod"
+								},
+								"name": "Pod",
+								"path": "pod"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "Job"
+								},
+								"name": "batch.Job",
+								"path": "job"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "ReplicaSet"
+								},
+								"name": "apps.ReplicaSet",
+								"path": "replicaset"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "DaemonSet"
+								},
+								"name": "apps.DaemonSet",
+								"path": "daemonset"
+							},
+							{
+								"component": "/table/index",
+								"meta": {
+									"icon": "resources",
+									"title": "Deployment"
+								},
+								"name": "apps.Deployment",
+								"path": "deployment"
+							}
+						],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "典型负载"
+						},
+						"path": "cntLoads"
+					},
+					{
+						"children": [{
+							"component": "/table/index",
+							"meta": {
+								"icon": "resources",
+								"title": "物理主机"
+							},
+							"name": "Node",
+							"path": "node"
+						}],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "运行环境"
+						},
+						"path": "envMgr"
+					}
+				],
+				"component": "Base",
+				"meta": {
+					"icon": "routes",
+					"title": "容器环境"
+				},
+				"path": "/cntMgr"
+			},
+			{
+				"children": [{
+						"children": [{
+							"component": "/sched/index",
+							"meta": {
+								"icon": "resources",
+								"title": "资源规划"
+							},
+							"path": "plan"
+						}],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "资源保障"
+						},
+						"path": "qos"
+					},
+					{
+						"children": [{
+							"component": "/sched/index",
+							"meta": {
+								"icon": "resources",
+								"title": "任务抢占"
+							},
+							"path": "preempt"
+						}],
+						"component": "Layout",
+						"meta": {
+							"icon": "routes",
+							"title": "优先抢占"
+						},
+						"path": "schedRes"
+					}
+				],
+				"component": "Base",
+				"meta": {
+					"icon": "routes",
+					"title": "效果展示"
+				},
+				"path": "/resMgr"
+			}
+		]
+	}
+}
