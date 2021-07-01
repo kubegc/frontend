@@ -4,25 +4,23 @@
       type="primary"
       style="display: block; margin-left: 20px; margin-top: 20px"
       @click="execute()"
-    >执行
+    >调度过程回放
     </el-button>
-    <p style="margin-left: 20px">
+    <!-- <p style="margin-left: 20px">
       注意：index必须从1开始且连续，注意任务应用关联性！
-    </p>
+    </p> -->
     <div
       class="card-editor-container"
       style="
-        width: 30%;
-        height: 400px;
+        width: 5%;
+        height: 10px;
         float: left;
-        margin-top: 10px;
-        margin-left: 20px;
       "
     >
       <!-- <json-editor ref="EditableJson" v-model="value" /> -->
-      <EditableJson v-model="json" />
+      <EditableJson v-model="json" v-show="false" />
     </div>
-    <div id="myChart" style="width: 65%; height: 700px; float: left" />
+    <div id="myChart" style="width: 95%; height: 350px; float: left" />
   </div>
 </template>
 <script>
