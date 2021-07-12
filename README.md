@@ -10,13 +10,16 @@
 - wuheng@otcaix.iscas.ac.cn
 
 
-# Coomands
+# Commands
 
 ```
 npm install
 npm run build:prod
 ```
 
+# Demo
+
+http://124.70.64.232/  (admin/admin)
 
 # Plugins
 
