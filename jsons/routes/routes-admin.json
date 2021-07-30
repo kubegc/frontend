@@ -1,0 +1,52 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "Route",
+	"metadata": {
+		"name": "routes-admin",
+		"namespace": "default"
+	},
+	"spec": {
+		"catalogs": [{
+				"name": "环境信息",
+				"path": "/envInfo"
+			},
+			{
+				"name": "应用管理",
+				"path": "/appMgr"
+			}
+		],
+		"groups": [{
+				"name": "平台信息",
+				"path": "/envInfo/basicInfo",
+				"icon": "routes"
+			},
+			{
+				"name": "工作负载",
+				"path": "/appMgr/workload",
+				"icon": "routes"
+			}
+		],
+		"items": [{
+				"component": "/table/index",
+				"icon": "resources",
+				"name": "路侧节点",
+				"kind": "Node",
+				"path": "/envInfo/basicInfo/node"
+			},
+			{
+				"component": "/dashboard/index",
+				"icon": "resources",
+				"source": "http://133.133.135.32:31002/d/xfpJB9FGz/prometheus-dashboard?orgId=1&kiosk",
+				"name": "系统概览",
+				"path": "/envInfo/basicInfo/index"
+			},
+			{
+				"component": "/table/index",
+				"icon": "resources",
+				"name": "Pod",
+				"kind": "Pod",
+				"path": "/appMgr/basicInfo/pod"
+			}
+		]
+	}
+}
