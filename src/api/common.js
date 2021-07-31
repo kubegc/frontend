@@ -174,14 +174,14 @@ export function frontendData(token, kind, listQuery, tablePage) {
       // 获取可以进行的操作
       getResource({
         token,
-        kind: 'Frontend',
+        kind: 'FrontendAction',
         name: 'action-' + kind,
         namespace: 'default'
       }).then((response) => {
         if (validResponse(response)) {
           // eslint-disable-next-line no-prototype-builtins
           if (response.hasOwnProperty('data')) {
-            tablePage.actions = response.data.spec.data
+            tablePage.actions = response.data.spec
           } else {
             tablePage.actions = []
           }
@@ -196,12 +196,12 @@ export function frontendData(token, kind, listQuery, tablePage) {
           // 获取表头信息
           getResource({
             token,
-            kind: 'Frontend',
+            kind: 'FrontendTable',
             name: 'table' + '-' + kind,
             namespace: 'default'
           }).then((response) => {
             if (validResponse(response)) {
-              tablePage.tableColumns = response.data.spec.data
+              tablePage.tableColumns = response.data.spec
               tablePage.listLoading = false
             }
           })
@@ -247,12 +247,12 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
   }).then((response) => {
     if (validResponse(response)) {
       // 就是创建这个资源的 json 模板
-      createAbout.createJsonPattern = response.data.spec.data.template
+      createAbout.createJsonPattern = response.data.spec.template
       // 生成之后就会变成填写字段信息表格的数据来源数组
       createAbout.createFormConfig = []
       // eslint-disable-next-line no-prototype-builtins
       if (response.hasOwnProperty('data')) {
-        createAbout.createFormConfig = response.data.spec.data.values
+        createAbout.createFormConfig = response.data.spec.values
         for (let i = 0; i < createAbout.createFormConfig.length; i++) {
           if (createAbout.createFormConfig[i].type === 'bool') {
             createAbout.createFormConfig[i].value = true
@@ -319,8 +319,8 @@ export function createJson(token, kind, createAbout) {
   }).then((response) => {
     if (validResponse(response)) {
       // this.customizedAction = true
-      if (response.data.spec && response.data.spec.data) {
-        createAbout.createTemplates = response.data.spec.data.support
+      if (response.data.spec) {
+        createAbout.createTemplates = response.data.spec.support
         createAbout.ifJsonEditorForCreate = false
       } else {
         createAbout.ifJsonEditorForCreate = true
@@ -373,19 +373,19 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
           namespace: 'default'
         }).then((response) => {
           if (validResponse(response)) {
-            updateAbout.updateResourceTitle = response.data.spec.data.key
+            updateAbout.updateResourceTitle = response.data.spec.key
             updateAbout.ifJsonEditorForUpdate = false
             // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
             // id是 spec.replicas
             // type 是字段的类型
             // value 是这个字段默认的值，bool 是 true, string 是 ''
             updateAbout.updateFormConfig = []
-            if (response.data.spec.data.template.hasOwnProperty("operator")) {
-              updateAbout.updateJsonData["operator"] = response.data.spec.data.template.operator
+            if (response.data.spec.template.hasOwnProperty("operator")) {
+              updateAbout.updateJsonData["operator"] = response.data.spec.template.operator
             }
             // eslint-disable-next-line no-prototype-builtins
             if (response.hasOwnProperty('data')) {
-              updateAbout.updateFormConfig = response.data.spec.data.values
+              updateAbout.updateFormConfig = response.data.spec.values
               for (let i = 0; i < updateAbout.updateFormConfig.length; i++) {
                 if (updateAbout.updateFormConfig[i].type === 'bool') {
                   updateAbout.updateFormConfig[i].value = true

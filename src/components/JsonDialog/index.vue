@@ -145,7 +145,7 @@ export default {
   created() {
     getResource({
       token: 'default',
-      kind: 'RegExp',
+      kind: 'FrontendRegExp',
       namespace: 'default',
       name: 'defstr'
     }).then((response) => {
@@ -155,7 +155,7 @@ export default {
 
     getResource({
       token: 'default',
-      kind: 'RegExp',
+      kind: 'FrontendRegExp',
       namespace: 'default',
       name: 'defnum'
     }).then((response) => {

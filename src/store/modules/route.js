@@ -13,6 +13,7 @@ const state = {
 }
 
 function createRoute(data) {
+  console.log(JSON.stringify(data))
   const res = data.filter(item => {
     if (item.component) {
       if (item.component === 'Base') {
@@ -204,9 +205,6 @@ const actions = {
       commit('SET_ROUTES', routes)
       commit('SET_TOPMENUS', catalogs)
       commit('SET_CURRMENUPREFIX', catalogs[0].path)
-      console.log(JSON.stringify(routes))
-      console.log(JSON.stringify(catalogs))
-      console.log(catalogs[0].path)
     }
   }
 }
