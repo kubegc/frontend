@@ -1,0 +1,67 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "FrontendTable",
+	"metadata": {
+		"name": "table-pod",
+		"namespace": "default"
+	},
+	"spec": [{
+			"kind": "internalLink",
+			"label": "Pod名",
+			"link": "podInfo",
+			"row": "metadata.name",
+			"type": "input"
+		},
+		{
+			"kind": "internalLink",
+			"label": "命名空间",
+			"link": "Namespace",
+			"row": "metadata.namespace",
+			"tag": "metadata#name"
+		},
+		{
+			"label": "IP地址ַ",
+			"row": "status.podIP"
+		},
+		{
+			"kind": "internalLink",
+			"label": "父类资源",
+			"link": "@metadata.ownerReferences[0].apiVersion+metadata.ownerReferences[0].kind",
+			"row": "metadata.ownerReferences[0].kind"
+		},
+		{
+			"kind": "internalLink",
+			"label": "父类资源名",
+			"link": "@metadata.ownerReferences[0].apiVersion+metadata.ownerReferences[0].kind",
+			"row": "metadata.ownerReferences[0].name",
+			"tag": "metadata#name"
+		},
+		{
+			"label": "运行状态",
+			"row": "status.phase"
+		},
+		{
+			"label": "所在主机",
+			"kind": "internalLink",
+			"link": "Node",
+			"tag": "metadata#name",
+			"row": "spec.nodeName"
+		},
+		{
+			"label": "创建时间",
+			"row": "metadata.creationTimestamp"
+		},
+		{
+			"kind": "terminal",
+			"label": "远程连接",
+			"link": "http://39.106.40.190:31052?pod={1}&namespace={2}",
+			"row": "metadata.name,metadata.namespace"
+		},
+		{
+
+			"kind": "action",
+			"label": "更多操作",
+			"row": ""
+		}
+	]
+}

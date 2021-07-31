@@ -1,0 +1,16 @@
+{
+	"apiVersion": "doslab.io/v1",
+	"kind": "FrontendAction",
+	"metadata": {
+		"name": "action-pod"
+	},
+	"spec": [{
+			"type": "delete",
+			"key": "删除"
+		},
+		{
+			"type": "update",
+			"key": "更新"
+		}
+	]
+}
