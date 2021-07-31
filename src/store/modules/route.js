@@ -13,7 +13,6 @@ const state = {
 }
 
 function createRoute(data) {
-  console.log(JSON.stringify(data))
   const res = data.filter(item => {
     if (item.component) {
       if (item.component === 'Base') {
@@ -100,11 +99,11 @@ function toVueRoute(data) {
     // groups
     const gcg = []
     for (const g of data.spec.groups) {
-      if (g.path.indexOf(c.path + '/') !== -1) {
+      if (g.path.includes(c.path + '/')) {
         // item
         const icg = []
         for (const i of data.spec.items) {
-          if (i.path.indexOf(g.path + '/') !== -1) {
+          if (i.path.includes(g.path + '/')) {
             const ici = {
               'component': i.component,
               'meta': {
