@@ -1,6 +1,6 @@
 {
   "apiVersion": "doslab.io/v1",
-  "kind": "RegExp",
+  "kind": "FrontendRegExp",
   "metadata": {
     "name": "username"
   },
