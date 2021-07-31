@@ -45,7 +45,7 @@
 				"icon": "resources",
 				"name": "Pod",
 				"kind": "Pod",
-				"path": "/appMgr/basicInfo/pod"
+				"path": "/appMgr/workload/pod"
 			}
 		]
 	}
