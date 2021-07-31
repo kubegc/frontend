@@ -1,3 +1,4 @@
+<!-- Copyright (2021, ) Institute of Software, Chinese Academy of Sciences -->
 <template>
   <div class="login-container">
     <el-form
@@ -137,9 +138,9 @@ export default {
   created() {
     getResource({
       token: 'default',
-      kind: 'Frontend',
+      kind: 'FrontendProject',
       namespace: 'default',
-      name: 'title-project'
+      name: 'project'
     }).then((response) => {
       this.projectTitles = response.data.spec.data
       this.chosenTitle = response.data.spec.data[0].label
@@ -147,7 +148,7 @@ export default {
 
     getResource({
       token: 'default',
-      kind: 'RegExp',
+      kind: 'FrontendRegExp',
       namespace: 'default',
       name: 'username'
     }).then((response) => {
@@ -157,7 +158,7 @@ export default {
 
     getResource({
       token: 'default',
-      kind: 'RegExp',
+      kind: 'FrontendRegExp',
       namespace: 'default',
       name: 'password'
     }).then((response) => {

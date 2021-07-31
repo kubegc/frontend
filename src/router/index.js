@@ -41,23 +41,6 @@ export const constantRoutes = [
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
-  },
-  {
-    path: '/',
-    component: Base,
-    children: [
-      {
-        path: 'in',
-        component: Layout,
-        children: [
-          {
-            path: 'DepAppMarket',
-            name: 'DepAppMarket',
-            component: () => import('@/views/cards/index'),
-            meta: { title: 'dep', icon: 'resources', kind: 'Image' }
-          }]
-      }
-    ]
   }
 ]
 

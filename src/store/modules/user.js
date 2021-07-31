@@ -1,13 +1,12 @@
+// Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
 import { login, getUserInfo } from '@/api/user'
 import { getResource } from '@/api/kubernetes'
 import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    // avatar: '',
     role: '',
     namespace: 'default'
   }
@@ -48,32 +47,9 @@ const actions = {
       })
     })
   },
-
-  // get user info
-  getInfo({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      getUserInfo({ token: state.token, username: getValue('name'), namespace: state.namespace }).then(response => {
-        const { data } = response
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-        const { role } = data
-        commit('SET_ROLE', role)
-        // commit('SET_AVATAR', avatar)
-        commit('SET_NAME', getValue('name'))
-        setValue('role', role)
-        // setValue('avatar', avatar)
-        resolve(data)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-
   logout({ dispatch }) {
     return new Promise(resolve => {
       dispatch('resetToken').then(() => {
-        resetRouter()
         removeValue('name')
         removeValue('role')
         resolve()
@@ -89,20 +65,22 @@ const actions = {
       resolve()
     })
   },
-  /**
-   * @author chace
-   * @param state
-   * @returns {Promise<unknown>}
-   */
-  getRoutesConfig({ state }, role) {
-    return new Promise(resolve => {
-      getResource({
-        token: state.token,
-        kind: 'Frontend',
-        namespace: state.namespace,
-        name: 'routes-' + role
-      }).then(response => {
-        resolve(response.data)
+  getRole({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getUserInfo({ token: state.token, username: getValue('name'), namespace: state.namespace }).then(response => {
+        const { data } = response
+        if (!data) {
+          reject('Verification failed, please Login again.')
+        }
+        const { role } = data
+        commit('SET_ROLE', role)
+        // commit('SET_AVATAR', avatar)
+        commit('SET_NAME', getValue('name'))
+        setValue('role', role)
+        // setValue('avatar', avatar)
+        resolve(data)
+      }).catch(error => {
+        reject(error)
       })
     })
   }

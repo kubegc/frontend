@@ -1,3 +1,4 @@
+// Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
 import router from './router'
 import store from './store'
 import { Message } from 'element-ui'
@@ -21,7 +22,7 @@ router.beforeEach(async(to, from, next) => {
 
   if (hasToken) {
     if (to.path === '/login') {
-      // if is logged in, redirect to the home page
+      // if it is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
     } else {
@@ -35,9 +36,9 @@ router.beforeEach(async(to, from, next) => {
           }
         } else {
           // get user info
-          const { role } = await store.dispatch('user/getInfo')
-          const { spec: { routes }} = await store.dispatch('user/getRoutesConfig', role)
-          await store.dispatch('permission/generateRoutes', routes)
+          const { role } = await store.dispatch('user/getRole')
+          const routes = await store.dispatch('route/getRoute', role)
+          await store.dispatch('route/parseRoute', routes)
           // dynamically add accessible routes
           router.addRoutes(store.getters.add_routes)
           // hack method to ensure that addRoutes is complete
@@ -47,7 +48,6 @@ router.beforeEach(async(to, from, next) => {
       } catch (error) {
         // remove token and go to login page to re-login
         await store.dispatch('user/resetToken')
-        console.log(error)
         Message.error(error || 'Has Error')
         next(`/login?redirect=${to.path}`)
         NProgress.done()

@@ -1,3 +1,4 @@
+// Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
 import defaultSettings from '@/settings'
 
 const { showSettings, fixedHeader, sidebarLogo } = defaultSettings

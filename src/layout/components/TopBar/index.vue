@@ -63,12 +63,12 @@ export default {
   methods: {
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$store.commit('permission/RESET_ROUTES')
+      this.$store.commit('route/RESET_ROUTES')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     },
     handleChange(menuIndex) {
-      this.$store.commit('permission/SET_CURRMENUPREFIX', this.top_menus[menuIndex].path)
-      this.$store.commit('permission/RESET_MENUROUTES', menuIndex)
+      this.$store.commit('route/SET_CURRMENUPREFIX', this.top_menus[menuIndex].path)
+      this.$store.commit('route/RESET_MENUROUTES', menuIndex)
     }
   }
 }
