@@ -1,0 +1,19 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: frontendregexps.doslab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .metadata.creationTimestamp
+    name: AGE
+    type: date
+  group: doslab.io
+  names:
+    kind: FrontendRegExp
+    plural: frontendregexps
+    shortNames:
+    - frdregexp
+    singular: frontendregexp
+  scope: Namespaced
+  version: v1
