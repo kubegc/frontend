@@ -1,46 +1,30 @@
 {
-	"metadata":{
-		"name":"formsearch-pod",
-		"namespace":"default"
-	},
-	"apiVersion":"doslab.io/v1",
-	"kind":"Frontend",
-	"spec":{
-		"data":{
-			"expand":2,
-			"submitButton":"搜索",
-			"formName":"search",
-			"formStyle":{
-				"display":"inline"
-			},
-			"icon":"el-icon-search",
-			"model":{
-				"metadata#name":"",
-				"spec#nodeName":""
-			},
-			"title":"查询",
-			"items":[
-				{
-					"drop":true,
-					"prop":"metadata#name",
-					"ph":"",
-					"itemStyle":"display:inline-block;margin-right:10px",
-					"label":"资源名称:",
-					"type":"input",
-					"key":1
-				},
-				{
-					"drop":false,
-					"prop":"spec#nodeName",
-					"ph":"",
-					"itemStyle":"display:inline-block;margin-right:10px",
-					"label":"所在主机:",
-					"type":"input",
-					"key":2
-				}
-			],
-			"resetButton":"重置信息"
-		},
-		"type":"formsearch"
-	}
+  "metadata": {
+    "name": "formsearch-pod",
+    "namespace": "default"
+  },
+  "apiVersion": "doslab.io/v1",
+  "kind": "FrontendFormseach",
+  "spec": {
+    "data": {
+      "items": [{
+        "name": "资源名称:",
+        "path": "metadata#name",
+        "style": "display:inline-block;margin-right:10px",
+        "type": "textbox",
+        "default": "默认值"
+      },
+        {
+          "name": "所在主机:",
+          "path": "spec#nodeName",
+          "style": "display:inline-block;margin-right:10px",
+          "type": "combobox",
+          "default": "keys(metadata#labels)"
+        }
+      ],
+      "submitButton": "搜索",
+      "resetButton": "重置信息",
+    },
+    "type": "formsearch"
+  }
 }
