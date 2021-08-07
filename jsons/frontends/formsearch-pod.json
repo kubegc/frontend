@@ -23,7 +23,7 @@
         }
       ],
       "submitButton": "搜索",
-      "resetButton": "重置信息",
+      "resetButton": "重置信息"
     },
     "type": "formsearch"
   }
