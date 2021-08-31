@@ -292,8 +292,6 @@ export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
   //   this.updateJsonData = JSON.parse(this.updateJsonData)
   // }
   if (!updateAbout.ifJsonEditorForUpdate) {
-    console.log(JSON.stringify(updateAbout.updateJsonData))
-    console.log(JSON.stringify(updateAbout.updateFormConfig))
     updateJsonObj(updateAbout.updateJsonData, updateAbout.updateFormConfig)
   }
   // this.createJsonData = JSON.parse(this.createJsonData);

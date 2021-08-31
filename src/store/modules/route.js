@@ -109,7 +109,8 @@ function toVueRoute(data) {
               'meta': {
                 'icon': i.icon,
                 'source': i.source ? i.source : '',
-                'title': i.name
+                'title': i.name,
+                'filter': i.filter ? i.filter : ''
               },
               'name': i.kind ? i.kind : '',
               'path': i.path

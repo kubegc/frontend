@@ -27,7 +27,6 @@ export default {
   },
   mounted() {
     screenData(this.$route.name).then((result) => {
-      console.log(result)
       this.result = result
       this.$nextTick(() => {
         const containers = []
@@ -44,8 +43,7 @@ export default {
         this.$nextTick(
           () => {
             for (let k = 0; k < containers.length; k++) {
-              console.log(JSON.stringify(this.result.views[containers[k].key].data))
-              console.log('---')
+            
               containers[k].value.setOption(this.result.views[containers[k].key].data)
             }
           }

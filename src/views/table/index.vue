@@ -166,7 +166,8 @@ export default {
       listQuery: {
         page: 0,
         limit: 10,
-        labels: {}
+        labels: {},
+        fixedLabels: {}
       },
       // 资源相关
       namespace: 'default',
@@ -194,11 +195,14 @@ export default {
   },
   created() {
     this.kind = this.$route.name // 该资源的名字
+    this.listQuery.fixedLabels = this.$route.meta.filter
+    this.listQuery.labels = this.listQuery.fixedLabels
     if (this.$route.params && this.$route.params.key) {
       const key = this.$route.params.key
       const value = this.$route.params.value
-      this.listQuery.labels[key] = value
+      this.listQuery.labels[key] = value || {}
     }
+    console.log(JSON.stringify(this.listQuery.labels))
     frontendMeta(
       this.token,
       this.kind,
@@ -224,6 +228,7 @@ export default {
     },
     handleCreateTemplateChange,
     search(labels) {
+      console.log(labels)
       this.listQuery.labels = labels
       frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },

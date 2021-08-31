@@ -153,7 +153,6 @@ export default {
       for (let i = this.initParams.expand; i < this.initParams.items.length; i++) {
         this.initParams.items[i].drop = !this.drop
       }
-      console.log(this.items)
       this.drop = !this.drop
     },
     promiseDataSource(itemName) {
