@@ -174,7 +174,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
       // 获取可以进行的操作
       getResource({
         token,
-        kind: 'FrontendAction',
+        kind: 'Frontend',
         name: 'action-' + kind,
         namespace: 'default'
       }).then((response) => {
@@ -196,7 +196,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
           // 获取表头信息
           getResource({
             token,
-            kind: 'FrontendTable',
+            kind: 'Frontend',
             name: 'table' + '-' + kind,
             namespace: 'default'
           }).then((response) => {

@@ -138,7 +138,7 @@ export default {
   created() {
     getResource({
       token: 'default',
-      kind: 'FrontendProject',
+      kind: 'Project',
       namespace: 'default',
       name: 'project'
     }).then((response) => {
@@ -148,7 +148,7 @@ export default {
 
     getResource({
       token: 'default',
-      kind: 'FrontendRegExp',
+      kind: 'RegExp',
       namespace: 'default',
       name: 'username'
     }).then((response) => {
@@ -158,7 +158,7 @@ export default {
 
     getResource({
       token: 'default',
-      kind: 'FrontendRegExp',
+      kind: 'RegExp',
       namespace: 'default',
       name: 'password'
     }).then((response) => {
