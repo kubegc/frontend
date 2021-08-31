@@ -11,11 +11,11 @@
     >
       <div class="title-container">
         <el-select
-          v-model="chosenTitle"
+          v-model="projectTitle"
           style="width: 112%; margin-bottom: 20px"
         >
           <el-option
-            v-for="item in projectTitles"
+            v-for="item in allProjectTitles"
             :key="item.label"
             :label="item.label"
             :value="item.value"
@@ -118,8 +118,9 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      projectTitles: [],
-      chosenTitle: '',
+      allProjectTitles: [],
+      projectTitle: '',
+      projectId: '',
       usernameRegExp: '',
       usernameRegExpDesc: '',
       passwordRegExp: '',
@@ -138,17 +139,18 @@ export default {
   created() {
     getResource({
       token: 'default',
-      kind: 'Project',
+      kind: 'Frontend',
       namespace: 'default',
       name: 'frontend-project'
     }).then((response) => {
-      this.projectTitles = response.data.spec.data
-      this.chosenTitle = response.data.spec.data[0].label
+      this.allProjectTitles = response.data.spec.data
+      this.projectTitle = response.data.spec.data[0].label
+      this.projectId = response.data.spec.data[0].value
     })
 
     getResource({
       token: 'default',
-      kind: 'RegExp',
+      kind: 'Frontend',
       namespace: 'default',
       name: 'username'
     }).then((response) => {
@@ -158,7 +160,7 @@ export default {
 
     getResource({
       token: 'default',
-      kind: 'RegExp',
+      kind: 'Frontend',
       namespace: 'default',
       name: 'password'
     }).then((response) => {

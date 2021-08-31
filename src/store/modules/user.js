@@ -1,6 +1,5 @@
 // Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
 import { login, getUserInfo } from '@/api/user'
-import { getResource } from '@/api/kubernetes'
 import { getToken, setToken, removeToken, setValue, getValue, removeValue } from '@/utils/auth'
 
 const getDefaultState = () => {
