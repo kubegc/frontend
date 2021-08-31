@@ -1,6 +1,6 @@
 {
 	"apiVersion": "doslab.io/v1",
-	"kind": "FrontendRoute",
+	"kind": "Frontend",
 	"metadata": {
 		"name": "routes-admin",
 		"namespace": "default"

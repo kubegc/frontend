@@ -73,23 +73,12 @@ router.afterEach(() => {
 })
 
 function homepage(curr) {
-  let hp = ''
   for (let i = 0; i < curr.length; i++) {
     const c = curr[i]
-    if (c.component) {
-      if (c.children) {
-        const rtn = homepage(c.children)
-        if (rtn !== '') {
-          hp += (c.path + '/' + rtn)
-          return hp
-        }
-      } else {
-        hp += c.path
-        return hp
-      }
+    if (c.children) {
+      return homepage(c.children)
     } else {
-      return hp
+      return c.path
     }
   }
-  return hp
 }

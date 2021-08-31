@@ -140,7 +140,7 @@ export default {
       token: 'default',
       kind: 'Project',
       namespace: 'default',
-      name: 'project'
+      name: 'frontend-project'
     }).then((response) => {
       this.projectTitles = response.data.spec.data
       this.chosenTitle = response.data.spec.data[0].label
