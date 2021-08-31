@@ -34,10 +34,10 @@ export function dropdownValues(name, values) {
     namespace: 'default',
     name })
     .then(response => {
-      if (validResponse(response)) {
-        values = response.data.spec
+        if (validResponse(response)) {
+          values = response.data.spec
+        }
       }
-    }
     )
 }
 export function getComplexOrDefValue(scope, longKey, defKey) {
@@ -86,7 +86,7 @@ export function getTextValue(scope, longKey) {
             parseInt(
               item.substring(item.indexOf('[') + 1, item.indexOf(']'))
             )
-          ]
+            ]
         return true
       }
     } else {
@@ -181,7 +181,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
         if (validResponse(response)) {
           // eslint-disable-next-line no-prototype-builtins
           if (response.hasOwnProperty('data')) {
-            tablePage.actions = response.data.spec
+            tablePage.actions = response.data.spec.data
           } else {
             tablePage.actions = []
           }
@@ -201,7 +201,7 @@ export function frontendData(token, kind, listQuery, tablePage) {
             namespace: 'default'
           }).then((response) => {
             if (validResponse(response)) {
-              tablePage.tableColumns = response.data.spec
+              tablePage.tableColumns = response.data.spec.data
               tablePage.listLoading = false
             }
           })
@@ -226,7 +226,7 @@ export function screenData(name) {
     name: name,
   }).then((response) => {
     if (validResponse(response)) {
-     return response.data.spec
+      return response.data.spec
     }
   })
 }
@@ -247,12 +247,12 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
   }).then((response) => {
     if (validResponse(response)) {
       // 就是创建这个资源的 json 模板
-      createAbout.createJsonPattern = response.data.spec.template
+      createAbout.createJsonPattern = response.data.spec.data.template
       // 生成之后就会变成填写字段信息表格的数据来源数组
       createAbout.createFormConfig = []
       // eslint-disable-next-line no-prototype-builtins
       if (response.hasOwnProperty('data')) {
-        createAbout.createFormConfig = response.data.spec.values
+        createAbout.createFormConfig = response.data.spec.data.values
         for (let i = 0; i < createAbout.createFormConfig.length; i++) {
           if (createAbout.createFormConfig[i].type === 'bool') {
             createAbout.createFormConfig[i].value = true
@@ -319,8 +319,8 @@ export function createJson(token, kind, createAbout) {
   }).then((response) => {
     if (validResponse(response)) {
       // this.customizedAction = true
-      if (response.data.spec) {
-        createAbout.createTemplates = response.data.spec.support
+      if (response.data.spec && response.data.spec.data) {
+        createAbout.createTemplates = response.data.spec.data.support
         createAbout.ifJsonEditorForCreate = false
       } else {
         createAbout.ifJsonEditorForCreate = true
@@ -373,19 +373,19 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
           namespace: 'default'
         }).then((response) => {
           if (validResponse(response)) {
-            updateAbout.updateResourceTitle = response.data.spec.key
+            updateAbout.updateResourceTitle = response.data.spec.data.key
             updateAbout.ifJsonEditorForUpdate = false
             // 比如 action 是 scaleup 的时候，这里可能代表的就是需要修改的一些属性字段的信息
             // id是 spec.replicas
             // type 是字段的类型
             // value 是这个字段默认的值，bool 是 true, string 是 ''
             updateAbout.updateFormConfig = []
-            if (response.data.spec.template.hasOwnProperty("operator")) {
-              updateAbout.updateJsonData["operator"] = response.data.spec.template.operator
+            if (response.data.spec.data.template.hasOwnProperty("operator")) {
+              updateAbout.updateJsonData["operator"] = response.data.spec.data.template.operator
             }
             // eslint-disable-next-line no-prototype-builtins
             if (response.hasOwnProperty('data')) {
-              updateAbout.updateFormConfig = response.data.spec.values
+              updateAbout.updateFormConfig = response.data.spec.data.values
               for (let i = 0; i < updateAbout.updateFormConfig.length; i++) {
                 if (updateAbout.updateFormConfig[i].type === 'bool') {
                   updateAbout.updateFormConfig[i].value = true
@@ -438,7 +438,7 @@ export function updateJsonObj(jsonObj, configArray) {
           jsonObjTemp =
             jsonObjTemp[
               pathToProperty[i].substring(0, pathToProperty[i].indexOf('['))
-            ]
+              ]
           // 获得 example 数组对象里面的 index 索引下的对象
           jsonObjTemp =
             jsonObjTemp[
@@ -448,7 +448,7 @@ export function updateJsonObj(jsonObj, configArray) {
                   pathToProperty[i].indexOf(']')
                 )
               )
-            ]
+              ]
         } else {
           jsonObjTemp = jsonObjTemp[pathToProperty[i]]
         }
@@ -461,7 +461,7 @@ export function updateJsonObj(jsonObj, configArray) {
               0,
               pathToProperty[pathToProperty.length - 1].indexOf('[')
             )
-          ]
+            ]
         if (configArray[key].type === 'integer') {
           jsonObjTemp[
             parseInt(
@@ -470,7 +470,7 @@ export function updateJsonObj(jsonObj, configArray) {
                 pathToProperty[pathToProperty.length - 1].indexOf(']')
               )
             )
-          ] = Number(configArray[key].value) // 这里的 value 就是用户填写的信息
+            ] = Number(configArray[key].value) // 这里的 value 就是用户填写的信息
         } else {
           jsonObjTemp[
             parseInt(
@@ -479,16 +479,16 @@ export function updateJsonObj(jsonObj, configArray) {
                 pathToProperty[pathToProperty.length - 1].indexOf(']')
               )
             )
-          ] = configArray[key].value
+            ] = configArray[key].value
         }
       } else if (configArray[key].type === 'integer') {
         jsonObjTemp[
           pathToProperty[pathToProperty.length - 1]
-        ] = Number(configArray[key].value)
+          ] = Number(configArray[key].value)
       } else {
         jsonObjTemp[
           pathToProperty[pathToProperty.length - 1]
-        ] = configArray[key].value
+          ] = configArray[key].value
       }
     }
   }
