@@ -67,7 +67,7 @@
               }"
             >
               <el-link type="primary">{{
-                  item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : item.label
+                  item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.data[item.row.substring(1) + '-' +item.tag][scope.$index]
                 }}</el-link>
             </router-link>
             <!-- externalLink -->
@@ -167,7 +167,8 @@ export default {
         page: 0,
         limit: 10,
         labels: {},
-        fixedLabels: {}
+        fixedLabels: {},
+        data: {}
       },
       // 资源相关
       namespace: 'default',
@@ -207,6 +208,7 @@ export default {
       this.kind,
       this.tablePage)
     frontendData(
+      this,
       this.token,
       this.kind,
       this.listQuery,

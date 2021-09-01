@@ -63,3 +63,11 @@ export function queryResourceValue(data) {
   })
 }
 
+export function queryResourceCount(data) {
+  return request({
+    url: '/kube/queryResourceCount',
+    method: 'post',
+    data
+  })
+}
+

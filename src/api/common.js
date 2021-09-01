@@ -1,4 +1,4 @@
-import { createResource, deleteResource, getResource, listResources, updateResource, getScreen } from '@/api/kubernetes'
+import { createResource, deleteResource, getResource, listResources, updateResource, getScreen, queryResourceCount  } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
 // eslint-disable-next-line no-unused-vars
 /* eslint-disable */
@@ -159,7 +159,7 @@ export function frontendMeta(token, kind, tablePage) {
     }
   })
 }
-export function frontendData(token, kind, listQuery, tablePage) {
+export function frontendData(ref, token, kind, listQuery, tablePage) {
   listResources({
     token,
     kind,
@@ -194,6 +194,17 @@ export function frontendData(token, kind, listQuery, tablePage) {
             tablePage.tableData[i].val = ''
           }
           // 获取表头信息
+          // getResource({
+          //   token,
+          //   kind: 'Frontend',
+          //   name: 'table' + '-' + kind,
+          //   namespace: 'default'
+          // }).then((response) => {
+          //   if (validResponse(response)) {
+          //     tablePage.tableColumns = response.data.spec.data
+          //     tablePage.listLoading = false
+          //   }
+          // })
           getResource({
             token,
             kind: 'Frontend',
@@ -202,6 +213,24 @@ export function frontendData(token, kind, listQuery, tablePage) {
           }).then((response) => {
             if (validResponse(response)) {
               tablePage.tableColumns = response.data.spec.data
+              for(let i = 0; i < tablePage.tableColumns.length; i ++) {
+                if(tablePage.tableColumns[i].kind === 'internalLink' && tablePage.tableColumns[i].row.indexOf('@') !== -1) {
+                  const key = tablePage.tableColumns[i].row.substring(1) + '-' +tablePage.tableColumns[i].tag
+                  const arr = []
+                  // listQuery.data[key] = arr
+                  ref.$set(listQuery.data, key, arr)
+                  for(let j = 0; j < tablePage.tableData.length; j ++) {
+                    queryResourceCount({token, data:{link: tablePage.tableColumns[i].link, tag: tablePage.tableColumns[i].tag, value: getTextValue(tablePage.tableData[j].json, tablePage.tableColumns[i].row.substring(1))}}).then(
+                      response => {
+                        if(validResponse(response)) {
+                          console.log('test: ' + response.data.totalCount)
+                          arr.push(response.data.totalCount)
+                        }
+                      }
+                    )
+                  }
+                }
+              }
               tablePage.listLoading = false
             }
           })
