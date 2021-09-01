@@ -30,15 +30,16 @@ const mutations = {
 
 const actions = {
   // user login
-  login({ state, commit }, userInfo) {
+  login({ state, commit }, { userInfo, projectId }) {
     const { username, password } = userInfo
+    // eslint-disable-next-line no-const-assign
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password, namespace: state.namespace }).then(response => {
+      login({ username: projectId + '-' + username, password: password, namespace: state.namespace }).then(response => {
         if (response.code === 20000) {
           const { data } = response
           commit('SET_TOKEN', data.token)
           setToken(data.token)
-          setValue('name', username.trim())
+          setValue('name', projectId + '-' + username)
           resolve()
         }
       }).catch(error => {
