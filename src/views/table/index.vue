@@ -200,7 +200,7 @@ export default {
     if (this.$route.params && this.$route.params.key) {
       const key = this.$route.params.key
       const value = this.$route.params.value
-      this.listQuery.labels[key] = value || {}
+      this.listQuery.labels[key] = value
     }
     console.log(JSON.stringify(this.listQuery.labels))
     frontendMeta(
@@ -228,8 +228,8 @@ export default {
     },
     handleCreateTemplateChange,
     search(labels) {
-      console.log(labels)
-      this.listQuery.labels = labels
+      this.listQuery.labels = Object.assign(labels, this.listQuery.fixedLabels)
+      console.log(JSON.stringify(this.listQuery.labels))
       frontendData(this.token, this.kind, this.listQuery, this.tablePage)
     },
     // 将表格的 list 和 action 进行更新
