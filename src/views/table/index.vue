@@ -231,11 +231,11 @@ export default {
     search(labels) {
       this.listQuery.labels = Object.assign(labels, this.listQuery.fixedLabels)
       console.log(JSON.stringify(this.listQuery.labels))
-      frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+      frontendData(this, this.token, this.kind, this.listQuery, this.tablePage)
     },
     // 将表格的 list 和 action 进行更新
     refresh() {
-      frontendData(this.token, this.kind, this.listQuery, this.tablePage)
+      frontendData(this, this.token, this.kind, this.listQuery, this.tablePage)
     },
     handleActionChange,
     create: createObject,

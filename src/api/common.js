@@ -161,8 +161,8 @@ export function frontendMeta(token, kind, tablePage) {
 }
 export function frontendData(ref, token, kind, listQuery, tablePage) {
   listResources({
-    token,
-    kind,
+    token: token,
+    kind: kind,
     limit: listQuery.limit,
     page: listQuery.page,
     labels: listQuery.labels
