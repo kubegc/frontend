@@ -1,0 +1,62 @@
+{
+  "apiVersion": "doslab.io/v1",
+  "kind": "FrontendRoute",
+  "metadata": {
+    "name": "routes-admin",
+    "namespace": "default"
+  },
+  "spec": {
+    "catalogs": [{
+      "name": "测试",
+      "path": "/test"
+    }],
+    "groups": [{
+      "name": "数据源配置模块",
+      "path": "/test/resourceConfig",
+      "icon": "routes"
+    },
+      {
+        "name": "api分析模块",
+        "path": "/test/apiAbout",
+        "icon": "routes"
+      },
+      {
+        "name": "兼容性问题发现与修复模块",
+        "path": "/appMgr/findAndFix",
+        "icon": "routes"
+      }
+    ],
+    "items": [{
+      "component": "/table/index",
+      "icon": "resources",
+      "name": "配置文件",
+      "kind": "Node",
+      "path": "/test/resourceConfig/config"
+    },
+      {
+        "component": "/pipeline/framework-construction",
+        "icon": "resources",
+        "name": "反射分析",
+        "path": "/test/apiAbout/analysis"
+      },
+      {
+        "component": "/config/apiAnalysis",
+        "icon": "resources",
+        "name": "api自动适配",
+        "path": "/test/apiAbout/auto"
+      },
+      {
+        "component": "/cloudPlatform/testRequest",
+        "icon": "resources",
+        "name": "接口验证",
+        "path": "/test/apiAbout/check"
+      },
+      {
+        "component": "/sysConfig/diff",
+        "icon": "resources",
+        "name": "api差异分析",
+        "path": "/appMgr/findAndFix/index"
+      }
+    ]
+  }
+}

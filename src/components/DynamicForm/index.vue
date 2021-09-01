@@ -1,74 +1,45 @@
 <template>
   <div class="full-form">
-    <!-- <h3>{{initParams.title}}</h3> -->
     <el-form
-      :ref="initParams.formName"
-      class="formStyle"
-      :rules="initParams.rules"
-      :model="initParams.model"
+      :ref="formName"
+      :model="model"
       label-position="left"
-      label-width="80px"
-      :style="initParams.formStyle"
+      :inline="true"
     >
       <el-form-item
-        v-for="efi in items"
-        :key="efi.key"
+        v-for="(efi, key) in formData.items"
+        :key="key"
         :label="efi.label"
-        :prop="efi.prop"
-        :style="efi.itemStyle"
+        :prop="efi.path"
       >
         <el-input
-          v-if="efi.type == 'input'"
-          v-model="initParams.model[efi.prop]"
+          v-if="efi.type === 'textbox'"
+          v-model="model[efi.path]"
           size="medium"
-          :placeholder="efi.ph"
-          :style="efi.selfStyle"
+          :placeholder="efi.prompt"
         />
         <el-select
-          v-if="efi.type == 'select'"
-          v-model="initParams.model[efi.prop]"
-          :placeholder="efi.ph"
-          :style="efi.selfStyle"
+          v-if="efi.type === 'combobox'"
+          v-model="model[efi.path]"
+          :placeholder="efi.prompt"
         >
           <el-option
-            v-for="lds in initParams.dataSources[efi.prop]"
+            v-for="lds in formData.dataSources[efi.prop]"
             :key="lds.key"
             :label="lds.label"
             :value="lds.value"
           />
         </el-select>
-        <el-tree
-          v-if="efi.type == 'tree'"
-          ref="tree"
-          :check-strictly="checkStrictly"
-          :data="initParams.model[efi.prop]"
-          :props="defaultProps"
-          show-checkbox
-          node-key="path"
-          class="permission-tree"
-        />
-        <el-checkbox-group v-if="efi.type == 'checkbox'" v-model="initParams.model[efi.prop]">
-          <el-checkbox v-for="r in initParams.dataSources[efi.prop]" :key="r.key" :label="r.label" />
-        </el-checkbox-group>
-        <el-radio-group v-if="efi.type == 'radio'" v-model="initParams.model[efi.prop]">
-          <el-radio v-for="r in initParams.dataSources[efi.prop]" :key="r.key" :label="r.label" />
-        </el-radio-group>
-        <el-input
-          v-if="efi.type == undefined"
-          v-model="temp[efi.prop]"
-          :placeholder="efi.ph"
-          :style="efi.style"
-        />
       </el-form-item>
-      <el-button style="margin-left: 10px" :icon="initParams.icon" type="primary" round @click="submitForm()">
-        {{ initParams.submitButton }}
-      </el-button>
-      <el-button round @click="resetForm()">{{ initParams.resetButton }}</el-button>
-      <a v-if="initParams.items.length > initParams.expand" style="margin-left: 10px" @click="dropDown">
-        {{ dropDownContent }}
-        <Icon :type="dropDownIcon" />
-      </a>
-      <span>{{ loading }}</span>
+
+      <el-form-item>
+        <el-button icon="el-icon-search" type="primary" round @click="submitForm()">
+          搜索
+        </el-button>
+      </el-form-item>
+      <el-form-item>
+        <el-button round @click="resetForm()"> 重置</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -77,99 +48,29 @@
 export default {
   name: 'DynamicForm',
   props: {
-    formData: Object,
-    kind: String,
-    onOK: Function
+    formData: Object
   },
 
   data() {
     return {
-      initParams: {},
-      loading: '',
-      dropDownContent: '收起',
-      dropDownIcon: 'ios-arrow-down',
-      drop: true,
-      defaultProps: {
-        children: 'children',
-        label: 'title'
-      }
-    }
-  },
-  computed: {
-    items: function() {
-      return this.initParams.items.filter(function(item) {
-        return item.drop
-      })
+      formName: 'search',
+      model: {}
     }
   },
   watch: {
     formData(newVal) {
-      this.initParams = newVal
+      this.formData = newVal
     }
   },
   created() {
-    this.initParams = this.formData
-    if (!this.initParams.title || this.initParams.title === '') {
-      this.initParams.title = '标签'
-    }
-    if (!this.initParams.submitButton || this.initParams.submitButton === '') {
-      this.initParams.submitButton = '提交'
-    }
-    if (!this.initParams.resetButton || this.initParams.resetButton === '') {
-      this.initParams.resetButton = '重置'
-    }
-    for (var i = 0; i < this.initParams.items.length; i++) {
-      if (
-        this.initParams.items[i].type === 'select' ||
-        this.initParams.items[i].type === 'radio' ||
-        this.initParams.items[i].type === 'checkbox'
-      ) {
-        this.promiseDataSource(this.initParams.items[i].prop)
-      }
-    }
+
   },
   methods: {
     submitForm() {
-      this.$refs[this.initParams.formName].validate(valid => {
-        if (valid) {
-          this.$emit('watchSearch', this.formData.model)
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.$emit('watchSearch', this.model)
     },
     resetForm() {
-      this.$refs[this.initParams.formName].resetFields()
-    },
-    dropDown() {
-      if (this.drop) {
-        this.dropDownContent = '展开'
-        this.dropDownIcon = 'ios-arrow-down'
-      } else {
-        this.dropDownContent = '收起'
-        this.dropDownIcon = 'ios-arrow-up'
-      }
-      for (let i = this.initParams.expand; i < this.initParams.items.length; i++) {
-        this.initParams.items[i].drop = !this.drop
-      }
-      this.drop = !this.drop
-    },
-    promiseDataSource(itemName) {
-      this.loading = 'start' + itemName
-      getMockObj(
-        {
-          kind: 'Frontend',
-          name: this.name + '-' + this.initParams.formName + '-' + itemName
-        },
-        '/ds/' + itemName
-      ).then(response => {
-        if (this.$valid(response)) {
-          this.initParams.dataSources[itemName] = response.data.spec.data
-          console.log('change loading')
-          this.loading = itemName
-        }
-      })
+      this.$refs[this.formName].resetFields()
     }
   }
 }
@@ -211,10 +112,12 @@ export default {
   border-radius: 4px;
   height: 32px;
 }
+
 .el-form-item + .el-form-item {
   margin-left: 10px;
 }
-.el-form-item{
+
+.el-form-item {
   margin-bottom: 0;
 }
 

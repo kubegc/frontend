@@ -195,7 +195,7 @@ export default {
   },
   created() {
     this.kind = this.$route.name // 该资源的名字
-    this.listQuery.fixedLabels = this.$route.meta.filter
+    this.listQuery.fixedLabels = this.$route.meta.filter || {}
     this.listQuery.labels = this.listQuery.fixedLabels
     if (this.$route.params && this.$route.params.key) {
       const key = this.$route.params.key
