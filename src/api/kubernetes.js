@@ -55,4 +55,11 @@ export function getScheduleData(data) {
     data
   })
 }
+export function queryResourceValue(data) {
+  return request({
+    url: '/kube/queryResourceValue',
+    method: 'post',
+    data
+  })
+}
 

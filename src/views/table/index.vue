@@ -202,7 +202,6 @@ export default {
       const value = this.$route.params.value
       this.listQuery.labels[key] = value
     }
-    console.log(JSON.stringify(this.listQuery.labels))
     frontendMeta(
       this.token,
       this.kind,

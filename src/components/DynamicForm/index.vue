@@ -24,10 +24,10 @@
           :placeholder="efi.prompt"
         >
           <el-option
-            v-for="lds in formData.dataSources[efi.prop]"
-            :key="lds.key"
-            :label="lds.label"
-            :value="lds.value"
+            v-for="(option, key) in efi.options"
+            :key="key"
+            :label="option"
+            :value="option"
           />
         </el-select>
       </el-form-item>
@@ -45,12 +45,26 @@
 </template>
 
 <script>
+import { queryResourceValue } from '@/api/kubernetes'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'DynamicForm',
   props: {
     formData: Object
   },
-
+  created() {
+    for (let i = 0; i < this.formData.items.length; i++) {
+      if (this.formData.items[i].type === 'combobox') {
+        queryResourceValue({ token: this.token, data: this.formData.items[i].data }).then(response => {
+          if (this.$valid(response)) {
+            this.formData.items[i]['options'] = response.data
+            this.$forceUpdate()
+          }
+        })
+      }
+    }
+  },
   data() {
     return {
       formName: 'search',
@@ -62,8 +76,8 @@ export default {
       this.formData = newVal
     }
   },
-  created() {
-
+  computed: {
+    ...mapGetters(['token'])
   },
   methods: {
     submitForm() {
