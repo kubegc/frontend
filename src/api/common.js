@@ -85,7 +85,7 @@ export function getComplexValue(scope, key) {
 }
 export function getTextValue(scope, longKey) {
   if (JSON.stringify(scope) === '{}' || !longKey) {
-    return '无'
+    return '-'
   }
   let result = scope
   longKey.split('.').every((item) => {
@@ -93,7 +93,7 @@ export function getTextValue(scope, longKey) {
     if (item.indexOf('[') > 0) {
       result = result[item.substring(0, item.indexOf('['))]
       if (result === undefined || result.length === 0) {
-        result = '无'
+        result = '-'
         return false
       } else {
         result =
@@ -109,7 +109,7 @@ export function getTextValue(scope, longKey) {
         result = result[item]
         return true
       } else {
-        result = '无'
+        result = '-'
         return false
       }
     }
@@ -246,7 +246,8 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
             if (validResponse(response)) {
               tablePage.tableColumns = response.data.spec.data
               for(let i = 0; i < tablePage.tableColumns.length; i ++) {
-                if(tablePage.tableColumns[i].kind === 'internalLink' && tablePage.tableColumns[i].row.indexOf('@') !== -1) {
+                //tablePage.tableColumns[i].kind === 'internalLink' &&
+                if(tablePage.tableColumns[i].row.indexOf('@') !== -1) {
                   const key = tablePage.tableColumns[i].row.substring(1) + '-' +tablePage.tableColumns[i].tag
                   const arr = []
                   // listQuery.data[key] = arr
@@ -258,12 +259,12 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
                           console.log('test: ' + response.data.totalCount)
                           arr.push(response.data.totalCount)
                         }
+                        tablePage.listLoading = false
                       }
                     )
                   }
                 }
               }
-              tablePage.listLoading = false
             }
           })
         }
