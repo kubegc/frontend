@@ -42,7 +42,7 @@ export function dropdownValues(name, values) {
 }
 export function getComplexOrDefValue(scope, longKey, defKey) {
   const value = getComplexValue(scope, longKey)
-  if (value.startsWith('无') && defKey) {
+  if (value.startsWith('-') && defKey) {
     return getTextValue(scope, defKey)
   }
   return value
@@ -61,26 +61,15 @@ export function getComplexValue(scope, key) {
       const longKey = strAry[i]
       if (i%2 === 0) {
         const v = getTextValue(scope, longKey)
-        value = value + strAry[1] + v.substring(0)
+        if (strAry[1] === '|') {
+          value = v.substring(0) !== '-' ? "." + v : value
+        } else {
+          value = value + strAry[1] + v.substring(0)
+        }
       }
     }
   }
 
-  // for (let i = 0; i < strAry.length; i++) {
-  //   const longKey = strAry[i]
-    // we just consider two strings
-    // if (strAry.length === 2) {
-    //   const v = getTextValue(scope, longKey)
-    //   const k = v.indexOf('/')
-    //   if (k !== -1) {
-    //     value = value + '.' + v.substring(0, k)
-    //   } else {
-    //     value = value + '.' + v
-    //   }
-    // } else {
-    //   value = value + '.' + getTextValue(scope, longKey)
-    // }
-  // }
   return value.substring(1)
 }
 export function getTextValue(scope, longKey) {
@@ -155,6 +144,12 @@ export function getTextValue(scope, longKey) {
       result = (Number(result.substring(0, result.length - 2).trim())/1024).toFixed(2) + 'GB'
     } else if (result.endsWith('Ti')) {
       result = (Number(result.substring(0, result.length - 2).trim())*1024).toFixed(2) + 'GB'
+    } else if (result === 'local') {
+      result = '本地服务器'
+    } else if (result === 'cloud') {
+      result = '公有云资源'
+    } else if (result === 'edge') {
+      result = '边缘端设备'
     }
     return result
   }
@@ -246,26 +241,27 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
             if (validResponse(response)) {
               tablePage.tableColumns = response.data.spec.data
               for(let i = 0; i < tablePage.tableColumns.length; i ++) {
-                //tablePage.tableColumns[i].kind === 'internalLink' &&
-                if(tablePage.tableColumns[i].row.indexOf('@') !== -1) {
+
+                if(tablePage.tableColumns[i].kind === 'internalLink' && tablePage.tableColumns[i].row.indexOf('@') !== -1) {
                   const key = tablePage.tableColumns[i].row.substring(1) + '-' +tablePage.tableColumns[i].tag
-                  const arr = []
+                  const arr = {}
                   // listQuery.data[key] = arr
                   ref.$set(listQuery.data, key, arr)
+
                   for(let j = 0; j < tablePage.tableData.length; j ++) {
                     queryResourceCount({token, data:{link: tablePage.tableColumns[i].link, tag: tablePage.tableColumns[i].tag, value: getTextValue(tablePage.tableData[j].json, tablePage.tableColumns[i].row.substring(1))}}).then(
                       response => {
                         if(validResponse(response)) {
                           console.log('test: ' + response.data.totalCount)
-                          arr.push(response.data.totalCount)
+                          ref.$set(listQuery.data[key], tablePage.tableData[j].json.metadata.name, response.data.totalCount)
                         }
-                        tablePage.listLoading = false
                       }
                     )
                   }
                 }
               }
             }
+            tablePage.listLoading = false
           })
         }
       })

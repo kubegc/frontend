@@ -67,7 +67,7 @@
               }"
             >
               <el-link type="primary">{{
-                  item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.data[item.row.substring(1) + '-' +item.tag][scope.$index]
+                  item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.data[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name]
                 }}</el-link>
             </router-link>
             <!-- externalLink -->
