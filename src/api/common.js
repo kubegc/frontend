@@ -252,7 +252,6 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
                     queryResourceCount({token, data:{link: tablePage.tableColumns[i].link, tag: tablePage.tableColumns[i].tag, value: getTextValue(tablePage.tableData[j].json, tablePage.tableColumns[i].row.substring(1))}}).then(
                       response => {
                         if(validResponse(response)) {
-                          console.log('test: ' + response.data.totalCount)
                           ref.$set(listQuery.data[key], tablePage.tableData[j].json.metadata.name, response.data.totalCount)
                         }
                       }

@@ -27,7 +27,7 @@
             v-for="(option, key) in efi.options"
             :key="key"
             :label="option"
-            :value="option"
+            :value="key"
           />
         </el-select>
       </el-form-item>
