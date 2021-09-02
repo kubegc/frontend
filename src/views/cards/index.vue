@@ -94,7 +94,7 @@
                       v-model="detailItem.val"
                       size="mini"
                       placeholder="请选择"
-                      @change="handleActionChange($event, detailItem.json, token, kind, listQuery, page, updateAbout)"
+                      @change="handleActionChange(getRef, $event, detailItem.json, token, kind, listQuery, page, updateAbout)"
                     >
                       <el-option
                         v-for="i in page.actions"
@@ -132,7 +132,7 @@
         :create-templates="createAbout.createTemplates"
         :form-data="createAbout.createFormConfig"
         @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-        @action="create(token, kind, listQuery, page, createAbout)"
+        @action="create(getRef, token, kind, listQuery, page, createAbout)"
         @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
       />
       <JsonDialog
@@ -143,7 +143,7 @@
         :json-file-obj="updateAbout.updateJsonData"
         :form-data="updateAbout.updateFormConfig"
         @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperation(token, kind, listQuery, page, updateAbout)"
+        @action="applyOperation(getRef, token, kind, listQuery, page, updateAbout)"
       />
     </div>
   </div>
@@ -210,11 +210,14 @@ export default {
   created() {
     this.kind = this.$route.name
     frontendMeta(this.token, this.kind, this.page)
-    frontendData(this.token, this.kind, this.listQuery, this.page)
+    frontendData(this, this.token, this.kind, this.listQuery, this.page)
     getTags(this)
   },
   computed: {
-    ...mapGetters(['token'])
+    ...mapGetters(['token']),
+    getRef() {
+      return this
+    }
   },
   methods: {
     search(labels) {
@@ -224,10 +227,10 @@ export default {
       } else {
         this.listQuery.labels[this.label] = this.chosenRadioName
       }
-      frontendData(this.token, this.kind, this.listQuery, this.page)
+      frontendData(this, this.token, this.kind, this.listQuery, this.page)
     },
     refresh() {
-      frontendData(this.token, this.kind, this.listQuery, this.page)
+      frontendData(this, this.token, this.kind, this.listQuery, this.page)
     },
     handleRadioClick(name) {
       if (name === '所有') {

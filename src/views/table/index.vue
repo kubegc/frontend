@@ -86,7 +86,7 @@
               v-else-if="item.kind === 'action'"
               v-model="scope.row.val"
               placeholder="请选择"
-              @change="handleActionChange($event, scope.row.json, token, kind, listQuery, tablePage, updateAbout)"
+              @change="handleActionChangeHelper($event, scope.row.json, token, kind, listQuery, tablePage, updateAbout)"
             >
               <el-option
                 v-for="item in tablePage.actions"
@@ -129,7 +129,7 @@
         :json-file-obj="updateAbout.updateJsonData"
         :form-data="updateAbout.updateFormConfig"
         @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperation(token, kind, listQuery, tablePage, updateAbout)"
+        @action="applyOperationHelper(token, kind, listQuery, tablePage, updateAbout)"
       />
     </div>
   </div>
@@ -237,12 +237,18 @@ export default {
     refresh() {
       frontendData(this, this.token, this.kind, this.listQuery, this.tablePage)
     },
-    handleActionChange,
-    create: createObject,
+    handleActionChangeHelper(event, json, token, kind, listQuery, tablePage, updateAbout) {
+      handleActionChange(this, event, json, token, kind, listQuery, tablePage, updateAbout)
+    },
+    create(token, kind, listQuery, tablePage, createAbout){
+      createObject(this, token, kind, listQuery, tablePage, createAbout)
+    },
     // 获取创建资源的模板信息，models 存有下拉列表的选项数据
     createJson,
     // 用于更新的 action 提交
-    applyOperation,
+    applyOperationHelper(token, kind, listQuery, tablePage, updateAbout){
+      applyOperation(this, token, kind, listQuery, tablePage, updateAbout)
+    },
     getTextValue,
     getComplexOrDefValue
   }

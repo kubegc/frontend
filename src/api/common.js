@@ -323,7 +323,7 @@ export function handleCreateTemplateChange(template, token, kind, createAbout) {
     }
   })
 }
-export function createObject(token, kind, listQuery, tablePage, createAbout) {
+export function createObject(ref, token, kind, listQuery, tablePage, createAbout) {
   // 创建资源的 dialog 需要消失
   createAbout.createDialogVisible = false
   if (!createAbout.ifJsonEditorForCreate) {
@@ -339,12 +339,13 @@ export function createObject(token, kind, listQuery, tablePage, createAbout) {
   }).then((response) => {
     if (validResponse(response)) {
       message('创建成功', 'success')
-      frontendData(token, kind, listQuery, tablePage)
+      frontendData(ref, token, kind, listQuery, tablePage)
       // refresh()
     }
   })
 }
-export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
+export function applyOperation(ref, token, kind, listQuery, tablePage, updateAbout) {
+  console.log(ref)
   updateAbout.actionDialogVisible = false
   // if (typeof this.updateJsonData === 'string') {
   //   this.updateJsonData = JSON.parse(this.updateJsonData)
@@ -354,11 +355,11 @@ export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
   }
   // this.createJsonData = JSON.parse(this.createJsonData);
   updateResource({
-    token,
+    token: token,
     json: updateAbout.updateJsonData
   }).then((response) => {
     if (validResponse(response)) {
-      frontendData(token, kind, listQuery, tablePage)
+      frontendData(ref, token, kind, listQuery, tablePage)
       message('更新成功', 'success')
     } else {
       message('更新失败', 'error')
@@ -368,7 +369,7 @@ export function applyOperation(token, kind, listQuery, tablePage, updateAbout) {
 
 export function createJson(token, kind, createAbout) {
   getResource({
-    token,
+    token: token,
     kind: 'doslab.io.Template',
     name: kind + '-' + 'create',
     namespace: 'default'
@@ -386,7 +387,7 @@ export function createJson(token, kind, createAbout) {
     }
   })
 }
-export function handleActionChange(action, row, token, kind, listQuery, tablePage, updateAbout) {
+export function handleActionChange(ref, action, row, token, kind, listQuery, tablePage, updateAbout) {
   if (action === 'update') {
     getResource({
       token,
@@ -409,7 +410,7 @@ export function handleActionChange(action, row, token, kind, listQuery, tablePag
       namespace: row.metadata.namespace
     }).then((response) => {
       if (validResponse(response)) {
-        frontendData(token, kind, listQuery, tablePage)
+        frontendData(ref, token, kind, listQuery, tablePage)
         message('删除成功', 'success')
       }
     })
