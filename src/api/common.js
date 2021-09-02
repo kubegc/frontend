@@ -140,7 +140,7 @@ export function getTextValue(scope, longKey) {
     } else if (result === 'Unknown') {
       result = '未知状态'
     } else if (result === 'Ready') {
-      result = '运行中'
+      result = '健康运行'
     } else if (result === 'Leader') {
       result = '主控节点'
     } else if (result === 'Worker') {
@@ -149,6 +149,12 @@ export function getTextValue(scope, longKey) {
       result = '维护状态'
     } else if (result === 'Schedule') {
       result = '工作状态'
+    } else if (result.endsWith('Ki')) {
+      result = (Number(result.substring(0, result.length - 2).trim())/1024/1024).toFixed(2) + 'GB'
+    } else if (result.endsWith('Mi')) {
+      result = (Number(result.substring(0, result.length - 2).trim())/1024).toFixed(2) + 'GB'
+    } else if (result.endsWith('Ti')) {
+      result = (Number(result.substring(0, result.length - 2).trim())*1024).toFixed(2) + 'GB'
     }
     return result
   }
