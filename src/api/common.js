@@ -52,21 +52,35 @@ export function getComplexValue(scope, key) {
     return ''
   }
   let value = ''
-  const strAry = key.split('+')
-  for (let i = 0; i < strAry.length; i++) {
-    const longKey = strAry[i]
-    if (strAry.length === 2) {
-      const v = getTextValue(scope, longKey)
-      const k = v.indexOf('/')
-      if (k !== -1) {
-        value = value + '.' + v.substring(0, k)
-      } else {
-        value = value + '.' + v
+  const strAry = key.split(';')
+
+  if (strAry.length === 1) {
+    value = value + '.' + getTextValue(scope, key)
+  } else {
+    for (let i = 0; i < strAry.length; i++) {
+      const longKey = strAry[i]
+      if (i%2 === 0) {
+        const v = getTextValue(scope, longKey)
+        value = value + strAry[1] + v.substring(0)
       }
-    } else {
-      value = value + '.' + getTextValue(scope, longKey)
     }
   }
+
+  // for (let i = 0; i < strAry.length; i++) {
+  //   const longKey = strAry[i]
+    // we just consider two strings
+    // if (strAry.length === 2) {
+    //   const v = getTextValue(scope, longKey)
+    //   const k = v.indexOf('/')
+    //   if (k !== -1) {
+    //     value = value + '.' + v.substring(0, k)
+    //   } else {
+    //     value = value + '.' + v
+    //   }
+    // } else {
+    //   value = value + '.' + getTextValue(scope, longKey)
+    // }
+  // }
   return value.substring(1)
 }
 export function getTextValue(scope, longKey) {
@@ -75,6 +89,7 @@ export function getTextValue(scope, longKey) {
   }
   let result = scope
   longKey.split('.').every((item) => {
+    item = item.replaceAll('#', '.')
     if (item.indexOf('[') > 0) {
       result = result[item.substring(0, item.indexOf('['))]
       if (result === undefined || result.length === 0) {
@@ -99,6 +114,7 @@ export function getTextValue(scope, longKey) {
       }
     }
   })
+
   if (result instanceof Object || result instanceof Array) {
     const objResult = new Set()
     for (const key in result) {
@@ -123,6 +139,16 @@ export function getTextValue(scope, longKey) {
       result = '执行失败'
     } else if (result === 'Unknown') {
       result = '未知状态'
+    } else if (result === 'Ready') {
+      result = '运行中'
+    } else if (result === 'Leader') {
+      result = '主控节点'
+    } else if (result === 'Worker') {
+      result = '工作节点'
+    } else if (result === 'NoSchedule') {
+      result = '维护状态'
+    } else if (result === 'Schedule') {
+      result = '工作状态'
     }
     return result
   }
