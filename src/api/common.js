@@ -55,7 +55,29 @@ export function getComplexValue(scope, key) {
   const strAry = key.split(';')
 
   if (strAry.length === 1) {
-    value = value + '.' + getTextValue(scope, key)
+
+    // convert 1516703495241 to 2018-01-23 18:31:35
+    // function time()
+    if (key.startsWith('time(')) {
+      value = getTextValue(scope, key.substring('time('.length, key.length - 1))
+      let date = new Date(parseInt(value.toString()))
+      let y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? ('0' + MM) : MM
+      let d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      let h = date.getHours()
+      h = h < 10 ? ('0' + h) : h
+      let m = date.getMinutes()
+      m = m < 10 ? ('0' + m) : m
+      let s = date.getSeconds()
+      s = s < 10 ? ('0' + s) : s
+      value = y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    } else {
+      value = getTextValue(scope, key)
+    }
+
+    value = '.' + value
   } else {
     for (let i = 0; i < strAry.length; i++) {
       const longKey = strAry[i]
