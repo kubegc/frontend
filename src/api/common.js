@@ -157,9 +157,9 @@ export function getTextValue(scope, longKey) {
     } else if (result === 'Worker') {
       result = '工作节点'
     } else if (result === 'NoSchedule') {
-      result = '维护状态'
+      result = '正在维护'
     } else if (result === 'Schedule') {
-      result = '工作状态'
+      result = '正在工作'
     } else if (result.endsWith('Ki')) {
       result = (Number(result.substring(0, result.length - 2).trim())/1024/1024).toFixed(2) + 'GB'
     } else if (result.endsWith('Mi')) {
@@ -209,9 +209,13 @@ export function frontendMeta(token, kind, tablePage) {
   })
 }
 export function frontendData(ref, token, kind, listQuery, tablePage) {
+
+  let idx = kind.indexOf('-')
+  console.log(kind)
+  console.log(idx)
   listResources({
     token: token,
-    kind: kind,
+    kind: idx === -1 ? kind : kind.substring(0, idx),
     limit: listQuery.limit,
     page: listQuery.page,
     labels: listQuery.labels
@@ -242,18 +246,7 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
             tablePage.tableData[i].actions = tablePage.actions
             tablePage.tableData[i].val = ''
           }
-          // 获取表头信息
-          // getResource({
-          //   token,
-          //   kind: 'Frontend',
-          //   name: 'table' + '-' + kind,
-          //   namespace: 'default'
-          // }).then((response) => {
-          //   if (validResponse(response)) {
-          //     tablePage.tableColumns = response.data.spec.data
-          //     tablePage.listLoading = false
-          //   }
-          // })
+
           getResource({
             token,
             kind: 'Frontend',
