@@ -84,13 +84,50 @@
         </el-col>
 
         <transition name="el-zoom-in-top">
-          <el-col v-show="detailVisible" :span="24 - leftSpan">
+          <el-col v-if="detailVisible" :span="24 - leftSpan">
             <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
               <el-row>
                 <el-form>
                   <el-form-item v-for="(labelItem, key) in page.tableColumns" :key="key" :label="labelItem.label">
+
+                    <!-- tag -->
+                    <div v-if="labelItem.kind === 'tag'">
+                      <el-row v-for="(tag, i) in getTextValue(detailItem.json, labelItem.row)" :key="i">
+                        <el-tooltip :content="JSON.stringify(tag)"><el-tag> {{ tag }} </el-tag></el-tooltip>
+                      </el-row>
+                    </div>
+
+                    <!-- internalLink -->
+                    <router-link
+                      v-else-if="labelItem.kind === 'internalLink'"
+                      :to="
+                        {
+                          name: labelItem.link.indexOf('@') === -1 ? labelItem.link : getComplexOrDefValue(detailItem.json, labelItem.link.substring(1), labelItem.def),
+                          params: {
+                            key: labelItem.tag,
+                            value: labelItem.tag ? getComplexOrDefValue(detailItem.json, labelItem.row.indexOf('@') === -1 ? labelItem.row : labelItem.row.substring(1), labelItem.def) : undefined
+                          }
+                        }"
+                    >
+                      <el-link type="primary">{{
+                        labelItem.row.indexOf('@') === -1 ? getComplexOrDefValue(detailItem.json, labelItem.row, labelItem.def) : listQuery.data[labelItem.row.substring(1) + '-' +labelItem.tag][detailItem.json.metadata.name]
+                      }}</el-link>
+                    </router-link>
+
+                    <!-- externalLink -->
+                    <el-link v-else-if="labelItem.kind === 'externalLink'" type="primary" :href="getTextValue(detailItem.json, labelItem.row)">{{
+                      getTextValue(detailItem.json, labelItem.row)
+                    }}</el-link>
+
+                    <!-- terminal -->
+                    <el-link v-else-if="labelItem.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(detailItem.json, labelItem)" target="_blank">
+                      <svg-icon
+                        icon-class="pc"
+                      />
+                    </el-link>
+
                     <el-select
-                      v-if="labelItem.kind === 'action'"
+                      v-else-if="labelItem.kind === 'action'"
                       v-model="detailItem.val"
                       size="mini"
                       placeholder="请选择"
@@ -103,7 +140,7 @@
                         :value="i.type"
                       />
                     </el-select>
-                    <el-tag v-else size="small">{{ getInputValue(detailItem.json, labelItem.row) }}</el-tag>
+                    <el-tag v-else size="small">{{ getComplexOrDefValue(detailItem.json, labelItem.row) }}</el-tag>
                   </el-form-item>
                 </el-form>
               </el-row>
@@ -151,7 +188,7 @@
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTags, getTextValue } from '@/api/common'
+import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTags, getTextValue, getComplexOrDefValue } from '@/api/common'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
 import DynamicForm from '@/components/DynamicForm'
@@ -164,7 +201,9 @@ export default {
       listQuery: {
         page: 1,
         limit: 12,
-        labels: {}
+        labels: {},
+        fixedLabels: {},
+        data: {}
       },
       createTemplate: {},
       page: {
@@ -209,6 +248,24 @@ export default {
   },
   created() {
     this.kind = this.$route.name
+    this.listQuery.fixedLabels = this.$route.meta.filter || {}
+    this.listQuery.labels = this.listQuery.fixedLabels
+
+    // kind support filter
+    let filterStr = JSON.stringify(this.listQuery.fixedLabels)
+    if (JSON.stringify(this.listQuery.fixedLabels) !== '{}') {
+      const i = filterStr.lastIndexOf('\"')
+      filterStr = filterStr.substring(0, i)
+      const j = filterStr.lastIndexOf('\"')
+      filterStr = filterStr.substring(j + 1)
+      this.kind = this.kind + '-' + filterStr.trim()
+    }
+
+    if (this.$route.params && this.$route.params.key) {
+      const key = this.$route.params.key
+      const value = this.$route.params.value
+      this.listQuery.labels[key] = value
+    }
     frontendMeta(this.token, this.kind, this.page)
     frontendData(this, this.token, this.kind, this.listQuery, this.page)
     getTags(this)
@@ -220,6 +277,16 @@ export default {
     }
   },
   methods: {
+    getTerminalAddr(json, item) {
+      const params = item.row.split(',')
+      const len = params.length
+      let addr = item.link
+      for (let i = 0; i < len; i++) {
+        const currParam = this.getTextValue(json, params[i])
+        addr = addr.replace('{' + (i + 1) + '}', currParam)
+      }
+      return addr
+    },
     search(labels) {
       this.listQuery.labels = labels
       if (this.chosenRadioName === '所有') {
@@ -272,7 +339,9 @@ export default {
         }
       }
     },
-    getTags
+    getTags,
+    getComplexOrDefValue,
+    getTextValue
   }
 }
 </script>
