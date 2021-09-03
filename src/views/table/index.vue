@@ -51,7 +51,7 @@
           <template slot-scope="scope">
             <!-- tag -->
             <div v-if="item.kind === 'tag'">
-              <el-row  v-for="(tag, i) in getTextValue(scope.row.json, item.row)" :key="i" >
+              <el-row v-for="(tag, i) in getTextValue(scope.row.json, item.row)" :key="i">
                 <el-tooltip :content="JSON.stringify(tag)"><el-tag> {{ tag }} </el-tag></el-tooltip>
               </el-row>
             </div>
@@ -67,13 +67,13 @@
               }"
             >
               <el-link type="primary">{{
-                  item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.data[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name]
-                }}</el-link>
+                item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.data[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name]
+              }}</el-link>
             </router-link>
             <!-- externalLink -->
             <el-link v-else-if="item.kind === 'externalLink'" type="primary" :href="getTextValue(scope.row.json, item.row)">{{
-                getTextValue(scope.row.json, item.row)
-              }}</el-link>
+              getTextValue(scope.row.json, item.row)
+            }}</el-link>
 
             <!-- terminal -->
             <el-link v-else-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)" target="_blank">
@@ -96,8 +96,8 @@
               />
             </el-select>
             <span v-else>{{
-                getComplexOrDefValue(scope.row.json, item.row, item.def)
-              }}</span>
+              getComplexOrDefValue(scope.row.json, item.row, item.def)
+            }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -207,9 +207,9 @@ export default {
     // kind support filter
     let filterStr = JSON.stringify(this.listQuery.fixedLabels)
     if (JSON.stringify(this.listQuery.fixedLabels) !== '{}') {
-      let i = filterStr.lastIndexOf('\"')
+      const i = filterStr.lastIndexOf('\"')
       filterStr = filterStr.substring(0, i)
-      let j = filterStr.lastIndexOf('\"')
+      const j = filterStr.lastIndexOf('\"')
       filterStr = filterStr.substring(j + 1)
       this.kind = this.kind + '-' + filterStr.trim()
     }
@@ -221,7 +221,7 @@ export default {
     }
     frontendMeta(
       this.token,
-      this.kind ,
+      this.kind,
       this.tablePage)
     frontendData(
       this,
@@ -256,13 +256,13 @@ export default {
     handleActionChangeHelper(event, json, token, kind, listQuery, tablePage, updateAbout) {
       handleActionChange(this, event, json, token, kind, listQuery, tablePage, updateAbout)
     },
-    create(token, kind, listQuery, tablePage, createAbout){
+    create(token, kind, listQuery, tablePage, createAbout) {
       createObject(this, token, kind, listQuery, tablePage, createAbout)
     },
     // 获取创建资源的模板信息，models 存有下拉列表的选项数据
     createJson,
     // 用于更新的 action 提交
-    applyOperationHelper(token, kind, listQuery, tablePage, updateAbout){
+    applyOperationHelper(token, kind, listQuery, tablePage, updateAbout) {
       applyOperation(this, token, kind, listQuery, tablePage, updateAbout)
     },
     getTextValue,

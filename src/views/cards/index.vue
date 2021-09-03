@@ -94,7 +94,7 @@
                       v-model="detailItem.val"
                       size="mini"
                       placeholder="请选择"
-                      @change="handleActionChange(getRef, $event, detailItem.json, token, kind, listQuery, page, updateAbout)"
+                      @change="handleActionChangeHelper($event, detailItem.json, token, kind, listQuery, page, updateAbout)"
                     >
                       <el-option
                         v-for="i in page.actions"
@@ -132,7 +132,7 @@
         :create-templates="createAbout.createTemplates"
         :form-data="createAbout.createFormConfig"
         @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-        @action="create(getRef, token, kind, listQuery, page, createAbout)"
+        @action="create(token, kind, listQuery, page, createAbout)"
         @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
       />
       <JsonDialog
@@ -143,7 +143,7 @@
         :json-file-obj="updateAbout.updateJsonData"
         :form-data="updateAbout.updateFormConfig"
         @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperation(getRef, token, kind, listQuery, page, updateAbout)"
+        @action="applyOperationHelper(token, kind, listQuery, page, updateAbout)"
       />
     </div>
   </div>
@@ -241,11 +241,17 @@ export default {
     },
 
     handleCreateTemplateChange,
-    create: createObject,
-    applyOperation,
+    create(token, kind, listQuery, tablePage, createAbout) {
+      createObject(this, token, kind, listQuery, tablePage, createAbout)
+    },
+    applyOperationHelper(token, kind, listQuery, tablePage, updateAbout) {
+      applyOperation(this, token, kind, listQuery, tablePage, updateAbout)
+    },
     createJson,
     getInputValue: getTextValue,
-    handleActionChange,
+    handleActionChangeHelper(event, json, token, kind, listQuery, tablePage, updateAbout) {
+      handleActionChange(this, event, json, token, kind, listQuery, tablePage, updateAbout)
+    },
     showDetail(detailItem) {
       if (!this.detailItem.json || this.detailItem.json.metadata.name === detailItem.json.metadata.name) {
         this.leftSpan = this.leftSpan === 24 ? 18 : 24
