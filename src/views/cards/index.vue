@@ -33,12 +33,12 @@
       </el-row>
       <!-- <el-divider /> -->
 
-      <el-row>
-        <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">
-          <el-radio-button label="所有" />
-          <el-radio-button v-for="(value, name) in tags" :key="value" :label="name" />
-        </el-radio-group>
-      </el-row>
+      <!--      <el-row>-->
+      <!--        <el-radio-group v-model="chosenRadioName" @change="handleRadioClick">-->
+      <!--          <el-radio-button label="所有" />-->
+      <!--          <el-radio-button v-for="(value, name) in tags" :key="value" :label="name" />-->
+      <!--        </el-radio-group>-->
+      <!--      </el-row>-->
 
       <el-row :gutter="10">
         <el-col :span="leftSpan" style="transition: all 0.28s;">
@@ -131,13 +131,13 @@
                       v-model="detailItem.val"
                       size="mini"
                       placeholder="请选择"
-                      @change="handleActionChangeHelper($event, detailItem.json, token, kind, listQuery, page, updateAbout)"
                     >
                       <el-option
                         v-for="i in page.actions"
                         :key="i.key"
                         :label="i.key"
                         :value="i.type"
+                        @click.native="handleActionChangeHelper(i.type, detailItem.json, token, kind, listQuery, page, updateAbout)"
                       />
                     </el-select>
                     <el-tag v-else size="small">{{ getComplexOrDefValue(detailItem.json, labelItem.row) }}</el-tag>
@@ -268,7 +268,7 @@ export default {
     }
     frontendMeta(this.token, this.kind, this.page)
     frontendData(this, this.token, this.kind, this.listQuery, this.page)
-    getTags(this)
+    // getTags(this)
   },
   computed: {
     ...mapGetters(['token']),
