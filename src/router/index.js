@@ -41,6 +41,18 @@ export const constantRoutes = [
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
+  },
+  {
+    path: '/test',
+    component: Base,
+    children: [{
+      path: 'test2',
+      component: Layout,
+      children: [{
+        path: 'test3',
+        component: () => import('@/views/app/index')
+      }]
+    }]
   }
 ]
 
