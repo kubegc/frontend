@@ -209,9 +209,13 @@ export function frontendMeta(token, kind, tablePage) {
   })
 }
 export function frontendData(ref, token, kind, listQuery, tablePage) {
+
+  let idx = kind.indexOf('-')
+  console.log(kind)
+  console.log(idx)
   listResources({
     token: token,
-    kind: kind,
+    kind: idx === -1 ? kind : kind.substring(0, idx),
     limit: listQuery.limit,
     page: listQuery.page,
     labels: listQuery.labels
@@ -242,18 +246,7 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
             tablePage.tableData[i].actions = tablePage.actions
             tablePage.tableData[i].val = ''
           }
-          // 获取表头信息
-          // getResource({
-          //   token,
-          //   kind: 'Frontend',
-          //   name: 'table' + '-' + kind,
-          //   namespace: 'default'
-          // }).then((response) => {
-          //   if (validResponse(response)) {
-          //     tablePage.tableColumns = response.data.spec.data
-          //     tablePage.listLoading = false
-          //   }
-          // })
+
           getResource({
             token,
             kind: 'Frontend',

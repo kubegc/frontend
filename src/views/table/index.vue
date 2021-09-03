@@ -175,9 +175,8 @@ export default {
       // routes-admin supports 'filter', it means we can get different view using this feature.
       // In order to have self-defined UI, we should get different metadata.
       // Note that the filter has and only has one property, if it has one
-      // then meatadata name is kind + kindPlus, otherwise it is kind
+      // then metadata name is kind + '-' + property value, otherwise it is kind
       kind: '',
-      kindPlus: '',
       // a
       createAbout: {
         createDialogVisible: false,
@@ -205,16 +204,14 @@ export default {
     this.listQuery.fixedLabels = this.$route.meta.filter || {}
     this.listQuery.labels = this.listQuery.fixedLabels
 
-    //
+    // kind support filter
     let filterStr = JSON.stringify(this.listQuery.fixedLabels)
-    if (JSON.stringify(this.listQuery.fixedLabels) === '{}') {
-      this.kindPlus = ''
-    } else {
+    if (JSON.stringify(this.listQuery.fixedLabels) !== '{}') {
       let i = filterStr.lastIndexOf('\"')
       filterStr = filterStr.substring(0, i)
       let j = filterStr.lastIndexOf('\"')
       filterStr = filterStr.substring(j + 1)
-      this.kindPlus = '-' + filterStr.trim()
+      this.kind = this.kind + '-' + filterStr.trim()
     }
 
     if (this.$route.params && this.$route.params.key) {
@@ -224,7 +221,7 @@ export default {
     }
     frontendMeta(
       this.token,
-      this.kind + this.kindPlus,
+      this.kind ,
       this.tablePage)
     frontendData(
       this,
