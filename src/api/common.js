@@ -157,9 +157,9 @@ export function getTextValue(scope, longKey) {
     } else if (result === 'Worker') {
       result = '工作节点'
     } else if (result === 'NoSchedule') {
-      result = '维护状态'
+      result = '正在维护'
     } else if (result === 'Schedule') {
-      result = '工作状态'
+      result = '正在工作'
     } else if (result.endsWith('Ki')) {
       result = (Number(result.substring(0, result.length - 2).trim())/1024/1024).toFixed(2) + 'GB'
     } else if (result.endsWith('Mi')) {

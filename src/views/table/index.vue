@@ -172,7 +172,13 @@ export default {
       },
       // 资源相关
       namespace: 'default',
+      // routes-admin supports 'filter', it means we can get different view using this feature.
+      // In order to have self-defined UI, we should get different metadata.
+      // Note that the filter has and only has one property, if it has one
+      // then meatadata name is kind + kindPlus, otherwise it is kind
       kind: '',
+      kindPlus: '',
+      // a
       createAbout: {
         createDialogVisible: false,
         ifJsonEditorForCreate: true,
@@ -198,6 +204,19 @@ export default {
     this.kind = this.$route.name // 该资源的名字
     this.listQuery.fixedLabels = this.$route.meta.filter || {}
     this.listQuery.labels = this.listQuery.fixedLabels
+
+    //
+    let filterStr = JSON.stringify(this.listQuery.fixedLabels)
+    if (JSON.stringify(this.listQuery.fixedLabels) === '{}') {
+      this.kindPlus = ''
+    } else {
+      let i = filterStr.lastIndexOf('\"')
+      filterStr = filterStr.substring(0, i)
+      let j = filterStr.lastIndexOf('\"')
+      filterStr = filterStr.substring(j + 1)
+      this.kindPlus = '-' + filterStr.trim()
+    }
+
     if (this.$route.params && this.$route.params.key) {
       const key = this.$route.params.key
       const value = this.$route.params.value
@@ -205,7 +224,7 @@ export default {
     }
     frontendMeta(
       this.token,
-      this.kind,
+      this.kind + this.kindPlus,
       this.tablePage)
     frontendData(
       this,
