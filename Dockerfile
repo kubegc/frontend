@@ -5,6 +5,6 @@ RUN cd /k8s-frontend \
     && npm install \
     && npm run build:prod
 
-FROM nginx
+FROM nginx as nginx
 COPY --from=build /k8s-frontend/dist /usr/share/nginx/html
 CMD ["nginx", "-g", "daemon off;"]
