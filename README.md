@@ -50,12 +50,12 @@ kubeinst init-frontend               // install kube-frontend
 git clone https://github.com/kubesys/kube-frontend
 ```
 
-[required] open run.sh and set fip='ip'. If it is a VM with a public IP, the 'ip' is public ip; otherwise, it is the ip used by physical or virtual machines 
+[required] open install.sh and set fip='ip'. If it is a VM with a public IP, the 'ip' is public ip; otherwise, it is the ip used by physical or virtual machines 
 
 
 [required] deploy frontend 
 
 ```
-bash run.sh
+bash install.sh
 ```
 
