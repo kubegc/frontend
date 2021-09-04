@@ -20,7 +20,7 @@ chmod 777 /usr/bin/kubeinst
 kubeinst init-env                    // install docker and kubeadm
 kubeinst init-kube                   // install Kubernetes using kubeadm
 kubeinst init-backend                // install kube-backend
-kubeinst init-frontend               // only install are required files 
+kubeinst init-frontend               // install kube-frontend
 ```
 
 then
