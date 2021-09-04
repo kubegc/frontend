@@ -1,0 +1,54 @@
+--- 
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata: 
+  name: "kube-frontend"
+  namespace: "kube-system"
+  labels: 
+    name: "frontend"
+spec: 
+  replicas: 1
+  selector: 
+    matchLabels:
+      name: "kube-frontend"
+  template: 
+    metadata: 
+      labels: 
+        name: "kube-frontend"
+    spec:
+      nodeSelector:
+        node-role.kubernetes.io/master: ""
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+      - name: "kube-frontend"
+        image: "registry.cn-beijing.aliyuncs.com/doslab/kube-frontend:v#version#-#arch#"
+        imagePullPolicy: "IfNotPresent"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: "config"
+          mountPath: "/usr/share/nginx/html/config.js"
+      volumes:
+      - name: "config"
+        hostPath:
+          path: "/var/lib/doslab/frontend/config.js"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-frontend
+  namespace: kube-system
+  labels: 
+    name: kube-frontend
+spec:
+  type: NodePort
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    name: kube-frontend-port
+    nodePort: 30000
+  selector:
+    name: kube-frontend
