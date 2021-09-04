@@ -34,4 +34,4 @@ docker build . -t $repo/$frontend:v$version-$arch
 ##
 ###############################################
 
-docker push  $repo/$frontend:v$version-$frontend
+docker push  $repo/$frontend:v$version-$arch
