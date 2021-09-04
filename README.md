@@ -17,7 +17,8 @@ This project assumes the following system are running
 # Quick start
 
 - [install from scratch](#install_from_scratch)
-- [just_install frontend](#just_install frontend)
+- [just_install frontend](#just_install_frontend)
+- [enjoy_frontend](#enjoy_frontend)
 
 
 ## install_from_scratch 
@@ -41,7 +42,7 @@ kubeinst init-backend                // install kube-backend
 kubeinst init-frontend               // install kube-frontend
 ```
 
-## just_install frontend
+## just_install_frontend
 
 
 [required]  download this project 
@@ -58,4 +59,8 @@ git clone https://github.com/kubesys/kube-frontend
 ```
 bash install.sh
 ```
+
+## enjoy_frontend
+
+http://IP:30000 (admin/admin)
 
