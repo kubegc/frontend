@@ -64,7 +64,7 @@
               }"
             >
               <el-link type="primary">{{
-                item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.data[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name]
+                item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.dynamicData[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name]
               }}</el-link>
             </router-link>
 
@@ -178,13 +178,16 @@ export default {
         // action
         actions: []
       },
+
+      // query context
       listQuery: {
         page: 0,
         limit: 10,
-        labels: {},
-        fixedLabels: {},
-        data: {}
+        allLabels: {},
+        defLabels: {},
+        dynamicData: {}
       },
+
       // for button 'create'
       // https://element.eleme.cn/#/zh-CN/component/dialog
       createJsonDialog: {
@@ -195,6 +198,7 @@ export default {
         createJsonPattern: {},
         createFormConfig: []
       },
+
       // for action 'update'
       // https://element.eleme.cn/#/zh-CN/component/dialog
       updateJsonDialog: {
@@ -212,12 +216,12 @@ export default {
   },
   created() {
     this.kind = this.$route.name // 该资源的名字
-    this.listQuery.fixedLabels = this.$route.meta.filter || {}
-    this.listQuery.labels = this.listQuery.fixedLabels
+    this.listQuery.defLabels = this.$route.meta.filter || {}
+    this.listQuery.allLabels = this.listQuery.defLabels
 
     // kind support filter
-    let filterStr = JSON.stringify(this.listQuery.fixedLabels)
-    if (JSON.stringify(this.listQuery.fixedLabels) !== '{}') {
+    let filterStr = JSON.stringify(this.listQuery.defLabels)
+    if (JSON.stringify(this.listQuery.defLabels) !== '{}') {
       const i = filterStr.lastIndexOf('\"')
       filterStr = filterStr.substring(0, i)
       const j = filterStr.lastIndexOf('\"')
@@ -228,7 +232,7 @@ export default {
     if (this.$route.params && this.$route.params.key) {
       const key = this.$route.params.key
       const value = this.$route.params.value
-      this.listQuery.labels[key] = value
+      this.listQuery.allLabels[key] = value
     }
     frontendMeta(
       this.token,
@@ -256,7 +260,7 @@ export default {
     },
     handleCreateTemplateChange,
     search(labels) {
-      this.listQuery.labels = Object.assign(labels, this.listQuery.fixedLabels)
+      this.listQuery.allLabels = Object.assign(labels, this.listQuery.defLabels)
       frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
     // 将表格的 list 和 action 进行更新

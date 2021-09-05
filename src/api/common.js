@@ -237,7 +237,7 @@ export function frontendData(ref, token, kind, listQuery, tableSpec) {
     kind: idx === -1 ? kind : kind.substring(0, idx),
     limit: listQuery.limit,
     page: listQuery.page,
-    labels: listQuery.labels
+    labels: listQuery.allLabels
   }).then((response) => {
     if (validResponse(response)) {
       tableSpec.table.tableLoading = true
@@ -279,14 +279,14 @@ export function frontendData(ref, token, kind, listQuery, tableSpec) {
                 if(tableSpec.table.tableColumns[i].kind === 'internalLink' && tableSpec.table.tableColumns[i].row.indexOf('@') !== -1) {
                   const key = tableSpec.table.tableColumns[i].row.substring(1) + '-' +tableSpec.table.tableColumns[i].tag
                   const arr = {}
-                  // listQuery.data[key] = arr
-                  ref.$set(listQuery.data, key, arr)
+
+                  ref.$set(listQuery.dynamicData, key, arr)
 
                   for(let j = 0; j < tableSpec.table.tableData.length; j ++) {
                     queryResourceCount({token, data:{link: tableSpec.table.tableColumns[i].link, tag: tableSpec.table.tableColumns[i].tag, value: getTextValue(tableSpec.table.tableData[j].json, tableSpec.table.tableColumns[i].row.substring(1))}}).then(
                       response => {
                         if(validResponse(response)) {
-                          ref.$set(listQuery.data[key], tableSpec.table.tableData[j].json.metadata.name, response.data.totalCount)
+                          ref.$set(listQuery.dynamicData[key], tableSpec.table.tableData[j].json.metadata.name, response.data.totalCount)
                         }
                       }
                     )

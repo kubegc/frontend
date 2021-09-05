@@ -234,14 +234,16 @@ export default {
         // actions
         actions: []
       },
+
+      // query context
       listQuery: {
-        page: 1,
-        limit: 12,
-        labels: {},
-        fixedLabels: {},
-        data: {}
+        page: 0,
+        limit: 10,
+        allLabels: {},
+        defLabels: {},
+        dynamicData: {}
       },
-      createTemplate: {},
+
       // for button 'create'
       // https://element.eleme.cn/#/zh-CN/component/dialog
       createJsonDialog: {
@@ -252,6 +254,7 @@ export default {
         createJsonPattern: {},
         createFormConfig: []
       },
+
       // for action 'update'
       // https://element.eleme.cn/#/zh-CN/component/dialog
       updateJsonDialog: {
@@ -262,6 +265,8 @@ export default {
         updateFormConfig: [],
         propertiesInfo: []
       },
+
+      createTemplate: {},
       leftSpan: 24,
       detailVisible: false,
       // leftCardSpan: 3,
