@@ -2,12 +2,12 @@
   <div>
     <!-- https://element.eleme.cn/#/zh-CN/component/collapse -->
     <div class="app-container" style="margin-bottom: 20px">
-      <el-collapse v-model="pageSpec.activeName" accordion>
+      <el-collapse v-model="pageSpec.description.activeName" accordion>
         <el-collapse-item>
           <template slot="title">
             功能描述<i class="header-icon el-icon-info" />
           </template>
-          <div v-text="pageSpec.activeDesc" />
+          <div v-text="pageSpec.description.activeDesc" />
         </el-collapse-item>
       </el-collapse>
     </div>
@@ -23,7 +23,7 @@
 
       <!-- https://element.eleme.cn/#/zh-CN/component/button -->
       <el-row style="margin-bottom: 5vh">
-        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
+        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createJsonDialog)" />
         <el-button
           icon="el-icon-refresh"
           round
@@ -84,7 +84,7 @@
               v-else-if="item.kind === 'action'"
               v-model="scope.row.val"
               placeholder="请选择"
-              @change="handleActionChangeHelper($event, scope.row.json, token, kind, listQuery, pageSpec, updateAbout)"
+              @change="handleActionChangeHelper($event, scope.row.json, token, kind, listQuery, pageSpec, updateJsonDialog)"
             >
               <el-option
                 v-for="item in pageSpec.actions"
@@ -109,25 +109,25 @@
         @pagination="refresh"
       />
       <JsonDialog
-        :json-editor="createAbout.ifJsonEditorForCreate"
-        :title="createAbout.createResourceTitle"
-        :value.sync="createAbout.createDialogVisible"
-        :json-file-obj="createAbout.createJsonPattern"
-        :create-templates="createAbout.createTemplates"
-        :form-data="createAbout.createFormConfig"
-        @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-        @action="create(token, kind, listQuery, pageSpec, createAbout)"
-        @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
+        :json-editor="createJsonDialog.ifJsonEditorForCreate"
+        :title="createJsonDialog.createResourceTitle"
+        :value.sync="createJsonDialog.createDialogVisible"
+        :json-file-obj="createJsonDialog.createJsonPattern"
+        :create-templates="createJsonDialog.createTemplates"
+        :form-data="createJsonDialog.createFormConfig"
+        @update:jsonFileObj="createJsonDialog.createJsonPattern = JSON.parse($event)"
+        @action="create(token, kind, listQuery, pageSpec, createJsonDialog)"
+        @selectChange="handleCreateTemplateChange($event, token, kind, createJsonDialog)"
       />
       <JsonDialog
         :if-create="false"
-        :json-editor="updateAbout.ifJsonEditorForUpdate"
-        :title="updateAbout.updateResourceTitle"
-        :value.sync="updateAbout.actionDialogVisible"
-        :json-file-obj="updateAbout.updateJsonData"
-        :form-data="updateAbout.updateFormConfig"
-        @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateAbout)"
+        :json-editor="updateJsonDialog.ifJsonEditorForUpdate"
+        :title="updateJsonDialog.updateResourceTitle"
+        :value.sync="updateJsonDialog.actionDialogVisible"
+        :json-file-obj="updateJsonDialog.updateJsonData"
+        :form-data="updateJsonDialog.updateFormConfig"
+        @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"
+        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"
       />
     </div>
   </div>
@@ -154,16 +154,22 @@ export default {
       namespace: 'default',
       // pageSpec
       pageSpec: {
-        // describe what this page is?
-        activeName: '1',
-        activeDesc: '',
-        // 动态表格
+        // description
+        description: {
+          activeName: '1',
+          activeDesc: ''
+        },
+
+        // formsearch
+
+        // table
         tableData: [],
         listLoading: true,
         tableItems: {},
         tableColumns: [],
         tableItemsSize: 0,
-        // 操作集
+
+        // action
         actions: [],
         // popover to create JSON
         jsonObject: {},
@@ -176,8 +182,9 @@ export default {
         fixedLabels: {},
         data: {}
       },
-      // a
-      createAbout: {
+      // for button 'create'
+      // https://element.eleme.cn/#/zh-CN/component/dialog
+      createJsonDialog: {
         createDialogVisible: false,
         ifJsonEditorForCreate: true,
         createTemplates: [],
@@ -185,7 +192,9 @@ export default {
         createJsonPattern: {},
         createFormConfig: []
       },
-      updateAbout: {
+      // for action 'update'
+      // https://element.eleme.cn/#/zh-CN/component/dialog
+      updateJsonDialog: {
         updateJsonData: {},
         ifJsonEditorForUpdate: true,
         updateResourceTitle: '更新对象',

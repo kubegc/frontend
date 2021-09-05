@@ -203,7 +203,7 @@ export function getTextValue(scope, longKey) {
  *
  *
  ********************************/
-export function frontendMeta(token, kind, tablePage) {
+export function frontendMeta(token, kind, pageSpec) {
   // 获取描述元信息
   getResource({
     token,
@@ -212,7 +212,7 @@ export function frontendMeta(token, kind, tablePage) {
     namespace: 'default'
   }).then((response) => {
     if (validResponse(response)) {
-      tablePage.desc = response.data.spec.desc
+      pageSpec.description.activeDesc = response.data.spec.desc
     }
   })
   // 获取搜索表单元信息
@@ -223,11 +223,12 @@ export function frontendMeta(token, kind, tablePage) {
     namespace: 'default'
   }).then((response) => {
     if (validResponse(response)) {
-      tablePage.dynamicFormJson = response.data.spec.data
-      tablePage.dynamicFormVisible = true
+      pageSpec.dynamicFormJson = response.data.spec.data
+      pageSpec.dynamicFormVisible = true
     }
   })
 }
+
 export function frontendData(ref, token, kind, listQuery, tablePage) {
 
   let idx = kind.indexOf('-')

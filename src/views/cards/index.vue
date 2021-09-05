@@ -3,12 +3,12 @@
   <!-- https://element.eleme.cn/#/zh-CN/component/collapse -->
   <div class="imageMarket-app-container">
     <div class="app-container" style="margin-bottom: 20px">
-      <el-collapse v-model="page.activeName" accordion>
+      <el-collapse v-model="pageSpec.description.activeName" accordion>
         <el-collapse-item>
           <template slot="title">
             功能描述<i class="header-icon el-icon-info" />
           </template>
-          <div v-text="page.activeDesc" />
+          <div v-text="pageSpec.description.activeDesc" />
         </el-collapse-item>
       </el-collapse>
     </div>
@@ -17,8 +17,8 @@
     <div class="app-container" style="margin-bottom: 20px">
       <el-row>
         <dynamic-form
-          v-if="page.jsonVisible"
-          :form-data="page.jsonObject"
+          v-if="pageSpec.jsonVisible"
+          :form-data="pageSpec.jsonObject"
           :kind="kind"
           @watchSearch="search($event)"
         />
@@ -26,7 +26,7 @@
 
       <!-- https://element.eleme.cn/#/zh-CN/component/button -->
       <el-row style="margin-bottom: 5vh">
-        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
+        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createJsonDialog)" />
         <el-button
           icon="el-icon-refresh"
           round
@@ -46,11 +46,11 @@
       <el-row :gutter="10">
         <el-col :span="leftSpan" style="transition: all 0.28s;">
           <el-row
-            v-loading="page.listLoading"
+            v-loading="pageSpec.listLoading"
             :gutter="leftGutter"
           >
             <el-col
-              v-for="(item, index) in page.tableData"
+              v-for="(item, index) in pageSpec.tableData"
               :key="index"
               style="cursor: pointer"
               :span="6"
@@ -91,7 +91,7 @@
             <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
               <el-row>
                 <el-form>
-                  <el-form-item v-for="(labelItem, key) in page.tableColumns" :key="key" :label="labelItem.label">
+                  <el-form-item v-for="(labelItem, key) in pageSpec.tableColumns" :key="key" :label="labelItem.label">
 
                     <!-- tag -->
                     <div v-if="labelItem.kind === 'tag'">
@@ -136,11 +136,11 @@
                       placeholder="请选择"
                     >
                       <el-option
-                        v-for="i in page.actions"
+                        v-for="i in pageSpec.actions"
                         :key="i.key"
                         :label="i.key"
                         :value="i.type"
-                        @click.native="handleActionChangeHelper(i.type, detailItem.json, token, kind, listQuery, page, updateAbout)"
+                        @click.native="handleActionChangeHelper(i.type, detailItem.json, token, kind, listQuery, pageSpec, updateJsonDialog)"
                       />
                     </el-select>
                     <el-tag v-else size="small">{{ getComplexOrDefValue(detailItem.json, labelItem.row) }}</el-tag>
@@ -156,34 +156,34 @@
       </el-row>
       <el-row style="margin-top: 30px">
         <pagination
-          v-show="page.tableItemsSize > listQuery.limit"
+          v-show="pageSpec.tableItemsSize > listQuery.limit"
           :auto-scroll="false"
-          :total="page.tableItemsSize"
+          :total="pageSpec.tableItemsSize"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
           @pagination="refresh"
         />
       </el-row>
       <JsonDialog
-        :json-editor="createAbout.ifJsonEditorForCreate"
-        :title="createAbout.createResourceTitle"
-        :value.sync="createAbout.createDialogVisible"
-        :json-file-obj="createAbout.createJsonPattern"
-        :create-templates="createAbout.createTemplates"
-        :form-data="createAbout.createFormConfig"
-        @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-        @action="create(token, kind, listQuery, page, createAbout)"
-        @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
+        :json-editor="createJsonDialog.ifJsonEditorForCreate"
+        :title="createJsonDialog.createResourceTitle"
+        :value.sync="createJsonDialog.createDialogVisible"
+        :json-file-obj="createJsonDialog.createJsonPattern"
+        :create-templates="createJsonDialog.createTemplates"
+        :form-data="createJsonDialog.createFormConfig"
+        @update:jsonFileObj="createJsonDialog.createJsonPattern = JSON.parse($event)"
+        @action="create(token, kind, listQuery, pageSpec, createJsonDialog)"
+        @selectChange="handleCreateTemplateChange($event, token, kind, createJsonDialog)"
       />
       <JsonDialog
         :if-create="false"
-        :json-editor="updateAbout.ifJsonEditorForUpdate"
-        :title="updateAbout.updateResourceTitle"
-        :value.sync="updateAbout.actionDialogVisible"
-        :json-file-obj="updateAbout.updateJsonData"
-        :form-data="updateAbout.updateFormConfig"
-        @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperationHelper(token, kind, listQuery, page, updateAbout)"
+        :json-editor="updateJsonDialog.ifJsonEditorForUpdate"
+        :title="updateJsonDialog.updateResourceTitle"
+        :value.sync="updateJsonDialog.actionDialogVisible"
+        :json-file-obj="updateJsonDialog.updateJsonData"
+        :form-data="updateJsonDialog.updateFormConfig"
+        @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"
+        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"
       />
     </div>
   </div>
@@ -210,16 +210,12 @@ export default {
       // https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
       namespace: 'default',
       // chosenRadioName: '所有',
-      listQuery: {
-        page: 1,
-        limit: 12,
-        labels: {},
-        fixedLabels: {},
-        data: {}
-      },
-      createTemplate: {},
-      page: {
-        activeDesc: '',
+      pageSpec: {
+        // description
+        description: {
+          activeName: '1',
+          activeDesc: ''
+        },
         // 查询表单
         jsonObject: {},
         jsonVisible: false,
@@ -232,7 +228,17 @@ export default {
         // 操作集
         actions: []
       },
-      createAbout: {
+      listQuery: {
+        page: 1,
+        limit: 12,
+        labels: {},
+        fixedLabels: {},
+        data: {}
+      },
+      createTemplate: {},
+      // for button 'create'
+      // https://element.eleme.cn/#/zh-CN/component/dialog
+      createJsonDialog: {
         createDialogVisible: false,
         ifJsonEditorForCreate: true,
         createTemplates: [],
@@ -240,7 +246,9 @@ export default {
         createJsonPattern: {},
         createFormConfig: []
       },
-      updateAbout: {
+      // for action 'update'
+      // https://element.eleme.cn/#/zh-CN/component/dialog
+      updateJsonDialog: {
         updateJsonData: {},
         ifJsonEditorForUpdate: true,
         updateResourceTitle: '更新对象',
@@ -277,8 +285,8 @@ export default {
       const value = this.$route.params.value
       this.listQuery.labels[key] = value
     }
-    frontendMeta(this.token, this.kind, this.page)
-    frontendData(this, this.token, this.kind, this.listQuery, this.page)
+    frontendMeta(this.token, this.kind, this.pageSpec)
+    frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     // getTags(this)
   },
   computed: {
@@ -305,18 +313,18 @@ export default {
       } else {
         this.listQuery.labels[this.label] = this.chosenRadioName
       }
-      frontendData(this, this.token, this.kind, this.listQuery, this.page)
+      frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
     refresh() {
-      frontendData(this, this.token, this.kind, this.listQuery, this.page)
+      frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
-    handleRadioClick(name) {
-      if (name === '所有') {
-        name = ''
-      }
-      this.listQuery.labels[this.label] = this.tags[name]
-      this.refresh()
-    },
+    // handleRadioClick(name) {
+    //   if (name === '所有') {
+    //     name = ''
+    //   }
+    //   this.listQuery.labels[this.label] = this.tags[name]
+    //   this.refresh()
+    // },
 
     handleCreateTemplateChange,
     create(token, kind, listQuery, tablePage, createAbout) {
