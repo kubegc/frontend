@@ -118,7 +118,7 @@
                     </router-link>
 
                     <!-- externalLink -->
-                    <el-link v-else-if="labelItem.kind === 'externalLink'" type="primary" :href="getTextValue(detailItem.json, labelItem.row)">{{
+                    <el-link v-else-if="labelItem.kind === 'externalLink'" type="primary" :href="getExternalLink(detailItem.json, labelItem)" target="_blank">{{
                       getTextValue(detailItem.json, labelItem.row)
                     }}</el-link>
 
@@ -321,6 +321,11 @@ export default {
         addr = addr.replace('{' + (i + 1) + '}', currParam)
       }
       return addr
+    },
+    getExternalLink(json, item) {
+      if (item['link'].startsWith('@')) {
+        return getTextValue(json, item['link'].substring(1))
+      }
     },
     search(labels) {
       this.listQuery.labels = labels
