@@ -57,7 +57,7 @@ service.interceptors.response.use(
       Message({
         message: '操作失败：' + res.message,
         type: 'error',
-        duration: 5 * 1000
+        duration: 15 * 1000
       })
 
       if (res.code === 50000 && res.message === 'java.lang.Exception: miss or wrong token') {
@@ -84,7 +84,7 @@ service.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 15 * 1000
     })
     return Promise.reject(error)
   }

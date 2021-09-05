@@ -1,24 +1,27 @@
 <template>
   <div>
+    <!-- https://element.eleme.cn/#/zh-CN/component/collapse -->
     <div class="app-container" style="margin-bottom: 20px">
-      <el-collapse v-model="tablePage.activeName" accordion>
+      <el-collapse v-model="pageSpec.activeName" accordion>
         <el-collapse-item>
           <template slot="title">
             功能描述<i class="header-icon el-icon-info" />
           </template>
-          <div v-text="tablePage.desc" />
+          <div v-text="pageSpec.activeDesc" />
         </el-collapse-item>
       </el-collapse>
     </div>
 
+    <!-- https://element.eleme.cn/#/zh-CN/component/form -->
     <div class="app-container">
       <dynamic-form
-        v-if="tablePage.dynamicFormVisible"
-        :form-data="tablePage.dynamicFormJson"
+        v-if="pageSpec.jsonVisible"
+        :form-data="pageSpec.jsonObject"
         :kind="kind"
         @watchSearch="search($event)"
       />
 
+      <!-- https://element.eleme.cn/#/zh-CN/component/button -->
       <div class="base-button-container">
         <el-button
           icon="el-icon-plus"
@@ -38,13 +41,13 @@
 
       <el-table
         ref="table"
-        v-loading="tablePage.listLoading"
-        :data="tablePage.tableData"
+        v-loading="pageSpec.listLoading"
+        :data="pageSpec.tableData"
         highlight-current-row
         :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
       >
         <el-table-column
-          v-for="item in tablePage.tableColumns"
+          v-for="item in pageSpec.tableColumns"
           :key="item.key"
           :label="item.label"
         >
@@ -87,10 +90,10 @@
               v-else-if="item.kind === 'action'"
               v-model="scope.row.val"
               placeholder="请选择"
-              @change="handleActionChangeHelper($event, scope.row.json, token, kind, listQuery, tablePage, updateAbout)"
+              @change="handleActionChangeHelper($event, scope.row.json, token, kind, listQuery, pageSpec, updateAbout)"
             >
               <el-option
-                v-for="item in tablePage.actions"
+                v-for="item in pageSpec.actions"
                 :key="item.key"
                 :label="item.key"
                 :value="item.type"
@@ -104,9 +107,9 @@
       </el-table>
 
       <pagination
-        v-show="tablePage.tableItemsSize > 0"
+        v-show="pageSpec.tableItemsSize > 0"
         :auto-scroll="false"
-        :total="tablePage.tableItemsSize"
+        :total="pageSpec.tableItemsSize"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
         @pagination="refresh"
@@ -119,7 +122,7 @@
         :create-templates="createAbout.createTemplates"
         :form-data="createAbout.createFormConfig"
         @update:jsonFileObj="createAbout.createJsonPattern = JSON.parse($event)"
-        @action="create(token, kind, listQuery, tablePage, createAbout)"
+        @action="create(token, kind, listQuery, pageSpec, createAbout)"
         @selectChange="handleCreateTemplateChange($event, token, kind, createAbout)"
       />
       <JsonDialog
@@ -130,7 +133,7 @@
         :json-file-obj="updateAbout.updateJsonData"
         :form-data="updateAbout.updateFormConfig"
         @update:jsonFileObj="updateAbout.updateJsonData = JSON.parse($event)"
-        @action="applyOperationHelper(token, kind, listQuery, tablePage, updateAbout)"
+        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateAbout)"
       />
     </div>
   </div>
@@ -146,15 +149,13 @@ export default {
   components: { JsonDialog, Pagination, DynamicForm },
   data() {
     return {
-      // 轮询
-      pollingId: undefined,
-      tablePage: {
+      pageSpec: {
         // 描述
         activeName: '1',
-        desc: '',
+        activeDesc: '',
         // 查询表单
-        dynamicFormJson: {},
-        dynamicFormVisible: false,
+        jsonObject: {},
+        jsonVisible: false,
         // 动态表格
         tableData: [],
         listLoading: true,
@@ -223,13 +224,13 @@ export default {
     frontendMeta(
       this.token,
       this.kind,
-      this.tablePage)
+      this.pageSpec)
     frontendData(
       this,
       this.token,
       this.kind,
       this.listQuery,
-      this.tablePage)
+      this.pageSpec)
     // this.pollingId = setInterval(this.getList, 10000)
   },
 
@@ -248,11 +249,11 @@ export default {
     search(labels) {
       this.listQuery.labels = Object.assign(labels, this.listQuery.fixedLabels)
       console.log(JSON.stringify(this.listQuery.labels))
-      frontendData(this, this.token, this.kind, this.listQuery, this.tablePage)
+      frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
     // 将表格的 list 和 action 进行更新
     refresh() {
-      frontendData(this, this.token, this.kind, this.listQuery, this.tablePage)
+      frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
     handleActionChangeHelper(event, json, token, kind, listQuery, tablePage, updateAbout) {
       handleActionChange(this, event, json, token, kind, listQuery, tablePage, updateAbout)
