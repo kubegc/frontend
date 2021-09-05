@@ -22,22 +22,15 @@
       />
 
       <!-- https://element.eleme.cn/#/zh-CN/component/button -->
-      <div class="base-button-container">
-        <el-button
-          icon="el-icon-plus"
-          type="primary"
-          class="buttonShadow"
-          circle
-          @click.native="createJson(token, kind, createAbout)"
-        />
-
+      <el-row style="margin-bottom: 5vh">
+        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
         <el-button
           icon="el-icon-refresh"
           round
           @click.native="refresh"
         >刷新页面
         </el-button>
-      </div>
+      </el-row>
 
       <!-- https://element.eleme.cn/#/zh-CN/component/table -->
       <el-table
@@ -150,21 +143,20 @@ export default {
   components: { JsonDialog, Pagination, DynamicForm },
   data() {
     return {
-      // routes-admin supports 'filter', it means we can get different view using this feature.
-      // In order to have self-defined UI, we should get different metadata.
-      // Note that the filter has and only has one property, if it has one
-      // then metadata name is kind + '-' + property value, otherwise it is kind
+      // kind = 'Kubernetes kind(Pod, apps.Deployment)' + 'our subKind'
+      // Kubernetes kind: https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/
+      // subKind: https://www.yuque.com/kubesys/kube-frontend/hntivn
+      // If subKind is null, kind = 'Kubernetes kind'
+      // Otherwise, kind = 'Kubernetes kind' + '-' + subKind
       kind: '',
       // namespace. In current design, it is always 'default'
+      // https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
       namespace: 'default',
       // pageSpec
       pageSpec: {
-        // 描述
+        // describe what this page is?
         activeName: '1',
         activeDesc: '',
-        // 查询表单
-        jsonObject: {},
-        jsonVisible: false,
         // 动态表格
         tableData: [],
         listLoading: true,
@@ -172,7 +164,10 @@ export default {
         tableColumns: [],
         tableItemsSize: 0,
         // 操作集
-        actions: []
+        actions: [],
+        // popover to create JSON
+        jsonObject: {},
+        jsonVisible: false
       },
       listQuery: {
         page: 0,

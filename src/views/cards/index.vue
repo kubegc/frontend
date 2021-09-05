@@ -1,5 +1,6 @@
 <template>
 
+  <!-- https://element.eleme.cn/#/zh-CN/component/collapse -->
   <div class="imageMarket-app-container">
     <div class="app-container" style="margin-bottom: 20px">
       <el-collapse v-model="page.activeName" accordion>
@@ -7,21 +8,23 @@
           <template slot="title">
             功能描述<i class="header-icon el-icon-info" />
           </template>
-          <div v-text="page.desc" />
+          <div v-text="page.activeDesc" />
         </el-collapse-item>
       </el-collapse>
     </div>
 
+    <!-- https://element.eleme.cn/#/zh-CN/component/form -->
     <div class="app-container" style="margin-bottom: 20px">
       <el-row>
         <dynamic-form
-          v-if="page.dynamicFormVisible"
-          :form-data="page.dynamicFormJson"
+          v-if="page.jsonVisible"
+          :form-data="page.jsonObject"
           :kind="kind"
           @watchSearch="search($event)"
         />
       </el-row>
 
+      <!-- https://element.eleme.cn/#/zh-CN/component/button -->
       <el-row style="margin-bottom: 5vh">
         <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createAbout)" />
         <el-button
@@ -197,7 +200,16 @@ export default {
   components: { Pagination, JsonDialog, DynamicForm },
   data() {
     return {
-      chosenRadioName: '所有',
+      // kind = 'Kubernetes kind(Pod, apps.Deployment)' + 'our subKind'
+      // Kubernetes kind: https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/
+      // subKind: https://www.yuque.com/kubesys/kube-frontend/hntivn
+      // If subKind is null, kind = 'Kubernetes kind'
+      // Otherwise, kind = 'Kubernetes kind' + '-' + subKind
+      kind: '',
+      // namespace. In current design, it is always 'default'
+      // https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+      namespace: 'default',
+      // chosenRadioName: '所有',
       listQuery: {
         page: 1,
         limit: 12,
@@ -207,10 +219,10 @@ export default {
       },
       createTemplate: {},
       page: {
-        desc: '',
+        activeDesc: '',
         // 查询表单
-        dynamicFormJson: {},
-        dynamicFormVisible: false,
+        jsonObject: {},
+        jsonVisible: false,
         // 动态表格
         tableData: [],
         listLoading: true,
@@ -220,7 +232,6 @@ export default {
         // 操作集
         actions: []
       },
-      kind: '',
       createAbout: {
         createDialogVisible: false,
         ifJsonEditorForCreate: true,
