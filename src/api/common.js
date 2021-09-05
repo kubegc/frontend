@@ -229,7 +229,7 @@ export function frontendMeta(token, kind, pageSpec) {
   })
 }
 
-export function frontendData(ref, token, kind, listQuery, tablePage) {
+export function frontendData(ref, token, kind, listQuery, tableSpec) {
 
   let idx = kind.indexOf('-')
   listResources({
@@ -240,9 +240,9 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
     labels: listQuery.labels
   }).then((response) => {
     if (validResponse(response)) {
-      tablePage.listLoading = true
-      tablePage.tableItems = response.data.items
-      tablePage.tableItemsSize = response.data.metadata.totalCount
+      tableSpec.table.tableLoading = true
+      tableSpec.table.tableItems = response.data.items
+      tableSpec.table.tableItemsSize = response.data.metadata.totalCount
       // 获取可以进行的操作
       getResource({
         token,
@@ -253,17 +253,17 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
         if (validResponse(response)) {
           // eslint-disable-next-line no-prototype-builtins
           if (response.hasOwnProperty('data')) {
-            tablePage.actions = response.data.spec.data
+            tableSpec.actions = response.data.spec.data
           } else {
-            tablePage.actions = []
+            tableSpec.actions = []
           }
-          tablePage.tableData = []
+          tableSpec.table.tableData = []
           // 这里的 tableData 就是最后传进 table 的 data prop的数据
-          for (let i = 0; i < tablePage.tableItems.length; i++) {
-            tablePage.tableData.push({})
-            tablePage.tableData[i].json = tablePage.tableItems[i]
-            tablePage.tableData[i].actions = tablePage.actions
-            tablePage.tableData[i].val = ''
+          for (let i = 0; i < tableSpec.table.tableItems.length; i++) {
+            tableSpec.table.tableData.push({})
+            tableSpec.table.tableData[i].json = tableSpec.table.tableItems[i]
+            tableSpec.table.tableData[i].actions = tableSpec.actions
+            tableSpec.table.tableData[i].val = ''
           }
 
           getResource({
@@ -273,20 +273,20 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
             namespace: 'default'
           }).then((response) => {
             if (validResponse(response)) {
-              tablePage.tableColumns = response.data.spec.data
-              for(let i = 0; i < tablePage.tableColumns.length; i ++) {
+              tableSpec.table.tableColumns = response.data.spec.data
+              for(let i = 0; i < tableSpec.table.tableColumns.length; i ++) {
 
-                if(tablePage.tableColumns[i].kind === 'internalLink' && tablePage.tableColumns[i].row.indexOf('@') !== -1) {
-                  const key = tablePage.tableColumns[i].row.substring(1) + '-' +tablePage.tableColumns[i].tag
+                if(tableSpec.table.tableColumns[i].kind === 'internalLink' && tableSpec.table.tableColumns[i].row.indexOf('@') !== -1) {
+                  const key = tableSpec.table.tableColumns[i].row.substring(1) + '-' +tableSpec.table.tableColumns[i].tag
                   const arr = {}
                   // listQuery.data[key] = arr
                   ref.$set(listQuery.data, key, arr)
 
-                  for(let j = 0; j < tablePage.tableData.length; j ++) {
-                    queryResourceCount({token, data:{link: tablePage.tableColumns[i].link, tag: tablePage.tableColumns[i].tag, value: getTextValue(tablePage.tableData[j].json, tablePage.tableColumns[i].row.substring(1))}}).then(
+                  for(let j = 0; j < tableSpec.table.tableData.length; j ++) {
+                    queryResourceCount({token, data:{link: tableSpec.table.tableColumns[i].link, tag: tableSpec.table.tableColumns[i].tag, value: getTextValue(tableSpec.table.tableData[j].json, tableSpec.table.tableColumns[i].row.substring(1))}}).then(
                       response => {
                         if(validResponse(response)) {
-                          ref.$set(listQuery.data[key], tablePage.tableData[j].json.metadata.name, response.data.totalCount)
+                          ref.$set(listQuery.data[key], tableSpec.table.tableData[j].json.metadata.name, response.data.totalCount)
                         }
                       }
                     )
@@ -294,7 +294,7 @@ export function frontendData(ref, token, kind, listQuery, tablePage) {
                 }
               }
             }
-            tablePage.listLoading = false
+            tableSpec.table.tableLoading = false
           })
         }
       })

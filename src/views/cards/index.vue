@@ -46,11 +46,11 @@
       <el-row :gutter="10">
         <el-col :span="leftSpan" style="transition: all 0.28s;">
           <el-row
-            v-loading="pageSpec.listLoading"
+            v-loading="pageSpec.table.tableLoading"
             :gutter="leftGutter"
           >
             <el-col
-              v-for="(item, index) in pageSpec.tableData"
+              v-for="(item, index) in pageSpec.table.tableData"
               :key="index"
               style="cursor: pointer"
               :span="6"
@@ -91,7 +91,7 @@
             <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
               <el-row>
                 <el-form>
-                  <el-form-item v-for="(labelItem, key) in pageSpec.tableColumns" :key="key" :label="labelItem.label">
+                  <el-form-item v-for="(labelItem, key) in pageSpec.table.tableColumns" :key="key" :label="labelItem.label">
 
                     <!-- tag -->
                     <div v-if="labelItem.kind === 'tag'">
@@ -156,9 +156,9 @@
       </el-row>
       <el-row style="margin-top: 30px">
         <pagination
-          v-show="pageSpec.tableItemsSize > listQuery.limit"
+          v-show="pageSpec.table.tableItemsSize > listQuery.limit"
           :auto-scroll="false"
-          :total="pageSpec.tableItemsSize"
+          :total="pageSpec.table.tableItemsSize"
           :page.sync="listQuery.page"
           :limit.sync="listQuery.limit"
           @pagination="refresh"
@@ -221,13 +221,17 @@ export default {
           formSearchJson: {},
           formSearchVisible: false
         },
-        // 动态表格
-        tableData: [],
-        listLoading: true,
-        tableItems: {},
-        tableColumns: [],
-        tableItemsSize: 0,
-        // 操作集
+
+        // table
+        table: {
+          tableData: [],
+          tableLoading: true,
+          tableItems: {},
+          tableColumns: [],
+          tableItemsSize: 0
+        },
+
+        // actions
         actions: []
       },
       listQuery: {

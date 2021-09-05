@@ -35,13 +35,13 @@
       <!-- https://element.eleme.cn/#/zh-CN/component/table -->
       <el-table
         ref="table"
-        v-loading="pageSpec.listLoading"
-        :data="pageSpec.tableData"
+        v-loading="pageSpec.table.tableLoading"
+        :data="pageSpec.table.tableData"
         highlight-current-row
         :header-cell-style="{ 'background-color': '#eef1f6', color: '#606266' }"
       >
         <el-table-column
-          v-for="item in pageSpec.tableColumns"
+          v-for="item in pageSpec.table.tableColumns"
           :key="item.key"
           :label="item.label"
         >
@@ -101,9 +101,9 @@
       </el-table>
 
       <pagination
-        v-show="pageSpec.tableItemsSize > 0"
+        v-show="pageSpec.table.tableItemsSize > 0"
         :auto-scroll="false"
-        :total="pageSpec.tableItemsSize"
+        :total="pageSpec.table.tableItemsSize"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.limit"
         @pagination="refresh"
@@ -167,11 +167,13 @@ export default {
         },
 
         // table
-        tableData: [],
-        listLoading: true,
-        tableItems: {},
-        tableColumns: [],
-        tableItemsSize: 0,
+        table: {
+          tableData: [],
+          tableLoading: true,
+          tableItems: {},
+          tableColumns: [],
+          tableItemsSize: 0
+        },
 
         // action
         actions: []
@@ -255,7 +257,6 @@ export default {
     handleCreateTemplateChange,
     search(labels) {
       this.listQuery.labels = Object.assign(labels, this.listQuery.fixedLabels)
-      console.log(JSON.stringify(this.listQuery.labels))
       frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
     // 将表格的 list 和 action 进行更新
