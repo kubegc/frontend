@@ -39,6 +39,7 @@
         </el-button>
       </div>
 
+      <!-- https://element.eleme.cn/#/zh-CN/component/table -->
       <el-table
         ref="table"
         v-loading="pageSpec.listLoading"
@@ -149,6 +150,14 @@ export default {
   components: { JsonDialog, Pagination, DynamicForm },
   data() {
     return {
+      // routes-admin supports 'filter', it means we can get different view using this feature.
+      // In order to have self-defined UI, we should get different metadata.
+      // Note that the filter has and only has one property, if it has one
+      // then metadata name is kind + '-' + property value, otherwise it is kind
+      kind: '',
+      // namespace. In current design, it is always 'default'
+      namespace: 'default',
+      // pageSpec
       pageSpec: {
         // 描述
         activeName: '1',
@@ -172,13 +181,6 @@ export default {
         fixedLabels: {},
         data: {}
       },
-      // 资源相关
-      namespace: 'default',
-      // routes-admin supports 'filter', it means we can get different view using this feature.
-      // In order to have self-defined UI, we should get different metadata.
-      // Note that the filter has and only has one property, if it has one
-      // then metadata name is kind + '-' + property value, otherwise it is kind
-      kind: '',
       // a
       createAbout: {
         createDialogVisible: false,
