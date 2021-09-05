@@ -17,8 +17,8 @@
     <div class="app-container" style="margin-bottom: 20px">
       <el-row>
         <dynamic-form
-          v-if="pageSpec.jsonVisible"
-          :form-data="pageSpec.jsonObject"
+          v-if="pageSpec.formSearch.formSearchVisible"
+          :form-data="pageSpec.formSearch.formSearchJson"
           :kind="kind"
           @watchSearch="search($event)"
         />
@@ -216,9 +216,11 @@ export default {
           activeName: '1',
           activeDesc: ''
         },
-        // 查询表单
-        jsonObject: {},
-        jsonVisible: false,
+        // formSearch
+        formSearch: {
+          formSearchJson: {},
+          formSearchVisible: false
+        },
         // 动态表格
         tableData: [],
         listLoading: true,

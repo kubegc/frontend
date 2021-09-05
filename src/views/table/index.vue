@@ -15,8 +15,8 @@
     <!-- https://element.eleme.cn/#/zh-CN/component/form -->
     <div class="app-container">
       <dynamic-form
-        v-if="pageSpec.jsonVisible"
-        :form-data="pageSpec.jsonObject"
+        v-if="pageSpec.formSearch.formSearchVisible"
+        :form-data="pageSpec.formSearch.formSearchJson"
         :kind="kind"
         @watchSearch="search($event)"
       />
@@ -160,7 +160,11 @@ export default {
           activeDesc: ''
         },
 
-        // formsearch
+        // formSearch
+        formSearch: {
+          formSearchJson: {},
+          formSearchVisible: false
+        },
 
         // table
         tableData: [],
@@ -170,10 +174,7 @@ export default {
         tableItemsSize: 0,
 
         // action
-        actions: [],
-        // popover to create JSON
-        jsonObject: {},
-        jsonVisible: false
+        actions: []
       },
       listQuery: {
         page: 0,

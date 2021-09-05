@@ -223,8 +223,8 @@ export function frontendMeta(token, kind, pageSpec) {
     namespace: 'default'
   }).then((response) => {
     if (validResponse(response)) {
-      pageSpec.dynamicFormJson = response.data.spec.data
-      pageSpec.dynamicFormVisible = true
+      pageSpec.formSearch.formSearchJson = response.data.spec.data
+      pageSpec.formSearch.formSearchVisible = true
     }
   })
 }
@@ -232,8 +232,6 @@ export function frontendMeta(token, kind, pageSpec) {
 export function frontendData(ref, token, kind, listQuery, tablePage) {
 
   let idx = kind.indexOf('-')
-  console.log(kind)
-  console.log(idx)
   listResources({
     token: token,
     kind: idx === -1 ? kind : kind.substring(0, idx),
@@ -380,7 +378,6 @@ export function createObject(ref, token, kind, listQuery, tablePage, createAbout
   })
 }
 export function applyOperation(ref, token, kind, listQuery, tablePage, updateAbout) {
-  console.log(ref)
   updateAbout.actionDialogVisible = false
   // if (typeof this.updateJsonData === 'string') {
   //   this.updateJsonData = JSON.parse(this.updateJsonData)
