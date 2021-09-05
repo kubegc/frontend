@@ -6,7 +6,7 @@ import store from '@/store'
 const service = axios.create({
   baseURL: window.g.baseURL, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 15000 // request timeout
 })
 
 // request interceptor
