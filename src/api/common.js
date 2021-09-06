@@ -283,7 +283,11 @@ export function frontendData(ref, token, kind, listQuery, tableSpec) {
                   ref.$set(listQuery.dynamicData, key, arr)
 
                   for(let j = 0; j < tableSpec.table.tableData.length; j ++) {
-                    queryResourceCount({token, data:{link: tableSpec.table.tableColumns[i].link, tag: tableSpec.table.tableColumns[i].tag, value: getTextValue(tableSpec.table.tableData[j].json, tableSpec.table.tableColumns[i].row.substring(1))}}).then(
+                    let tag = tableSpec.table.tableColumns[i].tag
+                    tag = tag.startsWith('@') ? getTextValue(tableSpec.table.tableData[j].json, tag.substring(1)) : tag;
+                    queryResourceCount({token, data:{link: tableSpec.table.tableColumns[i].link,
+                                                          tag: tag,
+                                                          value: getTextValue(tableSpec.table.tableData[j].json, tableSpec.table.tableColumns[i].row.substring(1))}}).then(
                       response => {
                         if(validResponse(response)) {
                           ref.$set(listQuery.dynamicData[key], tableSpec.table.tableData[j].json.metadata.name, response.data.totalCount)
