@@ -266,6 +266,15 @@ export default {
     getExternalLink(json, item) {
       if (item['link'].startsWith('@')) {
         return getTextValue(json, item['link'].substring(1))
+      } else {
+        let linkUrl = item['link']
+        const tags = item['tag'].split(',')
+        const len = tags.length
+        for (let i = 0; i < len; i++) {
+          const tag = this.getTextValue(json, tags[i])
+          linkUrl = linkUrl.replace('{' + (i + 1) + '}', tag)
+        }
+        return linkUrl
       }
     },
     handleCreateTemplateChange,
