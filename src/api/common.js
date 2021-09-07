@@ -137,6 +137,7 @@ export function getTextValue(scope, longKey) {
     return objResult
   } else {
     // Pod lifecycle: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
+    console.log(result)
     if (result === 'Running') {
       result = '运行中'
     } else if (result === 'Terminating') {
@@ -170,11 +171,11 @@ export function getTextValue(scope, longKey) {
     //     memory: 7811Mi
     //     pods: "110
     // We want to display it as Gi
-    else if (result.endsWith('Ki')) {
+    else if ((result + '').endsWith('Ki')) {
       result = (Number(result.substring(0, result.length - 2).trim())/1024/1024).toFixed(2) + 'GB'
-    } else if (result.endsWith('Mi')) {
+    } else if ((result + '').endsWith('Mi')) {
       result = (Number(result.substring(0, result.length - 2).trim())/1024).toFixed(2) + 'GB'
-    } else if (result.endsWith('Ti')) {
+    } else if ((result + '').endsWith('Ti')) {
       result = (Number(result.substring(0, result.length - 2).trim())*1024).toFixed(2) + 'GB'
     }
     // Resource classification:  https://www.yuque.com/kubesys/kube-frontend/ipnl6c
