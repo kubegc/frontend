@@ -95,9 +95,11 @@ export function getComplexValue(scope, key) {
   return value.substring(1)
 }
 export function getTextValue(scope, longKey) {
+  // if scope is null, just return '-'
   if (JSON.stringify(scope) === '{}' || !longKey) {
     return '-'
   }
+
   let result = scope
   longKey.split('.').every((item) => {
     item = item.replaceAll('#', '.')
@@ -118,6 +120,25 @@ export function getTextValue(scope, longKey) {
     } else {
       if (result && result[item] !== undefined) {
         result = result[item]
+        // we should consider this case in route-admin,
+        // in our design, apiVersion is a system keyword
+        //
+        // for example, the deployment kind in route-admin is "apps.Deploymnet"
+        // when we try to find the Pod's parent, we must find it in the following json.
+        // In order to get 'apps.Deployment', we should handle the apiVersion.
+        // "ownerReferences": [
+        //       {
+        //         "apiVersion": "apps/v1",
+        //         "kind": "Deployment",
+        //         "name": "coredns",
+        //         "uid": "a018d44a-5ca6-48f4-bc15-f0abe639c297",
+        //         "controller": true,
+        //         "blockOwnerDeletion": true
+        //       }
+        if (item === 'apiVersion') {
+          let idx = result.indexOf('/')
+          result = result.substring(0, idx)
+        }
         return true
       } else {
         result = '-'
@@ -126,6 +147,7 @@ export function getTextValue(scope, longKey) {
     }
   })
 
+  // if result is Object or Array ???
   if (result instanceof Object || result instanceof Array) {
     const objResult = new Set()
     for (const key in result) {
@@ -170,6 +192,7 @@ export function getTextValue(scope, longKey) {
     //     memory: 7811Mi
     //     pods: "110
     // We want to display it as Gi
+    // Here, result + ‘’:   because we want to handle it as a string type
     else if ((result + '').endsWith('Ki')) {
       result = (Number(result.substring(0, result.length - 2).trim())/1024/1024).toFixed(2) + 'GB'
     } else if ((result + '').endsWith('Mi')) {
