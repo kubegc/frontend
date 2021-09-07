@@ -137,7 +137,6 @@ export function getTextValue(scope, longKey) {
     return objResult
   } else {
     // Pod lifecycle: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
-    console.log(result)
     if (result === 'Running') {
       result = '运行中'
     } else if (result === 'Terminating') {
