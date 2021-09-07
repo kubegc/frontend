@@ -70,7 +70,7 @@
 
             <!-- externalLink -->
             <el-link v-else-if="item.kind === 'externalLink'" type="primary" :href="getExternalLink(scope.row.json, item)" target="_blank">{{
-              getTextValue(scope.row.json, item.row)
+                getComplexOrDefValue(scope.row.json, item.row)
             }}</el-link>
 
             <!-- terminal -->
@@ -271,7 +271,7 @@ export default {
         const tags = item['tag'].split(',')
         const len = tags.length
         for (let i = 0; i < len; i++) {
-          const tag = this.getTextValue(json, tags[i])
+          const tag = this.getComplexOrDefValue(json, tags[i])
           linkUrl = linkUrl.replace('{' + (i + 1) + '}', tag)
         }
         return linkUrl
