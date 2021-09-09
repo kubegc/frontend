@@ -2,10 +2,19 @@
 
 Kubernetes-oriented Low-Code Platform using kube-backend to support various scenario, such as AppMgr, DevOps, FaaS，CMP, Edge.
 
-This project assumes the following system are running
+This project assumes the following system are running.
 
 - [Kubernetes](https://github.com/kubernetes/kubernetes)  
 - [kube-backend](https://github.com/kubesys/kube-backend)
+
+If these componets are not working, using ['kubeinit'](https://github.com/kubesys/kube-installer) tool.
+
+```
+kubeinst init-env
+kubeinst init-kube
+kubeinst init-backend
+kubeinst init-frontend
+````
 
 # Authors
 
