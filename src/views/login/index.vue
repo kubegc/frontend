@@ -1,6 +1,22 @@
 <!-- Copyright (2021, ) Institute of Software, Chinese Academy of Sciences -->
 <template>
   <div class="login-container">
+    <div class="index-bg1"></div>
+    <div class="index-gy1">
+      深度软件定义的容器化运行环境
+<!--      <el-select-->
+<!--        v-model="projectTitle"-->
+<!--        style="width: 112%; margin-bottom: 20px"-->
+<!--      >-->
+<!--        <el-option-->
+<!--          v-for="item in allProjectTitles"-->
+<!--          :key="item.label"-->
+<!--          :label="item.label"-->
+<!--          :value="item.value"-->
+<!--          style="color: black"-->
+<!--        />-->
+<!--      </el-select>-->
+    </div>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -9,21 +25,22 @@
       auto-complete="on"
       label-position="left"
     >
-      <div class="title-container">
-        <el-select
-          v-model="projectTitle"
-          style="width: 112%; margin-bottom: 20px"
-        >
-          <el-option
-            v-for="item in allProjectTitles"
-            :key="item.label"
-            :label="item.label"
-            :value="item.value"
-            style="color: black"
-          />
-        </el-select>
+      <div class="title-container" style="font-size: 2em; color: cornflowerblue" align="center">
+        用户登录
+<!--        <el-select-->
+<!--          v-model="projectTitle"-->
+<!--          style="width: 112%; margin-bottom: 20px"-->
+<!--        >-->
+<!--          <el-option-->
+<!--            v-for="item in allProjectTitles"-->
+<!--            :key="item.label"-->
+<!--            :label="item.label"-->
+<!--            :value="item.value"-->
+<!--            style="color: black"-->
+<!--          />-->
+<!--        </el-select>-->
       </div>
-
+      <br/>
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -60,6 +77,7 @@
           />
         </span>
       </el-form-item>
+      <br/>
 
       <el-button
         :loading="loading"
@@ -71,12 +89,12 @@
       </el-button>
     </el-form>
 
-    <div>
-      <el-button id="usernameRegExp" type="text" hidden="true" />
-      <el-button id="usernameRegExpDesc" type="text" hidden="true" />
-      <el-button id="passwordRegExp" type="text" hidden="true" />
-      <el-button id="passwordRegExpDesc" type="text" hidden="true" />
-    </div>
+<!--    <div>-->
+<!--      <el-button id="usernameRegExp" type="text" hidden="true" />-->
+<!--      <el-button id="usernameRegExpDesc" type="text" hidden="true" />-->
+<!--      <el-button id="passwordRegExp" type="text" hidden="true" />-->
+<!--      <el-button id="passwordRegExpDesc" type="text" hidden="true" />-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -206,7 +224,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg: #283443;
-$light_gray: #fff;
+$light_gray: #283443;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -242,9 +260,9 @@ $cursor: #fff;
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.05);
     //background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 20px;
     color: #454545;
-    background-color: #304156;
+    background-color: aliceblue;
     box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
       0px 3px 6px 0px rgba(0, 0, 0, 0.12), 0px 5px 12px 4px rgba(0, 0, 0, 0.09);
   }
@@ -263,20 +281,27 @@ $light_gray: #eee;
 .login-container {
   min-height: 100%;
   width: 100%;
-  //background: url(../../assets/login.jpg) no-repeat center;
-  background: $bg;
+  background: url(../../assets/login.jpg) no-repeat center;
   overflow: hidden;
   .login-form {
-    position: relative;
-    width: 520px;
+    position: absolute;
+    float: right;
+    right: 150px;
+    top: 50%;
+    left: 55%;
+    margin-top: -175px;
+    margin-left: 250px;
+    width: 400px;
+    min-height: 300px;
     max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
+    padding: 40px 20px 10px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: #fff;
   }
 
   .svg-container {
-    padding: 6px 5px 6px 15px;
+    padding: 6px 10px 6px 15px;
     color: $dark_gray;
     vertical-align: middle;
     width: 30px;
@@ -287,7 +312,7 @@ $light_gray: #eee;
     position: relative;
 
     .title {
-      font-size: 26px;
+      font-size: 20px;
       color: $light_gray;
       margin: 0px auto 40px auto;
       text-align: center;
@@ -303,6 +328,28 @@ $light_gray: #eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .index-bg1{
+    background: #347ebc;
+    width: 100%;
+    height: 237px;
+    opacity: .6;
+    position: absolute;
+    top: calc(50vh - 118.5px);
+  }
+
+  .index-gy1{
+    width: 1000px;
+    height: 237px;
+    color: #fff;
+    font-size: 60px;
+    position: absolute;
+    padding-top: 80px;
+    left: 10%;
+    top: 0;
+    bottom: 0;
+    margin: auto;
   }
 }
 </style>
