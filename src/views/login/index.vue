@@ -2,20 +2,20 @@
 <template>
   <div class="login-container">
     <div class="index-bg1"></div>
-    <div class="index-gy1">
-      深度软件定义的容器化运行环境
-<!--      <el-select-->
-<!--        v-model="projectTitle"-->
-<!--        style="width: 112%; margin-bottom: 20px"-->
-<!--      >-->
-<!--        <el-option-->
-<!--          v-for="item in allProjectTitles"-->
-<!--          :key="item.label"-->
-<!--          :label="item.label"-->
-<!--          :value="item.value"-->
-<!--          style="color: black"-->
-<!--        />-->
-<!--      </el-select>-->
+    <div class="index-gy1"> {{ projectTitle }}
+    <!-- <el-select
+       class=""
+       v-model="projectTitle"
+       style="width: 100%; font-size: 64pt"
+     >
+       <el-option
+         v-for="item in allProjectTitles"
+         :key="item.label"
+         :label="item.label"
+         :value="item.value"
+         style="color: black"
+       />
+     </el-select> -->
     </div>
     <el-form
       ref="loginForm"
@@ -88,13 +88,6 @@
         登录
       </el-button>
     </el-form>
-
-<!--    <div>-->
-<!--      <el-button id="usernameRegExp" type="text" hidden="true" />-->
-<!--      <el-button id="usernameRegExpDesc" type="text" hidden="true" />-->
-<!--      <el-button id="passwordRegExp" type="text" hidden="true" />-->
-<!--      <el-button id="passwordRegExpDesc" type="text" hidden="true" />-->
-<!--    </div>-->
   </div>
 </template>
 

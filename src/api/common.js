@@ -159,22 +159,24 @@ export function getTextValue(scope, longKey) {
     return objResult
   } else {
     // Pod lifecycle: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
-    if (result === 'Running') {
+    if (result.toLowerCase() === 'running') {
       result = '运行中'
-    } else if (result === 'Terminating') {
+    } else if (result.toLowerCase() === 'terminating') {
       result = '销毁中'
-    } else if (result === 'Pending') {
+    } else if (result.toLowerCase() === 'pending') {
       result = '挂起中'
-    } else if (result === 'Succeeded') {
+    } else if (result.toLowerCase() === 'succeeded') {
       result = '执行完成'
-    } else if (result === 'Completed') {
+    } else if (result.toLowerCase() === 'completed') {
       result = '执行完成'
-    } else if (result === 'Failed') {
+    } else if (result.toLowerCase() === 'failed') {
       result = '执行失败'
-    } else if (result === 'Unknown') {
+    } else if (result.toLowerCase() === 'unknown') {
       result = '未知状态'
-    } else if (result === 'Ready') {
-      result = '健康运行'
+    } else if (result.toLowerCase() === 'ready') {
+      result = '正常运行'
+    } else if (result.toLowerCase() === 'active') {
+      result = '正常工作'
     }
     // Resource memory size when executing kubectl get no [name] -n [namespace] -o yaml
     // status:
