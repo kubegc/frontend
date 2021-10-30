@@ -24,14 +24,28 @@ export function removeToken() {
   return Cookies.remove(TokenKey)
 }
 
+/**
+ * Set a cookie
+ * @param {string} name
+ * @param {string} value
+ */
 export function setValue(name, value) {
   return Cookies.set(name, value)
 }
 
+/**
+ * get a cookie
+ * @param {string} name
+ * @returns {string | null}
+ */
 export function getValue(name) {
   return Cookies.get(name)
 }
 
+/**
+ * Remove a cookie
+ * @param {string} name
+ */
 export function removeValue(name) {
   return Cookies.remove(name)
 }

@@ -194,7 +194,7 @@
 <script>
 import axios from "axios";
 import JsonEditor from "@/components/JsonEditorSpecial/index";
-import { getLokiLink } from '@/utils/getResource'
+import { getLokiLink } from '@/utils/addon'
 //import './jquery-3.3.1.slim.min.js'
 // import './popper.min.js'
 // import './bootstrap.min.js'
