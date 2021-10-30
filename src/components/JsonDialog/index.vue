@@ -52,7 +52,7 @@
 
 <script>
 import JsonEditor from '@/components/JsonEditorSpecial'
-import { check } from '@/utils/validate'
+import { doCheck } from '@/api/common'
 import { getResource } from '@/api/kubernetes'
 
 export default {
@@ -92,7 +92,7 @@ export default {
   },
   data() {
     const stringValidator = (rule, value, callback) => {
-      if (!check(this.defStringRegExp, value)) {
+      if (!doCheck(this.defStringRegExp, value)) {
         callback(new Error(this.defStringRegExpDesc))
       } else {
         callback()
@@ -100,7 +100,7 @@ export default {
     }
 
     const integerValidator = (rule, value, callback) => {
-      if (!check(this.defNumberRegExp, value)) {
+      if (!doCheck(this.defNumberRegExp, value)) {
         callback(new Error(this.defNumberRegExpDesc))
       } else {
         callback()
@@ -210,7 +210,7 @@ export default {
 
           if (this.$valid(response)) {
             const validator = (rule, value, callback) => {
-              if (!check(response.data.spec.value, value)) {
+              if (!doCheck(response.data.spec.value, value)) {
                 callback(new Error(response.data.spec.desc))
               } else {
                 callback()

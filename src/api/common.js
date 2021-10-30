@@ -1,3 +1,5 @@
+// Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
+
 import { createResource, deleteResource, getResource, listResources, updateResource, getScreen, queryResourceCount } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
 // eslint-disable-next-line no-unused-vars
@@ -9,7 +11,93 @@ import Message from 'element-ui/packages/message/src/main'
  *
  *
  ********************************/
-export default function validResponse(response) {
+/**
+ * Get project title
+ * @param {(Object)} doc
+ */
+export default function getTitle(doc) {
+  getResource({
+    token: 'default',
+    kind: 'Frontend',
+    namespace: 'default',
+    name: 'frontend-project'
+  }).then((response) => {
+    doc.title = response.data.spec.data[0].label
+  })
+}
+
+/**
+ * @param {string} path
+ * @returns {Boolean}
+ */
+export function isExternal(path) {
+  return /^(https?:|mailto:|tel:)/.test(path)
+}
+
+/**
+ * @param {desc} regexp
+ * @param {value}  value
+ * @returns {Boolean}
+ */
+export function doCheck(desc, value) {
+  const regexp = new RegExp(desc)
+  if (value === undefined || !regexp.test(value)) {
+    return false
+  } else {
+    return true
+  }
+}
+
+/**
+ * Parse the time to string
+ * @param {(Object|string|number)} time
+ * @param {string} cFormat
+ * @returns {string | null}
+ */
+export function parseTime(time, cFormat) {
+  if (arguments.length === 0 || !time) {
+    return null
+  }
+  const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
+  let date
+  if (typeof time === 'object') {
+    date = time
+  } else {
+    if ((typeof time === 'string')) {
+      if ((/^[0-9]+$/.test(time))) {
+        // support "1548221490638"
+        time = parseInt(time)
+      } else {
+        // support safari
+        // https://stackoverflow.com/questions/4310953/invalid-date-in-safari
+        time = time.replace(new RegExp(/-/gm), '/')
+      }
+    }
+
+    if ((typeof time === 'number') && (time.toString().length === 10)) {
+      time = time * 1000
+    }
+    date = new Date(time)
+  }
+  const formatObj = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  }
+  const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
+    const value = formatObj[key]
+    // Note: getDay() returns 0 on Sunday
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    return value.toString().padStart(2, '0')
+  })
+  return time_str
+}
+
+export function validResponse(response) {
   // eslint-disable-next-line no-prototype-builtins
   return response != null && response.hasOwnProperty('code') && response.code === 20000
 }

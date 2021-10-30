@@ -1,4 +1,5 @@
 // Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
+
 import Cookies from 'js-cookie'
 
 const TokenKey = 'kubernetes_admin_token'

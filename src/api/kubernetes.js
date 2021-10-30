@@ -1,3 +1,5 @@
+// Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
+
 import request from '@/utils/request'
 
 export function createResource(data) {
@@ -70,4 +72,5 @@ export function queryResourceCount(data) {
     data
   })
 }
+
 

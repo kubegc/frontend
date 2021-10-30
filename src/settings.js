@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '系统原型',
+  title: '系统平台',
 
   /**
    * @type {boolean} true | false

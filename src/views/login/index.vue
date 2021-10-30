@@ -2,7 +2,7 @@
 <template>
   <div class="login-container">
     <div class="index-bg1"></div>
-    <div class="index-gy1"> {{ projectTitle }}
+    <div class="index-gy1" style="width: 80%"> {{ projectTitle }}
     <!-- <el-select
        class=""
        v-model="projectTitle"
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { check } from '@/utils/validate'
+import { doCheck } from '@/api/common'
 import { getResource } from '@/api/kubernetes'
 
 export default {
@@ -100,14 +100,14 @@ export default {
 
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!check(this.usernameRegExp, value)) {
+      if (!doCheck(this.usernameRegExp, value)) {
         callback(new Error(this.usernameRegExpDesc))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (!check(this.passwordRegExp, value)) {
+      if (!doCheck(this.passwordRegExp, value)) {
         callback(new Error(this.passwordRegExpDesc))
       } else {
         callback()
