@@ -1,7 +1,6 @@
-// import defaultSettings from '@/settings'
+// Copyright (2021, ) Institute of Software, Chinese Academy of Sciences
 import { getResource } from '@/api/kubernetes'
 
-// const title = defaultSettings.title || 'admin'
 export default function getTitle(doc) {
   getResource({
     token: 'default',
@@ -12,10 +11,3 @@ export default function getTitle(doc) {
     doc.title = response.data.spec.data[0].label
   })
 }
-
-// export default function getPageTitle(pageTitle) {
-//   if (pageTitle) {
-//     return `${pageTitle} - ${title}`
-//   }
-//   return `${title}`
-// }
