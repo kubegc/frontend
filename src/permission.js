@@ -31,11 +31,14 @@ router.beforeEach(async(to, from, next) => {
           if (to.path === '/') {
             next({ path: homepage(store.getters.add_routes) })
           } else {
-            next()
-            // }
+            if (JSON.stringify(store.getters.menu_routes).toString()
+              .indexOf('"' + to.path + '"') === -1) {
+              next('/')
+            } else {
+              next()
+            }
           }
         } else {
-          // get user info
           const { role } = await store.dispatch('user/getRole')
           const routes = await store.dispatch('route/getRoute', role)
           await store.dispatch('route/parseRoute', routes)
