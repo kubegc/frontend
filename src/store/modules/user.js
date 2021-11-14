@@ -34,12 +34,13 @@ const actions = {
     const { username, password } = userInfo
     // eslint-disable-next-line no-const-assign
     return new Promise((resolve, reject) => {
-      login({ username: projectId + '-' + username, password: password, namespace: state.namespace }).then(response => {
+      login({ username: username, password: password, namespace: state.namespace }).then(response => {
         if (response.code === 20000) {
           const { data } = response
           commit('SET_TOKEN', data.token)
           setToken(data.token)
-          setValue('name', projectId + '-' + username)
+          setValue('projectId', projectId)
+          setValue('name', username)
           resolve()
         }
       }).catch(error => {

@@ -27,18 +27,6 @@
     >
       <div class="title-container" style="font-size: 2em; color: cornflowerblue" align="center">
         用户登录
-<!--        <el-select-->
-<!--          v-model="projectTitle"-->
-<!--          style="width: 112%; margin-bottom: 20px"-->
-<!--        >-->
-<!--          <el-option-->
-<!--            v-for="item in allProjectTitles"-->
-<!--            :key="item.label"-->
-<!--            :label="item.label"-->
-<!--            :value="item.value"-->
-<!--            style="color: black"-->
-<!--          />-->
-<!--        </el-select>-->
       </div>
       <br/>
       <el-form-item prop="username">

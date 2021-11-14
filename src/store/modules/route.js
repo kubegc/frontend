@@ -3,6 +3,7 @@ import { constantRoutes } from '@/router'
 import Layout from '@/layout/layout'
 import Base from '@/layout/index'
 import { getResource } from '@/api/kubernetes'
+import { getValue } from '@/utils/cookie'
 
 const state = {
   routes: [],
@@ -182,7 +183,7 @@ const actions = {
         token: state.token,
         kind: 'Frontend',
         namespace: 'default',
-        name: 'routes-' + role
+        name: 'routes-' + getValue('projectId') + '-' + role
       }).then(response => {
         resolve(response.data)
       })
