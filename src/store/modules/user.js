@@ -37,6 +37,7 @@ const actions = {
       login({ username: username, password: password, namespace: state.namespace }).then(response => {
         if (response.code === 20000) {
           const { data } = response
+          console.log(JSON.stringify(data))
           commit('SET_TOKEN', data.token)
           setToken(data.token)
           setValue('projectId', projectId)

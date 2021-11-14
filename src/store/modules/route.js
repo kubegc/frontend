@@ -180,7 +180,7 @@ const actions = {
   getRoute({ state }, role) {
     return new Promise(resolve => {
       getResource({
-        token: state.token,
+        token: 'default',
         kind: 'Frontend',
         namespace: 'default',
         name: 'routes-' + getValue('projectId') + '-' + role
