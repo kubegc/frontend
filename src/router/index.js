@@ -50,7 +50,7 @@ export const constantRoutes = [
       component: Layout,
       children: [{
         path: 'test3',
-        component: () => import('@/views/app/index')
+        component: () => import('@/views/ccf/index')
       }]
     }]
   }

@@ -2,6 +2,7 @@
 
 import { createResource, deleteResource, getResource, listResources, updateResource, getScreen, queryResourceCount } from '@/api/kubernetes'
 import Message from 'element-ui/packages/message/src/main'
+import Vue from 'vue'
 // eslint-disable-next-line no-unused-vars
 /* eslint-disable */
 /** *****************************
@@ -308,6 +309,29 @@ export function getTextValue(scope, longKey) {
     }
     return result
   }
+}
+/** *****************************
+ *
+ *
+ * ConfigMap
+ *
+ *
+ ********************************/
+export function ConfigMapValue(token, name, mapper) {
+  getResource({
+    token,
+    kind: 'ConfigMap',
+    name: name,
+    namespace: 'default'
+  }).then((response) => {
+    if (validResponse(response)) {
+      var result = response.data.data
+      for (var key in result) {
+        Vue.set(mapper, key, result[key]) 
+      }
+      console.log(JSON.stringify(mapper))
+    }
+  })
 }
 /** *****************************
  *
