@@ -68,7 +68,7 @@
                     <!--                    <el-col :span="2">-->
                     <!--                      <el-button size="mini" @click="showDetail(item)">yaml详情</el-button>-->
                     <!--                    </el-col>-->
-                    <el-col :span="4" :offset="10" style="margin-top: 8px">
+                    <el-col :span="4" :offset="12" style="margin-top: 8px">
                       <el-dropdown trigger="click" @command="handleCommand">
                         <span class="el-dropdown-link">
                           更多<i class="el-icon-arrow-down el-icon--right" />
@@ -208,16 +208,16 @@
         @selectChange="handleCreateTemplateChange($event, token, kind, createJsonDialog)"
       />
 
-      <JsonDialog
-        :if-create="false"
-        :json-editor="updateJsonDialog.ifJsonEditorForUpdate"
-        :title="updateJsonDialog.updateResourceTitle"
-        :value.sync="updateJsonDialog.actionDialogVisible"
-        :json-file-obj="updateJsonDialog.updateJsonData"
-        :form-data="updateJsonDialog.updateFormConfig"
-        @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"
-        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"
-      />
+      <!--      <JsonDialog-->
+      <!--        :if-create="false"-->
+      <!--        :json-editor="updateJsonDialog.ifJsonEditorForUpdate"-->
+      <!--        :title="updateJsonDialog.updateResourceTitle"-->
+      <!--        :value.sync="updateJsonDialog.actionDialogVisible"-->
+      <!--        :json-file-obj="updateJsonDialog.updateJsonData"-->
+      <!--        :form-data="updateJsonDialog.updateFormConfig"-->
+      <!--        @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"-->
+      <!--        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"-->
+      <!--      />-->
       <JsonDialog
         :json-editor="itemJsonDialog.ifJsonEditorForCreate"
         :title="itemJsonDialog.createResourceTitle"
@@ -324,14 +324,14 @@ export default {
       },
       // for action 'update'
       // https://element.eleme.cn/#/zh-CN/component/dialog
-      updateJsonDialog: {
-        updateJsonData: {},
-        ifJsonEditorForUpdate: true,
-        updateResourceTitle: '更新对象',
-        actionDialogVisible: false,
-        updateFormConfig: [],
-        propertiesInfo: []
-      },
+      // updateJsonDialog: {
+      //   updateJsonData: {},
+      //   ifJsonEditorForUpdate: true,
+      //   updateResourceTitle: '更新对象',
+      //   actionDialogVisible: false,
+      //   updateFormConfig: [],
+      //   propertiesInfo: []
+      // },
 
       createTemplate: {},
       leftSpan: 24,
@@ -399,12 +399,12 @@ export default {
       }
     },
     search(labels) {
-      this.listQuery.labels = labels
-      if (this.chosenRadioName === '所有') {
-        this.listQuery.labels[this.label] = ''
-      } else {
-        this.listQuery.labels[this.label] = this.chosenRadioName
-      }
+      this.listQuery.allLabels = Object.assign({}, labels)
+      // if (this.chosenRadioName === '所有') {
+      //   this.listQuery.labels[this.label] = ''
+      // } else {
+      //   this.listQuery.labels[this.label] = this.chosenRadioName
+      // }
       frontendData(this, this.token, this.kind, this.listQuery, this.pageSpec)
     },
     refresh() {
