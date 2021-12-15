@@ -59,6 +59,7 @@ export default {
   name: 'JsonDialog',
   components: { JsonEditor },
   props: {
+    // eslint-disable-next-line vue/require-default-prop
     jsonFileObj: {
       required: false,
       type: Object
@@ -72,6 +73,7 @@ export default {
       type: Boolean,
       default: true
     },
+    // eslint-disable-next-line vue/require-default-prop
     title: {
       required: false,
       type: String
@@ -203,7 +205,7 @@ export default {
         if (this.formData[key].regexp) {
           const response = await getResource({
             token: 'default',
-            kind: 'RegExp',
+            kind: 'Frontend',
             namespace: 'default',
             name: this.formData[key].regexp
           })
