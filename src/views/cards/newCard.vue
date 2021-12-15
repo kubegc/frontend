@@ -62,10 +62,13 @@
                 </div>
                 <el-card class="exhibition">
                   <el-row>
-                    <el-col :span="12">
+                    <el-col :span="8">
                       <el-tag type="info">{{ item.json.spec.type }}</el-tag>
                     </el-col>
-                    <el-col :span="4" :offset="8" style="margin-top: 8px">
+                    <!--                    <el-col :span="2">-->
+                    <!--                      <el-button size="mini" @click="showDetail(item)">yaml详情</el-button>-->
+                    <!--                    </el-col>-->
+                    <el-col :span="4" :offset="10" style="margin-top: 8px">
                       <el-dropdown trigger="click" @command="handleCommand">
                         <span class="el-dropdown-link">
                           更多<i class="el-icon-arrow-down el-icon--right" />
@@ -78,7 +81,7 @@
                       </el-dropdown>
                     </el-col>
                   </el-row>
-                  <el-row style="margin-bottom: 20px">
+                  <el-row style="margin-bottom: 20px;margin-top: 20px">
                     <el-col style="text-align:center">
                       <el-link :href="item.json.spec.iconClick" target="_blank" :underline="false">
                         <el-image
@@ -115,72 +118,72 @@
 
         </el-col>
 
-        <transition name="el-zoom-in-top">
-          <el-col v-if="detailVisible" :span="24 - leftSpan">
-            <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">
-              <el-row>
-                <el-form>
-                  <el-form-item v-for="(labelItem, key) in pageSpec.table.tableColumns" :key="key" :label="labelItem.label">
+        <!--        <transition name="el-zoom-in-top">-->
+        <!--          <el-col v-if="detailVisible" :span="24 - leftSpan">-->
+        <!--            <el-card shadow="never" style="margin-top: 30px;border: #2b2f3a 1px solid">-->
+        <!--              <el-row>-->
+        <!--                <el-form>-->
+        <!--                  <el-form-item v-for="(labelItem, key) in pageSpec.table.tableColumns" :key="key" :label="labelItem.label">-->
 
-                    <!-- tag -->
-                    <div v-if="labelItem.kind === 'tag'">
-                      <el-row v-for="(tag, i) in getTextValue(detailItem.json, labelItem.row)" :key="i">
-                        <el-tooltip :content="JSON.stringify(tag)"><el-tag> {{ tag }} </el-tag></el-tooltip>
-                      </el-row>
-                    </div>
+        <!--                    &lt;!&ndash; tag &ndash;&gt;-->
+        <!--                    <div v-if="labelItem.kind === 'tag'">-->
+        <!--                      <el-row v-for="(tag, i) in getTextValue(detailItem.json, labelItem.row)" :key="i">-->
+        <!--                        <el-tooltip :content="JSON.stringify(tag)"><el-tag> {{ tag }} </el-tag></el-tooltip>-->
+        <!--                      </el-row>-->
+        <!--                    </div>-->
 
-                    <!-- internalLink -->
-                    <router-link
-                      v-else-if="labelItem.kind === 'internalLink'"
-                      :to="
-                        {
-                          name: labelItem.link.indexOf('@') === -1 ? labelItem.link : getComplexOrDefValue(detailItem.json, labelItem.link.substring(1), labelItem.def),
-                          params: {
-                            key: labelItem.tag,
-                            value: labelItem.tag ? getComplexOrDefValue(detailItem.json, labelItem.row.indexOf('@') === -1 ? labelItem.row : labelItem.row.substring(1), labelItem.def) : undefined
-                          }
-                        }"
-                    >
-                      <el-link type="primary">{{
-                        labelItem.row.indexOf('@') === -1 ? getComplexOrDefValue(detailItem.json, labelItem.row, labelItem.def) : listQuery.data[labelItem.row.substring(1) + '-' +labelItem.tag][detailItem.json.metadata.name]
-                      }}</el-link>
-                    </router-link>
+        <!--                    &lt;!&ndash; internalLink &ndash;&gt;-->
+        <!--                    <router-link-->
+        <!--                      v-else-if="labelItem.kind === 'internalLink'"-->
+        <!--                      :to="-->
+        <!--                        {-->
+        <!--                          name: labelItem.link.indexOf('@') === -1 ? labelItem.link : getComplexOrDefValue(detailItem.json, labelItem.link.substring(1), labelItem.def),-->
+        <!--                          params: {-->
+        <!--                            key: labelItem.tag,-->
+        <!--                            value: labelItem.tag ? getComplexOrDefValue(detailItem.json, labelItem.row.indexOf('@') === -1 ? labelItem.row : labelItem.row.substring(1), labelItem.def) : undefined-->
+        <!--                          }-->
+        <!--                        }"-->
+        <!--                    >-->
+        <!--                      <el-link type="primary">{{-->
+        <!--                        labelItem.row.indexOf('@') === -1 ? getComplexOrDefValue(detailItem.json, labelItem.row, labelItem.def) : listQuery.data[labelItem.row.substring(1) + '-' +labelItem.tag][detailItem.json.metadata.name]-->
+        <!--                      }}</el-link>-->
+        <!--                    </router-link>-->
 
-                    <!-- externalLink -->
-                    <el-link v-else-if="labelItem.kind === 'externalLink'" type="primary" :href="getExternalLink(detailItem.json, labelItem)" target="_blank">{{
-                      getComplexOrDefValue(detailItem.json, labelItem.row)
-                    }}</el-link>
+        <!--                    &lt;!&ndash; externalLink &ndash;&gt;-->
+        <!--                    <el-link v-else-if="labelItem.kind === 'externalLink'" type="primary" :href="getExternalLink(detailItem.json, labelItem)" target="_blank">{{-->
+        <!--                      getComplexOrDefValue(detailItem.json, labelItem.row)-->
+        <!--                    }}</el-link>-->
 
-                    <!-- terminal -->
-                    <el-link v-else-if="labelItem.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(detailItem.json, labelItem)" target="_blank">
-                      <svg-icon
-                        icon-class="pc"
-                      />
-                    </el-link>
+        <!--                    &lt;!&ndash; terminal &ndash;&gt;-->
+        <!--                    <el-link v-else-if="labelItem.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(detailItem.json, labelItem)" target="_blank">-->
+        <!--                      <svg-icon-->
+        <!--                        icon-class="pc"-->
+        <!--                      />-->
+        <!--                    </el-link>-->
 
-                    <el-select
-                      v-else-if="labelItem.kind === 'action'"
-                      v-model="detailItem.val"
-                      size="mini"
-                      placeholder="请选择"
-                    >
-                      <el-option
-                        v-for="i in pageSpec.actions"
-                        :key="i.key"
-                        :label="i.key"
-                        :value="i.type"
-                        @click.native="handleActionChangeHelper(i.type, detailItem.json, token, kind, listQuery, pageSpec, updateJsonDialog)"
-                      />
-                    </el-select>
-                    <el-tag v-else size="small">{{ getComplexOrDefValue(detailItem.json, labelItem.row) }}</el-tag>
-                  </el-form-item>
-                </el-form>
-              </el-row>
-              <el-divider v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc">详情</el-divider>
-              <el-tag v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc" style="overflow: hidden"> {{ this.detailItem.json.spec.basic.desc }}</el-tag>
-            </el-card>
-          </el-col>
-        </transition>
+        <!--                    <el-select-->
+        <!--                      v-else-if="labelItem.kind === 'action'"-->
+        <!--                      v-model="detailItem.val"-->
+        <!--                      size="mini"-->
+        <!--                      placeholder="请选择"-->
+        <!--                    >-->
+        <!--                      <el-option-->
+        <!--                        v-for="i in pageSpec.actions"-->
+        <!--                        :key="i.key"-->
+        <!--                        :label="i.key"-->
+        <!--                        :value="i.type"-->
+        <!--                        @click.native="handleActionChangeHelper(i.type, detailItem.json, token, kind, listQuery, pageSpec, updateJsonDialog)"-->
+        <!--                      />-->
+        <!--                    </el-select>-->
+        <!--                    <el-tag v-else size="small">{{ getComplexOrDefValue(detailItem.json, labelItem.row) }}</el-tag>-->
+        <!--                  </el-form-item>-->
+        <!--                </el-form>-->
+        <!--              </el-row>-->
+        <!--              <el-divider v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc">详情</el-divider>-->
+        <!--              <el-tag v-if="this.detailItem.json && this.detailItem.json.spec.basic && this.detailItem.json.spec.basic.desc" style="overflow: hidden"> {{ this.detailItem.json.spec.basic.desc }}</el-tag>-->
+        <!--            </el-card>-->
+        <!--          </el-col>-->
+        <!--        </transition>-->
 
       </el-row>
       <el-row style="margin-top: 30px">
@@ -427,26 +430,26 @@ export default {
     handleActionChangeHelper(event, json, token, kind, listQuery, tablePage, updateAbout) {
       handleActionChange(this, event, json, token, kind, listQuery, tablePage, updateAbout)
     },
-    showDetail(detailItem) {
-      if (!this.detailItem.json || this.detailItem.json.metadata.name === detailItem.json.metadata.name) {
-        this.leftSpan = this.leftSpan === 24 ? 18 : 24
-        this.leftGutter = this.leftGutter === 20 ? 10 : 20
-        this.detailItem = detailItem
-        setTimeout(() => {
-          this.detailVisible = !this.detailVisible
-        }, 280)
-        // this.detailVisible = true
-      } else {
-        this.detailItem = detailItem
-        if (this.leftSpan === 24 && this.leftGutter === 20) {
-          this.leftSpan = 18
-          this.leftGutter = 10
-          setTimeout(() => {
-            this.detailVisible = !this.detailVisible
-          }, 280)
-        }
-      }
-    },
+    // showDetail(detailItem) {
+    //   if (!this.detailItem.json || this.detailItem.json.metadata.name === detailItem.json.metadata.name) {
+    //     this.leftSpan = this.leftSpan === 24 ? 18 : 24
+    //     this.leftGutter = this.leftGutter === 20 ? 10 : 20
+    //     this.detailItem = detailItem
+    //     setTimeout(() => {
+    //       this.detailVisible = !this.detailVisible
+    //     }, 280)
+    //     // this.detailVisible = true
+    //   } else {
+    //     this.detailItem = detailItem
+    //     if (this.leftSpan === 24 && this.leftGutter === 20) {
+    //       this.leftSpan = 18
+    //       this.leftGutter = 10
+    //       setTimeout(() => {
+    //         this.detailVisible = !this.detailVisible
+    //       }, 280)
+    //     }
+    //   }
+    // },
     getTags,
     getComplexOrDefValue,
     getTextValue,
