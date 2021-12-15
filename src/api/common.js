@@ -328,7 +328,7 @@ export function ConfigMapValue(token, name, mapper) {
     if (validResponse(response)) {
       var result = response.data.data
       for (var key in result) {
-        Vue.set(mapper, key, result[key]) 
+        Vue.set(mapper, key, result[key])
       }
     }
   })

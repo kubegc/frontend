@@ -17,6 +17,13 @@ export function updateResource(data) {
     data
   })
 }
+export function createOrUpdateResource(data) {
+  return request({
+    url: '/kube/createOrUpdateResource',
+    method: 'post',
+    data
+  })
+}
 
 export function deleteResource(data) {
   return request({

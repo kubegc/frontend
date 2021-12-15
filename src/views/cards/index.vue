@@ -219,14 +219,16 @@
       <!--              @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"-->
       <!--            />-->
       <JsonDialog
-        :if-create="false"
-        :json-editor="itemJsonDialog.ifJsonEditorForUpdate"
-        :title="itemJsonDialog.updateResourceTitle"
-        :value.sync="itemJsonDialog.actionDialogVisible"
-        :json-file-obj="itemJsonDialog.updateJsonData"
-        :form-data="itemJsonDialog.updateFormConfig"
-        @update:jsonFileObj="itemJsonDialog.updateJsonData = JSON.parse($event)"
-        @action="applyOperationHelper(token, kind, listQuery, pageSpec, itemJsonDialog)"
+        :placeholder="itemJsonDialog.placeholder"
+        :json-editor="itemJsonDialog.ifJsonEditorForCreate"
+        :title="itemJsonDialog.createResourceTitle"
+        :value.sync="itemJsonDialog.createDialogVisible"
+        :json-file-obj="itemJsonDialog.createJsonPattern"
+        :create-templates="itemJsonDialog.createTemplates"
+        :form-data="itemJsonDialog.createFormConfig"
+        @update:jsonFileObj="itemJsonDialog.createJsonPattern = JSON.parse($event)"
+        @action="create(token, kind, listQuery, pageSpec, itemJsonDialog)"
+        @selectChange="handleCreateTemplateChange($event, token, kind, itemJsonDialog)"
       />
       />
     </div>
@@ -317,11 +319,13 @@ export default {
         createFormConfig: []
       },
       itemJsonDialog: {
-        actionDialogVisible: false,
-        ifJsonEditorForUpdate: false,
-        updateResourceTitle: '',
-        updateJsonData: {},
-        updateFormConfig: []
+        createDialogVisible: false,
+        ifJsonEditorForCreate: false,
+        createTemplates: [],
+        createResourceTitle: '',
+        createJsonPattern: {},
+        createFormConfig: [],
+        placeholder: ''
       },
       // for action 'update'
       // https://element.eleme.cn/#/zh-CN/component/dialog
@@ -458,13 +462,23 @@ export default {
       const name = command.name
       switch (name) {
         case '部署':
-          this.itemJsonDialog.updateResourceTitle = '创建 ' + command.click.kind + ' 对象'
+          this.itemJsonDialog.createResourceTitle = '创建 ' + command.click.kind + ' 对象'
+          this.itemJsonDialog.placeholder = this.itemJsonDialog.createResourceTitle
           getResource({ token: this.token, namespace: 'default', kind: 'Template', name: command.click.name }).then(
             response => {
               if (validResponse(response)) {
-                this.itemJsonDialog.updateJsonData = response.data.spec.data.template
-                this.itemJsonDialog.updateFormConfig = response.data.spec.data.values
-                this.itemJsonDialog.actionDialogVisible = true
+                this.itemJsonDialog.createJsonPattern = response.data.spec.data.template
+                this.itemJsonDialog.createFormConfig = response.data.spec.data.values
+                for (let i = 0; i < this.itemJsonDialog.createFormConfig.length; i++) {
+                  if (this.itemJsonDialog.createFormConfig[i].type === 'bool') {
+                    this.itemJsonDialog.createFormConfig[i].value = true
+                  } else {
+                    this.itemJsonDialog.createFormConfig[i].value = ''
+                  }
+                  this.itemJsonDialog.createFormConfig[i].placeholder = this.itemJsonDialog.createFormConfig[i].type
+                }
+                this.itemJsonDialog.createFormConfig = response.data.spec.data.values
+                this.itemJsonDialog.createDialogVisible = true
               }
             }
           )

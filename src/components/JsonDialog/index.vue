@@ -13,7 +13,7 @@
     <div v-else>
       <el-form v-if="ifCreate">
         <el-form-item :label="'请选择模板：'">
-          <el-select v-model="templateType" placeholder="选择模版" @change="handleChange">
+          <el-select v-model="templateType" :placeholder="placeholder" @change="handleChange">
             <el-option v-for="item in createTemplates" :key="item.value" :label="item.name" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -90,7 +90,13 @@ export default {
       required: false,
       type: Boolean,
       default: true
+    },
+    placeholder: {
+      required: false,
+      type: String,
+      default: '选择模板'
     }
+
   },
   data() {
     const stringValidator = (rule, value, callback) => {
@@ -128,7 +134,6 @@ export default {
     jsonEditor: function(val) {
       val === true ? this.width = '70%' : this.width = '40%'
     },
-
     value: {
       handler: function(val) {
         if (val && !this.jsonEditor) {
@@ -164,6 +169,13 @@ export default {
       this.defNumberRegExp = response.data.spec.value
       this.defNumberRegExpDesc = response.data.spec.desc
     })
+
+    if (this.placeholder !== '选择模板') {
+      this.dividerVisible = true
+    }
+    if (this.jsonEditor === false) {
+      this.width = '40%'
+    }
   },
 
   methods: {
