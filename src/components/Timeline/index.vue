@@ -33,7 +33,6 @@ export default {
       return this.countAllArticles() ? true : false;
     },
     countAllArticles() {
-      console.log(this.datesArticles);
       //   return this.datesArticles.length
     }
   }
