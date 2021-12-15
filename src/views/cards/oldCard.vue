@@ -119,7 +119,7 @@
 
                     <!-- externalLink -->
                     <el-link v-else-if="labelItem.kind === 'externalLink'" type="primary" :href="getExternalLink(detailItem.json, labelItem)" target="_blank">{{
-                        getComplexOrDefValue(detailItem.json, labelItem.row)
+                      getComplexOrDefValue(detailItem.json, labelItem.row)
                     }}</el-link>
 
                     <!-- terminal -->
