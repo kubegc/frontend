@@ -1,9 +1,68 @@
 <template>
   <div style="float: right">
     <!-- <el-checkbox-group v-model="selected" size="mini" class="rankbox"> -->
-      <!-- <el-checkbox-button>{{ ranking }}</el-checkbox-button> -->
-      <el-checkbox-button v-for="(value, key) in ranking" :key="key">{{ value }}</el-checkbox-button>
+    <!-- <el-checkbox-button>{{ ranking }}</el-checkbox-button> -->
+    <el-checkbox-button v-for="(value, key) in ranking" :key="key">{{ value }}</el-checkbox-button>
     <!-- </el-checkbox-group> -->
+
+<el-row class="zonedivider" />
+
+    <el-table
+      :show-header="false"
+      style="width: 100%"
+    >
+      <el-table-column>
+        <template slot-scope="scope">
+          <div :class="{ 'conf-fin': scope.row.status === 'FIN' }">
+            <el-row class="conf-title">
+              <a :href="generateDBLP(scope.row.dblp)">{{ scope.row.title }}</a> {{ scope.row.year }}
+              <i v-if="scope.row.isLike===true" class="el-icon-star-on" style="color: #FBCA04" />
+              <i v-else class="el-icon-star-off" />
+            </el-row>
+            <el-row>{{ scope.row.date+' '+scope.row.place }}</el-row>
+            <el-row class="conf-des">{{ scope.row.description }}</el-row>
+            <el-row><el-tag size="mini" type="" effect="plain">CCF {{ scope.row.rank }}</el-tag> <span v-show="scope.row.comment" style="color: #409eff"><b>NOTE:</b> {{ scope.row.comment }}</span></el-row>
+            <el-row style="padding-top: 5px"><span class="conf-sub">{{ scope.row.subname }}</span></el-row>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column>
+        <template slot-scope="scope">
+          <div :class="{ 'conf-fin': scope.row.status === 'FIN' }">
+            <el-row class="conf-timer">
+              <div v-if="scope.row.status === 'TBD'" style="color: black">TBD</div>
+              <countdown v-else style="color: black" :time="scope.row.remain" :transform="transform">
+                <template slot-scope="props">{{ props.days }} {{ props.hours }} {{ props.minutes }} {{ props.seconds }}</template>
+              </countdown>
+              <el-popover
+                placement="right"
+                trigger="click"
+              >
+                <el-row>
+                  <img src="//ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_3_2x.png#" srcset="//ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_3_2x.png 2x ,//ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_3_2x.png# 1x" alt="" aria-hidden="true" style="width:20px;height:20px;vertical-align: middle">
+                  <span style="padding-left: 5px">
+                    <a
+                      :href="formatGoogleCalendar(scope.row)"
+                      target="_blank"
+                      rel="nofollow"
+                    >Google Calendar</a>
+                  </span>
+                </el-row>
+                <i slot="reference" class="el-icon-date icon" style="padding-left: 5px" />
+              </el-popover>
+            </el-row>
+            <el-row>
+              <div v-if="scope.row.status === 'TBD'">
+                Deadline: <a href="https://github.com/ccfddl/ccf-deadlines/pulls">pull request to update</a>
+              </div>
+              <div v-else>
+                Deadline: {{ scope.row.localDDL }} ({{ scope.row.originDDL }})
+              </div>
+            </el-row>
+            <el-row>website: <a :href="scope.row.link">{{ scope.row.link }}</a> </el-row>
+            <!--          <el-row>subscribe</el-row>-->
+            <TimeLine v-if="scope.row.status === 'RUN'" :ddls="scope.row.ddls" />
+          </div></template></el-table-column></el-table>
   </div>
 </template>
 
@@ -53,7 +112,7 @@ export default {
       this.token,
       'ccf-ranking',
       this.ranking
-    // eslint-disable-next-line no-sequences
+      // eslint-disable-next-line no-sequences
     ),
     ConfigMapValue(
       this.token,
@@ -275,12 +334,12 @@ export default {
     },
     formatGoogleCalendar(row) {
       return 'https://www.google.com/calendar/render?action=TEMPLATE' +
-          '&text=' + row.title + '+' + row.year +
-          '&dates=' + moment(row.deadline + this.utcMap.get(row.timezone)).toISOString().replace(/-|:|\.\d\d\d/g, '') + '/' + moment(row.deadline + this.utcMap.get(row.timezone)).toISOString().replace(/-|:|\.\d\d\d/g, '') +
-          '&details=' + row.comment +
-          '&location=Online' +
-          '&ctz=' + this.timeZone +
-          '&sf=true&output=xml'
+        '&text=' + row.title + '+' + row.year +
+        '&dates=' + moment(row.deadline + this.utcMap.get(row.timezone)).toISOString().replace(/-|:|\.\d\d\d/g, '') + '/' + moment(row.deadline + this.utcMap.get(row.timezone)).toISOString().replace(/-|:|\.\d\d\d/g, '') +
+        '&details=' + row.comment +
+        '&location=Online' +
+        '&ctz=' + this.timeZone +
+        '&sf=true&output=xml'
     },
     _isMobile() {
       const flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
@@ -316,112 +375,113 @@ export default {
 }
 </script>
 
-<style scoped>
-/*/deep/ .el-table tbody tr { pointer-events:; }*/
-/deep/ .el-input--mini .el-input__inner {
-  height: 20px;
-  line-height: 20px;
-}
+      <style scoped>
+        /*/deep/ .el-table tbody tr { pointer-events:; }*/
+        /deep/ .el-input--mini .el-input__inner {
+        height: 20px;
+        line-height: 20px;
+        }
 
-/deep/ .el-input--mini .el-input__icon {
-  line-height: 20px;
-}
+        /deep/ .el-input--mini .el-input__icon {
+        line-height: 20px;
+        }
 
-/deep/ .el-checkbox__inner {
-  height: 20px;
-  width: 20px;
-}
+        /deep/ .el-checkbox__inner {
+        height: 20px;
+        width: 20px;
+        }
 
-/deep/ .el-button {
-  height: 20px;
-  padding: 0px 5px;
-}
+        /deep/ .el-button {
+        height: 20px;
+        padding: 0px 5px;
+        }
 
-/deep/ .el-checkbox-button--mini .el-checkbox-button__inner {
-  padding: 3px 10px;
-}
+        /deep/ .el-checkbox-button--mini .el-checkbox-button__inner {
+        padding: 3px 10px;
+        }
 
-/deep/ .el-checkbox__inner::after {
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;
-  content: "";
-  border: 3px solid #FFF;
-  border-left: 0;
-  border-top: 0;
-  height: 11px;
-  left: 6px;
-  position: absolute;
-  top: 1px;
-  -webkit-transform: rotate(45deg) scaleY(0);
-  transform: rotate(45deg) scaleY(0);
-  width: 4px;
-  -webkit-transition: -webkit-transform .15s ease-in .05s;
-  transition: -webkit-transform .15s ease-in .05s;
-  transition: transform .15s ease-in .05s,-webkit-transform .15s ease-in .05s;
-  -webkit-transform-origin: center;
-  transform-origin: center;
-}
+        /deep/ .el-checkbox__inner::after {
+        -webkit-box-sizing: content-box;
+        box-sizing: content-box;
+        content: "";
+        border: 3px solid #FFF;
+        border-left: 0;
+        border-top: 0;
+        height: 11px;
+        left: 6px;
+        position: absolute;
+        top: 1px;
+        -webkit-transform: rotate(45deg) scaleY(0);
+        transform: rotate(45deg) scaleY(0);
+        width: 4px;
+        -webkit-transition: -webkit-transform .15s ease-in .05s;
+        transition: -webkit-transform .15s ease-in .05s;
+        transition: transform .15s ease-in .05s,-webkit-transform .15s ease-in .05s;
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        }
 
-/deep/ .el-checkbox__input.is-indeterminate .el-checkbox__inner::before {
-  height: 6px;
-  top: 6px;
-}
+        /deep/ .el-checkbox__input.is-indeterminate .el-checkbox__inner::before {
+        height: 6px;
+        top: 6px;
+        }
 
-.icon:hover{
-  color:rgb(64, 158, 255);
-}
+        .icon:hover{
+        color:rgb(64, 158, 255);
+        }
 
-.rankbox {
-  padding-top: 1px;
-}
+        .rankbox {
+        padding-top: 1px;
+        }
 
-.boxes{
-  width: 33%;
-  margin-right: 0px;
-  padding-top: 10px;
-}
+        .boxes{
+        width: 33%;
+        margin-right: 0px;
+        padding-top: 10px;
+        }
 
-.timezone{
-  padding-top: 15px;
-  color: #666666;
-}
+        .timezone{
+        padding-top: 15px;
+        color: #666666;
+        }
 
-.zonedivider{
-  margin-top: 8px;
-  border-bottom: 1px solid #ebeef5;
-}
+        .zonedivider{
+        margin-top: 8px;
+        border-bottom: 1px solid #ebeef5;
+        }
 
-.conf-title {
-  font-size: 20px;
-  font-weight: 400;
-  color: black;
-}
+        .conf-title {
+        font-size: 20px;
+        font-weight: 400;
+        color: black;
+        }
 
-a{
-  text-decoration: none;
-  border-bottom: 1px solid #ccc;
-  color: inherit;
-}
+        a{
+        text-decoration: none;
+        border-bottom: 1px solid #ccc;
+        color: inherit;
+        }
 
-.conf-des {
-  font-size: 13px;
-}
+        .conf-des {
+        font-size: 13px;
+        }
 
-.conf-sub {
-  color: rgb(36, 101, 191);
-  background: rgba(236, 240, 241, 0.7);
-  font-size: 13px;
-  padding: 3px 5px;
-  cursor: pointer;
-  font-weight: 400;
-}
+        .conf-sub {
+        color: rgb(36, 101, 191);
+        background: rgba(236, 240, 241, 0.7);
+        font-size: 13px;
+        padding: 3px 5px;
+        cursor: pointer;
+        font-weight: 400;
+        }
 
-.conf-timer {
-  font-size: 20px;
-  font-weight: 400;
-}
+        .conf-timer {
+        font-size: 20px;
+        font-weight: 400;
+        }
 
-.conf-fin{
-  opacity: 0.4;
-}
-</style>
+        .conf-fin{
+        opacity: 0.4;
+        }
+      </style>
+    </el-table-column></div></template>

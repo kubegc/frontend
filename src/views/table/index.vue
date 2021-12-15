@@ -70,7 +70,7 @@
 
             <!-- externalLink -->
             <el-link v-else-if="item.kind === 'externalLink'" type="primary" :href="getExternalLink(scope.row.json, item)" target="_blank">{{
-                getComplexOrDefValue(scope.row.json, item.row)
+              getComplexOrDefValue(scope.row.json, item.row)
             }}</el-link>
 
             <!-- terminal -->
