@@ -54,35 +54,59 @@
               :key="index"
               style="cursor: pointer"
               :span="6"
-              @click.native="showDetail(item)"
             >
+              <!--              @click.native="showDetail(item)"  -->
               <el-tooltip placement="top">
                 <div slot="content">
                   <p>{{ item.json.spec.desc }}</p>
                 </div>
                 <el-card class="exhibition">
-                  <el-row :gutter="20">
-                    <el-col :span="6">
+                  <el-row>
+                    <el-col :span="12">
                       <el-tag type="info">{{ item.json.spec.type }}</el-tag>
                     </el-col>
+                    <el-col :span="4" :offset="8" style="margin-top: 8px">
+                      <el-dropdown trigger="click" @command="handleCommand">
+                        <span class="el-dropdown-link">
+                          更多<i class="el-icon-arrow-down el-icon--right" />
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                          <el-dropdown-item v-for="(itm, idx) in item.json.spec.more" :key="idx" :command="itm">
+                            {{ itm.name }}
+                          </el-dropdown-item>
+                        </el-dropdown-menu>
+                      </el-dropdown>
+                    </el-col>
                   </el-row>
-                  <el-row>
+                  <el-row style="margin-bottom: 20px">
                     <el-col style="text-align:center">
-                      <el-image
-                        style="border-radius: 2px;max-height: 80%;max-width: 80%;height: 100px"
-                        :src="item.json.spec.icon"
-                        :fit="'fit'"
-                      >
-                        <div slot="error">
-                          <i class="el-icon-picture-outline" />
-                        </div>
-                      </el-image>
+                      <el-link :href="item.json.spec.iconClick" target="_blank" :underline="false">
+                        <el-image
+                          style="border-radius: 2px;max-height: 80%;max-width: 90%;height: 100px"
+                          :src="item.json.spec.icon"
+                          :fit="'fit'"
+                          lazy
+                        >
+                          <div slot="error">
+                            <i class="el-icon-picture-outline" />
+                          </div>
+                        </el-image>
+                      </el-link>
                     </el-col>
                   </el-row>
 
                   <el-row type="flex" justify="center" style="text-align:center">
-
-                    <el-tag>{{ item.json.spec.name }}</el-tag>
+                    <router-link
+                      :to="{
+                        name: item.json.spec.nameClick && item.json.spec.nameClick.kind,
+                        params: {
+                          key: item.json.spec.nameClick && item.json.spec.nameClick.tag,
+                          value: getComplexOrDefValue(item.json, item.json.spec.nameClick && item.json.spec.nameClick.value)
+                        }
+                      }"
+                    >
+                      <el-tag>{{ item.json.spec.name }}</el-tag>
+                    </router-link>
                   </el-row>
                 </el-card>
               </el-tooltip>
@@ -180,6 +204,7 @@
         @action="create(token, kind, listQuery, pageSpec, createJsonDialog)"
         @selectChange="handleCreateTemplateChange($event, token, kind, createJsonDialog)"
       />
+
       <JsonDialog
         :if-create="false"
         :json-editor="updateJsonDialog.ifJsonEditorForUpdate"
@@ -190,17 +215,38 @@
         @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"
         @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"
       />
+      <JsonDialog
+        :json-editor="itemJsonDialog.ifJsonEditorForCreate"
+        :title="itemJsonDialog.createResourceTitle"
+        :value.sync="itemJsonDialog.createDialogVisible"
+        :json-file-obj="itemJsonDialog.createJsonPattern"
+        @update:jsonFileObj="itemJsonDialog.createJsonPattern = JSON.parse($event)"
+        @action="create(token, kind, listQuery, pageSpec, itemJsonDialog)"
+      />
     </div>
   </div>
 
 </template>
 
 <script>
-import { frontendMeta, frontendData, handleCreateTemplateChange, createObject, applyOperation, createJson, handleActionChange, getTags, getTextValue, getComplexOrDefValue } from '@/api/common'
+import {
+  frontendMeta,
+  frontendData,
+  handleCreateTemplateChange,
+  createObject,
+  applyOperation,
+  createJson,
+  handleActionChange,
+  getTags,
+  getTextValue,
+  getComplexOrDefValue,
+  validResponse
+} from '@/api/common'
 import Pagination from '@/components/Pagination'
 import JsonDialog from '@/components/JsonDialog'
 import DynamicForm from '@/components/DynamicForm'
 import { mapGetters } from 'vuex'
+import { getResource } from '@/api/kubernetes'
 export default {
   components: { Pagination, JsonDialog, DynamicForm },
   data() {
@@ -264,7 +310,15 @@ export default {
         createJsonPattern: {},
         createFormConfig: []
       },
-
+      itemJsonDialog: {
+        createDialogVisible: false,
+        ifJsonEditorForCreate: true,
+        createTemplates: [],
+        createResourceTitle: '创建对象',
+        createJsonPattern: {},
+        createFormConfig: [],
+        kind: ''
+      },
       // for action 'update'
       // https://element.eleme.cn/#/zh-CN/component/dialog
       updateJsonDialog: {
@@ -395,7 +449,27 @@ export default {
     },
     getTags,
     getComplexOrDefValue,
-    getTextValue
+    getTextValue,
+    handleCommand(command) {
+      const name = command.name
+      switch (name) {
+        case '部署':
+          this.itemJsonDialog.createResourceTitle = '创建 ' + command.click.kind + ' 对象'
+          this.itemJsonDialog.kind = command.click.kind
+          getResource({ token: this.token, namespace: 'default', kind: 'Template', name: command.click.name }).then(
+            response => {
+              if (validResponse(response)) {
+                this.itemJsonDialog.createJsonPattern = response.data.spec.data.template
+                this.itemJsonDialog.createDialogVisible = true
+              }
+            }
+          )
+          break
+        case '详情':
+          window.open(command.click.target, '_blank')
+          break
+      }
+    }
   }
 }
 </script>
