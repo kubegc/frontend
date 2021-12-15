@@ -208,23 +208,26 @@
         @selectChange="handleCreateTemplateChange($event, token, kind, createJsonDialog)"
       />
 
-      <!--      <JsonDialog-->
-      <!--        :if-create="false"-->
-      <!--        :json-editor="updateJsonDialog.ifJsonEditorForUpdate"-->
-      <!--        :title="updateJsonDialog.updateResourceTitle"-->
-      <!--        :value.sync="updateJsonDialog.actionDialogVisible"-->
-      <!--        :json-file-obj="updateJsonDialog.updateJsonData"-->
-      <!--        :form-data="updateJsonDialog.updateFormConfig"-->
-      <!--        @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"-->
-      <!--        @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"-->
-      <!--      />-->
+      <!--            <JsonDialog-->
+      <!--              :if-create="false"-->
+      <!--              :json-editor="updateJsonDialog.ifJsonEditorForUpdate"-->
+      <!--              :title="updateJsonDialog.updateResourceTitle"-->
+      <!--              :value.sync="updateJsonDialog.actionDialogVisible"-->
+      <!--              :json-file-obj="updateJsonDialog.updateJsonData"-->
+      <!--              :form-data="updateJsonDialog.updateFormConfig"-->
+      <!--              @update:jsonFileObj="updateJsonDialog.updateJsonData = JSON.parse($event)"-->
+      <!--              @action="applyOperationHelper(token, kind, listQuery, pageSpec, updateJsonDialog)"-->
+      <!--            />-->
       <JsonDialog
-        :json-editor="itemJsonDialog.ifJsonEditorForCreate"
-        :title="itemJsonDialog.createResourceTitle"
-        :value.sync="itemJsonDialog.createDialogVisible"
-        :json-file-obj="itemJsonDialog.createJsonPattern"
-        @update:jsonFileObj="itemJsonDialog.createJsonPattern = JSON.parse($event)"
-        @action="create(token, kind, listQuery, pageSpec, itemJsonDialog)"
+        :if-create="false"
+        :json-editor="itemJsonDialog.ifJsonEditorForUpdate"
+        :title="itemJsonDialog.updateResourceTitle"
+        :value.sync="itemJsonDialog.actionDialogVisible"
+        :json-file-obj="itemJsonDialog.updateJsonData"
+        :form-data="itemJsonDialog.updateFormConfig"
+        @update:jsonFileObj="itemJsonDialog.updateJsonData = JSON.parse($event)"
+        @action="applyOperationHelper(token, kind, listQuery, pageSpec, itemJsonDialog)"
+      />
       />
     </div>
   </div>
@@ -314,13 +317,11 @@ export default {
         createFormConfig: []
       },
       itemJsonDialog: {
-        createDialogVisible: false,
-        ifJsonEditorForCreate: true,
-        createTemplates: [],
-        createResourceTitle: '创建对象',
-        createJsonPattern: {},
-        createFormConfig: [],
-        kind: ''
+        actionDialogVisible: false,
+        ifJsonEditorForUpdate: false,
+        updateResourceTitle: '',
+        updateJsonData: {},
+        updateFormConfig: []
       },
       // for action 'update'
       // https://element.eleme.cn/#/zh-CN/component/dialog
@@ -457,13 +458,13 @@ export default {
       const name = command.name
       switch (name) {
         case '部署':
-          this.itemJsonDialog.createResourceTitle = '创建 ' + command.click.kind + ' 对象'
-          this.itemJsonDialog.kind = command.click.kind
+          this.itemJsonDialog.updateResourceTitle = '创建 ' + command.click.kind + ' 对象'
           getResource({ token: this.token, namespace: 'default', kind: 'Template', name: command.click.name }).then(
             response => {
               if (validResponse(response)) {
-                this.itemJsonDialog.createJsonPattern = response.data.spec.data.template
-                this.itemJsonDialog.createDialogVisible = true
+                this.itemJsonDialog.updateJsonData = response.data.spec.data.template
+                this.itemJsonDialog.updateFormConfig = response.data.spec.data.values
+                this.itemJsonDialog.actionDialogVisible = true
               }
             }
           )
