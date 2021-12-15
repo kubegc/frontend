@@ -248,6 +248,7 @@ export function getTextValue(scope, longKey) {
     return objResult
   } else {
     // Pod lifecycle: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
+    console.log(result)
     if (result.toLowerCase() === 'running') {
       result = '运行中'
     } else if (result.toLowerCase() === 'terminating') {
@@ -329,7 +330,6 @@ export function ConfigMapValue(token, name, mapper) {
       for (var key in result) {
         Vue.set(mapper, key, result[key]) 
       }
-      console.log(JSON.stringify(mapper))
     }
   })
 }
