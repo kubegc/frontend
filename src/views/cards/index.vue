@@ -101,10 +101,10 @@
                   <el-row type="flex" justify="center" style="text-align:center">
                     <router-link
                       :to="{
-                        name: item.json.spec.nameClick && item.json.spec.nameClick.kind,
+                        name: item.json.spec.nameClick.kind,
                         params: {
-                          key: item.json.spec.nameClick && item.json.spec.nameClick.tag,
-                          value: getComplexOrDefValue(item.json, item.json.spec.nameClick && item.json.spec.nameClick.value)
+                          key: item.json.spec.nameClick.tag,
+                          value: getComplexOrDefValue(item.json, item.json.spec.nameClick.value)
                         }
                       }"
                     >

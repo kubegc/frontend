@@ -11,7 +11,7 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'
-import validResponse from '@/api/common'
+import { validResponse } from '@/api/common'
 import VuePipeline from 'vue-pipeline'
 
 import '@/icons' // icon

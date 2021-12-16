@@ -16,7 +16,7 @@ import Vue from 'vue'
  * Get project title
  * @param {(Object)} doc
  */
-export default function getTitle(doc) {
+export function getTitle(doc) {
   getResource({
     token: 'default',
     kind: 'Frontend',
@@ -99,7 +99,6 @@ export function parseTime(time, cFormat) {
 }
 
 export function validResponse(response) {
-  // eslint-disable-next-line no-prototype-builtins
   return response != null && response.hasOwnProperty('code') && response.code === 20000
 }
 export function message(message, type) {

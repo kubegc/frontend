@@ -53,18 +53,6 @@ export default {
   props: {
     formData: Object
   },
-  created() {
-    for (let i = 0; i < this.formData.items.length; i++) {
-      if (this.formData.items[i].type === 'combobox') {
-        queryResourceValue({ token: this.token, data: this.formData.items[i].data }).then(response => {
-          if (this.$valid(response)) {
-            this.formData.items[i]['options'] = response.data
-            this.$forceUpdate()
-          }
-        })
-      }
-    }
-  },
   data() {
     return {
       formName: 'search',
@@ -74,6 +62,19 @@ export default {
   watch: {
     formData(newVal) {
       this.formData = newVal
+    }
+  },
+  created() {
+    for (let i = 0; i < this.formData.items.length; i++) {
+      if (this.formData.items[i].type === 'combobox') {
+        queryResourceValue({ token: this.token, data: this.formData.items[i].data }).then(response => {
+          console.log(this.$valid(response))
+          if (this.$valid(response)) {
+            this.formData.items[i]['options'] = response.data
+            this.$forceUpdate()
+          }
+        })
+      }
     }
   },
   computed: {

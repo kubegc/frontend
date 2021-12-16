@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/cookie' // get token from cookie
-import getTitle from '@/api/common'
+import { getTitle } from '@/api/common'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 const whiteList = ['/login'] // no redirect whitelist
@@ -31,12 +31,13 @@ router.beforeEach(async(to, from, next) => {
           if (to.path === '/') {
             next({ path: homepage(store.getters.add_routes) })
           } else {
-            if (JSON.stringify(store.getters.menu_routes).toString()
-              .indexOf('"' + to.path + '"') === -1) {
-              next('/')
-            } else {
-              next()
-            }
+            // if (JSON.stringify(store.getters.menu_routes).toString()
+            //   .indexOf('"' + to.path + '"') === -1) {
+            //   next('/')
+            // } else {
+            //   next()
+            // }
+            next()
           }
         } else {
           const { role } = await store.dispatch('user/getRole')
