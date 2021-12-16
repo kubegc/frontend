@@ -230,7 +230,6 @@
         @action="create(token, kind, listQuery, pageSpec, itemJsonDialog)"
         @selectChange="handleCreateTemplateChange($event, token, kind, itemJsonDialog)"
       />
-      />
     </div>
   </div>
 
