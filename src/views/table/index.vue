@@ -5,34 +5,143 @@
       <el-collapse v-model="pageSpec.description.activeName" accordion>
         <el-collapse-item>
           <template slot="title">
-            功能描述<i class="header-icon el-icon-info" />
+            <div class="block-title">功能描述</div><i class="header-icon el-icon-info" />
           </template>
           <div v-text="pageSpec.description.activeDesc" />
         </el-collapse-item>
       </el-collapse>
     </div>
 
-    <!-- https://element.eleme.cn/#/zh-CN/component/form -->
-    <div class="app-container">
-      <dynamic-form
-        v-if="pageSpec.formSearch.formSearchVisible"
-        :form-data="pageSpec.formSearch.formSearchJson"
-        :kind="kind"
-        @watchSearch="search($event)"
-      />
+    <div class="app-container" style="margin-bottom: 20px">
+      <div
+        slot="header"
+        class="block-title"
+      >
+        基本信息
+      </div>
+      <div class="text item">
+        <el-row :gutter="0">
+          <el-col :span="4">
+            <div><i class="el-icon-user-solid" /> 管理员</div>
+          </el-col>
+          <el-col :span="4">
+            <div>{{ loginForm.username }}</div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="0">
+          <el-col :span="4">
+            <div><i class="el-icon-time" /> 当前时间</div>
+          </el-col>
+          <el-col :span="6">
+            <div>{{ nowTime }}</div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="0">
+          <el-col :span="4">
+            <div><i class="el-icon-setting el-icon-s-operation" /> 操作
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="item-desc">
+              <el-tooltip
+                effect="dark"
+                content="资源搜索"
+                placement="top"
+              >
+                <i
+                  class="el-icon-search find-service"
+                  @click="createService()"
+                />
+              </el-tooltip>
+              <el-tooltip
+                effect="dark"
+                content="刷新页面"
+                placement="top"
+              >
+                <i
+                  class="el-icon-refresh edit-refresh"
+                  @click.native="refresh"
+                />
+              </el-tooltip>
+              <el-tooltip
+                effect="dark"
+                content="创建对象"
+                placement="top"
+              >
+                <i
+                  class="el-icon-plus create-object"
+                  @click="createJson(token, kind, createJsonDialog)"
+                />
+              </el-tooltip>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="0">
+          <el-col :span="4">
+            <div><i class="el-icon-set-up" /> 多云协作框架</div>
+          </el-col>
+          <el-col :span="6">
+            <div class="item-desc">
+              <el-tooltip
+                effect="dark"
+                content="构造多云协作框架"
+                placement="top"
+              >
+                <i
+                  class="el-icon-crop create-object"
+                  @click="createDialog"
+                />
+              </el-tooltip>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="0">
+          <el-col :span="4">
+            <div><i class="el-icon-s-operation" /> 流水线</div>
+          </el-col>
+          <el-col :span="6">
+            <div class="item-desc">
+              <el-tooltip
+                effect="dark"
+                content="新建流水线"
+                placement="top"
+              >
+                <i
+                  class="el-icon-video-play create-object"
+                  @click="showDialog"
+                />
+              </el-tooltip>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
 
-      <!-- https://element.eleme.cn/#/zh-CN/component/button -->
-      <el-row style="margin-bottom: 5vh">
-        <el-button icon="el-icon-plus" type="primary" circle @click="createJson(token, kind, createJsonDialog)" />
-        <el-button
-          icon="el-icon-refresh"
-          round
-          @click.native="refresh"
-        >刷新页面
-        </el-button>
-      </el-row>
+    <el-dialog
+      :modal="true"
+      :fullscreen="fullscreen"
+      custom-class="dialog-custom"
+      :visible.sync="dialogVisible"
+      width="50%"
+    >
+      <div>
+        <dynamic-form
+          v-if="pageSpec.formSearch.formSearchVisible"
+          :form-data="pageSpec.formSearch.formSearchJson"
+          :kind="kind"
+          @watchSearch="search($event)"
+        />
+      </div>
+    </el-dialog>
 
-      <!-- https://element.eleme.cn/#/zh-CN/component/table -->
+    <div class="app-container" style="margin-bottom: 20px">
+      <div
+        slot="header"
+        class="block-title"
+        style="margin-bottom: 20px"
+      >
+        资源详情
+      </div>
       <el-table
         ref="table"
         v-loading="pageSpec.table.tableLoading"
@@ -64,14 +173,15 @@
               }"
             >
               <el-link type="primary">{{
-                item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.dynamicData[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name]
-              }}</el-link>
+                item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.dynamicData[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name] }}</el-link>
             </router-link>
 
-            <!-- externalLink -->
+            <!--            <div class="DateForm" v-else-if="item.kind === 'externalLink'" type="primary" @click="showDialog">{{ item.row.indexOf('@') === -1 ? getComplexOrDefValue(scope.row.json, item.row, item.def) : listQuery.dynamicData[item.row.substring(1) + '-' +item.tag][scope.row.json.metadata.name] }}</div>-->
+
+            <!--             externalLink-->
             <el-link v-else-if="item.kind === 'externalLink'" type="primary" :href="getExternalLink(scope.row.json, item)" target="_blank">{{
-              getComplexOrDefValue(scope.row.json, item.row)
-            }}</el-link>
+              getComplexOrDefValue(scope.row.json, item.row) }}
+            </el-link>
 
             <!-- terminal -->
             <el-link v-else-if="item.kind === 'terminal'" type="primary" :underline="false" :href="getTerminalAddr(scope.row.json, item)" target="_blank">
@@ -99,6 +209,32 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <el-dialog
+        :modal="true"
+        :fullscreen="fullscreen"
+        custom-class="dialog-custom"
+        :visible.sync="dialog1"
+        width="90%"
+        top="5vh"
+      >
+        <div>
+          <framework />
+        </div>
+      </el-dialog>
+
+      <el-dialog
+        :modal="true"
+        :fullscreen="fullscreen"
+        custom-class="dialog-custom"
+        :visible.sync="dialog"
+        width="90%"
+        top="5vh"
+      >
+        <div>
+          <pipeline />
+        </div>
+      </el-dialog>
 
       <pagination
         v-show="pageSpec.table.tableItemsSize > 0"
@@ -139,10 +275,16 @@ import Pagination from '@/components/Pagination'
 import DynamicForm from '@/components/DynamicForm'
 import JsonDialog from '@/components/JsonDialog'
 import { mapGetters } from 'vuex'
+import framework from '../pipeline/framework-construction-new'
+import pipeline from '../pipeline/pipeline_add'
 export default {
-  components: { JsonDialog, Pagination, DynamicForm },
+  components: { framework, pipeline, JsonDialog, Pagination, DynamicForm },
   data() {
     return {
+      dialog1: false,
+      dialog: false,
+      dialogVisible: false,
+      fullscreen: false,
       // kind = 'Kubernetes kind(Pod, apps.Deployment)' + 'our subKind'
       // Kubernetes kind: https://kubernetes.io/docs/concepts/overview/working-with-objects/kubernetes-objects/
       // subKind: https://www.yuque.com/kubesys/kube-frontend/hntivn
@@ -213,7 +355,12 @@ export default {
         actionDialogVisible: false,
         updateFormConfig: [],
         propertiesInfo: []
-      }
+      },
+
+      loginForm: {
+        username: 'admin'
+      },
+      nowTime: ''
     }
   },
   computed: {
@@ -250,9 +397,19 @@ export default {
       this.listQuery,
       this.pageSpec)
     // this.pollingId = setInterval(this.getList, 10000)
+    this.getTime()
   },
 
   methods: {
+    createService() {
+      this.dialogVisible = true
+    },
+    showDialog() {
+      this.dialog = true
+    },
+    createDialog() {
+      this.dialog1 = true
+    },
     getTerminalAddr(json, item) {
       const params = item.row.split(',')
       const len = params.length
@@ -299,27 +456,35 @@ export default {
       applyOperation(this, token, kind, listQuery, tablePage, updateAbout)
     },
     getTextValue,
-    getComplexOrDefValue
+    getComplexOrDefValue,
+
+    getTime() {
+      setInterval(() => {
+        // new Date() new一个data对象，当前日期和时间
+        // toLocaleString() 方法可根据本地时间把 Date 对象转换为字符串，并返回结果。
+        this.nowTime = new Date().toLocaleString()
+      })
+    }
   }
 }
 </script>
 
 <style scoped>
-.dynamic-form-container {
-  margin-bottom: 30px;
-}
-.base-button-container {
-  padding: 10px;
-  margin-bottom: 22px;
-}
-.link {
-  color: red;
-  cursor: pointer;
-}
-input {
-  height: 35px;
-}
-.buttonShadow{
-  box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);
-}
+  .dynamic-form-container {
+    margin-bottom: 30px;
+  }
+  .base-button-container {
+    padding: 10px;
+    margin-bottom: 22px;
+  }
+  .link {
+    color: red;
+    cursor: pointer;
+  }
+  input {
+    height: 35px;
+  }
+  .buttonShadow{
+    box-shadow: 0 8px 16px 0 rgba(36, 46, 66, 0.28);
+  }
 </style>

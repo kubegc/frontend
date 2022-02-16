@@ -1,5 +1,6 @@
 #app {
 
+
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
@@ -19,8 +20,8 @@
     z-index: 1002;
     overflow: hidden;
     box-shadow: 1px 0px 2px -2px rgba(0, 0, 0, 0.16),
-                3px 0px 6px 0px rgba(0, 0, 0, 0.12),
-                5px 0px 12px 4px rgba(0, 0, 0, 0.09);
+    3px 0px 6px 0px rgba(0, 0, 0, 0.12),
+    5px 0px 12px 4px rgba(0, 0, 0, 0.09);
 
     // reset element-ui css
     .horizontal-collapse-transition {

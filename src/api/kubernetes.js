@@ -80,3 +80,10 @@ export function queryResourceCount(data) {
   })
 }
 
+export function pipeline_add(data) {
+  return request({
+    url: '/getPipelineItems',
+    method: 'get',
+    data
+  })
+}
