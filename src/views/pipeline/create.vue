@@ -261,23 +261,12 @@ export default {
 </script>
 
 <style>
-.tooltip-key {
-  display: inline-block;
-  width: 130px;
-}
 
 .create-project {
   .icon {
     cursor: pointer;
   }
 
-  .el-dialog__headerbtn {
-    font-size: 40px;
-  }
-
-  .el-dialog__body {
-    padding: 5px 20px;
-  }
 
   .create-btn {
     color: #1989fa;
@@ -330,26 +319,6 @@ export default {
         align-items: flex-start;
         justify-content: flex-start;
         width: 800px;
-
-        .el-form {
-          width: 100%;
-
-          .el-form-item {
-            margin-bottom: 5px;
-          }
-        }
-
-        .small-title {
-          color: #ccc;
-          font-size: 12px;
-        }
-
-        .el-radio--mini {
-          &.is-bordered {
-            width: 135px;
-            margin-right: 0;
-          }
-        }
       }
     }
   }
