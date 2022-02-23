@@ -50,7 +50,7 @@ export const constantRoutes = [
       component: Layout,
       children: [{
         path: 'test3',
-        component: () => import('@/views/pipeline/create/next')
+        component: () => import('@/views/pipeline/create/finish')
       }]
     }]
   }
