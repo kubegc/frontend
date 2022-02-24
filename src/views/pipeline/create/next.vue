@@ -14,7 +14,7 @@
           :gutter="pipelineItems.gutter"
         >
           <el-col v-for="card in row.items" :key="card.index" :span="card.span" style="text-align:center;">
-            <el-card v-if="card.type == 'span1'" class="box-card" v-show="active == 1">
+            <el-card v-if="card.type == 'span1'" class="box-card">
               <div slot="header" class="clearfix">
             <span
               v-if="card.color == 'black'"
@@ -157,11 +157,7 @@
                 </el-row>
               </div>
             </el-card>
-        <div class="account-integrations cf-block__list">
-          <div class="title">
-            <h4>环境准备</h4>
-          </div>
-          </div>
+
           <div style="height:100px" />
           <svg v-if="card.type == 'span2-right'" t="1605260206733" class="icon svg-middle" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1256" width="40" :fill="card.color"><path d="M512 128c211.74 0 384 172.26 384 384S723.74 896 512 896 128 723.74 128 512s172.26-384 384-384m0-64C264.58 64 64 264.58 64 512s200.58 448 448 448 448-200.58 448-448S759.43 64 512 64z" p-id="1257" /><path d="M733.53 524.23a31.93 31.93 0 0 0-6.78-34.67c0-0.05-0.07-0.13-0.12-0.19L568.23 331A32 32 0 0 0 523 376.24L626.75 480H320a32 32 0 0 0 0 64h306.75L523 647.76A32 32 0 0 0 568.23 693l158.4-158.39c0-0.06 0.07-0.14 0.12-0.19a31.92 31.92 0 0 0 6.78-10.19z" p-id="1258" /></svg>
 
@@ -207,7 +203,7 @@ export default {
       pipelineItems: [],
       dialogVisible: false,
       centerDialogVisible: false,
-       lokiDialogTitle: false,
+      lokiDialogTitle: false,
       jsonFileObj: {},
       dialogTitle: '',
       lokiLink: '',
@@ -231,10 +227,6 @@ export default {
       this.dialogTitle = name
       this.lokiDialogTitle = true
       // this.lokiLink = getLokiLink()
-    },
-
-    next() {
-      if (this.active++ > 3) this.active = 0
     },
 
     updateJson() {},
@@ -293,169 +285,24 @@ export default {
           font-size: 13px;
         }
       }
-
-      .account-integrations {
-        .el-alert--warning {
-          .el-button--text {
-            color: inherit;
-          }
-        }
-      }
-
-      .cf-block__list {
-        -ms-flex: 1;
-        flex: 1;
-        margin-top: 15px;
-        padding: 0 30px;
-        overflow-y: auto;
-        background-color: inherit;
-        -webkit-box-flex: 1;
-
-        .title {
-          h4 {
-            margin: 10px 0;
-            color: #4c4c4c;
-            font-weight: 400;
-            text-decoration: underline;
-          }
-
-          a {
-            color: inherit;
-            text-decoration-color: inherit;
-          }
-        }
-
-        .cf-block__item {
-          min-height: 102px;
-
-          .account-box-item {
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 20px 30px;
-            background-color: #fff;
-            -webkit-box-shadow: 0 3px 2px 1px rgba(0, 0, 0, 0.05);
-            box-shadow: 0 3px 2px 1px rgba(0, 0, 0, 0.05);
-            filter: progid:dximagetransform.microsoft.dropshadow(OffX=0, OffY=3px, Color='#0D000000');
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            -webkit-box-pack: justify;
-            -ms-flex-pack: justify;
-
-            .integration-card {
-              display: -webkit-box;
-              display: -ms-flexbox;
-              display: flex;
-              align-items: center;
-              justify-content: flex-start;
-              -webkit-box-align: center;
-              -ms-flex-align: center;
-              -webkit-box-pack: start;
-              -ms-flex-pack: start;
-
-              .integration-card__image {
-                width: 64px;
-
-                .el-button.is-circle {
-                  padding: 6px;
-                  border-radius: 50%;
-                }
-              }
-
-              .cf-sub-title {
-                color: #2f2f2f;
-                font-weight: bold;
-                font-size: 16px;
-                text-align: left;
-              }
-
-              .integration-details {
-                margin-bottom: 5px;
-                color: #4c4c4c;
-                font-size: 14px;
-                line-height: 20px;
-
-                .env-name {
-                  display: inline-block;
-                }
-
-                .desc {
-                  display: inline-block;
-                  width: 250px;
-                }
-              }
-            }
-
-            .integration-card > * {
-              -ms-flex: 0 0 auto;
-              flex: 0 0 auto;
-              -webkit-box-flex: 0;
-            }
-          }
-        }
-      }
     }
   }
+}
 
-  .alert {
-    display: flex;
-    padding: 0 25px;
+.el-card {
+  box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+  0px 3px 6px 0px rgba(0, 0, 0, 0.12), 0px 5px 12px 4px rgba(0, 0, 0, 0.09);
+}
 
-    .el-alert {
-      margin-bottom: 35px;
-
-      .el-alert__title {
-        font-size: 15px;
-      }
-    }
-  }
-
-  .controls__wrap {
-    position: relative;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    margin: 0 15px;
-    padding: 0 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
-
-    .controls__right {
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      align-items: center;
-      margin-right: 10px;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-
-      .save-btn {
-        margin-right: 15px;
-        padding: 10px 17px;
-        color: #fff;
-        font-weight: bold;
-        font-size: 13px;
-        text-decoration: none;
-        background-color: #1989fa;
-        border: 1px solid #1989fa;
-        cursor: pointer;
-        transition: background-color 300ms, color 300ms, border 300ms;
-      }
-
-      .save-btn[disabled] {
-        background-color: #9ac9f9;
-        border: 1px solid #9ac9f9;
-        cursor: not-allowed;
-      }
-    }
-  }
+.el-card:hover {
+  box-shadow: 0px 6px 16px -8px rgba(0, 0, 0, 0.08),
+  0px 9px 28px 0px rgba(0, 0, 0, 0.05), 0px 12px 48px 16px rgba(0, 0, 0, 0.03);
+  transform: translateY(-5px);
+  color: yellowgreen;
+  //border-top: #409EFF 1px solid;
+  border: #409eff 1px solid;
+}
+.svg-middle {
+  margin:0 auto;display:inline-block;
 }
 </style>

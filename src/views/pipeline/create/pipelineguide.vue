@@ -29,25 +29,19 @@
                   </div>
                 </div>
               </div>
-              <div class="account-box-item__controls">
-
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="controls__wrap">
-      <div class="controls__right">
+
+    <div class="controls__right">
+      <router-link :to="`/t/t2/t3`">
         <button type="primary"
                 class="save-btn"
                 plain>下一步</button>
-        <button type="primary"
-                class="save-btn"
-                @click="">
-          <i class="el-icon-loading"></i>
-          <span>跳过向导</span>
-        </button>
+      </router-link>
+      <div class="run-button">
       </div>
     </div>
   </div>

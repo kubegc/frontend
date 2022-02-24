@@ -153,10 +153,7 @@
   </div>
 </template>
 <script>
-
-// import { usersAPI, createProjectAPI, getSingleProjectAPI, updateSingleProjectAPI } from '@api'
 import { mapGetters } from 'vuex'
-// import CusDeliverable from './components/cusDeliverable.vue'
 
 const validateProductName = (rule, value, callback) => {
   if (typeof value === 'undefined' || value === '') {

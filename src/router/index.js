@@ -50,11 +50,24 @@ export const constantRoutes = [
       component: Layout,
       children: [{
         path: 'test3',
-        component: () => import('@/views/pipeline/create/finish')
+        component: () => import('@/views/pipeline/create/pipelineguide')
+      }]
+    }]
+  },
+  {
+    path: '/t',
+    component: Base,
+    children: [{
+      path: 't2',
+      component: Layout,
+      children: [{
+        path: 't3',
+        component: () => import('@/views/pipeline/create/next')
       }]
     }]
   }
 ]
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support

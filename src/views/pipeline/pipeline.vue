@@ -7,16 +7,7 @@
       <el-step title="步骤 3"></el-step>
       <el-step title="步骤 4"></el-step>
     </el-steps>
-<!--    <div>-->
-<!--      <div v-show="index == 0">-->
-<!--        <el-input-->
-<!--          placeholder="类型.."-->
-<!--          size="mini"-->
-<!--          style="width: 200px"-->
-<!--          @keyup.enter.native="next"-->
-<!--          v-model="salary.basicSalary"></el-input>-->
-<!--      </div>-->
-<!--    </div>-->
+
     <el-row
       v-for="row in pipelineItems.rows"
       :key="row.index"
@@ -566,41 +557,6 @@ export default {
     next() {
       if (this.active++ > 3) this.active = 0
     },
-
-    // next() {
-    //   if (this.active++ > 4) this.active = 1
-    //   var _this = this;
-    //   if (this.index == 4) {
-    //     if (this.salary.id) { // 更新
-    //       this.putRequest('/pipelineItems', this.salary).then(resp => {
-    //         if (resp && resp.status == 200) {
-    //           var data = resp.data;
-    //           _this.$message({type: data.status, message: data.msg});
-    //           _this.dialogVisible = false;
-    //           _this.index = 0;
-    //         }
-    //       });
-    //     } else { // 添加
-    //       this.$prompt('请输入账套名称', '提示', {
-    //         confirmButtonText: '确定',
-    //         cancelButtonText: '取消'
-    //       }).then(({value}) => {
-    //         this.salary.name = value;
-    //         this.postRequest('/pipelineItems', this.salary).then(resp => {
-    //           if (resp && resp.status == 200) {
-    //             var data = resp.data;
-    //             _this.$message({type: data.status, message: data.msg});
-    //             _this.dialogVisible = false;
-    //             _this.index = 0;
-    //           }
-    //         });
-    //       }).catch(() => {
-    //       });
-    //     }
-    //   } else {
-    //     this.index++;
-    //   }
-    // },
 
     updateJson() {},
 

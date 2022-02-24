@@ -10,11 +10,10 @@ Mock.mock('/getPipelineItems', { //输出数据
                 items:[
                     {index: 1,type:"span1",span: 10,name: "多云API信息导入",color:"brown", src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置"},
                     // {index: 100,type:"span2-right",span: 1, color: "black"},
-                    {index: 2,type:"span2",span: 10,name: "多云API引擎",color:"green", src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置"},
+                    {index: 2,type:"span2",span: 10,name: "多云API信息导入",color:"green", src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置"},
                     // {index: 101,type:"span2-right",span: 1, color: "black"},
-                    {index: 3,type:"span3",span: 10,name: "基本信息",color:"black", description:"基本信息填写"},
                     // {index: 102,type:"span2-right",span: 1, color: "black"},
-                    {index: 4,type:"span4",span: 10,name: "完成"},
+                    // {index: 4,type:"span4",span: 10,name: "完成"},
 
                     // {index: 2,type:"span1",span: 6,color:"red"},
                     // {index: 105,type:"span2-right",span: 2, color: "red",name: "多云API分析引擎",src: "docker.png", description:"对应多种不同API，需要提供准确的maven依赖配置"},
