@@ -4,7 +4,17 @@
     <el-row>
       <el-col :span="6">
         <div class="section-head">
-          <el-button size="small" @click="createDialog" style="margin-bottom: 40px">新建流水线</el-button>
+          <div class="controls__wrap">
+            <div class="controls__right">
+              <router-link :to="`/t/t1/t2`">
+                <button type="primary"
+                        class="save-btn"
+                        plain>新建流水线</button>
+              </router-link>
+              <div class="run-button">
+              </div>
+            </div>
+          </div>
         </div>
       </el-col>
     </el-row>

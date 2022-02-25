@@ -1,4 +1,5 @@
 <template>
+<div>
   <div class="projects-runtime-container">
     <div class="guide-container">
       <step :activeStep="2">
@@ -187,6 +188,19 @@
         </el-dialog>
       </div>
     </div>
+  </div>
+
+  <div class="controls__wrap">
+    <div class="controls__right">
+      <router-link :to="`/t/t1/t5`">
+        <button type="primary"
+                class="save-btn"
+                plain>下一步</button>
+      </router-link>
+      <div class="run-button">
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 <script>

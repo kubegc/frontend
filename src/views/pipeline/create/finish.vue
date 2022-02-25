@@ -12,11 +12,13 @@
     </div>
     <div class="controls__wrap">
       <div class="controls__right">
-        <button type="primary"
-                  size="small"
-                  class="save-btn"
-                  :disabled="loading"
-                  plain>完成</button>
+        <router-link :to="'/test/test2/test3'">
+          <button type="primary"
+                    size="small"
+                    class="save-btn"
+                    :disabled="loading"
+                    plain>完成</button>
+        </router-link>
       </div>
     </div>
   </div>

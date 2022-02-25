@@ -35,13 +35,15 @@
       </div>
     </div>
 
-    <div class="controls__right">
-      <router-link :to="`/t/t2/t3`">
-        <button type="primary"
-                class="save-btn"
-                plain>下一步</button>
-      </router-link>
-      <div class="run-button">
+    <div class="controls__wrap">
+      <div class="controls__right">
+        <router-link :to="`/t/t1/t4`">
+          <button type="primary"
+                  class="save-btn"
+                  plain>下一步</button>
+        </router-link>
+        <div class="run-button">
+        </div>
       </div>
     </div>
   </div>
@@ -68,186 +70,186 @@ export default {
 </script >
 
 <style lang="less">
-  .projects-info-container {
-    position: relative;
-    flex: 1;
-    overflow: auto;
-    background-color: #f5f7f7;
+.projects-info-container {
+  position: relative;
+  flex: 1;
+  overflow: auto;
+  background-color: #f5f7f7;
 
-    .page-title-container {
-      display: flex;
-      padding: 0 20px;
+  .page-title-container {
+    display: flex;
+    padding: 0 20px;
 
-      h1 {
-        width: 100%;
-        color: #4c4c4c;
-        font-weight: 300;
-        text-align: center;
-      }
+    h1 {
+      width: 100%;
+      color: #4c4c4c;
+      font-weight: 300;
+      text-align: center;
+    }
+  }
+
+  .guide-container {
+    min-height: calc(~"100% - 150px");
+    margin-top: 10px;
+
+    &.not-closed-title {
+      min-height: calc(~"100% - 150px");
     }
 
-    .guide-container {
-      min-height: calc(~"100% - 150px");
-      margin-top: 10px;
+    .current-step-container {
+      .title-container {
+        margin-bottom: 10px;
+        margin-left: 20px;
 
-      &.not-closed-title {
-        min-height: calc(~"100% - 150px");
-      }
-
-      .current-step-container {
-        .title-container {
-          margin-bottom: 10px;
-          margin-left: 20px;
-
-          .first {
-            display: inline-block;
-            width: 110px;
-            padding: 8px;
-            color: #fff;
-            font-weight: 300;
-            font-size: 18px;
-            text-align: center;
-            background: #3289e4;
-          }
-
-          .second {
-            display: inline-block;
-            color: #4c4c4c;
-            font-size: 13px;
-          }
+        .first {
+          display: inline-block;
+          width: 110px;
+          padding: 8px;
+          color: #fff;
+          font-weight: 300;
+          font-size: 18px;
+          text-align: center;
+          background: #3289e4;
         }
 
-        .cf-block__list {
-          -ms-flex: 1;
-          flex: 1;
-          margin-top: 15px;
-          padding: 0 30px;
-          overflow-y: auto;
-          background-color: inherit;
-          -webkit-box-flex: 1;
+        .second {
+          display: inline-block;
+          color: #4c4c4c;
+          font-size: 13px;
+        }
+      }
 
-          .cf-block__item {
-            .account-box-item {
+      .cf-block__list {
+        -ms-flex: 1;
+        flex: 1;
+        margin-top: 15px;
+        padding: 0 30px;
+        overflow-y: auto;
+        background-color: inherit;
+        -webkit-box-flex: 1;
+
+        .cf-block__item {
+          .account-box-item {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 20px 30px;
+            background-color: #fff;
+            -webkit-box-shadow: 0 3px 2px 1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 2px 1px rgba(0, 0, 0, 0.05);
+            filter: progid:dximagetransform.microsoft.dropshadow(OffX=0, OffY=3px, Color='#0D000000');
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+
+            .integration-card {
               display: -webkit-box;
               display: -ms-flexbox;
               display: flex;
               align-items: center;
-              justify-content: space-between;
-              margin-bottom: 10px;
-              padding: 20px 30px;
-              background-color: #fff;
-              -webkit-box-shadow: 0 3px 2px 1px rgba(0, 0, 0, 0.05);
-              box-shadow: 0 3px 2px 1px rgba(0, 0, 0, 0.05);
-              filter: progid:dximagetransform.microsoft.dropshadow(OffX=0, OffY=3px, Color='#0D000000');
+              justify-content: flex-start;
               -webkit-box-align: center;
               -ms-flex-align: center;
-              -webkit-box-pack: justify;
-              -ms-flex-pack: justify;
+              -webkit-box-pack: start;
+              -ms-flex-pack: start;
 
-              .integration-card {
-                display: -webkit-box;
-                display: -ms-flexbox;
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                -webkit-box-align: center;
-                -ms-flex-align: center;
-                -webkit-box-pack: start;
-                -ms-flex-pack: start;
+              .integration-card__image {
+                width: 64px;
 
-                .integration-card__image {
-                  width: 64px;
-
-                  .el-button.is-circle {
-                    padding: 6px;
-                    border-radius: 50%;
-                  }
-                }
-
-                .cf-sub-title {
-                  color: #2f2f2f;
-                  font-weight: bold;
-                  font-size: 16px;
-                  text-align: left;
-                }
-
-                .integration-details {
-                  color: #4c4c4c;
-                  font-size: 13px;
+                .el-button.is-circle {
+                  padding: 6px;
+                  border-radius: 50%;
                 }
               }
 
-              .integration-card > * {
-                -ms-flex: 0 0 auto;
-                flex: 0 0 auto;
-                -webkit-box-flex: 0;
+              .cf-sub-title {
+                color: #2f2f2f;
+                font-weight: bold;
+                font-size: 16px;
+                text-align: left;
               }
+
+              .integration-details {
+                color: #4c4c4c;
+                font-size: 13px;
+              }
+            }
+
+            .integration-card > * {
+              -ms-flex: 0 0 auto;
+              flex: 0 0 auto;
+              -webkit-box-flex: 0;
             }
           }
         }
       }
     }
+  }
 
-    .alert {
-      display: flex;
-      padding: 0 25px;
+  .alert {
+    display: flex;
+    padding: 0 25px;
 
-      .el-alert {
-        margin-bottom: 35px;
+    .el-alert {
+      margin-bottom: 35px;
 
-        .el-alert__title {
-          font-size: 15px;
-        }
+      .el-alert__title {
+        font-size: 15px;
       }
     }
+  }
 
-    .controls__wrap {
-      position: relative;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 2;
+  .controls__wrap {
+    position: relative;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    margin: 0 15px;
+    padding: 0 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+
+    .controls__right {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      height: 60px;
-      margin: 0 15px;
-      padding: 0 10px;
-      background-color: #fff;
-      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+      margin-right: 10px;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
 
-      .controls__right {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        align-items: center;
-        margin-right: 10px;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
+      .save-btn,
+      .next-btn {
+        margin-right: 15px;
+        padding: 10px 17px;
+        color: #fff;
+        font-weight: bold;
+        font-size: 13px;
+        text-decoration: none;
+        background-color: #1989fa;
+        border: 1px solid #1989fa;
+        cursor: pointer;
+        transition: background-color 300ms, color 300ms, border 300ms;
+      }
 
-        .save-btn,
-        .next-btn {
-          margin-right: 15px;
-          padding: 10px 17px;
-          color: #fff;
-          font-weight: bold;
-          font-size: 13px;
-          text-decoration: none;
-          background-color: #1989fa;
-          border: 1px solid #1989fa;
-          cursor: pointer;
-          transition: background-color 300ms, color 300ms, border 300ms;
-        }
-
-        .save-btn[disabled],
-        .next-btn[disabled] {
-          background-color: #9ac9f9;
-          border: 1px solid #9ac9f9;
-          cursor: not-allowed;
-        }
+      .save-btn[disabled],
+      .next-btn[disabled] {
+        background-color: #9ac9f9;
+        border: 1px solid #9ac9f9;
+        cursor: not-allowed;
       }
     }
   }
+}
 </style>

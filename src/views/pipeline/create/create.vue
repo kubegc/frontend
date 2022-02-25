@@ -140,13 +140,13 @@
 
           </div>
         </div>
-        <footer class="project-contexts-modal__footer">
+        <router-link :to="`/t/t1/t3`" class="project-contexts-modal__footer">
           <el-button class="create-btn"
                      type="primary"
                      plain
                      @click="submitForm('projectForm')">{{isEdit?'确认修改':'立即创建'}}
           </el-button>
-        </footer>
+        </router-link>
 
       </div>
     </el-dialog>
@@ -258,11 +258,19 @@ export default {
 </script>
 
 <style lang="less">
-
 .create-project {
   .icon {
     cursor: pointer;
   }
+
+  .el-dialog__headerbtn {
+    font-size: 40px;
+  }
+
+  .el-dialog__body {
+    padding: 5px 20px;
+  }
+
 
 
   .create-btn {
