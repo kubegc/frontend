@@ -10,6 +10,34 @@
         </div>
       </div>
     </div>
+    <div class="imageMarket-app-container">
+      <el-divider content-position="center">多云协作框架</el-divider>
+      <div style="width:100%;float:left">
+        <el-button type="text" style="display:inline-block;float:left;width:20%">构造多云协作框架API进度：</el-button>
+        <el-progress style="display:inline-block;float:left;width:75%;margin:7px 0 0 30px;" :text-inside="true" :stroke-width="24" :percentage="percentage" status="success" />
+      </div>
+      <div style="width:100%;float:left;margin:20px 0 0 0;">
+        <p style="font-size:16px;margin:0 0 0 10px;height: 10%;"><a style="color:black;font-size:18px;">步骤 1：</a>接收示例代码输入：</p>
+        <json-editor
+          style="width:100%"
+          :value="jsonString"
+          @input="jsonString = $event"
+        />
+      </div>
+      <div style="width:100%;float:left;margin:20px 0 0 0;">
+        <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:100%;display:inline-block;"><a style="color:black;font-size:18px;" @click="drawLine()">步骤 2.1:提取关键云服务操作：</a><span id="analysisTitle" style="color:brown;font-size:18px;margin-left:20px">待分析</span></p>
+        <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:100%;display:inline-block;"><a style="color:black;font-size:18px;" @click="constructTree()">步骤 2.2:构造云服务树形调用链:</a><span id="analysisTree" style="color:brown;font-size:18px;margin-left:20px">待生成</span></p>
+        <div id="myChart" style="width: 100%; height: 500px;float: left;" />
+      </div>
+      <div style="width:100%;float:left;margin:20px 0 0 0;">
+        <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:100%;display:inline-block;"><a style="color:black;font-size:18px;" @click="showTriple()">步骤 3:生成初始的、针对特定云服务代码片段的API调用接口(三元组)：</a></p>
+        <div id="step3" :style="isShown">
+          <el-button id="step31" style="display:block;margin:10px" type="primary">客户端及初始化参数</el-button>
+          <el-button id="step32" style="display:block;margin:10px" type="success">一个新请求</el-button>
+          <el-button id="step33" style="display:block;margin:10px" type="info">请求需要的参数</el-button>
+        </div>
+      </div>
+    </div>
     <div class="controls__wrap">
       <div class="controls__right">
         <router-link :to="'/test/test2/test3'">
@@ -31,6 +59,7 @@ export default {
     step
   }
 }
+
 </script>
 
 <style lang="less">

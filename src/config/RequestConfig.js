@@ -17,3 +17,20 @@ export const get = async(url = '', params = {}, method = 'get') => {
     return false
   }
 }
+
+export const push = async(url = '', params = {}, method = 'get') => {
+  const res = await axios(url, {
+    params: params,
+    method: method
+  })
+  if (res) {
+    return res
+  } else {
+    Message({
+      showClose: true,
+      message: '提交失败',
+      type: 'error'
+    })
+    return false
+  }
+}

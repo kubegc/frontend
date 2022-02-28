@@ -303,6 +303,55 @@ export default {
   }
 }
 
+.controls__wrap {
+  position: relative;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  margin: 0 15px;
+  padding: 0 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+
+  .controls__right {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+
+    .save-btn,
+    .next-btn {
+      margin-right: 15px;
+      padding: 10px 17px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 13px;
+      text-decoration: none;
+      background-color: #1989fa;
+      border: 1px solid #1989fa;
+      cursor: pointer;
+      transition: background-color 300ms, color 300ms, border 300ms;
+    }
+
+    .save-btn[disabled],
+    .next-btn[disabled] {
+      background-color: #9ac9f9;
+      border: 1px solid #9ac9f9;
+      cursor: not-allowed;
+    }
+  }
+}
+
 .el-card {
   box-shadow: 0px 1px 2px -2px rgba(0, 0, 0, 0.16),
   0px 3px 6px 0px rgba(0, 0, 0, 0.12), 0px 5px 12px 4px rgba(0, 0, 0, 0.09);

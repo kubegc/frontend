@@ -97,7 +97,11 @@ export default {
     return {
       pipelineItems: [],
       getUserList: [],
-      tableData: [],
+      tableData:{
+        index: '',
+        type: '',
+        name: ''
+      },
       dialog: false,
       fullscreen: false,
       currentPage: 1,

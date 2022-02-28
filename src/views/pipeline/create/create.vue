@@ -7,44 +7,28 @@
         <header class="project-contexts-modal__header">
         </header>
         <div class="project-contexts-modal__content">
-          <h1 class="project-contexts-modal__content-title">{{'开始新建项目'}}</h1>
+          <h1 class="project-contexts-modal__content-title">{{'开始新建工作流'}}</h1>
           <div class="project-contexts-modal__content-container">
             <div class="project-settings__inputs-container">
               <el-tabs style="width: 100%;"    v-model="activeName">
                 <el-tab-pane label="基本信息" name="base"></el-tab-pane>
                 <el-tab-pane label="高级配置" name="advance"></el-tab-pane>
               </el-tabs>
-              <el-form :model="projectForm"
+              <el-form :model="tableData"
                        :rules="rules"
                        label-position="top"
-                       ref="projectForm"
+                       ref="tableData"
                        label-width="100px"
                        class="demo-projectForm">
-                <el-form-item label="项目名称"
+                <el-form-item label="工作流名称"
                               v-show="activeName !=='advance'"
                               prop="project_name">
-                  <el-input @keyup.native="()=>projectForm.project_name=projectForm.project_name.trim()"
-                            v-model="projectForm.project_name"></el-input>
+                  <el-input v-model="tableData.name"></el-input>
                 </el-form-item>
 
-                <el-form-item label="项目主键"
-                              v-show="activeName !=='advance'"
+                <el-form-item label="工作流标识"
                               prop="product_name">
-                  <span slot="label">项目主键
-                    <el-tooltip effect="dark"
-                                content="项目主键是该项目资源的全局唯一标识符，用于该项目下所有资源的引用与更新，默认自动生成，同时支持手动指定，创建后不可更改"
-                                placement="top">
-                      <i class="el-icon-question"></i>
-                    </el-tooltip>
-                    <el-button v-if="!editProductName"
-                               @click="editProductName=true"
-                               type="text">编辑</el-button>
-                    <el-button v-if="!isEdit&&editProductName"
-                               @click="editProductName=false"
-                               type="text">完成</el-button>
-                  </span>
-                  <el-input :disabled="!showProductName"
-                            v-model="projectForm.product_name"></el-input>
+                  <el-input v-model="tableData.index"></el-input>
                 </el-form-item>
 
                 <el-form-item
@@ -69,24 +53,17 @@
                   <el-input type="textarea"
                             :rows="2"
                             placeholder="请输入描述信息"
-                            v-model="projectForm.desc">
+                            v-model="tableData.type">
                   </el-input>
 
                 </el-form-item>
                 <el-form-item v-if="!isEdit"
                               v-show="activeName !=='advance'"
-                              label="项目特点"
+                              label="工作流特点"
                               prop="desc">
                   <el-row :gutter="5">
                       <el-col :span="4">
-                        <span>基础设施
-                          <el-tooltip placement="top">
-                            <div slot="content">
-                              Kubernetes：包括自建 K8s 和云厂商提供容器云服务<br />
-                            </div>
-                            <i class="icon el-icon-question"></i>
-                          </el-tooltip>
-                        </span>
+                        <span>基础设施</span>
                       </el-col>
                       <el-col :span="10">
                         <el-radio-group size="mini"
@@ -100,15 +77,7 @@
                   </el-row>
                   <el-row :gutter="5" v-if="projectForm.product_feature.basic_facility==='kubernetes'">
                     <el-col :span="4">
-                      <span>
-                        环境创建方式
-                        <el-tooltip placement="top">
-                            <div slot="content">
-                              新建集成环境：在现有的 Kubernetes 集群新建环境<br />
-                            </div>
-                            <i class="icon el-icon-question"></i>
-                        </el-tooltip>
-                      </span>
+                      <span>环境创建方式</span>
                     </el-col>
                   </el-row>
                 </el-form-item>
@@ -144,7 +113,7 @@
           <el-button class="create-btn"
                      type="primary"
                      plain
-                     @click="submitForm('projectForm')">{{isEdit?'确认修改':'立即创建'}}
+                     @click="addInput">{{isEdit?'确认修改':'立即创建'}}
           </el-button>
         </router-link>
 
@@ -154,30 +123,9 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import axios from 'axios'
+import { getUserList } from '../../../api/api'
 
-const validateProductName = (rule, value, callback) => {
-  if (typeof value === 'undefined' || value === '') {
-    callback(new Error('填写项目主键'))
-  } else {
-    if (!/^[a-z0-9-]+$/.test(value)) {
-      callback(new Error('项目主键只支持小写字母和数字，特殊字符只支持中划线'))
-    } else {
-      callback()
-    }
-  }
-}
-const validateDeployTimeout = (rule, value, callback) => {
-  const reg = /^[0-9]+.?[0-9]*/
-  if (!reg.test(value)) {
-    callback(new Error('时间应为数字'))
-  } else {
-    if (value > 0) {
-      callback()
-    } else {
-      callback(new Error('请输入正确的时间范围'))
-    }
-  }
-}
 export default {
   data () {
     return {
@@ -202,29 +150,46 @@ export default {
           create_env_type: 'system'
         }
       },
-      rules: {
-        project_name: [
-          { required: true, message: '请输入项目名称', trigger: 'blur' }
-        ],
-        product_name: [
-          { required: true, trigger: 'change', validator: validateProductName }
-        ],
-        user_ids: [
-          { type: 'array', required: true, message: '请选择项目管理员', trigger: 'change' }
-        ],
-        visibility: [
-          { type: 'string', required: true, message: '请选择项目可见范围', trigger: 'change' }
-        ],
-        enabled: [
-          { type: 'boolean', required: true, message: '请选择项目是否启用项目', trigger: 'change' }
-        ],
-        timeout: [
-          { required: true, trigger: 'change', validator: validateDeployTimeout }
-        ]
-      }
+      getUserList: [],
+      tableData: {
+        index: '',
+        type: '',
+        name: ''
+      },
     }
   },
+
+  mounted() {
+    this.pipelinelength()
+    this.initPage()
+  },
+
   methods: {
+    addInput () {
+      this.$router.push('/getPipelineItems')
+    },
+
+    search () {
+      console.log(this.tableData)
+    },
+
+    pipelinelength() {
+      axios.get('/getPipelineItems').then(response => {
+        while (response.data < 100) {
+          return response.data.data
+        }
+      })
+    },
+
+    initPage() {
+      getUserList().then(res => {
+        if (res) {
+          console.log('getUserListres', res.data.data)
+          this.tableData = res.data.data
+        }
+      })
+    },
+
     remoteMethod (query) {
       if (query !== '') {
         this.loading = true
@@ -242,6 +207,7 @@ export default {
       this.$refs[formName].resetFields()
     }
   },
+
   computed: {
     ...mapGetters([
       'signupStatus'
@@ -249,10 +215,6 @@ export default {
     currentOrganizationId () {
       return this.$store.state.login.userinfo.organization.id
     },
-
-    showProductName () {
-      return !this.isEdit && this.editProductName
-    }
   }
 }
 </script>
@@ -324,6 +286,26 @@ export default {
         align-items: flex-start;
         justify-content: flex-start;
         width: 800px;
+
+        .el-form {
+          width: 100%;
+
+          .el-form-item {
+            margin-bottom: 5px;
+          }
+        }
+
+        .small-title {
+          color: #ccc;
+          font-size: 12px;
+        }
+
+        .el-radio--mini {
+          &.is-bordered {
+            width: 135px;
+            margin-right: 0;
+          }
+        }
       }
     }
   }

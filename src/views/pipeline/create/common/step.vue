@@ -10,13 +10,13 @@
                 class="process-container"
                 align-center
                 finish-status="success">
-        <el-step title="项目配置"
+        <el-step title="多云API信息导入"
                  description=""></el-step>
-        <el-step title="创建服务"
+        <el-step title="创建API信息"
                  description=""></el-step>
         <el-step title="加入运行环境"
                  description=""></el-step>
-        <el-step title="工作流交付"
+        <el-step title="完成"
                  description=""></el-step>
       </el-steps>
     </div>
