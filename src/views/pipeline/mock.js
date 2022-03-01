@@ -57,4 +57,24 @@ Mock.mock('/pipelineItems',{
           // { index: 6, type: 'span6', name: ' a5552' }
     ]
 
+});
+
+Mock.mock('/workflow',{
+  code:20000,
+  data: {
+    gutter: 20,
+    rows: [
+      {
+         index: 10,
+         items:[
+           {index: 1, type: 'span1', name: '项目配置'},
+           {index: 2, type: 'span2', name: '创建服务'},
+           {index: 3, type: 'span3', name: '加入运行环境'},
+           {index: 4, type: 'span4', name: '工作流交付'}
+         ]
+      }
+    ]
+  }
 })
+
+
