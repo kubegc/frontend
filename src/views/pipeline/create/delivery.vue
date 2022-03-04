@@ -51,8 +51,8 @@
               </template>
             </el-table-column>
           </el-table>
-
         </div>
+
       </div>
 
     </div>
@@ -77,7 +77,6 @@ export default {
       loading: true,
       workflow: {},
       taskDialogVisible: false,
-      mapWorkflows: []
     }
   },
   methods: {
@@ -87,9 +86,6 @@ export default {
     },
   },
   computed: {
-    projectName () {
-      return this.$route.params.project_name
-    }
   },
   components: { step },
 }
