@@ -89,7 +89,7 @@
 
 <script>
 import axios from 'axios'
-import { getUserList } from '../../api/api'
+// import { getUserList } from '../../api/api'
 import pipeline from '../pipeline/pipeline'
 export default {
   components: { pipeline },

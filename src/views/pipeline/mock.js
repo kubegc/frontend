@@ -52,14 +52,11 @@ Mock.mock('/pipelineItems',{
           { index: 5, type: 'span5', name: ' dsacxz4' },
           { index: 6, type: 'span6', name: ' dsacxz4' },
           // { index: 4, type: 'span4', name: ' dsacxz4' },
-          // { index: 4, type: 'span4', name: ' dsacxz4' },
-          // { index: 5, type: 'span5', name: ' cc-a2' },
-          // { index: 6, type: 'span6', name: ' a5552' }
     ]
 
 });
 
-Mock.mock('/workflow',{
+Mock.mock('/getGuideItems',{
   code:20000,
   data: {
     gutter: 20,
@@ -72,6 +69,23 @@ Mock.mock('/workflow',{
            {index: 3, type: 'span3', name: '加入运行环境'},
            {index: 4, type: 'span4', name: '工作流交付'}
          ]
+      }
+    ]
+  }
+});
+
+Mock.mock('/getService',{
+  code:20000,
+  data: {
+    gutter: 20,
+    rows: [
+      {
+        index: 10,
+        items:[
+          {index: 1, type: 'span1', name: '2套信息'},
+
+          {index: 2, type: 'span2', name: '3条工作流'}
+        ]
       }
     ]
   }

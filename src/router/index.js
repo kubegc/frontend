@@ -71,10 +71,14 @@ export const constantRoutes = [
         },
         {
           path: 't4',
-          component: () => import('@/views/pipeline/create/next')
+          component: () => import('@/views/pipeline/create/service')
         },
         {
           path: 't5',
+          component: () => import('@/views/pipeline/create/next')
+        },
+        {
+          path: 't6',
           component: () => import('@/views/pipeline/create/finish')
         }
       ]

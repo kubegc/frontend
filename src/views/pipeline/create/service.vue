@@ -1,10 +1,5 @@
 <template>
   <div class="projects-service-mgr">
-<!--    <el-drawer title="代码源集成"-->
-<!--               :visible.sync="addCodeDrawer"-->
-<!--               direction="rtl">-->
-<!--      <add-code @cancel="addCodeDrawer = false"></add-code>-->
-<!--    </el-drawer>-->
     <div class="guide-container">
       <step :activeStep="1">
       </step>
@@ -35,14 +30,29 @@
         </multipane>
       </div>
     </div>
+
+    <el-dialog
+      :modal="true"
+      :fullscreen="fullscreen"
+      custom-class="dialog-custom"
+      :visible.sync="dialog1"
+      width="90%"
+      top="5vh"
+    >
+      <div>
+        <service_tree />
+      </div>
+    </el-dialog>
+
     <div class="controls__wrap">
       <div class="controls__right">
-        <el-button type="primary"
-                   size="small"
-                   class="save-btn"
-                   @click="toNext"
-                   :disabled="!showNext"
-                   plain>下一步</el-button>
+        <router-link :to="`/t/t1/t5`">
+          <button type="primary"
+                  class="save-btn"
+                  plain>下一步</button>
+        </router-link>
+        <div class="run-button">
+        </div>
       </div>
     </div>
 
@@ -50,6 +60,8 @@
 </template>
 <script>
 import step from './common/step.vue'
+import service_tree from './common/service_tree'
+
 export default {
   data () {
     return {

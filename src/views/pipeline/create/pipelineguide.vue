@@ -12,7 +12,9 @@
       <div class="current-step-container">
         <div class="title-container">
           <span class="first">第一步</span>
-          <span class="second">多云API信息导入</span>
+          <div v-for="row in guideItems.rows"
+                :key="row.index"
+                :gutter="guideItems.gutter"><span v-for="item in row.items" :key="item.index">{{item.name}}</span></div>
         </div>
         <div class="account-integrations cf-block__list">
           <div class="cf-block__item">
@@ -25,8 +27,25 @@
                 </div>
                 <div class="integration-card__info">
                   <div class="integration-name cf-sub-title">2 套信息</div>
-                  <div class="integration-details">11, 22
-                  </div>
+                  <div class="integration-details">11, 22</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="account-integrations cf-block__list">
+          <div class="cf-block__item">
+            <div class="account-box-item">
+              <div class="account-box-item__info integration-card">
+                <div class="integration-card__image">
+                  <el-button type="success"
+                             icon="el-icon-check"
+                             circle></el-button>
+                </div>
+                <div class="integration-card__info">
+                  <div class="integration-name cf-sub-title">3 条工作流</div>
+                  <div class="integration-details">11, 22</div>
                 </div>
               </div>
             </div>
@@ -50,6 +69,7 @@
 </template>
 <script>
 import step from './common/step.vue'
+import axios from 'axios'
 export default {
   components: {
     step
@@ -57,10 +77,25 @@ export default {
   data() {
     return {
       showGuideText: true,
-      jumpLoading: false
+      jumpLoading: false,
+      guideItems:[]
     }
   },
   computed: {
+  },
+
+  methods:{
+    readguideItems() {
+      axios.get('/getGuideItems').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    }
+  },
+
+  mounted() {
+    this.readguideItems()
   },
   created() {
 

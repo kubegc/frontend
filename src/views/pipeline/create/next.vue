@@ -192,7 +192,7 @@
 
   <div class="controls__wrap">
     <div class="controls__right">
-      <router-link :to="`/t/t1/t5`">
+      <router-link :to="`/t/t1/t6`">
         <button type="primary"
                 class="save-btn"
                 plain>下一步</button>
