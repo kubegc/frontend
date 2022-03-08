@@ -57,8 +57,7 @@
                   </el-input>
 
                 </el-form-item>
-                <el-form-item v-if="!isEdit"
-                              v-show="activeName !=='advance'"
+                <el-form-item v-show="activeName !=='advance'"
                               label="工作流特点"
                               prop="desc">
                   <el-row :gutter="5">
@@ -80,9 +79,30 @@
                       <span>环境创建方式</span>
                     </el-col>
                   </el-row>
+                  <el-row v-if="projectForm.product_feature.basic_facility==='kubernetes'&&projectForm.product_feature.create_env_type==='system'" :gutter="5">
+                    <el-col :span="4">
+                      <span>服务部署方式
+                        <el-tooltip placement="top">
+                          <div slot="content">
+                            K8s YAML 部署：使用 K8s 原生的 YAML配置方式部署服务<br />
+                            Helm Chart 部署：使用 Helm 工具部署服务
+                          </div>
+                          <i class="icon el-icon-question"></i>
+                        </el-tooltip>
+                      </span>
+                    </el-col>
+                    <el-col :span="12">
+                      <el-radio-group size="mini"
+                                      v-model="projectForm.product_feature.deploy_type">
+                        <el-radio border
+                                  label="k8s">K8s YAML 部署</el-radio>
+                        <el-radio border
+                                  label="helm">Helm Chart 部署</el-radio>
+                      </el-radio-group>
+                    </el-col>
+                  </el-row>
                 </el-form-item>
-                <el-row v-if="isEdit"
-                        v-show="activeName !=='advance'"
+                <el-row v-show="activeName !=='advance'"
                         :gutter="5">
                   <el-col :span="24">
                     <el-form-item label="项目管理员"

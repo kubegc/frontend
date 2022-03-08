@@ -89,6 +89,23 @@ Mock.mock('/getService',{
       }
     ]
   }
-})
+});
+
+Mock.mock('/getWorkflow',{
+  code:20000,
+  data: {
+    gutter: 20,
+    rows: [
+      {
+        index: 10,
+        items:[
+          {index: 1, type: 'span1', name: '2套信息'},
+
+          {index: 2, type: 'span2', name: '3条工作流'}
+        ]
+      }
+    ]
+  }
+});
 
 
