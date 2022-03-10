@@ -116,13 +116,15 @@ Mock.mock('/getInfo',{
       {
         index: 10,
         items:[
-          {index: 1, type: 'span1', name: '2套信息'},
+          {index: 1, type: 'span1', name: '托管平台'},
 
-          {index: 2, type: 'span1', name: '2套信息'},
+          {index: 2, type: 'span2', name: '代码库拥有者'},
 
-          {index: 3, type: 'span1', name: '2套信息'},
+          {index: 3, type: 'span3', name: '代码库名称'},
 
-          {index: 4, type: 'span2', name: '3条工作流'}
+          {index: 4, type: 'span4', name: '分支'},
+
+          {index: 5, type: 'span5', name: '文件路径'}
         ]
       }
     ]

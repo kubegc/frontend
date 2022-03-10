@@ -238,6 +238,77 @@ export default {
       this.showSelectPath = true
       this.$refs.sourceForm.resetFields()
     },
+
+    loadRepoService () {
+      const codehostId = this.source.codehostId
+      const repoOwner = this.source.repoOwner
+      const repoName = this.source.repoName
+      const repoUUID = this.source.repoUUID
+      const branchName = this.source.branchName
+      const remoteName = this.source.remoteName
+      const path = this.source.path
+      const isDir = this.source.isDir
+      const payload = {
+        product_name: this.projectName,
+        visibility: 'private',
+        is_dir: isDir,
+        type: 'k8s',
+        path: path
+      }
+      this.$refs.sourceForm.validate((valid) => {
+        if (valid) {
+          this.importLoading = true
+          loadRepoServiceAPI(codehostId, repoOwner, repoName, branchName, remoteName, repoUUID, payload).then((res) => {
+            this.$emit('onRefreshService')
+            this.$emit('onRefreshSharedService')
+            this.$emit('update:showNext', true)
+            this.getServiceGroup()
+            this.dialogImportFileVisible = false
+            this.$message({
+              message: '服务导入成功',
+              type: 'success'
+            })
+            if (this.source.services && this.source.services.length > 0) {
+              const firstServiceName = this.source.services[0]
+              this.setServiceSelected(firstServiceName)
+              this.$router.replace({ query: { service_name: firstServiceName, rightbar: 'help' } })
+            }
+          }).finally(() => {
+            this.importLoading = false
+          })
+        } else {
+          return false
+        }
+      })
+    },
+
+    getServiceGroup () {
+      this.serviceGroup = []
+      const projectName = this.projectName
+      getSingleProjectAPI(projectName).then((res) => {
+        res.services.push([])
+        res.services.forEach((order, orderIndex) => {
+          this.serviceGroup.push({
+            label: `启动顺序 ${orderIndex}`,
+            id: orderIndex,
+            children: []
+          })
+          order.forEach((service, serviceIndex) => {
+            this.serviceGroup[orderIndex].children.push({
+              label: service,
+              id: `${orderIndex}-${serviceIndex}`,
+              children: []
+            })
+          })
+        })
+      })
+    },
+
+    setServiceSelected (key) {
+      this.$nextTick(() => {
+        this.$refs.serviceTree.setCurrentKey(key)
+      })
+    }
   },
 
   watch: {
