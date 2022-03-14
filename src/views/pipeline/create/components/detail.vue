@@ -152,7 +152,10 @@
                 <el-table-column label="环境名称">
 
                   <template slot-scope="scope">
-
+<!--                    <router-link-->
+<!--                                 :to="`/v1/projects/detail/${scope.row.product_name}/envs/detail?envName=${scope.row.env_name}`">-->
+<!--                      <span class="env-name">{{`${scope.row.env_name}`}}</span>-->
+<!--                    </router-link>-->
                   </template>
                 </el-table-column>
                 <el-table-column label="集群归属">
@@ -161,28 +164,11 @@
                     <span v-else>{{`${scope.row.clusterType}`}}</span>
                   </template>
                 </el-table-column>
-                <el-table-column label="当前状态">
-                  <template slot-scope="scope">
-                    <span
-                          v-if="scope.row.status">{{getProdStatus(scope.row.status,scope.row.updatable)}}</span>
-                    <span v-else><i class="el-icon-loading"></i></span>
-                  </template>
-                </el-table-column>
                 <el-table-column width="300"
                                  label="更新信息（时间/操作人）">
-                  <template slot-scope="scope">
-                    <div><i class="el-icon-time"></i>
-                      {{ $utils.convertTimestamp(scope.row.update_time) }} <i
-                         class="el-icon-user"></i>
-                      <span>{{scope.row.update_by}}</span>
-                    </div>
-                  </template>
                 </el-table-column>
               </el-table>
             </div>
-          </div>
-          <div class="workflow">
-            <h4 class="section-title">工作流信息</h4>
           </div>
         </section>
       </div>
@@ -190,9 +176,8 @@
   </div>
 </template>
 <script>
-// import { getProductInfo, getBuildConfigsAPI,  getClusterListAPI, getProjectInfoAPI, listProductAPI, usersAPI } from '@api'
+// import { getProductInfo, getBuildConfigsAPI, deleteProjectAPI, getClusterListAPI, getProjectInfoAPI, listProductAPI, usersAPI, downloadDevelopCLIAPI } from '@api'
 import { mapGetters } from 'vuex'
-
 export default {
   data () {
     return {
@@ -258,7 +243,53 @@ export default {
         }
       }
     },
-
+    deleteProject () {
+      const services = _.flattenDeep(this.currentProject.services)
+      const envNames = this.envList.map((element) => { return element.env_name })
+      const buildConfigs = this.buildConfigs.map((element) => { return element.name })
+      const workflows = this.workflows.map((element) => { return element.name })
+      const allWorkflows = workflows
+      const htmlTemplate = `
+      <span><b>服务：</b>${services.length > 0 ? services.join(', ') : '无'}</span><br>
+      <span><b>构建：</b>${buildConfigs.length > 0 ? buildConfigs.join(', ') : '无'}</span><br>
+      <span><b>环境：</b>${envNames.length > 0 ? envNames.join(', ') : '无'}</span><br>
+      <span><b>工作流：</b>${allWorkflows.length > 0 ? allWorkflows.join(', ') : '无'}</span>
+      `
+      const projectName = this.projectName
+      this.$prompt(`该项目下的资源会同时被删除<span style="color:red">请谨慎操作！！</span><br> ${htmlTemplate}`, `请输入项目名 ${projectName} 确认删除`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        dangerouslyUseHTMLString: true,
+        customClass: 'product-prompt',
+        confirmButtonClass: 'el-button el-button--danger',
+        inputValidator: project_name => {
+          if (project_name === projectName) {
+            return true
+          } else if (project_name === '') {
+            return '请输入项目名'
+          } else {
+            return '项目名不相符'
+          }
+        }
+      })
+        .then(({ value }) => {
+          deleteProjectAPI(projectName).then(
+            response => {
+              this.$message({
+                type: 'success',
+                message: '项目删除成功'
+              })
+              this.$router.push('/v1/projects')
+            }
+          )
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消删除'
+          })
+        })
+    },
     getProject (projectName) {
       getProjectInfoAPI(projectName).then((res) => {
         this.currentProject = res
@@ -279,17 +310,32 @@ export default {
         this.detailLoading = false
       })
     },
-
     getUserList () {
       const orgId = this.currentOrganizationId
       usersAPI(orgId).then((res) => {
         this.usersList = res.data
+      })
+    },
+    selectSystemToDownloadCLI (check) {
+      downloadDevelopCLIAPI(check).then(res => {
+        const aEle = document.createElement('a')
+        if (aEle.download !== undefined) {
+          aEle.setAttribute('href', res)
+          aEle.setAttribute('download', true)
+          document.body.appendChild(aEle)
+          aEle.click()
+          document.body.removeChild(aEle)
+        }
       })
     }
   },
   computed: {
     projectName () {
       return this.$route.params.project_name
+    },
+    workflows () {
+      const list = this.$utils.filterObjectArrayByKey('name', '', this.workflowList)
+      return list.filter(w => w.product_tmpl_name === this.projectName)
     },
     ...mapGetters([
       'workflowList'
@@ -306,6 +352,12 @@ export default {
         })
         : []
     },
+    isProjectAdmin () {
+      if (this.$utils.roleCheck().superAdmin) {
+        return true
+      }
+      return this.currentProject.user_ids ? this.currentProject.user_ids.includes(this.$store.state.login.userinfo.info.id) : false
+    }
   },
   components: {
   },
