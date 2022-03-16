@@ -74,16 +74,28 @@
         历史任务
       </div>
     </el-card>
+
+    <el-dialog :visible.sync="taskDialogVisible"
+               title="运行 产品-工作流"
+               custom-class="run-workflow"
+               width="60%"
+               class="dialog">
+      <run-workflow v-if="taskDialogVisible"
+                    :workflowName="workflowName"
+                    :workflowMeta="workflow"
+                    :targetProduct="workflow.product_tmpl_name"
+                    :forcedUserInput="forcedUserInput"
+                    @success="hideAndFetchHistory"></run-workflow>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 // import { workflowAPI, deleteWorkflowAPI, workflowTaskListAPI } from '@api'
-// import bus from '@utils/event_bus'
+// import runWorkflow from './common/run_workflow.vue'
 export default {
   components: {
   },
-
   data () {
     return {
       workflow: {},
@@ -103,14 +115,99 @@ export default {
     workflowName () {
       return this.$route.params.workflow_name
     },
+    testReportExists () {
+      const items = []
+      this.workflowTasks.forEach(element => {
+        if (element.test_reports) {
+          items.push(element.task_id)
+        }
+      })
+      if (items.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
+    async refreshHistoryTask () {
+      const res = await workflowTaskListAPI(this.workflowName, this.pageStart, this.pageSize)
+      this.processTestData(res)
+      this.workflowTasks = res.data
+      this.total = res.total
+      if (!this.timeTimeoutFinishFlag) {
+        this.timerId = setTimeout(this.refreshHistoryTask, 3000)// 保证内存中只有一个定时器
+      }
+    },
+    processTestData (res) {
+      res.data.forEach(element => {
+        if (element.test_reports) {
+          const testArray = []
+          for (const testName in element.test_reports) {
+            const val = element.test_reports[testName]
+            if (typeof val === 'object') {
+              const struct = {
+                success: null,
+                total: null,
+                name: null,
+                type: null,
+                time: null,
+                img_id: null
+              }
+              if (val.functionTestSuite) {
+                struct.name = testName
+                struct.type = 'function'
+                struct.success = val.functionTestSuite.successes ? val.functionTestSuite.successes : (val.functionTestSuite.tests - val.functionTestSuite.failures - val.functionTestSuite.errors)
+                struct.total = val.functionTestSuite.tests
+                struct.time = val.functionTestSuite.time
+              }
+              testArray.push(struct)
+            }
+          }
+          element.testSummary = testArray
+        }
+      })
+    },
+    fetchHistory (start, max) {
+      workflowTaskListAPI(this.workflowName, start, max).then(res => {
+        this.processTestData(res)
+        this.workflowTasks = res.data
+        this.total = res.total
+      })
+    },
+
+    hideAndFetchHistory () {
+      this.taskDialogVisible = false
+      this.fetchHistory(0, this.pageSize)
+    },
 
     startTask () {
       this.taskDialogVisible = true
       this.forcedUserInput = {}
     },
-
+    removeWorkflow () {
+      const name = this.workflowName
+      this.$prompt('输入工作流名称确认', '删除工作流 ' + name, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        confirmButtonClass: 'el-button el-button--danger',
+        inputValidator: pipe_name => {
+          if (pipe_name === name) {
+            return true
+          } else if (pipe_name === '') {
+            return '请输入工作流名称'
+          } else {
+            return '名称不相符'
+          }
+        }
+      }).then(({ value }) => {
+        deleteWorkflowAPI(name).then(() => {
+          this.$message.success('删除成功')
+          this.$router.push(`/v1/projects/detail/${this.projectName}/pipelines`)
+          this.$store.dispatch('refreshWorkflowList')
+        })
+      })
+    },
     rerun (task) {
       this.taskDialogVisible = true
 
@@ -137,24 +234,28 @@ export default {
     clearTimeout(this.timerId)
   },
   mounted () {
+    workflowAPI(this.workflowName).then(res => {
+      this.workflow = res
+    })
     this.projectName = this.$route.params.project_name
+    this.refreshHistoryTask()
     bus.$emit('set-topbar-title', {
       title: '',
       breadcrumb: [
-        { title: '项目', url: '/v1/projects' },
-        { title: this.projectName, url: `/v1/projects/detail/${this.projectName}` },
-        { title: '工作流', url: `/v1/projects/detail/${this.projectName}/pipelines` },
+        { title: '项目', url: '' },
+        { title: this.projectName, url: `` },
+        { title: '工作流', url: `` },
         { title: this.workflowName, url: '' }]
     })
     bus.$emit('set-sub-sidebar-title', {
       title: this.projectName,
       url: `/v1/projects/detail/${this.projectName}`,
       routerList: [
-        { name: '工作流', url: `/v1/projects/detail/${this.projectName}/pipelines` },
-        { name: '集成环境', url: `/v1/projects/detail/${this.projectName}/envs` },
-        { name: '服务', url: `/v1/projects/detail/${this.projectName}/services` },
-        { name: '构建', url: `/v1/projects/detail/${this.projectName}/builds` },
-        { name: '测试', url: `/v1/projects/detail/${this.projectName}/test` }]
+        { name: '工作流', url: `` },
+        { name: '集成环境', url: `` },
+        { name: '服务', url: `` },
+        { name: '构建', url: `` },
+        { name: '测试', url: `` }]
     })
   },
 }
