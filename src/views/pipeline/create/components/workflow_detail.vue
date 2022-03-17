@@ -38,6 +38,31 @@
           <el-col :span="4">
             <div class="grid-content item-title process"><i class="el-icon-finished"></i> 流程</div>
           </el-col>
+          <el-col :span="20">
+            <div class="grid-content process">
+              <ul>
+                <span v-if="!$utils.isEmpty(workflow.build_stage) && workflow.build_stage.enabled">
+                  <el-tag size="small">构建部署</el-tag>
+                  <span v-if="workflow.test_stage.enabled||workflow.distribute_stage.enabled"
+                        class="step-arrow"><i class="el-icon-right"></i></span>
+                </span>
+                <span
+                  v-if="!$utils.isEmpty(workflow.artifact_stage) && workflow.artifact_stage.enabled">
+                  <el-tag size="small">交付物部署</el-tag>
+                  <span v-if="workflow.test_stage.enabled||workflow.distribute_stage.enabled"
+                        class="step-arrow"><i class="el-icon-right"></i></span>
+                </span>
+                <span
+                  v-if="(!$utils.isEmpty(workflow.test_stage) && workflow.test_stage.enabled)">
+                  <el-tag size="small">测试</el-tag>
+                  <span v-if="workflow.distribute_stage.enabled"
+                        class="step-arrow"><i class="el-icon-right"></i></span>
+                </span>
+                <el-tag v-if="!$utils.isEmpty(workflow.distribute_stage) &&  workflow.distribute_stage.enabled"
+                        size="small">分发</el-tag>
+              </ul>
+            </div>
+          </el-col>
         </el-row>
         <el-row :gutter="0">
           <el-col :span="4">
@@ -53,6 +78,14 @@
                    class="el-icon-video-play start-build"></i>
               </el-tooltip>
               <template>
+                <el-tooltip effect="dark"
+                            content="编辑工作流"
+                            placement="top">
+                  <router-link :to="`/productpipelines/edit/${workflowName}`"
+                               class="not-anchor">
+                    <i class="el-icon-edit-outline edit-pipeline"></i>
+                  </router-link>
+                </el-tooltip>
                 <el-tooltip effect="dark"
                             content="删除工作流"
                             placement="top">
@@ -73,6 +106,20 @@
            class="block-title">
         历史任务
       </div>
+      <task-list :taskList="workflowTasks"
+                 :total="total"
+                 :pageSize="pageSize"
+                 :projectName="projectName"
+                 :baseUrl="`/v1/projects/detail/${projectName}/pipelines/multi/${workflowName}`"
+                 :workflowName="workflowName"
+                 :functionTestBaseUrl="`/v1/projects/detail/${projectName}/pipelines/multi/testcase/${workflowName}`"
+                 @cloneTask="rerun"
+                 @currentChange="changeTaskPage"
+                 showEnv
+                 showTestReport
+                 showServiceNames
+                 showOperation>
+      </task-list>
     </el-card>
 
     <el-dialog :visible.sync="taskDialogVisible"
@@ -94,8 +141,6 @@
 // import { workflowAPI, deleteWorkflowAPI, workflowTaskListAPI } from '@api'
 // import runWorkflow from './common/run_workflow.vue'
 export default {
-  components: {
-  },
   data () {
     return {
       workflow: {},
@@ -175,7 +220,11 @@ export default {
         this.total = res.total
       })
     },
-
+    changeTaskPage (val) {
+      const start = (val - 1) * this.pageSize
+      this.pageStart = start
+      this.fetchHistory(start, this.pageSize)
+    },
     hideAndFetchHistory () {
       this.taskDialogVisible = false
       this.fetchHistory(0, this.pageSize)
@@ -242,22 +291,25 @@ export default {
     bus.$emit('set-topbar-title', {
       title: '',
       breadcrumb: [
-        { title: '项目', url: '' },
-        { title: this.projectName, url: `` },
-        { title: '工作流', url: `` },
+        { title: '项目', url: '/v1/projects' },
+        { title: this.projectName, url: `/v1/projects/detail/${this.projectName}` },
+        { title: '工作流', url: `/v1/projects/detail/${this.projectName}/pipelines` },
         { title: this.workflowName, url: '' }]
     })
     bus.$emit('set-sub-sidebar-title', {
       title: this.projectName,
       url: `/v1/projects/detail/${this.projectName}`,
       routerList: [
-        { name: '工作流', url: `` },
-        { name: '集成环境', url: `` },
-        { name: '服务', url: `` },
-        { name: '构建', url: `` },
-        { name: '测试', url: `` }]
+        { name: '工作流', url: `/v1/projects/detail/${this.projectName}/pipelines` },
+        { name: '集成环境', url: `/v1/projects/detail/${this.projectName}/envs` },
+        { name: '服务', url: `/v1/projects/detail/${this.projectName}/services` },
+        { name: '构建', url: `/v1/projects/detail/${this.projectName}/builds` },
+        { name: '测试', url: `/v1/projects/detail/${this.projectName}/test` }]
     })
   },
+  components: {
+    runWorkflow
+  }
 }
 </script>
 
