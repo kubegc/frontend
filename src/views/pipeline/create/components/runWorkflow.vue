@@ -6,6 +6,39 @@
           <span style="margin-left: 10px;">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
+      <!-- <el-table-column width="200px" label="环境信息">
+        <template slot-scope="scope">
+          <a
+            v-if="scope.row.env_name"
+            class="env-name"
+            :href="`/v1/projects/detail/${scope.row.product_tmpl_name}/envs/detail?envName=${scope.row.env_name}`"
+            target="_blank"
+            >{{ `${scope.row.env_name}` }}</a
+          >
+        </template>
+      </el-table-column> -->
+      <!-- <el-table-column label="服务入口">
+        <template slot-scope="scope">
+          <div
+            v-for="(ingress, ingress_index) in scope.row.ingress_infos"
+            :key="ingress_index"
+          >
+            <div
+              v-for="(item, host_index) in scope.row.ingress_infos[
+                ingress_index
+              ]['host_info']"
+              :key="host_index"
+            >
+              <a
+                style="color: #1989fa;"
+                :href="`http://${item.host}`"
+                target="_blank"
+                >{{ item.host }}</a
+              >
+            </div>
+          </div>
+        </template>
+      </el-table-column> -->
       <el-table-column width="300px" label="包含步骤">
         <template slot-scope="scope">
           <span>
@@ -101,7 +134,9 @@
   </div>
 </template>
 <script>
+// import RunWorkflow from '../../pipeline/common/run_workflow.vue'
 // import { getProjectIngressAPI, generatePipeAPI } from '@api'
+
 export default {
   name: 'runWorkflow',
   data () {
