@@ -1,0 +1,587 @@
+<template>
+  <el-form class="run-workflow"
+           label-width="80px">
+    <el-form-item prop="productName"
+                  label="集成环境">
+      <el-select :value="runner.product_tmpl_name&&runner.namespace ? `${runner.product_tmpl_name} / ${runner.namespace}` : ''"
+                 @change="precreate"
+                 size="medium"
+                 :disabled="specificEnv"
+                 class="full-width">
+        <el-option v-for="pro of matchedProducts"
+                   :key="`${pro.product_name} / ${pro.env_name}`"
+                   :label="`${pro.product_name} / ${pro.env_name}${pro.is_prod?'（生产）':''}`"
+                   :value="`${pro.product_name} / ${pro.env_name}`">
+          <span>{{`${pro.product_name} / ${pro.env_name}`}}
+            <el-tag v-if="pro.is_prod"
+                    type="danger"
+                    size="mini"
+                    effect="light">
+              生产
+            </el-tag>
+          </span>
+        </el-option>
+        <el-option label=""
+                   value="">
+          <router-link style="color: #909399;"
+                       :to="`/v1/projects/detail/${targetProduct}/envs/create`">
+            {{`(环境不存在或者没有权限，点击创建环境)`}}
+          </router-link>
+        </el-option>
+      </el-select>
+      <el-tooltip v-if="specificEnv"
+                  effect="dark"
+                  content="该工作流已指定环境运行，可通过修改 工作流->基本信息 来解除指定环境绑定"
+                  placement="top">
+        <span><i style="color: #909399;"
+             class="el-icon-question"></i></span>
+      </el-tooltip>
+
+    </el-form-item>
+
+    <div v-loading="precreateLoading">
+      <el-form-item label="构建">
+        <el-select v-model="pickedBuildTarget"
+                   filterable
+                   clearable
+                   multiple
+                   value-key="name"
+                   @change="pickBuildConfig"
+                   size="medium"
+                   class="full-width">
+          <el-option v-for="(build,index) of buildTargets"
+                     :key="index"
+                     :label="build.name"
+                     :value="build">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="服务">
+        <el-select v-model="pickedTargetNames"
+                   filterable
+                   multiple
+                   clearable
+                   value-key="key"
+                   size="medium"
+                   class="full-width">
+          <el-option v-for="(ser,index) of allServiceNames"
+                     :key="index"
+                     :disabled="!ser.has_build"
+                     :label="ser.name"
+                     :value="ser">
+            <span v-if="!ser.has_build">
+              <router-link style="color: #ccc;"
+                           :to="`/v1/projects/detail/${runner.product_tmpl_name}/builds`">
+                {{`${ser.name}(${ser.service_name}) (服务不存在构建，点击添加构建)`}}
+              </router-link>
+            </span>
+            <span v-else>
+              <span>{{ser.name}}</span><span style="color: #ccc;"> ({{ser.service_name}})</span>
+            </span>
+          </el-option>
+        </el-select>
+        <template>
+          <el-button size="small"
+                     @click="fastSelect=!fastSelect"
+                     type="text">快捷选服务
+          </el-button>
+          <el-tooltip effect="dark"
+                      content="通过指定构建配置间接选择出需要的服务"
+                      placement="top">
+            <span><i style="color: #909399;"
+                 class="el-icon-question"></i></span>
+          </el-tooltip>
+        </template>
+
+      </el-form-item>
+      <!-- Build -->
+    </div>
+
+    <div v-if="artifactDeployEnabled"
+         v-loading="precreateLoading">
+      <el-form-item label="服务">
+        <el-select v-model="pickedTargetNames"
+                   value-key="key"
+                   filterable
+                   multiple
+                   clearable
+                   size="medium"
+                   class="full-width">
+          <el-option v-for="(ser,index) of allServiceNames"
+                     :key="index"
+                     :label="ser.name"
+                     :value="ser">
+            <span>
+              <span>{{ser.name}}</span><span style="color: #ccc;"> ({{ser.service_name}})</span>
+            </span>
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="镜像仓库">
+        <el-select v-model="pickedRegistry"
+                   filterable
+                   clearable
+                   @change="changeRegistry"
+                   size="medium"
+                   class="full-width">
+          <el-option v-for="(reg,index) of allRegistry"
+                     :key="index"
+                     :label="`${reg.reg_addr}/${reg.namespace}`"
+                     :value="reg.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-table v-if="pickedTargets.length > 0"
+                :data="pickedTargets"
+                empty-text="无"
+                class="service-deploy-table">
+        <el-table-column prop="name"
+                         label="服务"
+                         width="150px">
+        </el-table-column>
+        <el-table-column label="镜像">
+          <template slot-scope="scope">
+            <div class="workflow-build-rows">
+              <el-row class="build-row">
+                <template>
+                  <el-col :span="12">
+                    <el-select v-if="imageMap[scope.row.name] && imageMap[scope.row.name].length > 0"
+                               v-model="scope.row.image"
+                               @visible-change="changeVirtualData($event, scope.row, scope.$index)"
+                               filterable
+                               clearable
+                               size="small"
+                               style="width: 100%;"
+                               placeholder="请选择镜像">
+                      <virtual-scroll-list :ref="`scrollListRef${scope.$index}`"
+                                           style="height: 272px; overflow-y: auto;"
+                                           :size="virtualData.size"
+                                           :keeps="virtualData.keeps"
+                                           :start="startAll[scope.row.name]"
+                                           :dataKey="(img)=>{ return img.name+'-'+img.tag}"
+                                           :dataSources="imageMap[scope.row.name]"
+                                           :dataComponent="itemComponent">
+                      </virtual-scroll-list>
+                    </el-select>
+                    <el-tooltip v-else
+                                content="请求镜像失败，请手动输入镜像"
+                                placement="top"
+                                popper-class="gray-popper">
+                      <el-input v-model="scope.row.image"
+                                class="short-input"
+                                size="small"
+                                placeholder="请填写镜像"></el-input>
+                    </el-tooltip>
+                  </el-col>
+                </template>
+              </el-row>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div v-if="artifactDeployEnabled && !isHelm"
+          class="create-version">
+        <div class="create-checkbox">
+          <el-checkbox v-model="createVersion">创建版本</el-checkbox>
+        </div>
+        <el-form v-if="createVersion"
+                  :model="versionInfo"
+                  label-width="80px"
+                  ref="versionForm"
+                  :rules="versionRules">
+          <el-form-item label="版本名称"
+                        prop="version">
+            <el-input class="full-width"
+                      v-model="versionInfo.version"
+                      size="medium"
+                      autocomplete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="版本描述"
+                        prop="desc">
+            <el-input class="full-width"
+                      type="textarea"
+                      autosize
+                      placeholder="请输入版本描述"
+                      v-model="versionInfo.desc">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="标签"
+                        prop="labels">
+            <el-input class="full-width"
+                      type="textarea"
+                      autosize
+                      placeholder="请输入版本标签，多个标签用 ; 分割"
+                      v-model="versionInfo.labelStr">
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+    <!--  Test -->
+    <div v-if="runner.tests.length > 0">
+      <workflow-test-rows :runnerTests="runner.tests"></workflow-test-rows>
+    </div>
+
+    <div v-if="buildDeployEnabled"
+         class="advanced-setting">
+      <el-collapse v-model="activeNames">
+        <el-collapse-item title="高级设置"
+                          name="1">
+          <el-checkbox v-model="runner.reset_cache">不使用工作空间缓存
+            <el-tooltip effect="dark"
+                        content="可能会增加任务时长。如果构建中不使用工作空间缓存，该设置会被忽略"
+                        placement="top">
+              <span><i style="color: #909399;"
+                   class="el-icon-question"></i></span>
+            </el-tooltip>
+          </el-checkbox>
+          <br>
+        </el-collapse-item>
+      </el-collapse>
+    </div>
+    <div class="start-task">
+      <el-button @click="submit"
+                 :loading="startTaskLoading"
+                 type="primary"
+                 size="small">
+        {{ startTaskLoading?'启动中':'启动任务' }}
+      </el-button>
+
+    </div>
+
+  </el-form>
+</template>
+
+<script>
+// import { listProductAPI, precreateWorkflowTaskAPI, getAllBranchInfoAPI, runWorkflowAPI, getBuildTargetsAPI, getRegistryWhenBuildAPI, imagesAPI, getSingleProjectAPI } from '@api'
+export default {
+  data () {
+    return {
+      itemComponent: virtualListItem,
+      allRegistry: [],
+      activeNames: [],
+      buildTargets: [],
+      pickedBuildTarget: [],
+      imageMap: [],
+      pickedRegistry: '',
+      specificEnv: true,
+      runner: {
+        workflow_name: '',
+        product_tmpl_name: '',
+        description: '',
+        namespace: '',
+        targets: [],
+        tests: []
+      },
+      products: [],
+      matchedProducts: [],
+      repoInfoMap: {},
+      precreateLoading: false,
+      startTaskLoading: false,
+      fastSelect: false,
+      createVersion: false,
+      isHelm: false,
+      versionInfo: {
+        version: '',
+        enabled: true,
+        desc: '',
+        labels: [],
+        labelStr: ''
+      },
+      virtualData: {
+        keeps: 20,
+        size: 34,
+        start: 0
+      },
+      startAll: {}
+    }
+  },
+  computed: {
+    artifactDeployEnabled () {
+      return !!((this.workflowMeta.artifact_stage && this.workflowMeta.artifact_stage.enabled))
+    },
+    buildDeployEnabled () {
+      return this.workflowMeta.build_stage.enabled
+    },
+    distributeEnabled () {
+      return !!this.runner.distribute_enabled
+    },
+    allServiceNames () {
+      let allNames = []
+      if (this.buildDeployEnabled) {
+        allNames = sortBy(this.runner.targets.map(element => {
+          element.key = element.name + '/' + element.service_name
+          return element
+        }), 'service_name')
+      } else if (this.artifactDeployEnabled) {
+        const k8sServices = this.runner.targets.filter(element => {
+          for (let index = 0; index < element.deploy.length; index++) {
+            const deployItem = element.deploy[index]
+            if (deployItem.type !== 'pm') {
+              return element
+            }
+          }
+          return false
+        })
+        allNames = sortBy(k8sServices.map(element => {
+          element.key = element.name + '/' + element.service_name
+          return element
+        }), 'service_name')
+      }
+      this.getServiceImgs(allNames.map(service => service.name)) // .filter(service => service.has_build)
+      return orderBy(allNames, 'name')
+    },
+    targetsMap () {
+      return keyBy(this.runner.targets, (i) => {
+        return i.service_name + '/' + i.name
+      })
+    },
+    pickedTargets: {
+      get () {
+        return this.runner.targets.filter(t => t.picked)
+      }
+    },
+    pickedTargetNames: {
+      get () {
+        return this.runner.targets.filter(t => t.picked)
+      },
+      set (val) {
+        for (const obj of this.runner.targets) {
+          obj.picked = false
+        }
+        for (const { service_name, name } of val) {
+          if (this.targetsMap[`${service_name}/${name}`]) {
+            this.targetsMap[`${service_name}/${name}`].picked = true
+          }
+        }
+      }
+    },
+    buildRepos () {
+      return this.$utils.flattenArray(
+        this.runner.targets.map(tar => tar.build.repos)
+      )
+    },
+    testRepos () {
+      return this.$utils.flattenArray(
+        this.runner.tests.map(t => t.builds)
+      )
+    },
+    allRepos () {
+      if (this.buildDeployEnabled) {
+        return this.buildRepos.concat(this.testRepos)
+      } else {
+        return this.testRepos
+      }
+    },
+    allReposDeduped () {
+      return this.$utils.deduplicateArray(
+        this.allRepos,
+        re => `${re.repo_owner}/${re.repo_name}`
+      )
+    },
+    allReposForQuery () {
+      return this.allReposDeduped.map(re => {
+        if (re.source === 'codehub') {
+          return {
+            source: re.source,
+            repo_owner: re.repo_owner,
+            repo: re.repo_name,
+            default_branch: re.branch,
+            project_uuid: re.project_uuid,
+            repo_uuid: re.repo_uuid,
+            repo_id: re.repo_id,
+            codehost_id: re.codehost_id
+          }
+        } else {
+          return {
+            source: re.source,
+            repo_owner: re.repo_owner,
+            repo: re.repo_name,
+            default_branch: re.branch,
+            codehost_id: re.codehost_id
+          }
+        }
+      })
+    },
+    haveForcedInput () {
+      return !this.$utils.isEmpty(this.forcedUserInput)
+    },
+    forcedInputTargetMap () {
+      if (this.haveForcedInput) {
+        if (this.artifactDeployEnabled) {
+          return keyBy(this.forcedUserInput.artifactArgs, (i) => {
+            return i.service_name + '/' + i.name
+          })
+        }
+        return keyBy(this.forcedUserInput.targets, (i) => {
+          return i.service_name + '/' + i.name
+        })
+      }
+      return {}
+    }
+  },
+  watch: {
+    allRepos: {
+      handler (newVal) {
+        for (const repo of newVal) {
+          this.$set(
+            repo, 'showBranch',
+            (this.distributeEnabled && repo.releaseMethod === 'branch') ||
+            !this.distributeEnabled
+          )
+          this.$set(repo, 'showTag', this.distributeEnabled && repo.releaseMethod === 'tag')
+          this.$set(repo, 'showSwitch', this.distributeEnabled)
+          this.$set(repo, 'showPR', !this.distributeEnabled)
+        }
+      },
+      deep: true
+    }
+  },
+  methods: {
+    async checkProjectFeature (projectName) {
+      const res = await getSingleProjectAPI(projectName)
+      if (res.product_feature) {
+        if (res.product_feature.basic_facility === 'kubernetes') {
+          if (res.product_feature.deploy_type === 'helm') {
+            this.isHelm = true
+          }
+        }
+      }
+    },
+    changeVirtualData (event, row, index) {
+      const opt = event ? 0 : -1
+      const id = this.imageMap[row.name].map(img => img.full).indexOf(row.image) + opt
+      if (this.startAll[row.name]) {
+        this.startAll[row.name] = id
+      } else {
+        this.$set(this.startAll, row.name, id)
+      }
+      this.$refs[`scrollListRef${index}`].virtual.updateRange(id, id + this.virtualData.keeps)
+    },
+    getServiceImgs (val) {
+      return new Promise((resolve, reject) => {
+        const registryId = this.pickedRegistry
+        imagesAPI(uniq(val), registryId).then((images) => {
+          images = images || []
+          for (const image of images) {
+            image.full = `${image.name}:${image.tag}`
+          }
+          this.imageMap = this.$utils.makeMapOfArray(images, 'name')
+          resolve()
+        })
+      })
+    },
+    pickBuildConfig () {
+      let allBuildTargets = []
+      this.pickedBuildTarget.forEach(t => {
+        allBuildTargets = allBuildTargets.concat(t.targets)
+      })
+      this.pickedTargetNames = this.allServiceNames.filter(t => {
+        const index = allBuildTargets.findIndex(i => {
+          return i.service_name === t.service_name && i.service_module === t.name
+        })
+        if (index >= 0) {
+          return t
+        }
+        return false
+      })
+    }
+  },
+  created () {
+    const projectName = this.workflowMeta.product_tmpl_name
+    this.artifactDeployEnabled && getRegistryWhenBuildAPI().then((res) => {
+      this.allRegistry = res
+      if (this.forcedUserInput.registryId) {
+        this.pickedRegistry = this.forcedUserInput.registryId
+        this.getServiceImgs(this.forcedUserInput.artifactArgs.map(r => r.name)).then(() => {
+          this.forcedUserInput.artifactArgs.forEach((art, index) => {
+            this.changeVirtualData(false, art, index)
+          })
+        })
+        return
+      }
+      if (res && res.length > 0) {
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].is_default) {
+            this.pickedRegistry = res[i].id
+            break
+          };
+        }
+      }
+    })
+    if (this.forcedUserInput && this.forcedUserInput.registryId) {
+      if (this.forcedUserInput.versionArgs && this.forcedUserInput.versionArgs.version) {
+        this.createVersion = true
+        Object.assign(this.versionInfo, this.forcedUserInput.versionArgs)
+        this.versionInfo.labelStr = this.versionInfo.labels.join(';')
+      }
+    } else {
+      this.buildDeployEnabled && getBuildTargetsAPI(projectName).then(res => {
+        this.buildTargets = res
+      })
+    }
+  },
+  props: {
+    workflowName: {
+      type: String,
+      required: true
+    },
+    targetProduct: {
+      type: String,
+      required: true
+    },
+    workflowMeta: {
+      type: Object,
+      required: true
+    },
+    forcedUserInput: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
+  components: {}
+}
+</script>
+
+<style lang="less">
+.run-workflow {
+  .service-deploy-table {
+    width: auto;
+    margin-bottom: 15px;
+    padding: 0 5px;
+  }
+
+  .advanced-setting {
+    margin-bottom: 10px;
+    padding: 0 0;
+  }
+
+  .el-input,
+  .el-select {
+    &.full-width {
+      width: 40%;
+    }
+  }
+
+  .create-version {
+    .el-input,
+    .el-textarea,
+    .el-select {
+      &.full-width {
+        width: 40%;
+      }
+    }
+
+    .create-checkbox {
+      margin-bottom: 15px;
+    }
+  }
+
+  .start-task {
+    margin-bottom: 10px;
+    margin-left: 10px;
+  }
+}
+</style>
