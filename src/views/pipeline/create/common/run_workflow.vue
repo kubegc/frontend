@@ -21,7 +21,8 @@
             </el-tag>
           </span>
         </el-option>
-        <el-option label=""
+        <el-option v-if="matchedProducts.length===0"
+                   label=""
                    value="">
           <router-link style="color: #909399;"
                        :to="`/v1/projects/detail/${targetProduct}/envs/create`">
@@ -39,8 +40,10 @@
 
     </el-form-item>
 
-    <div v-loading="precreateLoading">
-      <el-form-item label="构建">
+    <div v-if="buildDeployEnabled"
+         v-loading="precreateLoading">
+      <el-form-item v-if="fastSelect"
+                    label="构建">
         <el-select v-model="pickedBuildTarget"
                    filterable
                    clearable
@@ -80,7 +83,7 @@
             </span>
           </el-option>
         </el-select>
-        <template>
+        <template v-if="!fastSelect">
           <el-button size="small"
                      @click="fastSelect=!fastSelect"
                      type="text">快捷选服务
@@ -95,6 +98,9 @@
 
       </el-form-item>
       <!-- Build -->
+      <div v-if="pickedTargets.length > 0">
+        <workflow-build-rows :pickedTargets="pickedTargets"></workflow-build-rows>
+      </div>
     </div>
 
     <div v-if="artifactDeployEnabled"
@@ -236,6 +242,14 @@
             </el-tooltip>
           </el-checkbox>
           <br>
+          <el-checkbox v-model="runner.ignore_cache">不使用 Docker 缓存
+            <el-tooltip effect="dark"
+                        content="只对配置了镜像构建步骤的构建生效"
+                        placement="top">
+              <span><i style="color: #909399;"
+                   class="el-icon-question"></i></span>
+            </el-tooltip>
+          </el-checkbox>
         </el-collapse-item>
       </el-collapse>
     </div>
@@ -484,6 +498,90 @@ export default {
           return t
         }
         return false
+      })
+    },
+    precreate (proNameAndNamespace) {
+      const [, namespace] = proNameAndNamespace.split(' / ')
+      this.precreateLoading = true
+      precreateWorkflowTaskAPI(this.workflowName, namespace).then(res => {
+        // prepare targets for view
+        for (let i = 0; i < res.targets.length; i++) {
+          if (this.haveForcedInput) {
+            const old = res.targets[i]
+            const forcedObj = this.forcedInputTargetMap[`${old.service_name}/${old.name}`]
+            if (forcedObj) {
+              res.targets.splice(
+                i,
+                1,
+                Object.assign(this.$utils.cloneObj(forcedObj), { deploy: old.deploy, has_build: old.has_build })
+              )
+            }
+          }
+          const maybeNew = res.targets[i]
+          maybeNew.picked = this.haveForcedInput && (`${maybeNew.service_name}/${maybeNew.name}` in this.forcedInputTargetMap)
+        }
+        // prepare deploys for view
+        for (const tar of res.targets) {
+          const forced = this.haveForcedInput ? this.forcedInputTargetMap[`${tar.service_name}/${tar.name}`] : null
+          const depMap = forced ? this.$utils.arrayToMap((forced.deploy || []), this.deployID) : {}
+          for (const dep of tar.deploy) {
+            this.$set(dep, 'picked', !forced || (this.deployID(dep) in depMap))
+          }
+        }
+
+        if (this.haveForcedInput) {
+          res.product_tmpl_name = this.forcedUserInput.product_tmpl_name
+          res.description = this.forcedUserInput.description
+          res.tests = this.forcedUserInput.tests
+        }
+
+        this.runner = res
+        this.precreateLoading = false
+        getAllBranchInfoAPI({ infos: this.allReposForQuery }, this.distributeEnabled ? 'bt' : 'bp').then(res => {
+          // make these repo info more friendly
+          res.forEach(repo => {
+            if (repo.prs) {
+              repo.prs.forEach(element => {
+                element.pr = element.id
+              })
+              repo.branchPRsMap = this.$utils.arrayToMapOfArrays(repo.prs, 'targetBranch')
+            } else {
+              repo.branchPRsMap = {}
+            }
+            if (repo.branches) {
+              repo.branchNames = repo.branches.map(b => b.name)
+            } else {
+              repo.branchNames = []
+            }
+          })
+          // and make a map
+          this.repoInfoMap = this.$utils.arrayToMap(res, re => `${re.repo_owner}/${re.repo}`)
+
+          /* prepare build/test repo for view
+             see watcher for allRepos */
+          for (const repo of this.allRepos) {
+            this.$set(repo, '_id_', this.repoID(repo))
+            const repoInfo = this.repoInfoMap[repo._id_]
+            this.$set(repo, 'branchNames', repoInfo && repoInfo.branchNames)
+            this.$set(repo, 'branchPRsMap', repoInfo && repoInfo.branchPRsMap)
+            this.$set(repo, 'tags', (repoInfo && repoInfo.tags) ? repoInfo.tags : [])
+            this.$set(repo, 'prNumberPropName', 'pr')
+            this.$set(repo, 'errorMsg', repoInfo.error_msg || '')
+            if (repo.tag) {
+              this.$set(repo, 'releaseMethod', 'tag')
+            } else {
+              this.$set(repo, 'releaseMethod', 'branch')
+            }
+            // make sure branch/pr/tag is reactive
+            this.$set(repo, 'branch', repo.branch || '')
+            this.$set(repo, repo.prNumberPropName, repo[repo.prNumberPropName] || null)
+            this.$set(repo, 'tag', repo.tag || '')
+          }
+        }).catch(() => {
+          this.precreateLoading = false
+        })
+      }).catch(() => {
+        this.precreateLoading = false
       })
     }
   },
