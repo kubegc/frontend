@@ -269,6 +269,7 @@
 <script>
 // import { listProductAPI, precreateWorkflowTaskAPI, getAllBranchInfoAPI, runWorkflowAPI, getBuildTargetsAPI, getRegistryWhenBuildAPI, imagesAPI, getSingleProjectAPI } from '@api'
 export default {
+  components: { },
   data () {
     return {
       itemComponent: virtualListItem,
@@ -472,6 +473,23 @@ export default {
       }
       this.$refs[`scrollListRef${index}`].virtual.updateRange(id, id + this.virtualData.keeps)
     },
+    changeRegistry (val) {
+      if (val) {
+        this.imageMap = []
+        const allClickableServeiceNames = this.allServiceNames.map(service => service.name)
+        imagesAPI(uniq(allClickableServeiceNames), val).then((images) => {
+          images = images || []
+          for (const image of images) {
+            image.full = `${image.name}:${image.tag}`
+          }
+          this.imageMap = this.$utils.makeMapOfArray(images, 'name')
+          this.pickedTargets.forEach(tar => {
+            tar.image = ''
+            this.startAll[tar.name] = 0
+          })
+        })
+      }
+    },
     getServiceImgs (val) {
       return new Promise((resolve, reject) => {
         const registryId = this.pickedRegistry
@@ -499,6 +517,21 @@ export default {
         }
         return false
       })
+    },
+    async filterProducts () {
+      const prodProducts = this.products.filter(element => {
+        if (element.product_name === this.targetProduct && element.is_prod) {
+          return element
+        }
+        return false
+      })
+      const testProducts = this.products.filter(element => {
+        if (element.product_name === this.targetProduct && !element.is_prod) {
+          return element
+        }
+        return false
+      })
+      this.matchedProducts = prodProducts.concat(testProducts)
     },
     precreate (proNameAndNamespace) {
       const [, namespace] = proNameAndNamespace.split(' / ')
@@ -638,8 +671,7 @@ export default {
         return {}
       }
     }
-  },
-  components: {}
+  }
 }
 </script>
 
