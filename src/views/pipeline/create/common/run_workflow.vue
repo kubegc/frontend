@@ -268,8 +268,8 @@
 
 <script>
 // import { listProductAPI, precreateWorkflowTaskAPI, getAllBranchInfoAPI, runWorkflowAPI, getBuildTargetsAPI, getRegistryWhenBuildAPI, imagesAPI, getSingleProjectAPI } from '@api'
+
 export default {
-  components: { },
   data () {
     return {
       itemComponent: virtualListItem,
@@ -476,7 +476,7 @@ export default {
     changeRegistry (val) {
       if (val) {
         this.imageMap = []
-        const allClickableServeiceNames = this.allServiceNames.map(service => service.name)
+        const allClickableServeiceNames = this.allServiceNames.map(service => service.name) // .filter(service => service.has_build)
         imagesAPI(uniq(allClickableServeiceNames), val).then((images) => {
           images = images || []
           for (const image of images) {
@@ -616,6 +616,101 @@ export default {
       }).catch(() => {
         this.precreateLoading = false
       })
+    },
+    repoID (repo) {
+      return `${repo.repo_owner}/${repo.repo_name}`
+    },
+    deployID (deploy) {
+      return `${deploy.env}|${deploy.type}`
+    },
+    submit () {
+      if (!this.checkInput()) {
+        return
+      }
+      this.startTaskLoading = true
+      const repoKeysToDelete = [
+        '_id_', 'branchNames', 'branchPRsMap', 'tags', 'isGithub', 'prNumberPropName', 'id',
+        'releaseMethod', 'showBranch', 'showTag', 'showSwitch', 'showPR'
+      ]
+      const clone = this.$utils.cloneObj(this.runner)
+      // filter picked targets
+      clone.targets = clone.targets.filter(t => t.picked)
+      if (this.artifactDeployEnabled) {
+        clone.registry_id = this.pickedRegistry
+        clone.artifact_args = []
+        clone.targets.forEach(element => {
+          clone.artifact_args.push({
+            service_name: element.service_name,
+            name: element.name,
+            image: element.image,
+            deploy: element.deploy
+          })
+        })
+        delete clone.targets
+        if (this.createVersion) {
+          if (this.versionInfo.labelStr !== '') {
+            this.versionInfo.labels = this.versionInfo.labelStr.trim().split(';')
+          }
+          clone.version_args = this.$utils.cloneObj(this.versionInfo)
+        }
+      } else {
+        for (const tar of clone.targets) {
+          // trim target
+          delete tar.picked
+
+          // trim build repos
+          for (const repo of tar.build.repos) {
+            repo.pr = repo.pr ? repo.pr : 0
+            for (const key of repoKeysToDelete) {
+              delete repo[key]
+            }
+          }
+
+          // filter deploys
+          tar.deploy = tar.deploy.filter(d => d.picked)
+          // trim deploys
+          for (const dep of tar.deploy) {
+            delete dep.picked
+          }
+        }
+
+        // trim test repos
+        for (const test of clone.tests) {
+          for (const repo of test.builds) {
+            repo.pr = repo.pr ? repo.pr : 0
+            for (const key of repoKeysToDelete) {
+              delete repo[key]
+            }
+          }
+        }
+      }
+
+      runWorkflowAPI(clone, this.artifactDeployEnabled).then(res => {
+        const projectName = this.targetProduct
+        const taskId = res.task_id
+        const pipelineName = res.pipeline_name
+        this.$message.success('创建成功')
+        this.$emit('success')
+        this.$router.push(`/v1/projects/detail/${projectName}/pipelines/multi/${pipelineName}/${taskId}?status=running`)
+        this.$store.dispatch('refreshWorkflowList')
+      }).catch(error => {
+        console.log(error)
+        // handle error
+        if (error.response && error.response.data.code === 6168) {
+          const projectName = error.response.data.extra.productName
+          const envName = error.response.data.extra.envName
+          const serviceName = error.response.data.extra.serviceName
+          this.$message({
+            message: `检测到 ${projectName} 中 ${envName} 环境下的 ${serviceName} 服务未启动 <br> 请检查后再运行工作流`,
+            type: 'warning',
+            dangerouslyUseHTMLString: true,
+            duration: 5000
+          })
+          this.$router.push(`/v1/projects/detail/${projectName}/envs/detail/${serviceName}?envName=${envName}&projectName=${projectName}`)
+        }
+      }).finally(() => {
+        this.startTaskLoading = false
+      })
     }
   },
   created () {
@@ -651,6 +746,24 @@ export default {
         this.buildTargets = res
       })
     }
+    listProductAPI('', projectName).then(res => {
+      this.products = res
+      this.filterProducts()
+      const product = this.forcedUserInput.product_tmpl_name
+      const namespace = this.forcedUserInput.namespace
+      if (this.workflowMeta.env_name && this.products.find(p => (p.product_name === this.workflowMeta.product_tmpl_name) && (p.env_name === this.workflowMeta.env_name))) {
+        const namespace = this.workflowMeta.env_name
+        const product = this.workflowMeta.product_tmpl_name
+        this.specificEnv = true
+        this.precreate(`${product} / ${namespace}`)
+      } else {
+        this.specificEnv = false
+      }
+      // 如果是编辑状态 且 product 存在 获取 preset 信息
+      if (this.haveForcedInput && this.products.find(p => p.product_name === product)) {
+        this.precreate(`${product} / ${namespace}`)
+      }
+    })
   },
   props: {
     workflowName: {
@@ -671,7 +784,8 @@ export default {
         return {}
       }
     }
-  }
+  },
+  components: {}
 }
 </script>
 
