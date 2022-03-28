@@ -62,12 +62,29 @@ Mock.mock('/getGuideItems',{
     gutter: 20,
     rows: [
       {
-         index: 10,
+         index: 4,
          items:[
            {index: 1, type: 'span1', name: '项目配置'},
            {index: 2, type: 'span2', name: '创建服务'},
            {index: 3, type: 'span3', name: '加入运行环境'},
            {index: 4, type: 'span4', name: '工作流交付'}
+         ]
+      }
+    ]
+  }
+});
+
+Mock.mock('/getDescription',{
+  code:20000,
+  data: {
+    gutter: 20,
+    rows: [
+      {
+         index: 4,
+         items:[
+           {index: 1, type: 'span1', description: '对项目的流程做初步定义后，后续可在项目中进行调整。当您创建好服务后，我们会为您做如下的智能交付准备。系统会自动生成以下资源'},
+           {index: 2, type: 'span2', description: '创建服务'}
+
          ]
       }
     ]

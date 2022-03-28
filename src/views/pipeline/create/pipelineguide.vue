@@ -13,8 +13,13 @@
         <div class="title-container">
           <span class="first">第一步</span>
           <div v-for="row in guideItems.rows"
-                :key="row.index"
-                :gutter="guideItems.gutter"><span v-for="item in row.items" :key="item.index">{{item.name}}</span></div>
+                  :key="row.index"
+                  :gutter="guideItems.gutter" class="second">
+            <div v-for="item in row.items"
+                 :key="item.index"
+                 :span="item.span"
+                 :title="item.description"><span v-if="item.type == 'span1'">{{item.description}}</span></div>
+          </div>
         </div>
         <div class="account-integrations cf-block__list">
           <div class="cf-block__item">
@@ -86,7 +91,7 @@ export default {
 
   methods:{
     readguideItems() {
-      axios.get('/getGuideItems').then((response) => {
+      axios.get('/getDescription').then((response) => {
         if(response.data){
           this.guideItems = response.data.data
         }
@@ -97,9 +102,7 @@ export default {
   mounted() {
     this.readguideItems()
   },
-  created() {
-
-  }
+  created() {}
 }
 
 </script >

@@ -9,19 +9,20 @@
       <el-row
          v-for="row in guideItems.rows"
          :key="row.index"
-         :gutter="guideItems.gutter"
-      >
+         :gutter="guideItems.gutter">
         <el-steps :active="activeStep"
                   class="process-container"
                   align-center
                   finish-status="success">
-          <el-step v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name"></el-step>
-          <el-step v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name"
-                   description=""></el-step>
-          <el-step title="加入运行环境"
-                   description=""></el-step>
-          <el-step title="完成"
-                   description=""></el-step>
+<!--          <el-step v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name"></el-step>-->
+          <el-step v-for="item in row.items"
+                   :key="item.index"
+                   :span="item.span"
+                   :title="item.name"></el-step>
+<!--          <el-step title="加入运行环境"-->
+<!--                   description=""></el-step>-->
+<!--          <el-step title="完成"-->
+<!--                   description=""></el-step>-->
         </el-steps>
       </el-row>
     </div>
@@ -113,7 +114,7 @@ export default {
       display: flex;
 
       h4 {
-        width: 110px;
+        width: 130px;
         margin: 0 0 10px 20px;
         padding: 8px;
         color: #fff;

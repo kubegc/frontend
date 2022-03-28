@@ -1,8 +1,7 @@
 <template>
   <div class="projects-runtime-container">
     <div class="guide-container">
-      <step :activeStep="3">
-      </step>
+
       <div class="current-step-container">
         <div class="title-container">
           <span class="first">第三步</span>
@@ -52,7 +51,6 @@
   </div>
 </template>
 <script>
-import step from './common/step.vue'
 
 export default {
   components: {

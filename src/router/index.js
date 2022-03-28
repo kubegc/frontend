@@ -75,7 +75,7 @@ export const constantRoutes = [
         },
         {
           path: 't5',
-          component: () => import('@/views/pipeline/create/next')
+          component: () => import('@/views/pipeline/create/second')
         },
         {
           path: 't6',

@@ -2,8 +2,7 @@
 <div>
   <div class="projects-runtime-container">
     <div class="guide-container">
-      <step :activeStep="2">
-      </step>
+
       <div class="current-step-container">
         <div class="title-container">
           <span class="first">第二步</span>
@@ -12,8 +11,7 @@
         <el-row
           v-for="row in pipelineItems.rows"
           :key="row.index"
-          :gutter="pipelineItems.gutter"
-        >
+          :gutter="pipelineItems.gutter">
           <el-col v-for="card in row.items" :key="card.index" :span="card.span" style="text-align:center;">
             <el-card v-if="card.type == 'span1'" class="box-card">
               <div slot="header" class="clearfix">
@@ -205,7 +203,7 @@
 </template>
 <script>
 import axios from 'axios'
-import step from './common/step.vue'
+// import step from './common/step.vue'
 import JsonEditor from '@/components/JsonEditorSpecial/index'
 export default {
   components: {
