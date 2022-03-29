@@ -6,7 +6,14 @@
       <div class="current-step-container">
         <div class="title-container">
           <span class="first">第二步</span>
-          <span class="second">创建服务模板，后续均可在项目中重新配置</span>
+          <div v-for="row in guideItems.rows"
+               :key="row.index"
+               :gutter="guideItems.gutter" class="second">
+            <div v-for="item in row.items"
+                 :key="item.index"
+                 :span="item.span"
+                 :title="item.description"><div v-if="item.type == 'span2'">{{item.description}}</div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -61,8 +68,12 @@
 <script>
 import step from './common/step.vue'
 import service_tree from './common/service_tree'
+import axios from 'axios'
 
 export default {
+  components: {
+    step
+  },
   data () {
     return {
       service: {},
@@ -74,14 +85,23 @@ export default {
       currentServiceYamlKinds: {},
       projectInfo: {},
       showNext: false,
-      addCodeDrawer: false
+      addCodeDrawer: false,
+      guideItems:[]
     }
   },
   methods: {
+    readGuideItems() {
+      axios.get('/getDescription').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    }
   },
-  components: {
-    step
-  },
+
+  mounted() {
+    this.readGuideItems()
+  }
 }
 </script>
 
@@ -124,7 +144,12 @@ export default {
     }
 
     .guide-container {
+      min-height: calc(~"100% - 150px");
       margin-top: 10px;
+
+      &.not-closed-title {
+        min-height: calc(~"100% - 150px");
+      }
 
       .current-step-container {
         .title-container {
@@ -142,6 +167,7 @@ export default {
           }
 
           .second {
+            display: inline-block;
             color: #4c4c4c;
             font-size: 13px;
           }

@@ -18,7 +18,7 @@
             <div v-for="item in row.items"
                  :key="item.index"
                  :span="item.span"
-                 :title="item.description"><span v-if="item.type == 'span1'">{{item.description}}</span></div>
+                 :title="item.description"><div v-if="item.type == 'span1'">{{item.description}}</div></div>
           </div>
         </div>
         <div class="account-integrations cf-block__list">
@@ -31,8 +31,13 @@
                              circle></el-button>
                 </div>
                 <div class="integration-card__info">
-                  <div class="integration-name cf-sub-title">2 套信息</div>
-                  <div class="integration-details">11, 22</div>
+                  <div v-for="row in ServiceItems.rows" :key="row.index" :gutter="ServiceItems.gutter" class="integration-name cf-sub-title">
+                    <div v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name">
+                      <div v-if="item.type == 'span1'">{{item.name}}</div>
+                    </div>
+                  </div>
+                  <div v-for="row in EnvItems.rows" :key="row.index" :gutter="EnvItems.gutter" class="integration-details">
+                    <div v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name"><div v-if="item.type == 'span1'">{{item.name}}</div></div></div>
                 </div>
               </div>
             </div>
@@ -49,8 +54,13 @@
                              circle></el-button>
                 </div>
                 <div class="integration-card__info">
-                  <div class="integration-name cf-sub-title">3 条工作流</div>
-                  <div class="integration-details">11, 22</div>
+                  <div v-for="row in ServiceItems.rows" :key="row.index" :gutter="ServiceItems.gutter" class="integration-name cf-sub-title">
+                    <div v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name">
+                      <div v-if="item.type == 'span2'">{{item.name}}</div>
+                    </div>
+                  </div>
+                  <div v-for="row in EnvItems.rows" :key="row.index" :gutter="EnvItems.gutter" class="integration-details">
+                    <div v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name"><div v-if="item.type == 'span2'">{{item.name}}</div></div></div>
                 </div>
               </div>
             </div>
@@ -83,24 +93,44 @@ export default {
     return {
       showGuideText: true,
       jumpLoading: false,
-      guideItems:[]
+      guideItems:[],
+      ServiceItems:[],
+      EnvItems:[]
     }
   },
   computed: {
   },
 
   methods:{
-    readguideItems() {
+    readGuideItems() {
       axios.get('/getDescription').then((response) => {
         if(response.data){
           this.guideItems = response.data.data
+        }
+      })
+    },
+
+    readServiceItems() {
+      axios.get('/getService').then((response) => {
+        if(response.data){
+          this.ServiceItems = response.data.data
+        }
+      })
+    },
+
+    readEnvItems() {
+      axios.get('/getEnv').then((response) => {
+        if(response.data){
+          this.EnvItems = response.data.data
         }
       })
     }
   },
 
   mounted() {
-    this.readguideItems()
+    this.readGuideItems()
+    this.readServiceItems()
+    this.readEnvItems()
   },
   created() {}
 }

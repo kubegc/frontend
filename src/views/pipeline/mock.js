@@ -83,7 +83,7 @@ Mock.mock('/getDescription',{
          index: 4,
          items:[
            {index: 1, type: 'span1', description: '对项目的流程做初步定义后，后续可在项目中进行调整。当您创建好服务后，我们会为您做如下的智能交付准备。系统会自动生成以下资源'},
-           {index: 2, type: 'span2', description: '创建服务'}
+           {index: 2, type: 'span2', description: '创建服务模板，后续均可在项目中重新配置'}
 
          ]
       }
@@ -108,7 +108,7 @@ Mock.mock('/getService',{
   }
 });
 
-Mock.mock('/getWorkflow',{
+Mock.mock('/getEnv',{
   code:20000,
   data: {
     gutter: 20,
@@ -116,9 +116,9 @@ Mock.mock('/getWorkflow',{
       {
         index: 10,
         items:[
-          {index: 1, type: 'span1', name: '2套信息'},
+          {index: 1, type: 'span1', name: 'dev,qa'},
 
-          {index: 2, type: 'span2', name: '3条工作流'}
+          {index: 2, type: 'span2', name: 'workflow-dev'}
         ]
       }
     ]

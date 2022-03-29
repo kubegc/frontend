@@ -81,11 +81,11 @@ export default {
   },
 
   mounted() {
-    this.readguideItems()
+    this.readGuideItems()
   },
 
   methods: {
-    readguideItems(){
+    readGuideItems(){
       axios.get('/getGuideItems').then((response) => {
         if (response.data) {
           this.guideItems = response.data.data
