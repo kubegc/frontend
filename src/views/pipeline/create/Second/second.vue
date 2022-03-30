@@ -41,7 +41,7 @@
 </template>
 <script>
 import axios from 'axios'
-import step from './common/step.vue'
+import step from '../common/step.vue'
 import JsonEditor from '@/components/JsonEditorSpecial/index'
 export default {
   components: {

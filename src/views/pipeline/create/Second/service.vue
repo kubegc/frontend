@@ -66,8 +66,8 @@
   </div>
 </template>
 <script>
-import step from './common/step.vue'
-import service_tree from './common/service_tree'
+import step from '../common/step.vue'
+import service_tree from '../common/service_tree'
 import axios from 'axios'
 
 export default {
