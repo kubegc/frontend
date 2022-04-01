@@ -17,39 +17,68 @@
         </div>
       </div>
     </div>
+
     <div class="pipeline onboarding">
       <div class="pipeline-workflow__wrap">
         <multipane class="vertical-panes"
                    layout="vertical">
-          <div
+          <div class="service-tree-container">
+            <serviceTree :services="services"
+                         :currentServiceYamlKinds="currentServiceYamlKinds"
+                         :sharedServices="sharedServices"
+                         :projectInfo="projectInfo"
+                         :basePath="`/v1/projects/create/${projectName}/helm/service`"
+                         :guideMode="true"
+                         ref="serviceTree"
+                         @onAddCodeSource="addCodeDrawer = true"
+                         @onJumpToKind="jumpToKind"
+                         @onRefreshProjectInfo="checkProjectFeature"
+                         @onRefreshService="getServices"
+                         @onRefreshSharedService="getSharedServices"
+                         @onSelectServiceChange="onSelectServiceChange"></serviceTree>
+          </div>
+          <template v-if="service.service_name &&  services.length >0">
+            <template v-if="service.type==='k8s'">
+              <multipane-resizer></multipane-resizer>
+              <div class="service-editor-container"
+                   :style="{ minWidth: '300px', width: '500px'}"
+                   :class="{'pm':service.type==='pm'}">
+                <serviceEditorK8s ref="serviceEditor"
+                                  :serviceInTree="service"
+                                  :showNext.sync="showNext"
+                                  @onParseKind="getYamlKind"
+                                  @onRefreshService="getServices"
+                                  @onRefreshSharedService="getSharedServices"
+                                  @onUpdateService="onUpdateService"></serviceEditorK8s>
+              </div>
+              <multipane-resizer></multipane-resizer>
+              <aside class="pipelines__aside pipelines__aside_right"
+                     :style="{ flexGrow: 1 }">
+                <serviceAsideK8s :service="service"
+                                 :detectedEnvs="detectedEnvs"
+                                 :detectedServices="detectedServices"
+                                 :systemEnvs="systemEnvs"
+                                 :buildBaseUrl="`/v1/projects/create/${projectName}/basic/service`"
+                                 @getServiceModules="getServiceModules"> </serviceAsideK8s>
+              </aside>
+            </template>
+          </template>
+          <div v-else
                class="no-content">
 <!--            <img src="@assets/icons/illustration/editor_nodata.svg"-->
 <!--                 alt="">-->
-            <p >暂无服务，点击 <el-button size="mini"
-                         icon="el-icon-plus"
-                         @click="createService()"
-                         plain
-                         circle>
-              </el-button> 创建服务</p>
-            <p >请在左侧选择需要编辑的服务</p>
-            <p >请在左侧选择需要编辑的服务</p>
+            <p v-if="services.length === 0">暂无服务，点击 <el-button size="mini"
+                                                               icon="el-icon-plus"
+                                                               @click="createService()"
+                                                               plain
+                                                               circle>
+            </el-button> 创建服务</p>
+            <p v-else-if="service.service_name==='服务列表' && services.length >0">请在左侧选择需要编辑的服务</p>
+            <p v-else-if="!service.service_name && services.length >0">请在左侧选择需要编辑的服务</p>
           </div>
         </multipane>
       </div>
     </div>
-
-    <el-dialog
-      :modal="true"
-      :fullscreen="fullscreen"
-      custom-class="dialog-custom"
-      :visible.sync="dialog1"
-      width="90%"
-      top="5vh"
-    >
-      <div>
-        <service_tree />
-      </div>
-    </el-dialog>
 
     <div class="controls__wrap">
       <div class="controls__right">
@@ -72,7 +101,7 @@ import axios from 'axios'
 
 export default {
   components: {
-    step
+    step, serviceTree
   },
   data () {
     return {
@@ -90,12 +119,32 @@ export default {
     }
   },
   methods: {
+    createService () {
+      this.$refs.serviceTree.createService('platform')
+    },
+    getServices () {
+      const projectName = this.projectName
+      this.$set(this, 'service', {})
+      getServiceTemplatesAPI(projectName).then((res) => {
+        this.services = sortBy((res.data.map(service => {
+          service.idStr = `${service.service_name}/${service.type}`
+          service.status = 'added'
+          return service
+        })), 'service_name')
+      })
+    },
     readGuideItems() {
       axios.get('/getDescription').then((response) => {
         if(response.data){
           this.guideItems = response.data.data
         }
       })
+    },
+    getYamlKind (payload) {
+      this.currentServiceYamlKinds = payload
+    },
+    jumpToKind (payload) {
+      this.$refs.serviceEditor.jumpToWord(`kind: ${payload.kind}`)
     }
   },
 
