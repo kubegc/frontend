@@ -122,6 +122,7 @@ export default {
     createService () {
       this.$refs.serviceTree.createService('platform')
     },
+
     getServices () {
       const projectName = this.projectName
       this.$set(this, 'service', {})
@@ -133,6 +134,7 @@ export default {
         })), 'service_name')
       })
     },
+
     readGuideItems() {
       axios.get('/getDescription').then((response) => {
         if(response.data){
@@ -140,15 +142,18 @@ export default {
         }
       })
     },
+
     getYamlKind (payload) {
       this.currentServiceYamlKinds = payload
     },
+
     jumpToKind (payload) {
       this.$refs.serviceEditor.jumpToWord(`kind: ${payload.kind}`)
     }
   },
 
   mounted() {
+    this.getServices()
     this.readGuideItems()
   }
 }
