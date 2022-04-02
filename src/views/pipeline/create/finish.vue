@@ -1,42 +1,70 @@
 <template>
   <div class="projects-runtime-container">
     <div class="guide-container">
-
+      <step :activeStep="3">
+      </step>
       <div class="current-step-container">
         <div class="title-container">
-          <span class="first">第三步</span>
-          <span class="second">配置完成结束</span>
+          <span class="first">第四步</span>
+          <div v-for="row in guideItems.rows"
+               :key="row.index"
+               :gutter="guideItems.gutter" class="second">
+            <div v-for="item in row.items"
+                 :key="item.index"
+                 :span="item.span"
+                 :title="item.description"><div v-if="item.type == 'span3'">{{item.description}}</div></div>
+          </div>
+        </div>
+        <div class="account-integrations cf-block__list">
+          <el-table v-loading="loading"
+                    :data="mapWorkflows"
+                    style="width: 100%;">
+            <el-table-column label="工作流名称">
+              <template slot-scope="scope">
+                <span style="margin-left: 10px;">{{ scope.row.name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column width="200px"
+                             label="环境信息">
+            </el-table-column>
+            <el-table-column width="200px"
+                             label="包含步骤">
+              <template slot-scope="scope">
+                <span>
+                  <span>
+                    <el-tag size="small">构建部署</el-tag>
+                    <span class="step-arrow"><i class="el-icon-right"></i></span>
+                  </span>
+                  <span>
+                    <el-tag size="small">交付物部署</el-tag>
+                    <span class="step-arrow"><i class="el-icon-right"></i></span>
+                  </span>
+                  <span>
+                    <el-tag size="small">测试</el-tag>
+                    <span class="step-arrow"><i class="el-icon-right"></i></span>
+                  </span>
+                  <el-tag size="small">分发</el-tag>
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column width="150px"
+                             label="更新信息（时间/操作人）">
+            </el-table-column>
+            <el-table-column width="120px"
+                             label="操作">
+              <template slot-scope="scope">
+                <el-button type="success"
+                           size="mini"
+                           round
+                           @click="runCurrentTask(scope.row)"
+                           plain>点击运行</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </div>
     </div>
-    <div class="imageMarket-app-container">
-      <el-divider content-position="center">多云协作框架</el-divider>
-      <div style="width:100%;float:left">
-        <el-button type="text" style="display:inline-block;float:left;width:20%">构造多云协作框架API进度：</el-button>
-        <el-progress style="display:inline-block;float:left;width:75%;margin:7px 0 0 30px;" :text-inside="true" :stroke-width="24" :percentage="percentage" status="success" />
-      </div>
-      <div style="width:100%;float:left;margin:20px 0 0 0;">
-        <p style="font-size:16px;margin:0 0 0 10px;height: 10%;"><a style="color:black;font-size:18px;">步骤 1：</a>接收示例代码输入：</p>
-        <json-editor
-          style="width:100%"
-          :value="jsonString"
-          @input="jsonString = $event"
-        />
-      </div>
-      <div style="width:100%;float:left;margin:20px 0 0 0;">
-        <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:100%;display:inline-block;"><a style="color:black;font-size:18px;" @click="drawLine()">步骤 2.1:提取关键云服务操作：</a><span id="analysisTitle" style="color:brown;font-size:18px;margin-left:20px">待分析</span></p>
-        <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:100%;display:inline-block;"><a style="color:black;font-size:18px;" @click="constructTree()">步骤 2.2:构造云服务树形调用链:</a><span id="analysisTree" style="color:brown;font-size:18px;margin-left:20px">待生成</span></p>
-        <div id="myChart" style="width: 100%; height: 500px;float: left;" />
-      </div>
-      <div style="width:100%;float:left;margin:20px 0 0 0;">
-        <p style="float:left;font-size:16px;margin:0 0 0 10px;height:10%;width:100%;display:inline-block;"><a style="color:black;font-size:18px;" @click="showTriple()">步骤 3:生成初始的、针对特定云服务代码片段的API调用接口(三元组)：</a></p>
-        <div id="step3" :style="isShown">
-          <el-button id="step31" style="display:block;margin:10px" type="primary">客户端及初始化参数</el-button>
-          <el-button id="step32" style="display:block;margin:10px" type="success">一个新请求</el-button>
-          <el-button id="step33" style="display:block;margin:10px" type="info">请求需要的参数</el-button>
-        </div>
-      </div>
-    </div>
+
     <div class="controls__wrap">
       <div class="controls__right">
         <router-link :to="'/test/test2/test3'">
@@ -51,13 +79,57 @@
   </div>
 </template>
 <script>
-
+// import bus from '@utils/event_bus'
+import step from './common/step'
+import axios from 'axios'
+// import runWorkflow from '../../pipeline/common/run_workflow.vue'
+// import { getProjectIngressAPI } from '@api'
 export default {
+  data () {
+    return {
+      loading: true,
+      workflow: {},
+      taskDialogVisible: false,
+      mapWorkflows: [],
+      guideItems:[]
+    }
+  },
+
+  methods: {
+    readGuideItems() {
+      axios.get('/getDescription').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    }
+  },
+
+  computed: {
+    projectName () {
+      return this.$route.params.project_name
+    }
+  },
+
+  created () {
+    this.getWorkflows()
+    bus.$emit('set-topbar-title', { title: '', breadcrumb: [{ title: '项目', url: '/v1/projects' }, { title: this.projectName, url: '' }] })
+    bus.$emit('set-sub-sidebar-title', {
+      title: '',
+      routerList: []
+    })
+  },
+
+  mounted() {
+    // this.getServices()
+    this.readGuideItems()
+  },
+
   components: {
     step
-  }
+  },
+  onboardingStatus: 0
 }
-
 </script>
 
 <style lang="less">
@@ -99,6 +171,7 @@ export default {
         }
 
         .second {
+          display: inline-block;
           color: #4c4c4c;
           font-size: 13px;
         }

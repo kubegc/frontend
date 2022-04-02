@@ -83,7 +83,9 @@ Mock.mock('/getDescription',{
          index: 4,
          items:[
            {index: 1, type: 'span1', description: '对项目的流程做初步定义后，后续可在项目中进行调整。当您创建好服务后，我们会为您做如下的智能交付准备。系统会自动生成以下资源'},
-           {index: 2, type: 'span2', description: '创建服务模板，后续均可在项目中重新配置'}
+           {index: 2, type: 'span2', description: '创建服务模板，后续均可在项目中重新配置'},
+           {index: 3, type: 'span3', description: '将服务加入运行环境，并准备对应的交付工作流，后续均可在项目中进行配置'},
+           {index: 4, type: 'span4', description: '运行工作流触发服务的自动化交付'}
 
          ]
       }

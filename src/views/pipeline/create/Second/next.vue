@@ -6,8 +6,15 @@
       </step>
       <div class="current-step-container">
         <div class="title-container">
-          <span class="first">第二步</span>
-          <span class="second">将服务加入运行环境，并准备对应的交付工作流，后续均可在项目中进行配置</span>
+          <span class="first">第三步</span>
+          <div v-for="row in guideItems.rows"
+               :key="row.index"
+               :gutter="guideItems.gutter" class="second">
+            <div v-for="item in row.items"
+                 :key="item.index"
+                 :span="item.span"
+                 :title="item.description"><div v-if="item.type == 'span3'">{{item.description}}</div></div>
+          </div>
         </div>
         <div class="no-content">
           <img src="@/assets/editor_nodata.jpg"
@@ -64,6 +71,7 @@ export default {
         id: '',
         basicSalary: ''
       },
+      guideItems:[]
     }
   },
 
@@ -87,23 +95,20 @@ export default {
       this.lokiDialogTitle = true
       // this.lokiLink = getLokiLink()
     },
-
-    getServices () {
-      const projectName = this.projectName
-      this.$set(this, 'service', {})
-      getServiceAPI(projectName).then((res) => {
-        this.services = sortBy((res.data.map(service => {
-          service.idStr = `${service.service_name}/${service.type}`
-          service.status = 'added'
-          return service
-        })), 'service_name')
-      })
-    },
-
     createService () {
       this.$refs.serviceTree.createService('platform')
     },
+    readGuideItems() {
+      axios.get('/getDescription').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    }
+  },
 
+  mounted() {
+    this.readGuideItems()
   }
 }
 </script>
@@ -147,6 +152,7 @@ export default {
         }
 
         .second {
+          display: inline-block;
           color: #4c4c4c;
           font-size: 13px;
         }
