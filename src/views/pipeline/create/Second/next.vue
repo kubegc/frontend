@@ -15,6 +15,7 @@
                  :span="item.span"
                  :title="item.description"><div v-if="item.type == 'span3'">{{item.description}}</div></div>
           </div>
+
         </div>
         <div class="no-content">
           <img src="@/assets/editor_nodata.jpg"
@@ -28,7 +29,96 @@
           <p v-else-if="service.service_name==='服务列表' && services.length >0">请在左侧选择需要编辑的服务</p>
           <p v-else-if="!service.service_name && services.length >0">请在左侧选择需要编辑的服务</p>
         </div>
+        <div class="account-integrations cf-block__list">
+          <div class="title">
+            <h4>环境准备</h4>
+            <el-alert v-if="envFailure.length > 0||timeOut"
+                      type="warning">
+              <template v-solt:title>
+                环境正在准备中，可点击 “下一步” 或者
+                <el-button type="text"
+                           @click="jumpEnv">查看环境状态</el-button>
+                <i v-if="jumpLoading"
+                   class="el-icon-loading"></i>
+              </template>
+            </el-alert>
+          </div>
+          <div class="cf-block__item">
+            <div class="account-box-item">
+              <div class="account-box-item__info integration-card">
+                <div class="integration-card__image">
+                  <el-button v-if="envSuccess.length === 2"
+                             type="success"
+                             icon="el-icon-check"
+                             circle></el-button>
+                  <el-button v-else
+                             icon="el-icon-loading"
+                             circle></el-button>
+                </div>
+                <div class="integration-card__info">
+                  <div v-for="(env,index) in envStatus"
+                       :key="index"
+                       class="integration-details">
+                    <template v-if="env.env_name==='dev'">
+                      <span class="env-name">
+                        开发环境：{{projectName}}-dev
+                      </span>
+                      <span class="desc">，开发日常自测、业务联调</span>
+                      <el-link v-if="env.err_message!==''"
+                               type="warning">{{env.err_message}}</el-link>
+                    </template>
+                    <template v-if="env.env_name==='qa'"
+                              class="env-item">
+                      <span class="env-name">测试环境：{{projectName}}-qa
+                      </span>
+                      <span class="desc">，测试环境（自动化测试、业务验收）</span>
+                      <el-link v-if="env.err_message!==''"
+                               type="warning">{{env.err_message}}</el-link>
+                    </template>
 
+                  </div>
+                </div>
+              </div>
+              <div class="account-box-item__controls">
+              </div>
+            </div>
+          </div>
+          <div class="title">
+            <h4>工作流准备</h4>
+            <el-alert v-if="pipeStatus.err_message"
+                      :title="pipeStatus.err_message"
+                      type="error">
+            </el-alert>
+          </div>
+          <div class="cf-block__item">
+            <div class="account-box-item">
+              <div class="account-box-item__info integration-card">
+                <div class="integration-card__image">
+                  <el-button v-if="pipeStatus.status === 'success'"
+                             type="success"
+                             icon="el-icon-check"
+                             circle></el-button>
+                  <el-button v-else
+                             icon="el-icon-loading"
+                             circle></el-button>
+                </div>
+                <div class="integration-card__info">
+                  <div class="integration-details">
+                    开发工作流：{{projectName}}-workflow-dev，应用日常升级，用于开发自测和联调
+                  </div>
+                  <div class="integration-details">
+                    测试工作流：{{projectName}}-workflow-qa，应用按需升级，用于自动化测试和业务验收
+                  </div>
+                  <div class="integration-details">
+                    运维工作流：{{projectName}}-workflow-ops，业务按需发布，用于版本升级和业务上线
+                  </div>
+                </div>
+              </div>
+              <div class="account-box-item__controls">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -49,7 +139,7 @@
 <script>
 import axios from 'axios'
 import step from '../common/step.vue'
-import JsonEditor from '@/components/JsonEditorSpecial/index'
+// import { generateEnvAPI, generatePipeAPI } from '@api'
 export default {
   components: {
     step
@@ -57,20 +147,20 @@ export default {
 
   data() {
     return {
-      service:{},
-      services: [],
-      pipelineItems: [],
       dialogVisible: false,
       centerDialogVisible: false,
       lokiDialogTitle: false,
       jsonFileObj: {},
       dialogTitle: '',
       lokiLink: '',
-      active: 0,
-      salary: {
-        id: '',
-        basicSalary: ''
-      },
+      envStatus: [{ env_name: 'dev' }, { env_name: 'qa' }],
+      pipeStatus: {},
+      getResult: false,
+      envTimer: 0,
+      pipeTimer: 0,
+      secondCount: 0,
+      timeOut: 0,
+      jumpLoading: false,
       guideItems:[]
     }
   },
@@ -81,10 +171,6 @@ export default {
     }
   },
 
-  mounted() {
-    this.readPipeline()
-      // this.lokiLink = getLokiLink()
-  },
   methods: {
     handleClick(color, name) {
       this.dialogTitle = name

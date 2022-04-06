@@ -12,7 +12,7 @@
             <div v-for="item in row.items"
                  :key="item.index"
                  :span="item.span"
-                 :title="item.description"><div v-if="item.type == 'span3'">{{item.description}}</div></div>
+                 :title="item.description"><div v-if="item.type == 'span4'">{{item.description}}</div></div>
           </div>
         </div>
         <div class="account-integrations cf-block__list">
@@ -85,6 +85,9 @@ import axios from 'axios'
 // import runWorkflow from '../../pipeline/common/run_workflow.vue'
 // import { getProjectIngressAPI } from '@api'
 export default {
+  components: {
+    step
+  },
   data () {
     return {
       loading: true,
@@ -93,6 +96,10 @@ export default {
       mapWorkflows: [],
       guideItems:[]
     }
+  },
+
+  mounted() {
+    this.readGuideItems()
   },
 
   methods: {
@@ -120,14 +127,6 @@ export default {
     })
   },
 
-  mounted() {
-    // this.getServices()
-    this.readGuideItems()
-  },
-
-  components: {
-    step
-  },
   onboardingStatus: 0
 }
 </script>
