@@ -6,7 +6,14 @@
       <div class="current-step-container">
         <div class="title-container">
           <span class="first">第三步</span>
-          <span class="second">将服务加入运行环境，并准备对应的交付工作流，后续均可在项目中进行配置</span>
+          <div v-for="row in guideItems.rows"
+               :key="row.index"
+               :gutter="guideItems.gutter" class="second">
+            <div v-for="item in row.items"
+                 :key="item.index"
+                 :span="item.span"
+                 :title="item.description"><div v-if="item.type == 'span3'">{{item.description}}</div></div>
+          </div>
         </div>
         <div class="account-integrations cf-block__list">
           <div class="title">
@@ -54,7 +61,6 @@
                       <el-link v-if="env.err_message!==''"
                                type="warning">{{env.err_message}}</el-link>
                     </template>
-
                   </div>
                 </div>
               </div>
@@ -112,28 +118,12 @@
         </div>
       </div>
     </div>
-<!--    <div class="controls__wrap">-->
-<!--      <div class="controls__right">-->
-<!--        <router-link :to="`/v1/projects/create/${projectName}/basic/delivery`">-->
-<!--          <button v-if="!getResult"-->
-<!--                  type="primary"-->
-<!--                  class="save-btn"-->
-<!--                  disabled-->
-<!--                  plain>下一步</button>-->
-<!--          <button v-else-if="getResult"-->
-<!--                  type="primary"-->
-<!--                  class="save-btn"-->
-<!--                  plain>下一步</button>-->
-<!--        </router-link>-->
-<!--        <div class="run-button">-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </template>
 <script>
 // import bus from '@utils/event_bus'
 import step from './common/step.vue'
+import axios from 'axios'
 // import { generateEnvAPI, generatePipeAPI } from '@api'
 export default {
   data () {
@@ -145,10 +135,18 @@ export default {
       pipeTimer: 0,
       secondCount: 0,
       timeOut: 0,
-      jumpLoading: false
+      jumpLoading: false,
+      guideItems:[]
     }
   },
   methods: {
+    readGuideItems() {
+      axios.get('/getDescription').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    },
     jumpEnv () {
       this.$confirm('确认跳出后就不再进入 onboarding 流程。', '确认跳出产品交付向导？', {
         confirmButtonText: '确定',
@@ -245,6 +243,9 @@ export default {
   },
   components: {
     step
+  },
+  mounted() {
+    this.readGuideItems()
   },
   onboardingStatus: 3
 }
