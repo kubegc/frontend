@@ -86,7 +86,7 @@
               <el-table-column label="Issue 追踪"
                                width="160">
                 <template slot-scope="scope">
-                  <span v-else> 暂无 Issue </span>
+                  <span> 暂无 Issue </span>
                 </template>
               </el-table-column>
               <el-table-column label="环境变量" width="100">
@@ -243,9 +243,188 @@ export default {
       expandedTests: []
     }
   },
-  computed: {},
+  computed: {
+    workflowName () {
+      return this.$route.params.workflow_name
+    },
+    currentOrganizationId () {
+      return this.$store.state.login.userinfo.organization.id
+    },
+    taskID () {
+      return this.$route.params.task_id
+    },
+    status () {
+      return this.$route.query.status
+    },
+    workflowProductTemplate () {
+      return this.workflow.product_tmpl_name
+    },
+    projectName () {
+      return this.$route.params.project_name ? this.$route.params.project_name : this.workflowProductTemplate
+    },
+    artifactDeployMap () {
+      const map = {}
+      const stage = this.taskDetail.stages.find(stage => stage.type === 'artifact')
+      if (stage) {
+        this.collectSubTask(map, 'deploy')
+      }
+      return map
+    },
+    artifactDeployArray () {
+      const arr = this.$utils.mapToArray(this.artifactDeployMap, '_target')
+      for (const target of arr) {
+        target.buildOverallStatusZh = this.myTranslate(target.deploySubTask.status)
+        target.buildOverallColor = this.colorTranslation(target.deploySubTask.status, 'pipeline', 'task')
+        target.buildOverallTimeZhSec = this.calcElapsedTimeNum(target.deploySubTask)
+        target.buildOverallTimeZh = this.$utils.timeFormat(target.buildOverallTimeZhSec)
+      }
+      return arr
+    },
+    buildDeployMap () {
+      const map = {}
+      this.collectBuildDeploySubTask(map)
+      this.collectSubTask(map, 'docker_build')
+      return map
+    },
+    buildDeployArray () {
+      const arr = this.$utils.mapToArray(this.buildDeployMap, '_target')
+      for (const target of arr) {
+        target.buildOverallStatus = this.$utils.calcOverallBuildStatus(
+          target.buildv2SubTask, target.docker_buildSubTask
+        )
+        target.buildOverallStatusZh = this.myTranslate(target.buildOverallStatus)
+        target.buildOverallColor = this.colorTranslation(target.buildOverallStatus, 'pipeline', 'task')
+        target.buildOverallTimeZhSec = this.calcElapsedTimeNum(target.buildv2SubTask) + this.calcElapsedTimeNum(target.docker_buildSubTask)
+        target.buildOverallTimeZh = this.$utils.timeFormat(target.buildOverallTimeZhSec)
+      }
+      return arr
+    },
+    buildSummary () {
+      const map = {}
+      this.collectSubTask(map, 'jira')
+      const taskArr = this.$utils.mapToArray(map, 'service_name')
+      const jiraIssues = []
+      taskArr.forEach(element => {
+        if (element.jiraSubTask.issues) {
+          jiraIssues.push({
+            service_name: element.service_name,
+            issues: element.jiraSubTask.issues
+          })
+        }
+      })
+      const buildArr = this.$utils.mapToArray(this.buildDeployMap, '_target').filter(item => item.buildv2SubTask.type === 'buildv2')
+      const envs = {}
+      this.workflow.targets && this.workflow.targets.forEach(target => {
+        envs[target.name] = target.envs
+      })
+      const summary = buildArr.map(element => {
+        let currentIssues = jiraIssues.find(item => { return item.service_name === element._target })
+        if (!currentIssues) {
+          currentIssues = null
+        }
+        return {
+          service_name: element._target,
+          builds: _.get(element, 'buildv2SubTask.job_ctx.builds', ''),
+          issues: currentIssues ? currentIssues.issues : [],
+          envs: envs[element._target] || []
+        }
+      })
+      return summary
+    },
+    jenkinsSummary () {
+      const map = {}
+      this.collectSubTask(map, 'jira')
+      const taskArr = this.$utils.mapToArray(map, 'service_name')
+      const jiraIssues = []
+      taskArr.forEach(element => {
+        if (element.jiraSubTask.issues) {
+          jiraIssues.push({
+            service_name: element.service_name,
+            issues: element.jiraSubTask.issues
+          })
+        }
+      })
+      const buildArr = this.$utils.mapToArray(this.buildDeployMap, '_target').filter(item => item.buildv2SubTask.type === 'jenkins_build')
+      const summary = buildArr.map(element => {
+        let currentIssues = jiraIssues.find(item => { return item.service_name === element._target })
+        if (!currentIssues) {
+          currentIssues = null
+        }
+        return {
+          service_name: element._target,
+          builds: _.get(element, 'buildv2SubTask.job_ctx', ''),
+          jenkins_build_args: _.get(element, 'buildv2SubTask.jenkins_build_args', '')
+        }
+      })
+      return summary
+    },
+    distributeMap () {
+      const map = {}
+      this.collectSubTask(map, 'distribute2kodo')
+      this.collectSubTask(map, 'release_image')
+      this.collectSubTask(map, 'distribute')
+      return map
+    },
+    distributeArray () {
+      const arr = this.$utils.mapToArray(this.distributeMap, '_target')
+      for (const item of arr) {
+        if (item.distribute2kodoSubTask) {
+          item.distribute2kodoSubTask.distribute2kodoPath = item.distribute2kodoSubTask.remote_file_key
+        }
+        if (item.release_imageSubTask) {
+          item.release_imageSubTask._image = item.release_imageSubTask.image_release
+            ? item.release_imageSubTask.image_release.split('/')[2]
+            : '*'
+        }
+      }
+      return arr
+    },
+    distributeArrayExpanded () {
+      const wanted = ['distribute2kodoSubTask', 'release_imageSubTask', 'distributeSubTask']
 
+      const outputKeys = {
+        distribute2kodoSubTask: 'package_file',
+        release_imageSubTask: '_image',
+        distributeSubTask: 'package_file'
+      }
+      const locationKeys = {
+        distribute2kodoSubTask: 'distribute2kodoPath',
+        release_imageSubTask: 'image_repo',
+        distributeSubTask: 'dist_host'
+      }
+
+      const twoD = this.distributeArray.map(map => {
+        let typeCount = 0
+        const arr = []
+        for (const key of wanted) {
+          if (key in map) {
+            typeCount++
+            const item = map[key]
+            item._target = map._target
+            item.output = item[outputKeys[key]]
+            if (key === 'release_imageSubTask') {
+              item.location = item.releases ? item.releases : item.image_release
+            } else {
+              item.location = item[locationKeys[key]]
+            }
+            arr.push(item)
+          }
+        }
+        arr[0].typeCount = typeCount
+        return arr
+      })
+      return this.$utils.flattenArray(twoD)
+    }
+  },
   methods: {
+    isStageDone (name) {
+      if (this.taskDetail.stages.length > 0) {
+        const stage = this.taskDetail.stages.find(element => {
+          return element.type === name
+        })
+        return stage ? stage.status === 'passed' : false
+      }
+    },
     rerun () {
       const taskUrl = `/v1/projects/detail/${this.projectName}/pipelines/multi/${this.workflowName}/${this.taskID}`
       restartWorkflowAPI(this.workflowName, this.taskID).then(res => {
@@ -273,6 +452,17 @@ export default {
         this.versionList = res
       })
     },
+    collectSubTask (map, typeName) {
+      const stage = this.taskDetail.stages.find(stage => stage.type === typeName)
+      if (stage) {
+        for (const target in stage.sub_tasks) {
+          if (!(target in map)) {
+            map[target] = {}
+          }
+          map[target][`${typeName}SubTask`] = stage.sub_tasks[target]
+        }
+      }
+    },
 
     fetchTaskDetail () {
       return workflowTaskDetailSSEAPI(this.workflowName, this.taskID).then(res => {
@@ -298,6 +488,16 @@ export default {
 
     myTranslate (word) {
       return wordTranslate(word, 'pipeline', 'task')
+    },
+    colorTranslation (word, category, subitem) {
+      return colorTranslate(word, category, subitem)
+    },
+    calcElapsedTimeNum (subTask) {
+      if (this.$utils.isEmpty(subTask) || subTask.status === '') {
+        return 0
+      }
+      const endTime = subTask.status === 'running' ? Math.floor(Date.now() / 1000) : subTask.end_time
+      return endTime - subTask.start_time
     },
 
     updateBuildDeployExpanded (row, expandedRows) {
@@ -334,6 +534,7 @@ export default {
   },
   created () {
     this.checkDeliveryList()
+    this.setTitleBar()
     if (this.$route.query.status === 'passed' || this.$route.query.status === 'failed' || this.$route.query.status === 'timeout' || this.$route.query.status === 'cancelled') {
       this.fetchOldTaskDetail()
     } else {

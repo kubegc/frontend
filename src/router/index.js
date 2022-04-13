@@ -79,7 +79,7 @@ export const constantRoutes = [
         },
         {
           path: 't6',
-          component: () => import('@/views/pipeline/create/finish')
+          component: () => import('@/views/pipeline/detail/workflow_multi_task_detail')
         }
       ]
     }]
