@@ -213,8 +213,6 @@
 
 <script>
 // import { workflowTaskDetailAPI, workflowTaskDetailSSEAPI, restartWorkflowAPI, cancelWorkflowAPI, getVersionListAPI } from '@api'
-
-
 export default {
   data () {
     return {
