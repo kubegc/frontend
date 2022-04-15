@@ -22,21 +22,9 @@
       <div class="pipeline-workflow__wrap">
         <multipane class="vertical-panes"
                    layout="vertical">
-<!--          <div class="service-tree-container">-->
-<!--            <serviceTree :services="services"-->
-<!--                         :currentServiceYamlKinds="currentServiceYamlKinds"-->
-<!--                         :sharedServices="sharedServices"-->
-<!--                         :projectInfo="projectInfo"-->
-<!--                         :basePath="`/v1/projects/create/${projectName}/helm/service`"-->
-<!--                         :guideMode="true"-->
-<!--                         ref="serviceTree"-->
-<!--                         @onAddCodeSource="addCodeDrawer = true"-->
-<!--                         @onJumpToKind="jumpToKind"-->
-<!--                         @onRefreshProjectInfo="checkProjectFeature"-->
-<!--                         @onRefreshService="getServices"-->
-<!--                         @onRefreshSharedService="getSharedServices"-->
-<!--                         @onSelectServiceChange="onSelectServiceChange"></serviceTree>-->
-<!--          </div>-->
+          <div class="service-tree-container">
+            <serviceTree></serviceTree>
+          </div>
 <!--          <template v-if="service.service_name &&  services.length >0">-->
 <!--            <template v-if="service.type==='k8s'">-->
 <!--              <multipane-resizer></multipane-resizer>-->
@@ -73,8 +61,6 @@
                                                                plain
                                                                circle>
             </el-button> 创建服务</p>
-            <p >请在左侧选择需要编辑的服务</p>
-            <p >请在左侧选择需要编辑的服务</p>
           </div>
         </multipane>
       </div>
@@ -96,12 +82,12 @@
 </template>
 <script>
 import step from '../common/step.vue'
-// import service_tree from '../common/service_tree'
+import serviceTree from '../common/service_tree'
 import axios from 'axios'
 
 export default {
   components: {
-    step
+    step, serviceTree
   },
   data () {
     return {
