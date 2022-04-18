@@ -63,6 +63,8 @@
                     <div v-for="item in row.items" :key="item.index" :span="item.span" :title="item.name"><div v-if="item.type == 'span2'">{{item.name}}</div></div></div>
                 </div>
               </div>
+              <div class="account-box-item__controls">
+              </div>
             </div>
           </div>
         </div>
@@ -132,7 +134,9 @@ export default {
     this.readServiceItems()
     this.readEnvItems()
   },
-  created() {}
+  created() {},
+
+  onboardingStatus: 1
 }
 
 </script >
@@ -154,11 +158,63 @@ export default {
       font-weight: 300;
       text-align: center;
     }
+    .controls__wrap {
+      position: relative;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      margin: 0 15px;
+      padding: 0 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
+
+      & > * {
+        margin-right: 10px;
+      }
+
+      .controls__right {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        align-items: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+
+        .save-btn,
+        .next-btn {
+          margin-right: 15px;
+          padding: 10px 17px;
+          color: #fff;
+          font-weight: bold;
+          font-size: 13px;
+          text-decoration: none;
+          background-color: #1989fa;
+          border: 1px solid #1989fa;
+          cursor: pointer;
+          transition: background-color 300ms, color 300ms, border 300ms;
+        }
+
+        .save-btn[disabled],
+        .next-btn[disabled] {
+          background-color: #9ac9f9;
+          border: 1px solid #9ac9f9;
+          cursor: not-allowed;
+        }
+      }
+    }
   }
 
   .guide-container {
     min-height: calc(~"100% - 150px");
     margin-top: 10px;
+    margin-bottom: 290px;
 
     &.not-closed-title {
       min-height: calc(~"100% - 150px");

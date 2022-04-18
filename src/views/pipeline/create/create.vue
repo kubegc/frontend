@@ -14,10 +14,10 @@
                 <el-tab-pane label="基本信息" name="base"></el-tab-pane>
                 <el-tab-pane label="高级配置" name="advance"></el-tab-pane>
               </el-tabs>
-              <el-form :model="tableData"
+              <el-form :model="addForm"
                        :rules="rules"
                        label-position="top"
-                       ref="tableData"
+                       ref="addFormRef"
                        label-width="100px"
                        class="demo-projectForm">
                 <el-form-item label="工作流名称"
@@ -133,7 +133,7 @@
           <el-button class="create-btn"
                      type="primary"
                      plain
-                     @click="addInput">{{isEdit?'确认修改':'立即创建'}}
+                     @click="addRow(addForm)">{{isEdit?'确认修改':'立即创建'}}
           </el-button>
         </router-link>
 
@@ -176,6 +176,16 @@ export default {
         type: '',
         name: ''
       },
+      addForm:{
+        type: '',
+        index:'',
+        name:''
+      },
+      addFormRules:{
+        type:[{require: true, message: '请输入', trigger: 'blur'}],
+        index:[{require: true, message: '请输入', trigger: 'blur'}],
+        name:[{require: true, message: '请输入', trigger: 'blur'}],
+      }
     }
   },
 
@@ -185,8 +195,9 @@ export default {
   },
 
   methods: {
-    addInput () {
-      this.$router.push('/getPipelineItems')
+    async resetForm(){
+      const test = this.tableData
+      console.log(test)
     },
 
     search () {
@@ -225,6 +236,18 @@ export default {
 
     resetForm (formName) {
       this.$refs[formName].resetFields()
+    },
+
+    addRow(addForm){
+      this.$ref.addFormRef.validate(valid => {
+        if (!valid) return this.get$message.warning('表单填写有误，请检查！')
+        this.$message.success('添加成功！')
+        console.log(addForm)
+        this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
+        this.addForm.type = ''
+        this.addForm.index = ''
+        this.addForm.name = ''
+      })
     }
   },
 

@@ -153,6 +153,7 @@ export default {
   .guide-container {
     min-height: calc(~"100% - 70px");
     margin-top: 10px;
+    margin-bottom: 240px;
 
     .current-step-container {
       .title-container {

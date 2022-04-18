@@ -322,6 +322,7 @@ export default {
     min-height: calc(~"100% - 70px");
     margin-top: 10px;
 
+
     .current-step-container {
       .title-container {
         margin-left: 20px;

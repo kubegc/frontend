@@ -35,10 +35,10 @@
           <multipane class="vertical-panes"
                      layout="vertical">
 
-            <div v-else
+            <div
                  class="no-content">
-              <img src="@assets/icons/illustration/editor_nodata.svg"
-                   alt="">
+<!--              <img src="@assets/icons/illustration/editor_nodata.svg"-->
+<!--                   alt="">-->
               <p v-if="services.length === 0">暂无服务，点击 <el-button size="mini"
                            icon="el-icon-plus"
                            @click="createService()"
