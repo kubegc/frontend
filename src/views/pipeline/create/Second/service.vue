@@ -61,6 +61,9 @@
                                                                circle>
             </el-button> 创建服务</p>
           </div>
+          <div class = "aside__inner">
+            <serviceAside></serviceAside>
+          </div>
         </multipane>
       </div>
     </div>
@@ -82,12 +85,13 @@
 <script>
 import step from '../common/step.vue'
 import serviceTree from '../common/service_tree'
+import serviceAside from './service_aside'
 import { Multipane, MultipaneResizer } from 'vue-multipane'
 import axios from 'axios'
 
 export default {
   components: {
-    step, serviceTree, Multipane, MultipaneResizer
+    step, serviceTree, serviceAside, Multipane, MultipaneResizer
   },
   data () {
     return {

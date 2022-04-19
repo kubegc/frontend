@@ -16,18 +16,18 @@
           </div>
         </div>
         <div class="account-integrations cf-block__list">
-          <el-table v-loading="loading"
+          <el-table
                     :data="mapWorkflows"
                     style="width: 100%;">
             <el-table-column label="工作流名称">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px;">{{ scope.row.name }}</span>
+              <template >
+                <span style="margin-left: 10px;">{{ 111 }}</span>
               </template>
             </el-table-column>
-            <el-table-column width="200px"
+            <el-table-column width="400px"
                              label="环境信息">
             </el-table-column>
-            <el-table-column width="200px"
+            <el-table-column width="400px"
                              label="包含步骤">
               <template slot-scope="scope">
                 <span>
@@ -47,10 +47,10 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column width="150px"
+            <el-table-column width="200px"
                              label="更新信息（时间/操作人）">
             </el-table-column>
-            <el-table-column width="120px"
+            <el-table-column width="200px"
                              label="操作">
               <template slot-scope="scope">
                 <el-button type="success"

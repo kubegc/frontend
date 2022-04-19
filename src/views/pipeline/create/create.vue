@@ -23,19 +23,19 @@
                 <el-form-item label="工作流名称"
                               v-show="activeName !=='advance'"
                               prop="project_name">
-                  <el-input v-model="tableData.name"></el-input>
+                  <el-input v-model="addForm.name"></el-input>
                 </el-form-item>
 
                 <el-form-item label="工作流标识"
                               prop="product_name">
-                  <el-input v-model="tableData.index"></el-input>
+                  <el-input v-model="addForm.index"></el-input>
                 </el-form-item>
 
                 <el-form-item
                               v-show="activeName==='advance'"
                               label="服务部署超时（分钟）"
                               prop="timeout">
-                  <el-input v-model.number="projectForm.timeout"></el-input>
+                  <el-input v-model="addForm.type"></el-input>
                 </el-form-item>
                 <el-form-item
                               v-show="activeName==='advance'"
@@ -145,6 +145,7 @@
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 import { getUserList } from '../../../api/api'
+import tableData from '../pipeline_add'
 
 export default {
   data () {
@@ -184,7 +185,7 @@ export default {
       addFormRules:{
         type:[{require: true, message: '请输入', trigger: 'blur'}],
         index:[{require: true, message: '请输入', trigger: 'blur'}],
-        name:[{require: true, message: '请输入', trigger: 'blur'}],
+        name:[{require: true, message: '请输入', trigger: 'blur'}]
       }
     }
   },
@@ -192,6 +193,7 @@ export default {
   mounted() {
     this.pipelinelength()
     this.initPage()
+    this.$refs.msg[0].findAllorder(this.activeName);
   },
 
   methods: {
@@ -248,6 +250,10 @@ export default {
         this.addForm.index = ''
         this.addForm.name = ''
       })
+    },
+    handleClick(type, index) {
+      console.log(type, index);
+      this.$refs.msg[addForm.index].findAllorder(this.activeName);
     }
   },
 
