@@ -37,7 +37,7 @@
             <div class="pipeline-workflow-box__title">构建</div>
           </header>
           <div class="pipeline-workflow-box__content">
-<!--            <build ref="buildRef"></build>-->
+            <build ref="buildRef"></build>
           </div>
             <div class="btn-container">
               <el-button type="primary"
@@ -645,7 +645,7 @@ export default {
     .aside__content {
       -ms-flex: 1;
       flex: 1;
-      width: 400px;
+      width: 200px;
       overflow-x: hidden;
       background-color: #fff;
       -webkit-box-flex: 1;

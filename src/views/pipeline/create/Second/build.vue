@@ -63,6 +63,118 @@
 export default {
   data() {
     return {
+      source: 'zadig',
+      orginOptions: [{
+        value: 'zadig',
+        label: 'Zadig 构建'
+      },
+        {
+          value: 'jenkins',
+          label: 'Jenkins 构建'
+        }],
+      jenkinsJobList: [],
+      jenkinsBuild: {
+        name: '',
+        desc: '',
+        targets: [],
+        timeout: 60,
+        jenkins_build: {
+          job_name: '',
+          jenkins_build_params: []
+        },
+        pre_build: {
+          res_req: 'low'
+        }
+      },
+      buildConfig: {
+        timeout: 60,
+        name: '',
+        desc: '',
+        repos: [],
+        pre_build: {
+          clean_workspace: false,
+          res_req: 'low',
+          build_os: 'xenial',
+          image_id: '',
+          image_from: '',
+          installs: [],
+          envs: [],
+          enable_proxy: false,
+          enable_gocov: false,
+          parameters: []
+        },
+        scripts: '#!/bin/bash\nset -e',
+        main_file: '',
+        post_build: {
+        },
+        targets: []
+      },
+      stcov_enabled: false,
+      docker_enabled: false,
+      binary_enabled: false,
+      post_script_enabled: false,
+      allApps: [],
+      serviceTargets: [],
+      allCodeHosts: [],
+      showBuildAdvancedSetting: {},
+      createRules: {
+        name: [
+          {
+            type: 'string',
+            required: true,
+            validator: validateBuildConfigName,
+            trigger: 'blur'
+          }
+        ],
+        'pre_build.image_id': [
+          {
+            type: 'string',
+            required: true,
+            message: '请选择构建系统',
+            trigger: 'blur'
+          }
+        ]
+      },
+      docker_rules: {
+        work_dir: [
+          {
+            type: 'string',
+            message: '请填写镜像构建目录',
+            required: true,
+            trigger: 'blur'
+          }
+        ],
+        docker_file: [
+          {
+            type: 'string',
+            message: '请填写Dockerfile路径',
+            required: true,
+            trigger: 'blur'
+          }
+        ]
+      },
+      stcov_rules: {
+        main_file: [
+          {
+            type: 'string',
+            message: '请填写main文件路径',
+            required: true,
+            trigger: 'blur'
+          }
+        ]
+      },
+      file_archive_rules: {
+        file_location: [
+          {
+            type: 'string',
+            message: '请填写文件路径',
+            required: true,
+            trigger: 'blur'
+          }
+        ]
+      },
+      systems: [],
+
       form: {
         name: '',
         region: '',
