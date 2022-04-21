@@ -190,6 +190,103 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!');
+    },
+    addFirstCacheDir () {
+      if (!this.buildConfig.caches || this.buildConfig.caches.length === 0) {
+        this.$set(this.buildConfig, 'caches', [])
+        this.buildConfig.caches.push('')
+      }
+    },
+    addCacheDir (index) {
+      this.$refs.cacheDir.validate((valid) => {
+        if (valid) {
+          this.buildConfig.caches.push('')
+        } else {
+          return false
+        }
+      })
+    },
+    deleteCacheDir (index) {
+      this.buildConfig.caches.splice(index, 1)
+    },
+    addBuildApp (index) {
+      this.$refs.buildApp.validate((valid) => {
+        if (valid) {
+          this.buildConfig.pre_build.installs.push({
+            name: '',
+            version: '',
+            id: ''
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    addFirstBuildApp () {
+      this.buildConfig.pre_build.installs.push({
+        name: '',
+        version: '',
+        id: ''
+      })
+    },
+    deleteBuildApp (index) {
+      this.buildConfig.pre_build.installs.splice(index, 1)
+    },
+    addBuildEnv (index) {
+      this.$refs.buildEnv.validate((valid) => {
+        if (valid) {
+          this.buildConfig.pre_build.envs.push({
+            key: '',
+            value: '',
+            is_credential: true
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    addFirstBuildEnv () {
+      this.buildConfig.pre_build.envs.push({
+        key: '',
+        value: '',
+        is_credential: true
+      })
+    },
+    deleteBuildEnv (index) {
+      this.buildConfig.pre_build.envs.splice(index, 1)
+    },
+    addExtra (command) {
+      if (command === 'docker') {
+        this.docker_enabled = true
+        if (!this.buildConfig.post_build) {
+          this.$set(this.buildConfig, 'post_build', {})
+        }
+        this.$set(this.buildConfig.post_build, 'docker_build', {
+          work_dir: '',
+          docker_file: '',
+          build_args: ''
+        })
+      }
+      if (command === 'stcov') {
+        this.stcov_enabled = true
+      }
+      if (command === 'binary') {
+        this.binary_enabled = true
+        if (!this.buildConfig.post_build) {
+          this.$set(this.buildConfig, 'post_build', {})
+        }
+        this.$set(this.buildConfig.post_build, 'file_archive', {
+          file_location: ''
+        })
+      }
+      if (command === 'script') {
+        this.post_script_enabled = true
+        if (!this.buildConfig.post_build) {
+          this.$set(this.buildConfig, 'post_build', {})
+        }
+        this.$set(this.buildConfig.post_build, 'scripts', '#!/bin/bash\nset -e')
+      }
+      this.$nextTick(this.$utils.scrollToBottom)
     }
   }
 }
