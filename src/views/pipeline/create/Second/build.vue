@@ -9,7 +9,7 @@
         <el-option label="区域二" value="beijing"></el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="构建时间">
+    <el-form-item label="构建超时">
       <el-col :span="11">
         <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
       </el-col>
@@ -31,8 +31,8 @@
     </el-form-item>
     <el-form-item label="特殊资源">
       <el-radio-group v-model="form.resource">
-        <el-radio label="使用工作空间缓存"></el-radio>
-        <el-radio label="缓存自定义目录"></el-radio>
+        <el-radio label="环境变量"></el-radio>
+        <el-radio label="环境策略"></el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="构建脚本">
@@ -63,118 +63,6 @@
 export default {
   data() {
     return {
-      source: 'zadig',
-      orginOptions: [{
-        value: 'zadig',
-        label: 'Zadig 构建'
-      },
-        {
-          value: 'jenkins',
-          label: 'Jenkins 构建'
-        }],
-      jenkinsJobList: [],
-      jenkinsBuild: {
-        name: '',
-        desc: '',
-        targets: [],
-        timeout: 60,
-        jenkins_build: {
-          job_name: '',
-          jenkins_build_params: []
-        },
-        pre_build: {
-          res_req: 'low'
-        }
-      },
-      buildConfig: {
-        timeout: 60,
-        name: '',
-        desc: '',
-        repos: [],
-        pre_build: {
-          clean_workspace: false,
-          res_req: 'low',
-          build_os: 'xenial',
-          image_id: '',
-          image_from: '',
-          installs: [],
-          envs: [],
-          enable_proxy: false,
-          enable_gocov: false,
-          parameters: []
-        },
-        scripts: '#!/bin/bash\nset -e',
-        main_file: '',
-        post_build: {
-        },
-        targets: []
-      },
-      stcov_enabled: false,
-      docker_enabled: false,
-      binary_enabled: false,
-      post_script_enabled: false,
-      allApps: [],
-      serviceTargets: [],
-      allCodeHosts: [],
-      showBuildAdvancedSetting: {},
-      createRules: {
-        name: [
-          {
-            type: 'string',
-            required: true,
-            validator: validateBuildConfigName,
-            trigger: 'blur'
-          }
-        ],
-        'pre_build.image_id': [
-          {
-            type: 'string',
-            required: true,
-            message: '请选择构建系统',
-            trigger: 'blur'
-          }
-        ]
-      },
-      docker_rules: {
-        work_dir: [
-          {
-            type: 'string',
-            message: '请填写镜像构建目录',
-            required: true,
-            trigger: 'blur'
-          }
-        ],
-        docker_file: [
-          {
-            type: 'string',
-            message: '请填写Dockerfile路径',
-            required: true,
-            trigger: 'blur'
-          }
-        ]
-      },
-      stcov_rules: {
-        main_file: [
-          {
-            type: 'string',
-            message: '请填写main文件路径',
-            required: true,
-            trigger: 'blur'
-          }
-        ]
-      },
-      file_archive_rules: {
-        file_location: [
-          {
-            type: 'string',
-            message: '请填写文件路径',
-            required: true,
-            trigger: 'blur'
-          }
-        ]
-      },
-      systems: [],
-
       form: {
         name: '',
         region: '',
@@ -190,103 +78,6 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!');
-    },
-    addFirstCacheDir () {
-      if (!this.buildConfig.caches || this.buildConfig.caches.length === 0) {
-        this.$set(this.buildConfig, 'caches', [])
-        this.buildConfig.caches.push('')
-      }
-    },
-    addCacheDir (index) {
-      this.$refs.cacheDir.validate((valid) => {
-        if (valid) {
-          this.buildConfig.caches.push('')
-        } else {
-          return false
-        }
-      })
-    },
-    deleteCacheDir (index) {
-      this.buildConfig.caches.splice(index, 1)
-    },
-    addBuildApp (index) {
-      this.$refs.buildApp.validate((valid) => {
-        if (valid) {
-          this.buildConfig.pre_build.installs.push({
-            name: '',
-            version: '',
-            id: ''
-          })
-        } else {
-          return false
-        }
-      })
-    },
-    addFirstBuildApp () {
-      this.buildConfig.pre_build.installs.push({
-        name: '',
-        version: '',
-        id: ''
-      })
-    },
-    deleteBuildApp (index) {
-      this.buildConfig.pre_build.installs.splice(index, 1)
-    },
-    addBuildEnv (index) {
-      this.$refs.buildEnv.validate((valid) => {
-        if (valid) {
-          this.buildConfig.pre_build.envs.push({
-            key: '',
-            value: '',
-            is_credential: true
-          })
-        } else {
-          return false
-        }
-      })
-    },
-    addFirstBuildEnv () {
-      this.buildConfig.pre_build.envs.push({
-        key: '',
-        value: '',
-        is_credential: true
-      })
-    },
-    deleteBuildEnv (index) {
-      this.buildConfig.pre_build.envs.splice(index, 1)
-    },
-    addExtra (command) {
-      if (command === 'docker') {
-        this.docker_enabled = true
-        if (!this.buildConfig.post_build) {
-          this.$set(this.buildConfig, 'post_build', {})
-        }
-        this.$set(this.buildConfig.post_build, 'docker_build', {
-          work_dir: '',
-          docker_file: '',
-          build_args: ''
-        })
-      }
-      if (command === 'stcov') {
-        this.stcov_enabled = true
-      }
-      if (command === 'binary') {
-        this.binary_enabled = true
-        if (!this.buildConfig.post_build) {
-          this.$set(this.buildConfig, 'post_build', {})
-        }
-        this.$set(this.buildConfig.post_build, 'file_archive', {
-          file_location: ''
-        })
-      }
-      if (command === 'script') {
-        this.post_script_enabled = true
-        if (!this.buildConfig.post_build) {
-          this.$set(this.buildConfig, 'post_build', {})
-        }
-        this.$set(this.buildConfig.post_build, 'scripts', '#!/bin/bash\nset -e')
-      }
-      this.$nextTick(this.$utils.scrollToBottom)
     }
   }
 }
