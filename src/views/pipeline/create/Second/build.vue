@@ -1,109 +1,406 @@
 <template>
-  <el-form ref="form" :model="form" label-width="80px">
-    <el-form-item label="构建名称">
-      <el-input v-model="form.name"></el-input>
-    </el-form-item>
-    <el-form-item label="构建服务">
-      <el-select v-model="form.region" placeholder="请选择活动区域">
-        <el-option label="区域一" value="shanghai"></el-option>
-        <el-option label="区域二" value="beijing"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="构建超时">
-      <el-col :span="11">
-        <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-      </el-col>
-      <el-col class="line" :span="2">-</el-col>
-      <el-col :span="11">
-        <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-      </el-col>
-    </el-form-item>
-    <el-form-item label="即时">
-      <el-switch v-model="form.delivery"></el-switch>
-    </el-form-item>
-    <el-form-item label="代码信息">
-      <el-checkbox-group v-model="form.type">
-        <el-checkbox label="平台" name="type"></el-checkbox>
-        <el-checkbox label="拥有者" name="type"></el-checkbox>
-        <el-checkbox label="名称" name="type"></el-checkbox>
-        <el-checkbox label="分支" name="type"></el-checkbox>
-      </el-checkbox-group>
-    </el-form-item>
-    <el-form-item label="特殊资源">
-      <el-radio-group v-model="form.resource">
-        <el-radio label="环境变量"></el-radio>
-        <el-radio label="环境策略"></el-radio>
-      </el-radio-group>
-    </el-form-item>
-    <el-form-item label="构建脚本">
-      <el-input type="textarea" v-model="form.desc"></el-input>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="onSubmit">立即创建</el-button>
-      <el-button>取消</el-button>
-    </el-form-item>
-  </el-form>
+    <div class="build-config-container">
+      <div class="jenkins" v-show="source === 'jenkins'">
+        <div class="section">
+          <el-form ref="jenkinsForm"
+                  :model="jenkinsBuild"
+                  label-position="left"
+                  label-width="100px">
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建来源"  :rules="[{ required: true, message: '构建来源不能为空' }]">
+                  <el-select style="width: 100%;"
+                            v-model="source"
+                            size="small"
+                            :disabled="isEdit"
+                            value-key="key"
+                            filterable>
+                    <el-option v-for="(item,index) in orginOptions"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建超时">
+                  <el-input-number size="mini"
+                                  :min="1"
+                                  v-model="jenkinsBuild.timeout"></el-input-number>
+                  <span>分钟</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建名称"
+                              prop="name" :rules="[{ required: true, message: '构建名称不能为空' }]">
+                  <el-input v-model="jenkinsBuild.name"
+                            placeholder="构建名称"
+                            autofocus
+                            size="small"
+                            :disabled="isEdit"
+                            auto-complete="off"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建服务">
+                  <el-select style="width: 100%;"
+                            v-model="jenkinsBuild.targets"
+                            multiple
+                            size="small"
+                            value-key="key"
+                            filterable>
+                    <el-option v-for="(service,index) in serviceTargets"
+                        :key="index"
+                        :label="`${service.service_module}(${service.service_name})`"
+                        :value="service">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+
+            </el-row>
+            <span class="item-title">构建参数</span>
+            <el-alert class="description"
+              show-icon
+              title="Jenkins Build Parameters 中必须存在“IMAGE”变量，作为构建镜像的名称，Jenkins 成功构建镜像后，部署阶段会使用该镜像更新服务"
+              :closable="false"
+              type="warning">
+            </el-alert>
+            <div class="divider item"></div>
+            <el-row v-for="(item) in jenkinsBuild.jenkins_build.jenkins_build_params" :key="item.name">
+             <el-col :span="24">
+              <el-form-item
+                label-width="140px"
+                :label="item.name"
+                class="form-item"
+              >
+                <el-input
+                  size="medium"
+                  v-model="item.value"
+                  placeholder="请输入值"
+                ></el-input>
+              </el-form-item>
+             </el-col>
+            </el-row>
+          </el-form>
+        </div>
+      </div>
+      <div class="zadig" v-show="source === 'zadig'">
+        <div class="section">
+          <el-form ref="addConfigForm"
+                  :model="buildConfig"
+                  :rules="createRules"
+                  label-position="left"
+                  label-width="80px">
+             <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建来源">
+                  <el-select style="width: 100%;"
+                            v-model="source"
+                            size="small"
+                            value-key="key"
+                            :disabled="isEdit"
+                            filterable>
+                    <el-option v-for="(item,index) in orginOptions"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建超时">
+                  <el-input-number size="mini"
+                                  :min="1"
+                                  v-model="buildConfig.timeout"></el-input-number>
+                  <span>分钟</span>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="构建名称"
+                              prop="name">
+                  <el-input v-model="buildConfig.name"
+                            placeholder="构建名称"
+                            autofocus
+                            size="mini"
+                            :disabled="isEdit"
+                            auto-complete="off"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="24">
+                <el-form-item prop="targets"
+                              label="构建服务">
+                  <el-select style="width: 100%;"
+                            v-model="buildConfig.targets"
+                            multiple
+                            size="mini"
+                            value-key="key"
+                            filterable>
+                    <el-option v-for="(service,index) in serviceTargets"
+                              :key="index"
+                              :label="`${service.service_module}(${service.service_name})`"
+                              :value="service">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <span class="item-title">构建环境</span>
+            <div class="divider item"></div>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="系统"
+                              prop="pre_build.image_id"
+                              label-width="60px">
+                  <el-select size="mini"
+                            v-model="buildConfig.pre_build.image_id"
+                            placeholder="请选择">
+                    <el-option v-for="(sys,index) in systems"
+                              :key="index"
+                              :label="sys.label"
+                              :value="sys.id">
+                      <span> {{sys.label}}
+                        <el-tag v-if="sys.image_from==='custom'"
+                                type="info"
+                                size="mini"
+                                effect="light">
+                          自定义
+                        </el-tag>
+                      </span>
+                    </el-option>
+                    <el-option value="NEWCUSTOM">
+                      <router-link to="/v1/system/imgs" style="color: #606266;">新建自定义构建镜像</router-link>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="资源"
+                              label-width="50px">
+                  <el-select size="mini"
+                            v-model="buildConfig.pre_build.res_req"
+                            placeholder="请选择">
+                    <el-option label="高 | CPU: 16 核 内存: 32 GB"
+                              value="high">
+                    </el-option>
+                    <el-option label="中 | CPU: 8 核 内存: 16 GB"
+                              value="medium">
+                    </el-option>
+                    <el-option label="低 | CPU: 4 核 内存: 8 GB"
+                              value="low">
+                    </el-option>
+                    <el-option label="最低 | CPU: 2 核 内存: 2 GB"
+                              value="min">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+          <el-form ref="buildApp"
+                  :inline="true"
+                  :model="buildConfig"
+                  class="form-style1"
+                  label-position="top"
+                  label-width="80px">
+            <span class="item-title">应用列表</span>
+            <el-button v-if="buildConfig.pre_build.installs.length===0"
+                      style="padding: 0;"
+                      @click="addFirstBuildApp()"
+                      size="mini"
+                      type="text">新增</el-button>
+            <div class="divider item"></div>
+            <el-row v-for="(app,build_app_index) in buildConfig.pre_build.installs"
+                    :key="build_app_index">
+              <el-col :span="12">
+                <el-form-item
+                              :prop="'pre_build.installs.' + build_app_index + '.name'"
+                              :rules="{required: true, message: '应用名不能为空', trigger: 'blur'}">
+                  <el-select style="width: 100%;"
+                            v-model="buildConfig.pre_build.installs[build_app_index]"
+                            placeholder="请选择应用"
+                            size="mini"
+                            value-key="id"
+                            filterable>
+                    <el-option v-for="(app, index) in allApps"
+                              :key="index"
+                              :label="`${app.name} ${app.version} `"
+                              :value="{'name':app.name,'version':app.version,'id':app.name+app.version}">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item>
+                  <div class="app-operation">
+                    <el-button v-if="buildConfig.pre_build.installs.length >= 1"
+                              @click="deleteBuildApp(build_app_index)"
+                              type="danger"
+                              size="mini"
+                              plain>删除</el-button>
+                    <el-button v-if="build_app_index===buildConfig.pre_build.installs.length-1"
+                              @click="addBuildApp(build_app_index)"
+                              type="primary"
+                              size="mini"
+                              plain>新增</el-button>
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+        <div class="section">
+          <repo-select :config="buildConfig"
+                      ref="repoSelect"
+                      showDivider
+                      addBtnMini
+                      shortDescription
+                      showFirstLine></repo-select>
+        </div>
+        <div class="section">
+          <el-form ref="buildEnv"
+                  :inline="true"
+                  :model="buildConfig"
+                  class="form-style1"
+                  label-position="top"
+                  label-width="120px">
+            <span class="item-title">环境变量</span>
+            <el-button v-if="buildConfig.pre_build.envs.length===0"
+                      style="padding: 0;"
+                      size="mini"
+                      @click="addFirstBuildEnv()"
+                      type="text">新增</el-button>
+            <div class="divider item"></div>
+            <el-row v-for="(app,build_env_index) in buildConfig.pre_build.envs"
+                    :key="build_env_index">
+              <el-col :span="5">
+                <el-form-item
+                              :prop="'pre_build.envs.' + build_env_index + '.key'"
+                              :rules="{required: true, message: '键不能为空', trigger: 'blur'}">
+                  <el-input placeholder="键" v-model="buildConfig.pre_build.envs[build_env_index].key"
+                            size="mini">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+
+        <div class="section">
+          <el-form ref="cacheDir"
+                  :inline="true"
+                  :model="buildConfig"
+                  class="form-style1"
+                  label-position="left"
+                  label-width="130px">
+            <span class="item-title">缓存策略</span>
+            <div class="divider item"></div>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="使用工作空间缓存">
+                  <el-switch  v-model="useWorkspaceCache"
+                            active-color="#409EFF">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <template>
+              <el-row>
+                <el-col :span="12">
+                  <el-form-item label="缓存自定义目录">
+                    <el-button v-if="!this.buildConfig.caches||this.buildConfig.caches.length ===0"
+                              style="padding: 0;"
+                              @click="addFirstCacheDir()"
+                              type="text">新增</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row v-for="(dir,index) in buildConfig.caches"
+                      :key="index">
+                <el-col :span="14">
+                  <el-form-item :label="index===0?'':''">
+                    <el-input v-model="buildConfig.caches[index]"
+                              style="width: 100%;"
+                              size="mini">
+                      <template slot="prepend">$WORKSPACE/</template>
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10">
+                  <el-form-item :label="index===0?'':''">
+                    <div class="app-operation">
+                      <el-button v-if="buildConfig.caches.length >= 1"
+                                @click="deleteCacheDir(index)"
+                                type="danger"
+                                size="mini"
+                                plain>删除</el-button>
+                      <el-button v-if="index===buildConfig.caches.length-1"
+                                @click="addCacheDir(index)"
+                                type="primary"
+                                size="mini"
+                                plain>新增</el-button>
+                    </div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </template>
+          </el-form>
+        </div>
+      </div>
+    </div>
 </template>
 <script>
 // import { getBuildConfigDetailAPI, getAllAppsAPI, getImgListAPI, getCodeSourceAPI, createBuildConfigAPI, updateBuildConfigAPI, getServiceTargetsAPI, queryJenkinsJob, queryJenkinsParams } from '@api'
 // import qs from 'qs'
 // import Editor from 'vue2-ace-bind'
 // import Resize from '@/components/common/resize.vue'
-// const validateBuildConfigName = (rule, value, callback) => {
-//   if (value === '') {
-//     callback(new Error('请输入构建名称'))
-//   } else {
-//     if (!/^[a-z0-9-]+$/.test(value)) {
-//       callback(new Error('名称只支持小写字母和数字，特殊字符只支持中划线'))
-//     } else {
-//       callback()
-//     }
-//   }
-// }
 export default {
-  data() {
+  data () {
     return {
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+
     }
   },
   methods: {
-    onSubmit() {
-      console.log('submit!');
+
+
+  },
+  props: {
+    detectedServices: {
+      required: true,
+      type: Array
     }
+  },
+  computed: {
+
+  },
+  created () {
+
+  },
+  watch: {
+
+  },
+  components: {
+
   }
 }
 </script>
 <style lang="less" scoped>
-  .scrollBar() {
-    ::-webkit-scrollbar-track {
-      width: 5px;
-      height: 5px;
-      background-color: #f5f5f5;
-      border-radius: 6px;
-    }
-
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 5px;
-      background-color: #f5f5f5;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      width: 5px;
-      height: 5px;
-      background-color: #b7b8b9;
-      border-radius: 6px;
-    }
-  }
 
 .el-input-group {
   vertical-align: middle;

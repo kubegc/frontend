@@ -253,7 +253,7 @@
             <div class="pipeline-workflow-box__title">构建</div>
           </header>
           <div class="pipelines-aside-help__content">
-            <build></build>
+            <test></test>
           </div>
         </div>
       </div>
@@ -264,7 +264,7 @@
 import axios from 'axios'
 // import bus from '@utils/event_bus'
 // import { serviceTemplateWithConfigAPI, getSingleProjectAPI, updateEnvTemplateAPI, getRegistryWhenBuildAPI, getCodeSourceByAdminAPI } from '@api'
-import build from './build'
+import test from './test'
 // import help from './container/help.vue'
 // import addCode from '../common/add_code.vue'
 // import IntegrationRegistry from '@/components/projects/common/integration_registry.vue'
@@ -526,7 +526,7 @@ export default {
     // }
   },
   components: {
-     build
+     test
   //   help,
   //   'add-code': addCode,
   //   IntegrationRegistry
