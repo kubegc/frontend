@@ -131,7 +131,7 @@
                   empty-text="无"
                   class="build-deploy-table">
           <el-table-column type="expand">
-            <template slot-scope="scope">
+<!--            <template slot-scope="scope">-->
 <!--              <task-detail-build :buildv2="scope.row.buildv2SubTask"-->
 <!--                                 :docker_build="scope.row.docker_buildSubTask"-->
 <!--                                 :isWorkflow="true"-->

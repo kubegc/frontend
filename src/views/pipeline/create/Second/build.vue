@@ -66,7 +66,23 @@
               </el-col>
             </el-row>
             <el-row>
+             <el-col :span="24">
+                <el-form-item label="jenkins job" prop="jenkins_build.job_name" :rules="[{ required: true, trigger: 'change', message: 'jobs不能为空' }]" >
+                  <el-select style="width: 100%;"
+                            v-model="jenkinsBuild.jenkins_build.job_name"
 
+                            size="small"
+                            value-key="key"
+                            @change="changeJobName"
+                            filterable>
+                    <el-option v-for="(item,index) in jenkinsJobList"
+                        :key="index"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
             <span class="item-title">构建参数</span>
             <el-alert class="description"
@@ -298,6 +314,44 @@
                   </el-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="5">
+                <el-form-item
+                              :prop="'pre_build.envs.' + build_env_index + '.value'"
+                              :rules="{required: true, message: '值不能为空', trigger: 'blur'}">
+                  <el-input placeholder="值" v-model="buildConfig.pre_build.envs[build_env_index].value"
+                            size="mini">
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item prop="is_credential">
+                  <el-checkbox v-model="buildConfig.pre_build.envs[build_env_index].is_credential">
+                    敏感信息
+                    <el-tooltip effect="dark"
+                                content="在日志中将被隐藏"
+                                placement="top">
+                      <i class="el-icon-question"></i>
+                    </el-tooltip>
+                  </el-checkbox>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div class="app-operation">
+                    <el-button v-if="buildConfig.pre_build.envs.length >= 1"
+                              @click="deleteBuildEnv(build_env_index)"
+                              type="danger"
+                              size="mini"
+                              plain>删除</el-button>
+                    <el-button v-if="build_env_index===buildConfig.pre_build.envs.length-1"
+                              @click="addBuildEnv(build_env_index)"
+                              type="primary"
+                              size="mini"
+                              plain>新增</el-button>
+
+                  </div>
+                </el-form-item>
+              </el-col>
             </el-row>
           </el-form>
         </div>
@@ -362,6 +416,129 @@
             </template>
           </el-form>
         </div>
+        <div class="section">
+          <el-form ref="buildScript"
+                  :model="buildConfig"
+                  label-position="left"
+                  label-width="80px">
+            <span class="item-title">构建脚本</span>
+            <el-row>
+              <el-col  class="deploy-script"  :span="24">
+                <Resize :height="'150px'">
+                  <Editor v-model="buildConfig.scripts"
+                        lang="sh"
+                        theme="xcode"
+                        width="100%"
+                        height="100%"></Editor>
+                </Resize>
+              </el-col>
+            </el-row>
+          </el-form>
+          <el-form v-if="docker_enabled"
+                  :model="buildConfig.post_build.docker_build"
+                  :rules="docker_rules"
+                  ref="docker_build"
+                  class="docker label-at-left">
+
+            <div class="dashed-container">
+              <span class="title">镜像构建
+                <el-button type="text"
+                          @click="removeDocker"
+                          icon="el-icon-delete"></el-button>
+              </span>
+              <el-form-item label="镜像构建目录："
+                            prop="work_dir">
+                <el-input v-model="buildConfig.post_build.docker_build.work_dir"
+                          size="mini">
+                  <template slot="prepend">$WORKSPACE/</template>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="Dockerfile 文件的完整路径："
+                            prop="docker_file">
+                <el-input v-model="buildConfig.post_build.docker_build.docker_file"
+                          size="mini">
+                  <template slot="prepend">$WORKSPACE/</template>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="镜像构建参数：">
+                <el-tooltip effect="dark"
+                            content="支持所有 Docker Build 参数"
+                            placement="top-start">
+                  <el-input v-model="buildConfig.post_build.docker_build.build_args"
+                            size="mini"
+                            placeholder="--build-arg key=value"></el-input>
+                </el-tooltip>
+              </el-form-item>
+            </div>
+            <div class="divider">
+            </div>
+
+          </el-form>
+          <el-form v-if="binary_enabled"
+                  :model="buildConfig.post_build.file_archive"
+                  :rules="file_archive_rules"
+                  ref="file_archive"
+                  class="stcov label-at-left">
+
+            <div class="dashed-container">
+              <span class="title">二进制包归档
+                <el-button type="text"
+                          @click="removeBinary"
+                          icon="el-icon-delete"></el-button>
+              </span>
+              <el-form-item label="二进制包存放路径："
+                            prop="file_location">
+                <el-input v-model="buildConfig.post_build.file_archive.file_location"
+                          size="mini">
+                  <template slot="append">/$PKG_FILE</template>
+                  <template slot="prepend">$WORKSPACE/</template>
+                </el-input>
+              </el-form-item>
+            </div>
+            <div class="divider">
+            </div>
+          </el-form>
+          <el-form v-if="post_script_enabled"
+                  :model="buildConfig.post_build"
+                  ref="script"
+                  label-width="220px"
+                  class="stcov label-at-left">
+            <div class="dashed-container">
+              <span class="title">Shell 脚本
+                <el-button type="text"
+                          @click="removeScript"
+                          icon="el-icon-delete"></el-button>
+              </span>
+              <div class="divider item"></div>
+              <el-row>
+                <el-col :span="24">
+                  <Editor v-model="buildConfig.post_build.scripts"
+                          lang="sh"
+                          theme="xcode"
+                          width="100%"
+                          height="300px"></Editor>
+                </el-col>
+              </el-row>
+            </div>
+            <div class="divider">
+            </div>
+          </el-form>
+          <div>
+            <el-dropdown @command="addExtra">
+              <el-button size="mini">
+                新增构建步骤<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="docker"
+                                  :disabled="docker_enabled">镜像构建</el-dropdown-item>
+                <el-dropdown-item command="binary"
+                                  :disabled="binary_enabled">二进制包归档</el-dropdown-item>
+                <el-dropdown-item command="script"
+                                  :disabled="post_script_enabled">Shell 脚本</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </div>
       </div>
     </div>
 </template>
@@ -393,7 +570,6 @@ export default {
 
   },
   watch: {
-
   },
   components: {
 
@@ -410,11 +586,6 @@ export default {
   margin-top: 10px;
   margin-bottom: 10px;
 
-  .ace_editor.ace-xcode {
-    &:hover {
-      .scrollBar();
-    }
-  }
 }
 
 .params-dialog {
