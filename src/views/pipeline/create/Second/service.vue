@@ -109,21 +109,21 @@ export default {
     }
   },
   methods: {
-    // createService () {
-    //   this.$refs.serviceTree.createService('platform')
-    // },
-    //
-    // getServices () {
-    //   const projectName = this.projectName
-    //   this.$set(this, 'service', {})
-    //   getServiceTemplatesAPI(projectName).then((res) => {
-    //     this.services = sortBy((res.data.map(service => {
-    //       service.idStr = `${service.service_name}/${service.type}`
-    //       service.status = 'added'
-    //       return service
-    //     })), 'service_name')
-    //   })
-    // },
+    createService () {
+      this.$refs.serviceTree.createService('platform')
+    },
+
+    getServices () {
+      const projectName = this.projectName
+      this.$set(this, 'service', {})
+      getServiceTemplatesAPI(projectName).then((res) => {
+        this.services = sortBy((res.data.map(service => {
+          service.idStr = `${service.service_name}/${service.type}`
+          service.status = 'added'
+          return service
+        })), 'service_name')
+      })
+    },
 
     readGuideItems() {
       axios.get('/getDescription').then((response) => {
@@ -133,13 +133,13 @@ export default {
       })
     },
 
-    // getYamlKind (payload) {
-    //   this.currentServiceYamlKinds = payload
-    // },
-    //
-    // jumpToKind (payload) {
-    //   this.$refs.serviceEditor.jumpToWord(`kind: ${payload.kind}`)
-    // }
+    getYamlKind (payload) {
+      this.currentServiceYamlKinds = payload
+    },
+
+    jumpToKind (payload) {
+      this.$refs.serviceEditor.jumpToWord(`kind: ${payload.kind}`)
+    }
   },
 
   mounted() {
