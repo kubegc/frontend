@@ -122,7 +122,6 @@
            :closable="false"
           type="warning">
         </el-alert>
-        <div ></div>
         <el-table :data="buildDeployArray"
                   row-key="_target"
                   :expand-row-keys="expandedBuildDeploys"
@@ -131,19 +130,19 @@
                   empty-text="无"
                   class="build-deploy-table">
           <el-table-column type="expand">
-<!--            <template slot-scope="scope">-->
-<!--              <task-detail-build :buildv2="scope.row.buildv2SubTask"-->
-<!--                                 :docker_build="scope.row.docker_buildSubTask"-->
-<!--                                 :isWorkflow="true"-->
-<!--                                 :serviceName="scope.row._target"-->
-<!--                                 :pipelineName="workflowName"-->
-<!--                                 :projectName="projectName"-->
-<!--                                 :taskID="taskID"-->
-<!--                                 ref="buildComp"></task-detail-build>-->
-<!--              <task-detail-deploy :deploys="scope.row.deploySubTasks"-->
-<!--                                  :pipelineName="workflowName"-->
-<!--                                  :taskID="taskID"></task-detail-deploy>-->
-<!--            </template>-->
+            <template slot-scope="scope">
+              <task-detail-build :buildv2="scope.row.buildv2SubTask"
+                                 :docker_build="scope.row.docker_buildSubTask"
+                                 :isWorkflow="true"
+                                 :serviceName="scope.row._target"
+                                 :pipelineName="workflowName"
+                                 :projectName="projectName"
+                                 :taskID="taskID"
+                                 ref="buildComp"></task-detail-build>
+              <task-detail-deploy :deploys="scope.row.deploySubTasks"
+                                  :pipelineName="workflowName"
+                                  :taskID="taskID"></task-detail-deploy>
+            </template>
           </el-table-column>
 
           <el-table-column prop="_target"
