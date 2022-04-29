@@ -1,26 +1,26 @@
 <template>
   <div class="service-container">
-<!--    <el-dialog title="是否更新对应环境？"-->
-<!--               :append-to-body="true"-->
-<!--               v-if="envNameList.length"-->
-<!--               :visible.sync="updateEnvDialogVisible"-->
-<!--               width="40%">-->
-<!--      <el-checkbox-group v-model="selectedEnvs">-->
-<!--        <el-checkbox v-for="(env,index) in envNameList"-->
-<!--                     :key="index"-->
-<!--                     :label="env.envName"></el-checkbox>-->
-<!--      </el-checkbox-group>-->
-<!--      <span slot="footer"-->
-<!--            class="dialog-footer">-->
-<!--        <el-button size="small"-->
-<!--                   type="primary"-->
-<!--                   @click="autoUpgradeEnv">确 定</el-button>-->
-<!--        <el-button size="small"-->
-<!--                   @click="updateEnvDialogVisible = false">跳过</el-button>-->
+    <el-dialog title="是否更新对应环境？"
+               :append-to-body="true"
+               v-if="envNameList.length"
+               :visible.sync="updateEnvDialogVisible"
+               width="40%">
+      <el-checkbox-group v-model="selectedEnvs">
+        <el-checkbox v-for="(env,index) in envNameList"
+                     :key="index"
+                     :label="env.envName"></el-checkbox>
+      </el-checkbox-group>
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button size="small"
+                   type="primary"
+                   @click="autoUpgradeEnv">确 定</el-button>
+        <el-button size="small"
+                   @click="updateEnvDialogVisible = false">跳过</el-button>
 
-<!--      </span>-->
-<!--    </el-dialog>-->
-    <!--start of workspace-tree-dialog-->
+      </span>
+    </el-dialog>
+<!--    start of workspace-tree-dialog-->
     <el-dialog :append-to-body="true"
                :visible.sync="workSpaceModalVisible"
                width="60%"
