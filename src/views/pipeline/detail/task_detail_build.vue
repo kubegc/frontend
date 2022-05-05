@@ -1,13 +1,11 @@
 <template>
   <div class="task-detail-build">
-    <el-card v-if="!$utils.isEmpty(buildv2) && buildv2.enabled"
-             class="box-card task-process"
+    <el-card class="box-card task-process"
              :body-style="{padding: '8px 20px', margin: '5px 0 0 0' }">
       <div slot="header"
            class="clearfix subtask-header">
         <span>构建</span>
-        <div v-if="buildv2.status==='running'"
-             class="loader">
+        <div class="loader">
           <div class="ball-scale-multiple">
             <div></div>
             <div></div>
@@ -16,8 +14,7 @@
         </div>
       </div>
       <div class="error-wrapper">
-        <el-alert v-if="buildv2.error"
-                  title="错误信息"
+        <el-alert title="错误信息"
                   :description="buildv2.error"
                   type="error"
                   close-text="知道了">
@@ -36,19 +33,16 @@
                  href="#buildv2-log">{{buildv2.status?buildOverallStatusZh:"未运行"}}</a>
             </div>
           </el-col>
-          <el-col v-if="buildv2.status!=='running'"
-                  :span="6">
+          <el-col :span="6">
             <div class="grid-content item-title">
               <i class="iconfont iconshijian"></i> 持续时间
             </div>
           </el-col>
-          <el-col v-if="buildv2.status!=='running'"
-                  :span="6">
-            <span
-                  class="item-desc">{{$utils.timeFormat(buildv2.end_time - buildv2.start_time)}}</span>
+          <el-col :span="6">
+            <span class="item-desc">{{$utils.timeFormat(buildv2.end_time - buildv2.start_time)}}</span>
           </el-col>
         </el-row>
-        <template v-if="buildv2.job_ctx">
+        <template >
           <el-row :gutter="0"
                   v-for="(build,index) in buildv2.job_ctx.builds"
                   :key="index">
@@ -72,8 +66,7 @@
                           effect="dark">
                 <span v-if="build.tag"
                       class="link">
-                  <a v-if="build.source==='github'||build.source==='gitlab'"
-                     :href="`${build.address}/${build.repo_owner}/${build.repo_name}/tags/${build.tag}`"
+                  <a :href="`${build.address}/${build.repo_owner}/${build.repo_name}/tags/${build.tag}`"
                      target="_blank">{{build.tag}}
                   </a>
                   <span v-if="build.source==='gerrit'">{{build.tag}}</span>
@@ -82,8 +75,7 @@
               <el-tooltip :content="build.source==='gerrit'||build.source==='codehub'?`暂不支持在该类型上查看 Branch`:`在 ${build.source} 上查看 Branch`"
                           placement="top"
                           effect="dark">
-                <span v-if="build.branch && !build.tag"
-                      class="link">
+                <span class="link">
                   <a v-if="build.source==='github'||build.source==='gitlab'"
                      :href="`${build.address}/${build.repo_owner}/${build.repo_name}/tree/${build.branch}`"
                      target="_blank">{{"Branch-"+build.branch}}
@@ -95,25 +87,6 @@
                      target="_blank">{{"Branch-"+build.branch}}
                   </a>
                   <span v-else-if="build.source ==='codehub'">{{"Branch-"+build.branch}}</span>
-                </span>
-              </el-tooltip>
-              <el-tooltip :content="`在 ${build.source} 上查看 PR`"
-                          placement="top"
-                          effect="dark">
-                <span v-if="build.pr && build.pr>0"
-                      class="link">
-                  <a v-if="build.source==='github'"
-                     :href="`${build.address}/${build.repo_owner}/${build.repo_name}/pull/${build.pr}`"
-                     target="_blank">{{"PR-"+build.pr}}
-                  </a>
-                  <a v-if="build.source==='gitlab'"
-                     :href="`${build.address}/${build.repo_owner}/${build.repo_name}/merge_requests/${build.pr}`"
-                     target="_blank">{{"PR-"+build.pr}}
-                  </a>
-                  <a v-if="!build.source"
-                     :href="`${build.address}/${build.repo_owner}/${build.repo_name}/pull/${build.pr}`"
-                     target="_blank">{{"PR-"+build.pr}}
-                  </a>
                 </span>
               </el-tooltip>
               <el-tooltip :content="build.source==='gerrit'||build.source==='codehub'?`暂不支持在该类型上查看 Commit`:`在 ${build.source} 上查看 Commit`"
@@ -140,8 +113,7 @@
             </el-col>
           </el-row>
         </template>
-        <el-row v-if="!$utils.isEmpty(buildv2)"
-                :gutter="0">
+        <el-row :gutter="0">
           <el-col :span="6">
             <div class="grid-content item-title">
               <i class="iconfont iconfuwu"></i> 服务名称
