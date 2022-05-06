@@ -156,6 +156,73 @@ export default {
     }
   },
   methods: {
+    getProjects () {
+      this.loading = true
+      getProjectsAPI().then(
+        response => {
+          this.projects = this.$utils.deepSortOn(response, 'product_name')
+          this.loading = false
+        }
+      )
+    },
+    handleCommand (command) {
+      if (command.action === 'delete') {
+        this.deleteProject(command.project_name)
+      }
+    },
+    deleteProject (projectName) {
+      let services; let buildConfigs; let allWorkflows = []
+      const workflows = (this.workflowList.filter(w => w.product_tmpl_name === projectName)).map((element) => { return element.name })
+      const envNames = (this.productList.filter(p => p.product_name === projectName)).map((element) => { return element.env_name })
+      allWorkflows = workflows
+      getSingleProjectAPI(projectName).then((res) => {
+        services = _.flattenDeep(res.services)
+      }).then(() => {
+        getBuildConfigsAPI(projectName).then((res) => {
+          buildConfigs = res.map((element) => { return element.name })
+          const htmlTemplate = `
+      <span><b>服务：</b>${services.length > 0 ? services.join(', ') : '无'}</span><br>
+      <span><b>构建：</b>${buildConfigs.length > 0 ? buildConfigs.join(', ') : '无'}</span><br>
+      <span><b>环境：</b>${envNames.length > 0 ? envNames.join(', ') : '无'}</span><br>
+      <span><b>工作流：</b>${allWorkflows.length > 0 ? allWorkflows.join(', ') : '无'}</span>
+      `
+          this.$prompt(`该项目下的资源会同时被删除<span style="color:red">请谨慎操作！！</span><br> ${htmlTemplate}`, `请输入项目名 ${projectName} 确认删除`, {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            dangerouslyUseHTMLString: true,
+            customClass: 'product-prompt',
+            confirmButtonClass: 'el-button el-button--danger',
+            inputValidator: project_name => {
+              if (project_name === projectName) {
+                return true
+              } else if (project_name === '') {
+                return '请输入项目名'
+              } else {
+                return '项目名不相符'
+              }
+            }
+          })
+            .then(({ value }) => {
+              deleteProjectAPI(projectName).then(
+                response => {
+                  this.$message({
+
+                    type: 'success',
+                    message: '项目删除成功'
+                  })
+                  this.getProjects()
+                }
+              )
+            })
+            .catch(() => {
+              this.$message({
+                type: 'info',
+                message: '取消删除'
+              })
+            })
+        })
+      })
+    }
 
   },
   computed: {},
