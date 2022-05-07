@@ -165,11 +165,13 @@ export default {
         }
       )
     },
-    handleCommand (command) {
-      if (command.action === 'delete') {
-        this.deleteProject(command.project_name)
-      }
-    },
+    // handleCommand (command) {
+    //   if (command.action === 'delete') {
+    //     this.deleteProject(command.project_name)
+    //   } else if (command.action === 'edit') {
+    //
+    //   }
+    // },
     deleteProject (projectName) {
       let services; let buildConfigs; let allWorkflows = []
       const workflows = (this.workflowList.filter(w => w.product_tmpl_name === projectName)).map((element) => { return element.name })
@@ -223,10 +225,19 @@ export default {
         })
       })
     }
-
   },
   computed: {},
-  mounted () {}
+  mounted () {
+    this.$store.dispatch('getProductList')
+    this.$store.dispatch('getWorkflowList')
+    this.getProjects()
+    bus.$emit('show-sidebar', true)
+    bus.$emit('set-topbar-title', { title: '项目', breadcrumb: [] })
+    bus.$emit('set-sub-sidebar-title', {
+      title: '',
+      routerList: []
+    })
+  }
 }
 </script>
 
