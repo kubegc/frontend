@@ -228,15 +228,7 @@ export default {
   },
   computed: {},
   mounted () {
-    this.$store.dispatch('getProductList')
-    this.$store.dispatch('getWorkflowList')
-    this.getProjects()
-    bus.$emit('show-sidebar', true)
-    bus.$emit('set-topbar-title', { title: '项目', breadcrumb: [] })
-    bus.$emit('set-sub-sidebar-title', {
-      title: '',
-      routerList: []
-    })
+
   }
 }
 </script>
