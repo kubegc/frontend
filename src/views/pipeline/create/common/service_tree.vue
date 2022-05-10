@@ -429,7 +429,19 @@ export default {
         path: '',
         isDir: false
       },
-        serviceRules: {
+      sourceRules: {
+        url: [{
+          required: true,
+          message: '请输入 URL 地址',
+          trigger: 'blur'
+        },
+          {
+            type: 'url',
+            message: '请输入正确的 URL，包含协议',
+            trigger: ['blur', 'change']
+          }]
+      },
+      serviceRules: {
         newServiceName: [
           {
             type: 'string',
@@ -1005,62 +1017,7 @@ export default {
       })
     }
   },
-  computed: {
-    deployType () {
-      return 'k8s'
-    }
-    // ...mapGetters([
-    //   'signupStatus', 'productList'
-    // ]),
-    // envNameList () {
-    //   const envNameList = []
-    //   this.productList.forEach(element => {
-    //     if (element.product_name === this.projectName && element.source !== 'external') {
-    //       envNameList.push({
-    //         envName: element.env_name
-    //       })
-    //     }
-    //   })
-    //   return envNameList
-    // },
-    // deployType () {
-    //   return 'k8s'
-    // },
-    // projectName () {
-    //   return this.$route.params.project_name
-    // },
-    // filteredServices () {
-    //   const services = this.$utils.filterObjectArrayByKey('service_name', this.searchService, this.services)
-    //   return services.map((element, index) => {
-    //     element.label = element.service_name
-    //     element.id = index
-    //     element.children = []
-    //     return element
-    //   })
-    // },
-    // filteredSharedServices () {
-    //   const services = this.$utils.filterObjectArrayByKey('service_name', this.searchService, this.sharedServices)
-    //   return [
-    //     {
-    //       label: '共享服务列表',
-    //       children: services.map((element, index) => {
-    //         element.visibility = 'public'
-    //         element.label = element.service_name
-    //         element.id = index
-    //         element.children = []
-    //         return element
-    //       })
-    //     }
-    //   ]
-    // },
-    // showSelectFileBtn () {
-    //   return (this.source.codehostId && this.source.repoName !== '' && this.source.branchName !== '')
-    // },
-    // queryServiceName () {
-    //   return this.$route.query.service_name
-    // }
-
-  },
+  computed: {},
   watch: {
     // filteredServices: {
     //   handler (val, old_val) {
