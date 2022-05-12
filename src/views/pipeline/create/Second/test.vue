@@ -78,7 +78,137 @@ export default {
   methods: {
     onSubmit() {
       console.log('submit!');
-    }
+    },
+    // async addBuild (item) {
+    //   const res = await getCodeSourceByAdminAPI(1)
+    //   if (res && res.length > 0) {
+    //     this.$router.push(`${this.buildBaseUrl}?rightbar=build&service_name=${item.name}&build_add=true`)
+    //   } else {
+    //     this.addCodeDrawer = true
+    //   }
+    // },
+    // saveBuildConfig () {
+    //   this.$refs.buildRef.updateBuildConfig()
+    // },
+    // getServiceModules () {
+    //   this.$emit('getServiceModules')
+    // },
+    getProject () {
+      const projectName = this.projectName
+      getSingleProjectAPI(projectName).then((res) => {
+        this.projectForm = res
+        this.customEnvs = res.vars
+        if (res.team_id === 0) {
+          this.projectForm.team_id = null
+        }
+      })
+    },
+    // getServiceTemplateWithConfig () {
+    //   if (this.service && this.service.type === 'k8s' && this.service.status === 'added') {
+    //     this.changeRoute('var')
+    //     serviceTemplateWithConfigAPI(this.service.service_name, this.projectNameOfService).then(res => {
+    //       this.serviceModules = res.service_module
+    //       this.sysEnvs = res.system_variable
+    //     })
+    //   }
+    // },
+    // changeRoute (step) {
+    //   this.$route.query.service_project_name && (delete this.$route.query.service_project_name)
+    //   this.$route.query.build_name && (delete this.$route.query.build_name)
+    //   this.$router.replace({
+    //     query: Object.assign(
+    //       {},
+    //       this.$route.query,
+    //       {
+    //         rightbar: step
+    //       })
+    //   })
+    // },
+
+    checkExistVars () {
+      return new Promise((resolve, reject) => {
+        const isDuplicate = this.detectedEnvs.map((item) => { return item.key }).some((item, idx) => {
+          return this.detectedEnvs.map((item) => { return item.key }).indexOf(item) !== idx
+        })
+        if (isDuplicate) {
+          this.$message({
+            message: '变量列表中存在相同的 Key 请检查后再保存',
+            type: 'warning'
+          })
+          reject(new Error('cancel save'))
+        } else {
+          resolve()
+        }
+      })
+    },
+    updateEnvTemplate (projectName, payload, verbose) {
+      updateEnvTemplateAPI(projectName, payload).then((res) => {
+        bus.$emit('refresh-service')
+        if (verbose) {
+          this.$notify({
+            title: '保存成功',
+            message: '变量列表保存成功',
+            type: 'success'
+          })
+        }
+      })
+    },
+    // addRenderKey () {
+    //   if (this.addKeyData[0].key !== '') {
+    //     this.$refs.addKeyForm.validate(valid => {
+    //       if (valid) {
+    //         this.customEnvs.push(this.$utils.cloneObj(this.addKeyData[0]))
+    //         this.projectForm.vars = this.customEnvs
+    //         this.checkExistVars()
+    //           .then(() => {
+    //             this.updateEnvTemplate(this.projectName, this.projectForm)
+    //             this.addKeyData[0].key = ''
+    //             this.addKeyData[0].value = ''
+    //           })
+    //           .catch(() => {
+    //             this.addKeyData[0].key = ''
+    //             this.addKeyData[0].value = ''
+    //             this.$refs.addKeyForm.resetFields()
+    //             this.$refs.addValueForm.resetFields()
+    //             this.addKeyInputVisable = false
+    //             console.log('error')
+    //           })
+    //       } else {
+    //         return false
+    //       }
+    //     })
+    //   }
+    // },
+    // editRenderKey (index, state) {
+    //   this.$set(this.editEnvIndex, index, true)
+    // },
+    // saveRenderKey (index, state) {
+    //   this.$set(this.editEnvIndex, index, false)
+    //   this.projectForm.vars = this.customEnvs
+    //   this.updateEnvTemplate(this.projectName, this.projectForm)
+    // },
+    // deleteRenderKey (index, state) {
+    //   if (state === 'present') {
+    //     this.$confirm('该 Key 被产品引用，确定删除', '提示', {
+    //       confirmButtonText: '确定',
+    //       cancelButtonText: '取消',
+    //       type: 'warning'
+    //     }).then(() => {
+    //       this.customEnvs.splice(index, 1)
+    //       this.projectForm.vars = this.customEnvs
+    //       this.updateEnvTemplate(this.projectName, this.projectForm)
+    //     }).catch(() => {
+    //       this.$message({
+    //         type: 'info',
+    //         message: '已取消删除'
+    //       })
+    //     })
+    //   } else {
+    //     this.customEnvs.splice(index, 1)
+    //     this.projectForm.vars = this.customEnvs
+    //     this.updateEnvTemplate(this.projectName, this.projectForm)
+    //   }
+    // }
   }
 }
 </script>
