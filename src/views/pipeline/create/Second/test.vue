@@ -153,62 +153,62 @@ export default {
         }
       })
     },
-    // addRenderKey () {
-    //   if (this.addKeyData[0].key !== '') {
-    //     this.$refs.addKeyForm.validate(valid => {
-    //       if (valid) {
-    //         this.customEnvs.push(this.$utils.cloneObj(this.addKeyData[0]))
-    //         this.projectForm.vars = this.customEnvs
-    //         this.checkExistVars()
-    //           .then(() => {
-    //             this.updateEnvTemplate(this.projectName, this.projectForm)
-    //             this.addKeyData[0].key = ''
-    //             this.addKeyData[0].value = ''
-    //           })
-    //           .catch(() => {
-    //             this.addKeyData[0].key = ''
-    //             this.addKeyData[0].value = ''
-    //             this.$refs.addKeyForm.resetFields()
-    //             this.$refs.addValueForm.resetFields()
-    //             this.addKeyInputVisable = false
-    //             console.log('error')
-    //           })
-    //       } else {
-    //         return false
-    //       }
-    //     })
-    //   }
-    // },
-    // editRenderKey (index, state) {
-    //   this.$set(this.editEnvIndex, index, true)
-    // },
-    // saveRenderKey (index, state) {
-    //   this.$set(this.editEnvIndex, index, false)
-    //   this.projectForm.vars = this.customEnvs
-    //   this.updateEnvTemplate(this.projectName, this.projectForm)
-    // },
-    // deleteRenderKey (index, state) {
-    //   if (state === 'present') {
-    //     this.$confirm('该 Key 被产品引用，确定删除', '提示', {
-    //       confirmButtonText: '确定',
-    //       cancelButtonText: '取消',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       this.customEnvs.splice(index, 1)
-    //       this.projectForm.vars = this.customEnvs
-    //       this.updateEnvTemplate(this.projectName, this.projectForm)
-    //     }).catch(() => {
-    //       this.$message({
-    //         type: 'info',
-    //         message: '已取消删除'
-    //       })
-    //     })
-    //   } else {
-    //     this.customEnvs.splice(index, 1)
-    //     this.projectForm.vars = this.customEnvs
-    //     this.updateEnvTemplate(this.projectName, this.projectForm)
-    //   }
-    // }
+    addRenderKey () {
+      if (this.addKeyData[0].key !== '') {
+        this.$refs.addKeyForm.validate(valid => {
+          if (valid) {
+            this.customEnvs.push(this.$utils.cloneObj(this.addKeyData[0]))
+            this.projectForm.vars = this.customEnvs
+            this.checkExistVars()
+              .then(() => {
+                this.updateEnvTemplate(this.projectName, this.projectForm)
+                this.addKeyData[0].key = ''
+                this.addKeyData[0].value = ''
+              })
+              .catch(() => {
+                this.addKeyData[0].key = ''
+                this.addKeyData[0].value = ''
+                this.$refs.addKeyForm.resetFields()
+                this.$refs.addValueForm.resetFields()
+                this.addKeyInputVisable = false
+                console.log('error')
+              })
+          } else {
+            return false
+          }
+        })
+      }
+    },
+    editRenderKey (index, state) {
+      this.$set(this.editEnvIndex, index, true)
+    },
+    saveRenderKey (index, state) {
+      this.$set(this.editEnvIndex, index, false)
+      this.projectForm.vars = this.customEnvs
+      this.updateEnvTemplate(this.projectName, this.projectForm)
+    },
+    deleteRenderKey (index, state) {
+      if (state === 'present') {
+        this.$confirm('该 Key 被产品引用，确定删除', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.customEnvs.splice(index, 1)
+          this.projectForm.vars = this.customEnvs
+          this.updateEnvTemplate(this.projectName, this.projectForm)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+      } else {
+        this.customEnvs.splice(index, 1)
+        this.projectForm.vars = this.customEnvs
+        this.updateEnvTemplate(this.projectName, this.projectForm)
+      }
+    }
   }
 }
 </script>
