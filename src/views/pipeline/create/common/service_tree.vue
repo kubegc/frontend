@@ -389,6 +389,8 @@
 // import gitfileTree from '@/components/common/gitfile_tree.vue'
 // import { deleteServiceTemplateAPI, autoUpgradeEnvAPI, getSingleProjectAPI, updateEnvTemplateAPI, getCodeSourceAPI, getRepoOwnerByIdAPI, getRepoNameByIdAPI, getBranchInfoByIdAPI, loadRepoServiceAPI, validPreloadService, getCodeSourceByAdminAPI } from '@api'
 // import { mapGetters } from 'vuex'
+import axios from 'axios'
+
 export default {
   data () {
     return {
@@ -451,71 +453,30 @@ export default {
           }
         ]
       },
+      guideItems:[],
       previousNodeKey: ''
     }
   },
 
   methods: {
-
+    readGuideItems() {
+      axios.get('/getDescription').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    },
   },
   computed: {},
   watch: {
-    // filteredServices: {
-    //   handler (val, old_val) {
-    //     this.$nextTick(() => {
-    //       let data = null
-    //       const serviceInRoute = val.find(d => d.service_name === this.queryServiceName)
-    //       if (serviceInRoute) {
-    //         data = serviceInRoute
-    //       } else {
-    //         data = val[0]
-    //       }
-    //       if (data && !this.showNewServiceInput) {
-    //         this.setServiceSelected(data.service_name)
-    //         this.$router.replace({ query: { service_name: data.service_name, rightbar: (data.status === 'named' ? 'help' : 'var') } })
-    //         this.$emit('onSelectServiceChange', data)
-    //       }
-    //     })
-    //     this.$nextTick(() => {
-    //       this.listenResize()
-    //     })
-    //   }
-    // },
-    // filteredSharedServices: {
-    //   handler (val, old_val) {
-    //     this.$nextTick(() => {
-    //       this.listenResize()
-    //     })
-    //   },
-    //   immediate: true
-    // },
-    // currentServiceYamlKinds: {
-    //   handler (val, old_val) {
-    //     this.$nextTick(() => {
-    //       const kinds = val.payload.map(element => {
-    //         return {
-    //           kind: element.kind,
-    //           type: 'kind',
-    //           label: `${element.kind}.yaml`.toLowerCase(),
-    //           service_name: `${element.kind}.yaml`.toLowerCase()
-    //         }
-    //       })
-    //       const node = this.$refs.serviceTree.getNode(val.service_name)
-    //       node.childNodes = []
-    //       if (node.data.type === 'k8s') {
-    //         kinds.forEach(element => {
-    //           this.$refs.serviceTree.append(element, node)
-    //         })
-    //       }
-    //     })
-    //   }
-    // }
   },
   created () {
     // this.getProducts()
     // this.getServiceGroup()
   },
   mounted () {
+
+      this.readGuideItems()
     // window.addEventListener('resize', this.listenResize)
   },
   beforeDestroy () {

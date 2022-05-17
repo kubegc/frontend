@@ -60,6 +60,8 @@
 //     }
 //   }
 // }
+import axios from 'axios'
+
 export default {
   data() {
     return {
@@ -71,6 +73,7 @@ export default {
         delivery: false,
         type: [],
         resource: '',
+        guideItems:[],
         desc: ''
       }
     }
@@ -79,20 +82,15 @@ export default {
     onSubmit() {
       console.log('submit!');
     },
-    // async addBuild (item) {
-    //   const res = await getCodeSourceByAdminAPI(1)
-    //   if (res && res.length > 0) {
-    //     this.$router.push(`${this.buildBaseUrl}?rightbar=build&service_name=${item.name}&build_add=true`)
-    //   } else {
-    //     this.addCodeDrawer = true
-    //   }
-    // },
-    // saveBuildConfig () {
-    //   this.$refs.buildRef.updateBuildConfig()
-    // },
-    // getServiceModules () {
-    //   this.$emit('getServiceModules')
-    // },
+    async addBuild (item) {
+      const res = await getCodeSourceByAdminAPI(1)
+      if (res && res.length > 0) {
+        this.$router.push(`${this.buildBaseUrl}?rightbar=build&service_name=${item.name}&build_add=true`)
+      } else {
+        this.addCodeDrawer = true
+      }
+    },
+
     getProject () {
       const projectName = this.projectName
       getSingleProjectAPI(projectName).then((res) => {
@@ -103,27 +101,6 @@ export default {
         }
       })
     },
-    // getServiceTemplateWithConfig () {
-    //   if (this.service && this.service.type === 'k8s' && this.service.status === 'added') {
-    //     this.changeRoute('var')
-    //     serviceTemplateWithConfigAPI(this.service.service_name, this.projectNameOfService).then(res => {
-    //       this.serviceModules = res.service_module
-    //       this.sysEnvs = res.system_variable
-    //     })
-    //   }
-    // },
-    // changeRoute (step) {
-    //   this.$route.query.service_project_name && (delete this.$route.query.service_project_name)
-    //   this.$route.query.build_name && (delete this.$route.query.build_name)
-    //   this.$router.replace({
-    //     query: Object.assign(
-    //       {},
-    //       this.$route.query,
-    //       {
-    //         rightbar: step
-    //       })
-    //   })
-    // },
 
     checkExistVars () {
       return new Promise((resolve, reject) => {
@@ -208,7 +185,15 @@ export default {
         this.projectForm.vars = this.customEnvs
         this.updateEnvTemplate(this.projectName, this.projectForm)
       }
-    }
+    },
+
+    readGuideItems() {
+      axios.get('/getDescription').then((response) => {
+        if(response.data){
+          this.guideItems = response.data.data
+        }
+      })
+    },
   }
 }
 </script>
