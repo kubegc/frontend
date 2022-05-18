@@ -51,6 +51,13 @@
                  :rules="sourceRules"
                  ref="sourceForm"
                  label-width="140px">
+          <div v-for="row in guideItems.rows"
+               :key="row.index"
+               :gutter="guideItems.gutter" class="second">
+            <div v-for="item in row.items"
+                 :key="item.index"
+                 :span="item.span"
+                 :title="item.description"><div v-if="item.type == 'span2'">{{item.description}}</div></div>
           <el-form-item label="托管平台"
                         prop="codehostId"
                         :rules="{required: true, message: '平台不能为空', trigger: 'change'}">
@@ -60,10 +67,10 @@
                        placeholder="请选择托管平台"
                        @change="getRepoOwnerById(source.codehostId)"
                        filterable>
-              <el-option v-for="(host,index) in allCodeHosts"
-                         :key="index"
-                         :label="`${host.address} ${host.type==='github'?'('+host.namespace+')':''}`"
-                         :value="host.id">{{`${host.address}
+              <el-option v-for="item in row.items"
+                         :key="item.index"
+                         :span="item.span"
+                         :title="item.description">{{`${host.address}
                     ${host.type==='github'?'('+host.namespace+')':''}`}}</el-option>
             </el-select>
           </el-form-item>
@@ -105,10 +112,10 @@
                          size="small"
                          placeholder="请选择代码库"
                          filterable>
-                <el-option v-for="(repo,index) in codeInfo['repos']"
-                           :key="index"
-                           :label="repo.name"
-                           :value="repo.name">
+                <el-option v-for="item in row.items"
+                           :key="item.index"
+                           :span="item.span"
+                           :title="item.description">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -122,10 +129,10 @@
                          filterable
                          allow-create
                          clearable>
-                <el-option v-for="(branch,branch_index) in codeInfo['branches']"
-                           :key="branch_index"
-                           :label="branch.name"
-                           :value="branch.name">
+                <el-option v-for="item in row.items"
+                           :key="item.index"
+                           :span="item.span"
+                           :title="item.description">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -145,7 +152,7 @@
 
             </el-form-item>
           </template>
-
+         </div>
         </el-form>
       </div>
       <span slot="footer"
