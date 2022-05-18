@@ -466,6 +466,32 @@ export default {
   },
 
   methods: {
+    validateServiceName (rule, value, callback) {
+      if (value === '') {
+        callback(new Error('请输入服务名称'))
+      } else if (this.filteredServices.map(ser => ser.service_name).includes(value)) {
+        callback(new Error('服务名称与现有名称重复'))
+      } else {
+        if (!/^[a-z0-9-]+$/.test(value)) {
+          callback(new Error('名称只支持小写字母和数字，特殊字符只支持中划线'))
+        } else {
+          callback()
+        }
+      }
+    },
+
+    setHovered (name) {
+      this.$nextTick(() => {
+        this.$set(this.showHover, name, true)
+      })
+    },
+
+    unsetHovered (name) {
+      this.$nextTick(() => {
+        this.$set(this.showHover, name, false)
+      })
+    },
+
     readGuideItems() {
       axios.get('/getDescription').then((response) => {
         if(response.data){
@@ -474,21 +500,28 @@ export default {
       })
     },
   },
-  computed: {},
-  watch: {
+
+  computed: {
+
   },
+
+  watch: {
+
+  },
+
   created () {
     // this.getProducts()
     // this.getServiceGroup()
   },
-  mounted () {
 
+  mounted () {
       this.readGuideItems()
     // window.addEventListener('resize', this.listenResize)
   },
   beforeDestroy () {
     // window.removeEventListener('resize', this.listenResize)
   },
+
   components: {
   }
 }
