@@ -186,7 +186,6 @@ export default {
         this.updateEnvTemplate(this.projectName, this.projectForm)
       }
     },
-
     readGuideItems() {
       axios.get('/getDescription').then((response) => {
         if(response.data){
@@ -194,6 +193,65 @@ export default {
         }
       })
     },
+    created () {
+      this.getProject()
+      // this.getServiceTemplateWithConfig()
+      // bus.$on(`save-var`, () => {
+      //   this.projectForm.vars = this.detectedEnvs
+      //   this.updateEnvTemplate(this.projectName, this.projectForm)
+      // })
+      // this.getRegistryWhenBuild()
+    },
+    props: {
+      detectedEnvs: {
+        required: false,
+        type: Array
+      },
+      detectedServices: {
+        required: false,
+        type: Array
+      },
+      systemEnvs: {
+        required: false,
+        type: Array
+      },
+      service: {
+        required: false,
+        type: Object
+      },
+      buildBaseUrl: {
+        required: true,
+        type: String
+      }
+
+    },
+    watch: {
+      detectedServices (val) {
+        this.serviceModules = val
+      },
+      systemEnvs (val) {
+        this.sysEnvs = val
+      },
+      detectedEnvs (val) {
+        this.customEnvs = val
+      },
+      service (val) {
+        if (val) {
+          this.getServiceTemplateWithConfig()
+        }
+      }
+    },
+    computed: {
+      projectName () {
+        return this.$route.params.project_name
+      },
+      projectNameOfService () {
+        return this.service.product_name
+      },
+      serviceType () {
+        return 'k8s'
+      }
+    }
   }
 }
 </script>
