@@ -85,13 +85,14 @@
 <script>
 import step from '../common/step.vue'
 import serviceTree from '../common/service_tree'
+import serviceAsideK8s from './service_aside'
 import serviceAside from './service_aside'
 import { Multipane, MultipaneResizer } from 'vue-multipane'
 import axios from 'axios'
 
 export default {
   components: {
-    step, serviceTree, serviceAside, Multipane, MultipaneResizer
+    step, serviceTree, serviceAside, Multipane, MultipaneResizer ,serviceAsideK8s
   },
   data () {
     return {
