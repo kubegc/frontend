@@ -1,125 +1,117 @@
 <template>
   <div class="aside__wrap">
-    <el-drawer title="代码源集成"
-               :visible.sync="addCodeDrawer"
-               direction="rtl">
-      <add-code @cancel="addCodeDrawer = false"></add-code>
+    <el-drawer title="代码源集成" :visible.sync="integrationCodeDrawer" direction="rtl">
+      <IntegrationCode @cancel="integrationCodeDrawer = false" />
     </el-drawer>
-    <el-drawer title="镜像仓库集成"
-               :visible.sync="registryCreateVisible">
-      <IntegrationRegistry @cancel="registryCreateVisible = false"
-                           @createSuccess="getRegistryWhenBuild"></IntegrationRegistry>
+    <el-drawer title="镜像仓库集成" :visible.sync="registryCreateVisible">
+      <IntegrationRegistry @cancel="registryCreateVisible = false" @createSuccess="getRegistryWhenBuild" />
     </el-drawer>
     <div class="aside__inner">
       <div class="aside-bar">
         <div class="tabs__wrap tabs__wrap_vertical">
-          <div class="tabs__item"
-
-               @click="changeRoute('build')">
-            <span class="step-name">构建</span>
-          </div>
-          <div class="tabs__item"
-
-               @click="changeRoute('var')">
+          <div class="tabs__item" :class="{'selected': selected === 'var'}" @click="changeRoute('var')">
             <span class="step-name">变量</span>
           </div>
-          <div class="tabs__item"
-
-               @click="changeRoute('help')">
+          <div class="tabs__item" :class="{'selected': selected === 'policy'}" @click="changeRoute('policy')">
+            <span class="step-name">策略</span>
+          </div>
+          <div class="tabs__item" :class="{'selected': selected === 'help'}" @click="changeRoute('help')">
             <span class="step-name">帮助</span>
           </div>
         </div>
       </div>
       <div class="aside__content">
-        <div v-if="$route.query.rightbar === 'build'"
-             class="pipelines__aside--variables">
-          <header class="pipeline-workflow-box__header">
-            <div class="pipeline-workflow-box__title">构建</div>
-          </header>
-          <div class="pipeline-workflow-box__content">
-            <build ref="buildRef"
-                   @getServiceModules="getServiceModules"
-                   :detectedServices="detectedServices"></build>
+        <div v-if="selected === 'build'" class="service-aside--variables">
+          <div style="padding-left: 15px;">
+            <el-button @click="$router.back()" icon="el-icon-back" type="text">返回</el-button>
           </div>
-            <div class="btn-container">
-              <el-button type="primary"
-                         size="small"
-                         @click="saveBuildConfig"
-                         :disabled="projectName !== projectNameOfService">保存构建
-              </el-button>
-            </div>
-        </div>
-        <div v-if="$route.query.rightbar === 'var'"
-             class="pipelines__aside--variables">
-          <header class="pipeline-workflow-box__header">
-            <div class="pipeline-workflow-box__title">变量</div>
+          <header class="service-aside-box__header">
+            <div class="service-aside-box__title">构建</div>
           </header>
-          <div class="pipeline-workflow-box__content">
-            <section>
+          <div class="service-aside-box__content">
+            <CommonBuild
+              ref="buildRef"
+              :name="$route.query.service_name"
+              :buildName="$route.query.build_name"
+              :isEdit="!!$route.query.build_name"
+              :followUpFn="followUpFn"
+              :saveDisabled="projectName !== projectNameOfService"
+              :buildNameIndex="buildNameIndex"
+              canSelectBuildName
+              mini
+              fromServicePage
+            />
+          </div>
+        </div>
+        <div v-if="selected === 'var'" class="service-aside--variables">
+          <header class="service-aside-box__header">
+            <div class="service-aside-box__title">变量</div>
+          </header>
+          <div class="service-aside-box__content">
+            <section class="aside-section">
               <h4>
-                <span><i class="iconfont iconfuwu"></i></span> 检测到的服务组件
-                <el-tooltip effect="dark"
-                            placement="top">
+                <span>
+                  <i class="iconfont iconfuwu"></i>
+                </span> 检测到的服务组件
+                <el-tooltip effect="dark" placement="top">
                   <div slot="content">可被更新的服务容器名称</div>
-                  <span><i class="el-icon-question"></i></span>
+                  <span>
+                    <i class="el-icon-question"></i>
+                  </span>
                 </el-tooltip>
               </h4>
-              <div v-if="allRegistry.length === 0"
-                   class="registry-alert">
+              <div v-if="allRegistry.length === 0" class="registry-alert">
                 <el-alert type="warning">
                   <div>
                     私有镜像仓库未集成，
-                    <el-button type="text"
-                               style="color: #e6a23c;"
-                               @click="registryCreateVisible = true">立即集成</el-button>
-                    ！
+                    <el-button type="text" class="theme-color" style="padding: 0;" @click="registryCreateVisible = true">立即集成</el-button>
                   </div>
                 </el-alert>
               </div>
-              <el-table :data="serviceModules"
-                        stripe
-                        style="width: 100%;">
-                <el-table-column prop="name"
-                                 label="服务组件">
-                </el-table-column>
-                <el-table-column prop="image"
-                                 label="当前镜像版本">
+              <el-table :data="serviceModules" stripe style="width: 100%;">
+                <el-table-column prop="name" label="服务组件"></el-table-column>
+                <el-table-column prop="image_name" label="镜像名"></el-table-column>
+                <el-table-column prop="image">
+                  <template slot="header">
+                    <span>当前镜像版本($IMAGE)</span>
+                    <el-tooltip effect="dark" placement="top">
+                      <div slot="content">
+                        工作流任务执行过程中，由构建任务生成 $IMAGE 镜像，部署任务使用生成的 $IMAGE 镜像更新服务。
+                        <br />其中 $IMAGE 为系统内置的镜像名称，工作流执行时自动生成。
+                        <br />点击「策略」配置镜像名称规则。
+                      </div>
+                      <span>
+                        <i class="el-icon-question"></i>
+                      </span>
+                    </el-tooltip>
+                  </template>
                 </el-table-column>
                 <el-table-column label="构建信息/操作">
                   <template slot-scope="scope">
-                    <router-link v-if="scope.row.build_name"
-                                 :to="`${buildBaseUrl}?rightbar=build&service_name=${scope.row.name}&build_name=${scope.row.build_name}&service_project_name=${projectNameOfService}`">
-                      <el-button size="small"
-                                 type="text">{{scope.row.build_name}}</el-button>
-                    </router-link>
-                    <el-button v-else
-                               size="small"
-                               @click="addBuild(scope.row)"
-                               type="text">添加构建</el-button>
-
+                    <div v-for="(buildName, index) in scope.row.build_names" :key="index">
+                      <router-link :to="`${buildBaseUrl}?rightbar=build&service_name=${scope.row.name}&build_name=${buildName}`">
+                        <span class="build-name">{{ buildName }}</span>
+                      </router-link>
+                    </div>
+                    <el-button size="small" v-hasPermi="{projectName: projectName, action: 'create_build'}" :disabled="projectName !== projectNameOfService" @click="addBuild(scope.row)" type="text">添加构建</el-button>
                   </template>
-
                 </el-table-column>
               </el-table>
             </section>
-            <section>
+            <section class="aside-section">
               <h4>
-                <span><i class="iconfont icongongjuxiang"></i></span> 系统内置变量
-                <el-tooltip effect="dark"
-                            content="在服务配置中使用 $Namespace$，$Product$，$Service$，$EnvName$ 方式引用"
-                            placement="top">
-                  <span><i class="el-icon-question"></i></span>
+                <span>
+                  <i class="iconfont icongongjuxiang"></i>
+                </span> 系统内置变量
+                <el-tooltip effect="dark" content="在服务配置中使用 $Namespace$，$Product$，$Service$，$EnvName$ 方式引用" placement="top">
+                  <span>
+                    <i class="el-icon-question"></i>
+                  </span>
                 </el-tooltip>
-
               </h4>
-              <el-table :data="sysEnvs"
-                        stripe
-                        style="width: 100%;">
-                <el-table-column prop="key"
-                                 label="变量">
-                </el-table-column>
-                <el-table-column prop="value"
-                                 label="当前值">
+              <el-table :data="sysEnvs" stripe style="width: 100%;">
+                <el-table-column prop="key" label="变量"></el-table-column>
+                <el-table-column prop="value" label="当前值">
                   <template slot-scope="scope">
                     <span v-if="scope.row.value">{{scope.row.value}}</span>
                     <span v-else>空</span>
@@ -127,18 +119,20 @@
                 </el-table-column>
               </el-table>
             </section>
-            <section>
+            <section class="aside-section">
               <h4>
-                <span><i class="iconfont icontanhao"></i></span> 自定义变量
-                <el-tooltip effect="dark"
-                            :content="'自定义变量通过'+' {{'+'.key}} ' +' 声明'"
-                            placement="top">
-                  <span><i class="el-icon-question"></i></span>
+                <span>
+                  <i class="iconfont icontanhao"></i>
+                </span> 全局变量
+                <el-tooltip effect="dark" :content="'全局变量通过'+' {{'+'.key}} ' +' 引用，项目中的所有服务均可使用'" placement="top">
+                  <span>
+                    <i class="el-icon-question"></i>
+                  </span>
                 </el-tooltip>
+                <VariablePreviewEditor :serviceName="service.service_name" :services="services" :projectName="projectName" :variables="customEnvs" />
               </h4>
               <div class="kv-container">
-                <el-table :data="customEnvs"
-                          style="width: 100%;">
+                <el-table :data="customEnvs" style="width: 100%;">
                   <el-table-column label="Key">
                     <template slot-scope="scope">
                       <span>{{ scope.row.key }}</span>
@@ -146,114 +140,100 @@
                   </el-table-column>
                   <el-table-column label="Value">
                     <template slot-scope="scope">
-                      <el-input size="small"
-                                :disabled="!editEnvIndex[scope.$index]"
-                                v-model="scope.row.value"
-                                type="textarea"
-                                :autosize="{ minRows: 1, maxRows: 4}"
-                                placeholder="请输入内容"></el-input>
+                      <VariableEditor :disabled="!editEnvIndex[scope.$index]" :varKey="scope.row.key" :value.sync="scope.row.value" />
                     </template>
                   </el-table-column>
-                  <el-table-column label="操作"
-                                   width="150">
+                  <el-table-column v-hasPermi="{projectName: projectName, action: 'edit_service'}" label="操作" width="150">
                     <template slot-scope="scope">
-                        <span class="operate">
-                              <el-button
-                                         type="text"
-                                         @click="editRenderKey(scope.$index,scope.row.state)"
-                                         class="edit">编辑</el-button>
-                              <el-button
-                                         type="text"
-                                         @click="saveRenderKey(scope.$index,scope.row.state)"
-                                         class="edit">保存</el-button>
-                              <el-button
-                                         type="text"
-                                         @click="deleteRenderKey(scope.$index,scope.row.state)"
-                                         class="delete">移除</el-button>
-                            <el-tooltip
-                                        effect="dark"
-                                        content="服务中已经用到的 Key 无法被删除"
-                                        placement="top">
-                              <span class="el-icon-question"></span>
-                            </el-tooltip>
-                          </span>
+                      <span class="operate">
+                        <el-button
+                          v-if="!editEnvIndex[scope.$index]"
+                          type="text"
+                          @click="editRenderKey(scope.$index,scope.row.state)"
+                          class="edit"
+                        >编辑</el-button>
+                        <el-button
+                          v-if="editEnvIndex[scope.$index]"
+                          type="text"
+                          @click="saveRenderKey(scope.$index,scope.row.state)"
+                          class="edit"
+                        >保存</el-button>
+                        <el-button
+                          v-if="scope.row.state === 'unused'"
+                          type="text"
+                          @click="deleteRenderKey(scope.$index,scope.row.state)"
+                          class="delete"
+                        >移除</el-button>
+                        <el-tooltip
+                          v-if="scope.row.state === 'present'||scope.row.state === 'new'"
+                          effect="dark"
+                          content="服务中已经用到的 Key 无法被删除"
+                          placement="top"
+                        >
+                          <span class="el-icon-question"></span>
+                        </el-tooltip>
+                      </span>
                     </template>
                   </el-table-column>
                 </el-table>
-                <div v-if="addKeyInputVisable"
-                     class="add-key-container">
-                  <el-table :data="addKeyData"
-                            :show-header="false"
-                            style="width: 100%;">
+                <div v-if="addKeyInputVisable" class="add-key-container">
+                  <el-table :data="addKeyData" :show-header="false" style="width: 100%;">
                     <el-table-column>
                       <template slot-scope="{ row }">
-                        <el-form :model="row"
-                                 :rules="keyCheckRule"
-                                 ref="addKeyForm"
-                                 hide-required-asterisk>
-                          <el-form-item label="Key"
-                                        prop="key"
-                                        inline-message>
-                            <el-input size="small"
-                                      type="textarea"
-                                      :autosize="{ minRows: 1, maxRows: 4}"
-                                      v-model="row.key"
-                                      placeholder="Key">
-                            </el-input>
+                        <el-form :model="row" :rules="keyCheckRule" ref="addKeyForm" hide-required-asterisk>
+                          <el-form-item label="Key" prop="key" inline-message>
+                            <el-input
+                              size="small"
+                              type="text"
+                              v-model="row.key"
+                              placeholder="Key"
+                            ></el-input>
                           </el-form-item>
                         </el-form>
                       </template>
                     </el-table-column>
                     <el-table-column>
                       <template slot-scope="{ row }">
-                        <el-form :model="row"
-                                 :rules="keyCheckRule"
-                                 ref="addValueForm"
-                                 hide-required-asterisk>
-                          <el-form-item label="Value"
-                                        prop="value"
-                                        inline-message>
-                            <el-input size="small"
-                                      type="textarea"
-                                      :autosize="{ minRows: 1, maxRows: 4}"
-                                      v-model="row.value"
-                                      placeholder="Value">
-                            </el-input>
+                        <el-form :model="row" :rules="keyCheckRule" ref="addValueForm" hide-required-asterisk>
+                          <el-form-item label="Value" prop="value" inline-message>
+                            <VariableEditor style="line-height: 22px;" :varKey="row.key" :value.sync="row.value" />
                           </el-form-item>
                         </el-form>
                       </template>
                     </el-table-column>
-                    <el-table-column width="140">
+                    <el-table-column width="150">
                       <template>
                         <span style="display: inline-block; margin-bottom: 15px;">
-                          <el-button @click="addRenderKey()"
-                                     type="text">确认</el-button>
-                          <el-button @click="addKeyInputVisable=false"
-                                     type="text">取消</el-button>
+                          <el-button @click="addRenderKey()" type="text">确认</el-button>
+                          <el-button @click="addKeyInputVisable=false" type="text">取消</el-button>
                         </span>
                       </template>
                     </el-table-column>
                   </el-table>
                 </div>
-                  <div>
-                    <el-button size="medium"
-                               class="add-kv-btn"
-                               @click="addKeyInputVisable=true"
-                               type="text">
-                      <i class="el-icon-circle-plus-outline"></i>添加
-                    </el-button>
-                  </div>
+                <div v-hasPermi="{projectName: projectName, action: 'edit_service'}">
+                  <el-button size="medium" class="add-kv-btn" @click="addKeyInputVisable=true" type="text">
+                    <i class="el-icon-circle-plus-outline"></i>添加
+                  </el-button>
+                </div>
               </div>
             </section>
           </div>
         </div>
-        <div
-             class="pipelines__aside--variables">
-          <header class="pipeline-workflow-box__header">
-            <div class="pipeline-workflow-box__title">构建</div>
+        <div v-if="selected === 'policy'" class="service-aside--variables">
+          <header class="service-aside-box__header">
+            <div class="service-aside-box__title">策略</div>
           </header>
-          <div class="pipelines-aside-help__content">
-            <test></test>
+          <div class="service-aside-help__content">
+            <Policy :service="serviceModules" />
+          </div>
+        </div>
+        <div v-if="selected === 'help'" class="service-aside--variables">
+          <header class="service-aside-box__header">
+            <div class="service-aside-box__title">帮助</div>
+          </header>
+          <div class="service-aside-help__content">
+            <Help />
           </div>
         </div>
       </div>
