@@ -459,66 +459,71 @@ export default {
     }
   },
   created () {
-  //   this.getProject()
-  //   this.getServiceTemplateWithConfig()
-  //   bus.$on(`save-var`, () => {
-  //     this.projectForm.vars = this.detectedEnvs
-  //     this.updateEnvTemplate(this.projectName, this.projectForm)
-  //   })
-  //   this.getRegistryWhenBuild()
+    this.getProject()
+    this.getServiceTemplateWithConfig()
+    if (this.$route.query.rightbar) {
+      this.changeRoute(this.$route.query.rightbar)
+    } else {
+      this.changeRoute('var')
+    }
+  },
+  // props: {
+  //   detectedEnvs: {
+  //     required: false,
+  //     type: Array
+  //   },
+  //   detectedServices: {
+  //     required: false,
+  //     type: Array
+  //   },
+  //   systemEnvs: {
+  //     required: false,
+  //     type: Array
+  //   },
+  //   service: {
+  //     required: false,
+  //     type: Object
+  //   },
+  //   services: {
+  //     required: false,
+  //     type: Array
+  //   },
+  //   buildBaseUrl: {
+  //     required: true,
+  //     type: String
+  //   }
   // },
-  // beforeDestroy () {
-  //   bus.$off('save-var')
-  },
-  props: {
-    // detectedEnvs: {
-    //   required: false,
-    //   type: Array
-    // },
-    // detectedServices: {
-    //   required: false,
-    //   type: Array
-    // },
-    // systemEnvs: {
-    //   required: false,
-    //   type: Array
-    // },
-    // service: {
-    //   required: false,
-    //   type: Object
-    // },
-    // buildBaseUrl: {
-    //   required: true,
-    //   type: String
-    // }
-
-  },
   watch: {
-    // detectedServices (val) {
-    //   this.serviceModules = val
-    // },
-    // systemEnvs (val) {
-    //   this.sysEnvs = val
-    // },
-    // detectedEnvs (val) {
-    //   this.customEnvs = val
-    // },
-    // service (val) {
-    //   if (val) {
-    //     this.getServiceTemplateWithConfig()
-    //   }
-    // }
+    detectedServices (val) {
+      this.serviceModules = val
+    },
+    systemEnvs (val) {
+      this.sysEnvs = val
+    },
+    detectedEnvs (val) {
+      this.customEnvs = val
+    },
+    service (val) {
+      if (val) {
+        this.getServiceTemplateWithConfig()
+        this.changeRoute('var')
+      }
+    }
   },
   computed: {
-    // projectName () {
-    //   return this.$route.params.project_name
-    // },
-    // projectNameOfService () {
-    //   return this.service.product_name
-    // },
-    // serviceType () {
-    //   return 'k8s'
-    // }
+    projectName () {
+      return this.$route.params.project_name
+    },
+    projectNameOfService () {
+      return this.service.product_name
+    },
+    serviceType () {
+      return 'k8s'
+    },
+    selected () {
+      const defaultAside = this.service.status === 'named' ? 'help' : 'var'
+      return this.$route.query.rightbar || defaultAside
+    }
   },
   components: {
      test
