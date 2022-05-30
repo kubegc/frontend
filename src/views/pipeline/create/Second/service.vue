@@ -160,11 +160,27 @@ export default {
 .dialog-upgrade-env {
   .el-dialog__body {
     padding: 10px 20px;
+
+    .tip-desc {
+      margin-top: 10px;
+      color: #f56c6c;
+      font-size: 13px;
+    }
   }
 
   .title {
     .el-alert {
       margin-bottom: 10px;
+    }
+  }
+
+  .env-tabs {
+    margin-top: 10px;
+
+    .desc {
+      display: block;
+      margin: 15px 0;
+      color: #909399;
     }
   }
 
@@ -181,57 +197,26 @@ export default {
 .projects-service-mgr {
   position: relative;
   flex: 1;
-  overflow: auto;
-  background-color: #f5f7f7;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f6f6f6;
 
   .project-name {
-    color: #1989fa;
+    color: #0066ff;
   }
 
-  .guide-container {
-    min-height: calc(~"100% - 150px");
-    margin-top: 10px;
-
-    &.not-closed-title {
-      min-height: calc(~"100% - 150px");
-    }
-
-    .current-step-container {
-      .title-container {
-        margin-left: 20px;
-
-        .first {
-          display: inline-block;
-          width: 110px;
-          padding: 8px;
-          color: #fff;
-          font-weight: 300;
-          font-size: 18px;
-          text-align: center;
-          background: #3289e4;
-        }
-
-        .second {
-          display: inline-block;
-          color: #4c4c4c;
-          font-size: 13px;
-        }
-      }
-    }
-  }
-
-  .pipeline {
+  .service-wrap {
     position: relative;
     display: flex;
-    height: calc(~'100% - 70px');
-    padding: 15px 5px 0 5px;
+    height: calc(~'100% - 10px');
+    padding: 10px 5px 0 5px;
 
     &.onboarding {
       height: calc(~'100% - 245px');
     }
   }
 
-  .pipeline-workflow__wrap {
+  .service-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -248,7 +233,6 @@ export default {
 
     .vertical-panes {
       width: 100%;
-      height: 550px;
 
       .multipane-resizer {
         position: relative;
@@ -280,7 +264,25 @@ export default {
     }
 
     .service-editor-container {
+      position: relative;
       height: 100%;
+
+      .service-editor-content {
+        position: relative;
+        z-index: 0;
+      }
+
+      .modal-block {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        padding: 14px;
+        background: rgba(234, 234, 234, 0.92);
+        cursor: not-allowed;
+      }
 
       &.pm {
         width: 100%;
@@ -307,13 +309,13 @@ export default {
       }
     }
 
-    .pipelines__aside_right {
+    .service-aside-right {
       min-width: 372px;
       -webkit-transition: width 0.2s ease-out;
       transition: width 0.2s ease-out;
     }
 
-    .pipelines__aside {
+    .service-aside {
       display: flex;
       flex: 1;
       flex-direction: column;
@@ -330,9 +332,7 @@ export default {
     align-items: center;
     justify-content: space-between;
     height: 55px;
-    margin: 0 5px;
     background-color: #fff;
-    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.05);
 
     > * {
       margin-right: 10px;
@@ -347,18 +347,18 @@ export default {
         margin-right: 15px;
         padding: 10px 17px;
         color: #fff;
-        font-weight: bold;
         font-size: 13px;
         text-decoration: none;
-        background-color: #1989fa;
-        border: 1px solid #1989fa;
+        background-color: #0066ff;
+        border: 1px solid #0066ff;
         cursor: pointer;
         transition: background-color 300ms, color 300ms, border 300ms;
       }
 
       .save-btn[disabled] {
-        background-color: #9ac9f9;
-        border: 1px solid #9ac9f9;
+        color: #fff;
+        background-color: rgb(170, 170, 255);
+        border-color: rgb(170, 170, 255);
         cursor: not-allowed;
       }
     }
