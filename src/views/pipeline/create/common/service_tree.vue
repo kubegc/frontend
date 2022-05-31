@@ -469,7 +469,9 @@ export default {
     validateServiceName (rule, value, callback) {
       if (value === '') {
         callback(new Error('请输入服务名称'))
-      } else if (this.filteredServices.map(ser => ser.service_name).includes(value)) {
+      } else if (
+        this.filteredServices.map(ser => ser.service_name).includes(value)
+      ) {
         callback(new Error('服务名称与现有名称重复'))
       } else {
         if (!/^[a-z0-9-]+$/.test(value)) {
@@ -492,6 +494,108 @@ export default {
       })
     },
 
+    addSharedService (node, data) {
+      if (this.yamlChange) {
+        this.askSaveYamlConfig()
+        return
+      }
+      const services = []
+      const payload = this.$utils.cloneObj(this.projectInfo)
+      const projectName = this.projectName
+      this.serviceGroup.forEach((order, orderIndex) => {
+        if (order.children.length > 0) {
+          const serviceStringArray = order.children.map(service => {
+            return service.label
+          })
+          services.push(serviceStringArray)
+        }
+      })
+      services.push([data.service_name])
+      payload.services = services
+      payload.shared_services = (payload.shared_services || []).concat({
+        name: data.service_name,
+        owner: data.product_name
+      })
+      updateEnvTemplateAPI(projectName, payload).then(res => {
+        this.$message.success('添加共享服务成功')
+        this.getServiceGroup()
+        this.$emit('onRefreshProjectInfo')
+        this.$emit('onRefreshService')
+        this.$emit('onRefreshSharedService')
+        this.$emit('update:showNext', true)
+      })
+    },
+
+    deleteSharedService (node, data) {
+      this.previousNodeKey = ''
+      let deleteText = ''
+      const title = '确认'
+      const services = []
+      const payload = this.$utils.cloneObj(this.projectInfo)
+      if (data.type === 'k8s') {
+        deleteText = `确定要移除 ${data.service_name} 这个共享服务吗？`
+      }
+      this.$confirm(`${deleteText}`, `${title}`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        const projectName = this.projectName
+        this.serviceGroup.forEach((order, orderIndex) => {
+          if (order.children.length > 0) {
+            const filterArray = order.children.filter(service => {
+              return service.label !== data.service_name
+            })
+            const serviceStringArray = filterArray.map(service => {
+              return service.label
+            })
+            services.push(serviceStringArray)
+          }
+        })
+        payload.services = services
+        payload.shared_services = payload.shared_services.filter(share => {
+          return share.name !== data.service_name
+        })
+        updateEnvTemplateAPI(projectName, payload).then(res => {
+          this.getServiceGroup()
+          this.$emit('onRefreshProjectInfo')
+          this.$emit('onRefreshSharedService')
+          this.$emit('onRefreshService')
+          this.$emit('update:showNext', true)
+          this.$message.success('共享服务移除成功')
+          this.$emit('onDeleteService', data.service_name)
+        })
+      })
+    },
+
+    getServiceGroup () {
+      this.serviceGroup = []
+      const projectName = this.projectName
+      getSingleProjectAPI(projectName).then(res => {
+        res.services.push([])
+        res.services.forEach((order, orderIndex) => {
+          this.serviceGroup.push({
+            label: `启动顺序 ${orderIndex}`,
+            id: orderIndex,
+            children: []
+          })
+          order.forEach((service, serviceIndex) => {
+            this.serviceGroup[orderIndex].children.push({
+              label: service,
+              id: `${orderIndex}-${serviceIndex}`,
+              children: []
+            })
+          })
+        })
+      })
+    },
+
+    openFileTree () {
+      if (this.showSelectFileBtn) {
+        this.workSpaceModalVisible = true
+      }
+    },
+
     readGuideItems() {
       axios.get('/getDescription').then((response) => {
         if(response.data){
@@ -501,29 +605,17 @@ export default {
     },
   },
 
-  computed: {
+  computed: {},
 
-  },
+  watch: {},
 
-  watch: {
-
-  },
-
-  created () {
-    // this.getProducts()
-    // this.getServiceGroup()
-  },
+  created () {},
 
   mounted () {
       this.readGuideItems()
-    // window.addEventListener('resize', this.listenResize)
-  },
-  beforeDestroy () {
-    // window.removeEventListener('resize', this.listenResize)
   },
 
-  components: {
-  }
+  components: {}
 }
 </script>
 
