@@ -605,9 +605,116 @@ export default {
     },
   },
 
-  computed: {},
-
-  watch: {},
+  computed: {
+    // deployType () {
+    //   return 'k8s'
+    // },
+    // projectName () {
+    //   return this.$route.params.project_name
+    // },
+    // filteredServices () {
+    //   const services = this.$utils.filterObjectArrayByKey(
+    //     'service_name',
+    //     this.searchService,
+    //     this.services
+    //   )
+    //   return services.map((element, index) => {
+    //     element.label = element.service_name
+    //     element.id = index
+    //     element.children = []
+    //     return element
+    //   })
+    // },
+    // filteredSharedServices () {
+    //   const services = this.$utils.filterObjectArrayByKey(
+    //     'service_name',
+    //     this.searchService,
+    //     this.sharedServices
+    //   )
+    //   return [
+    //     {
+    //       label: '共享服务列表',
+    //       children: services.map((element, index) => {
+    //         element.visibility = 'public'
+    //         element.label = element.service_name
+    //         element.id = index
+    //         element.children = []
+    //         return element
+    //       })
+    //     }
+    //   ]
+    // },
+    // showSelectFileBtn () {
+    //   return (
+    //     this.source.codehostId &&
+    //     this.source.repoName !== '' &&
+    //     this.source.branchName !== ''
+    //   )
+    // },
+    // queryServiceName () {
+    //   return this.$route.query.service_name
+    // }
+  },
+  watch: {
+    filteredServices: {
+      handler (val, old_val) {
+        this.$nextTick(() => {
+          let data = null
+          const serviceInRoute = val.find(
+            d => d.service_name === this.queryServiceName
+          )
+          if (serviceInRoute) {
+            data = serviceInRoute
+          } else {
+            data = val[0]
+          }
+          if (data && !this.showNewServiceInput) {
+            this.setServiceSelected(data.service_name)
+            const query = {
+              service_name: data.service_name,
+              rightbar: data.status === 'named' ? 'help' : (this.$route.query.rightbar ? this.$route.query.rightbar : 'var')
+            }
+            this.$router.replace({
+              query: query
+            })
+            this.$emit('onSelectServiceChange', data)
+          }
+        })
+        this.$nextTick(() => {
+          this.listenResize()
+        })
+      }
+    },
+    filteredSharedServices: {
+      handler (val, old_val) {
+        this.$nextTick(() => {
+          this.listenResize()
+        })
+      },
+      immediate: true
+    },
+    currentServiceYamlKinds: {
+      handler (val, old_val) {
+        this.$nextTick(() => {
+          const kinds = val.payload.map(element => {
+            return {
+              kind: element.kind,
+              type: 'kind',
+              label: `${element.kind}.yaml`.toLowerCase(),
+              service_name: `${element.kind}.yaml`.toLowerCase()
+            }
+          })
+          const node = this.$refs.serviceTree.getNode(val.service_name)
+          node.childNodes = []
+          if (node.data.type === 'k8s') {
+            kinds.forEach(element => {
+              this.$refs.serviceTree.append(element, node)
+            })
+          }
+        })
+      }
+    }
+  },
 
   created () {},
 
