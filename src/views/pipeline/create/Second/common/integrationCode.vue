@@ -157,13 +157,90 @@ export default {
         applicationId: '',
         clientSecret: ''
       },
+      codeRules: {
+        type: {
+          required: true,
+          message: '请选择代码源类型',
+          trigger: ['blur']
+        },
+        address: [{
+          type: 'url',
+          message: '请输入正确的 URL，包含协议',
+          trigger: ['blur', 'change']
+        }, {
+          required: true,
+          trigger: 'change',
+          validator: validateGitURL
+        }],
+        accessToken: {
+          required: true,
+          message: '请填写 Access Token',
+          trigger: ['blur']
+        },
+        applicationId: {
+          required: true,
+          message: '请填写 Id',
+          trigger: ['blur']
+        },
+        clientSecret: {
+          required: true,
+          message: '请填写 Secret',
+          trigger: ['blur']
+        },
+        region: {
+          required: true,
+          message: '请填写区域',
+          trigger: ['blur']
+        },
+        namespace: {
+          required: true,
+          message: '请填写 Org',
+          trigger: ['blur']
+        },
+        username: {
+          required: true,
+          message: '请填写 Username',
+          trigger: ['blur']
+        },
+        password: {
+          required: true,
+          message: '请填写 Password',
+          trigger: ['blur']
+        }
+      }
     }
   },
   methods: {},
-  
   watch: {}
 }
 </script>
 <style lang="less">
+.add-code-container {
+  padding: 10px 15px;
+  font-size: 13px;
 
+  .tips {
+    display: block;
+
+    &.code-line {
+      display: inline-block;
+      padding-left: 10px;
+      color: #ecf0f1;
+      font-size: 14px;
+      word-wrap: break-word;
+      word-break: break-all;
+      background-color: #334851;
+      border-radius: 2px;
+
+      .copy {
+        font-size: 16px;
+        cursor: pointer;
+
+        &:hover {
+          color: @themeColor;
+        }
+      }
+    }
+  }
+}
 </style>
