@@ -543,6 +543,7 @@ export default {
         const projectName = this.projectName
         this.serviceGroup.forEach((order, orderIndex) => {
           if (order.children.length > 0) {
+
             const filterArray = order.children.filter(service => {
               return service.label !== data.service_name
             })
