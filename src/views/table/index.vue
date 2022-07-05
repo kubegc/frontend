@@ -276,7 +276,7 @@ import DynamicForm from '@/components/DynamicForm'
 import JsonDialog from '@/components/JsonDialog'
 import { mapGetters } from 'vuex'
 import framework from '../pipeline/framework-construction-new'
-import pipeline from '../pipeline/pipeline_add'
+import pipeline from '../pipeline/home/pipeline_add'
 export default {
   components: { framework, pipeline, JsonDialog, Pagination, DynamicForm },
   data() {

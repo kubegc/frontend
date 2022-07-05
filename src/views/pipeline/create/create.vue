@@ -17,7 +17,7 @@
               <el-form :model="addForm"
                        :rules="rules"
                        label-position="top"
-                       ref="addFormRef"
+                       re0f="addFormRef"
                        label-width="100px"
                        class="demo-projectForm">
                 <el-form-item label="工作流名称"
@@ -145,7 +145,7 @@
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 import { getUserList } from '../../../api/api'
-import tableData from '../pipeline_add'
+import tableData from '../home/pipeline_add'
 
 export default {
   data () {
