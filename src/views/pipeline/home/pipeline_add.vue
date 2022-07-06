@@ -6,7 +6,7 @@
         <i class="el-icon-s-fold display-btn" @click="currentTab = 'list'" :class="{'active':currentTab==='list'}"></i>
       </div>
       <div class="header-end">
-        <el-button @click="addParamsSetting" style="width: 132px; margin-right: 10px;" plain>
+        <el-button @click="$router.push('/t/t1/t2')" style="width: 132px; margin-right: 10px;" plain>
           <i class="el-icon-plus"></i>新建项目
         </el-button>
       </div>
@@ -14,9 +14,6 @@
 
     <div
       v-if="currentTab==='grid'"
-      v-loading="loading"
-      element-loading-text="加载中..."
-      element-loading-spinner="iconfont iconfont-loading iconxiangmuloading"
       class="projects-grid">
       <el-row :gutter="12">
         <el-col v-for="(Data,index) in tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="6" :xl="4">
@@ -101,19 +98,15 @@
 
     <div
       v-if="currentTab==='list'"
-      v-loading="loading"
-      element-loading-text="加载中..."
-      element-loading-spinner="iconfont iconfont-loading iconxiangmuloading"
       class="projects-list">
       <el-table
         :data="tableData"
-        v-loading="tableLoading"
         style="width: 100%">
-        <el-table-column label="序号" prop="index" min-width="40%">
-        </el-table-column>
-        <el-table-column prop="type" label="类型" min-width="80%">
+        <el-table-column prop="type" label="类型" min-width="40%">
         </el-table-column>
         <el-table-column prop="name" label="名称" min-width="80%">
+        </el-table-column>
+        <el-table-column prop="env" label="更新信息" min-width="80%">
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -212,9 +205,9 @@
         pipelineItems: [],
         getUserList: [],
         tableData: [{
-          index: '',
           type: '',
-          name: ''
+          name: '',
+          env: ''
         }],
         currentTab: 'grid',
         dialog: false,
@@ -274,6 +267,7 @@
       },
       addParamsSetting() {
         this.addList()
+        this.submitForm()
       },
       deleteRow(index) {
         this.tableData.splice(index, 1)
@@ -284,6 +278,13 @@
         } else if (command.action === 'edit') {
           this.$router.push(`/test/test2/test3`)
         }
+      },
+      submitForm() {
+        let _this = this;
+        let data = {
+          list: _this.tableData
+        }
+        console.log(data)
       }
     }
   }

@@ -193,10 +193,10 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: 10px;
   padding-left: 26px;
   background-color: #fff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+
 
   .nav-container {
     .nav-content {

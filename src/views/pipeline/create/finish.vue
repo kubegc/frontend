@@ -71,7 +71,6 @@
           <button type="primary"
                     size="small"
                     class="save-btn"
-                    :disabled="loading"
                     plain>完成</button>
         </router-link>
       </div>
@@ -113,9 +112,9 @@ export default {
   },
 
   computed: {
-    projectName () {
-      return this.$route.params.project_name
-    }
+    // projectName () {
+    //   return this.$route.params.project_name
+    // }
   },
 
   created () {

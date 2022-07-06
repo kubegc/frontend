@@ -14,7 +14,7 @@
                 <el-tab-pane label="基本信息" name="base"></el-tab-pane>
                 <el-tab-pane label="高级配置" name="advance"></el-tab-pane>
               </el-tabs>
-              <el-form :model="addForm"
+              <el-form :model="tableData"
                        :rules="rules"
                        label-position="top"
                        re0f="addFormRef"
@@ -23,7 +23,7 @@
                 <el-form-item label="工作流名称"
                               v-show="activeName !=='advance'"
                               prop="project_name">
-                  <el-input v-model="addForm.name"></el-input>
+                  <el-input v-model="tableData.name"></el-input>
                 </el-form-item>
 
                 <el-form-item label="工作流标识"
@@ -133,7 +133,7 @@
           <el-button class="create-btn"
                      type="primary"
                      plain
-                     @click="addRow(addForm)">{{isEdit?'确认修改':'立即创建'}}
+                     @click="addParamsSetting">{{isEdit?'确认修改':'立即创建'}}
           </el-button>
         </router-link>
 
@@ -150,6 +150,11 @@ import tableData from '../home/pipeline_add'
 export default {
   data () {
     return {
+      tableData:[{
+        type:'',
+        name:'',
+        env:''
+      }],
       activeName: 'base',
       dialogVisible: true,
       users: [],
@@ -172,11 +177,6 @@ export default {
         }
       },
       getUserList: [],
-      tableData: {
-        index: '',
-        type: '',
-        name: ''
-      },
       addForm:{
         type: '',
         index:'',
@@ -254,6 +254,16 @@ export default {
     handleClick(type, index) {
       console.log(type, index);
       this.$refs.msg[addForm.index].findAllorder(this.activeName);
+    },
+    addList() {
+      this.tableData.push({
+        env: '',
+        type: '',
+        name: ''
+      })
+    },
+    addParamsSetting() {
+      this.addList()
     }
   },
 

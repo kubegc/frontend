@@ -1,6 +1,6 @@
 <template>
   <div class="projects-container">
-    <subTopbar/>
+    <subTopbar />
 <!--    <router-view @injectComp="injectComp" ></router-view>-->
   </div>
 </template>
