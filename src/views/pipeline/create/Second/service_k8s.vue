@@ -3,7 +3,6 @@
       <el-drawer title="代码源集成"
                  :visible.sync="addCodeDrawer"
                  direction="rtl">
-        <add-code @cancel="addCodeDrawer = false"></add-code>
       </el-drawer>
       <el-dialog title="是否更新对应环境？"
                  custom-class="dialog-upgrade-env"
@@ -15,72 +14,23 @@
                     type="warning">
           </el-alert>
         </div>
-        <span slot="footer"
-              class="dialog-footer">
-          <el-button size="small"
-                     type="primary"
-                     @click="autoUpgradeEnv">确 定</el-button>
-          <el-button size="small"
-                     @click="skipUpdate">跳过</el-button>
-
-        </span>
       </el-dialog>
       <div class="service-wrap">
         <div class="service-container">
           <Multipane class="vertical-panes"
                      layout="vertical">
             <div class="service-tree-container">
-              <ServiceTree :services="services"
-                           :projectInfo="projectInfo"
-                           :currentServiceYamlKinds="currentServiceYamlKinds"
-                           :sharedServices="sharedServices"
-                           :basePath="`/v1/projects/detail/${projectName}/services`"
-                           :showNext.sync="showNext"
-                           :yamlChange="yamlChange"
-                           ref="serviceTree"
-                           @onAddCodeSource="addCodeSource"
-                           @onJumpToKind="jumpToKind"
-                           @onRefreshProjectInfo="checkProjectFeature"
-                           @onRefreshService="getServices"
-                           @onDeleteService="deleteService"
-                           @onRefreshSharedService="getSharedServices"
-                           @onSelectServiceChange="onSelectServiceChange"
-                           @onShowJoinToEnvBtn="showJoinToEnvBtnEvent"
-                           @updateYaml="updateYaml($event)" />
+<!--              <ServiceTree />-->
             </div>
-            <template v-if="service.service_name  &&  services.length >0">
+            <template >
               <MultipaneResizer/>
               <div class="service-editor-container"
                    :style="{ minWidth: '300px', width: '500px' }">
-                <ServiceEditor ref="serviceEditor"
-                               :serviceInTree="service"
-                               :showNext.sync="showNext"
-                               :yamlChange.sync="yamlChange"
-                               :isOnboarding="isOnboarding"
-                               :showJoinToEnvBtn.sync="showJoinToEnvBtn"
-                               @onGetTemplateId="getTemplateId"
-                               @onParseKind="getYamlKind"
-                               @onRefreshService="getServices"
-                               @onRefreshSharedService="getSharedServices"
-                               @onUpdateService="onUpdateService"
-                               @showJoinToEnvDialog="showJoinToEnvDialog"
-                               class="service-editor-content" />
+                <ServiceEditor  />
               </div>
               <MultipaneResizer/>
-              <aside class="service-aside service-aside-right"
-                     :style="{ flexGrow: 1 }">
-                <ServiceAside :service="service"
-                              :services="services"
-                              :detectedEnvs="detectedEnvs"
-                              :detectedServices="detectedServices"
-                              :systemEnvs="systemEnvs"
-                              :buildBaseUrl="isOnboarding?`/v1/projects/create/${projectName}/k8s/service`:`/v1/projects/detail/${projectName}/services`"
-                              @getServiceModules="getServiceModules"/>
-              </aside>
-
             </template>
-            <div v-else
-                 class="no-content">
+            <div class="no-content">
 <!--              <img src="@assets/icons/illustration/editorNoService.svg"-->
 <!--                   alt="">-->
               <p >暂无服务，点击 <el-button size="mini"
@@ -122,7 +72,9 @@
     </div>
 </template>
 <script>
-import
+import ServiceTree from '../common/service_tree'
+import { Multipane, MultipaneResizer } from 'vue-multipane'
+
 export default {
   data () {
     return {
@@ -139,7 +91,7 @@ export default {
   mounted () {
 
   },
-  components: { },
+  components: { ServiceTree,    Multipane, MultipaneResizer },
 }
 </script>
 
