@@ -192,5 +192,20 @@ Mock.mock('/getChangeItems', { //输出数据
   }
 });
 
+Mock.mock('/services',{
+  code:20000,
+  data: {
+    gutter: 20,
+    rows: [
+      {
+        index: 10,
+        length:[
+          {index: 1, type: 'span1', name: '托管平台'},
+        ]
+      }
+    ]
+  }
+});
+
 
 

@@ -25,21 +25,17 @@
           <div class="service-tree-container">
             <serviceTree></serviceTree>
           </div>
-          <template v-if="service.service_name &&  services.length >0">
-            <template v-if="service.type==='k8s'">
-              <multipane-resizer></multipane-resizer>
+          <template v-if="services.length >0">
+            <template >
+              <multipane-resizer/>
               <div class="service-editor-container"
                    :style="{ minWidth: '300px', width: '500px'}"
                    :class="{'pm':service.type==='pm'}">
                 <serviceEditorK8s ref="serviceEditor"
                                   :serviceInTree="service"
-                                  :showNext.sync="showNext"
-                                  @onParseKind="getYamlKind"
-                                  @onRefreshService="getServices"
-                                  @onRefreshSharedService="getSharedServices"
-                                  @onUpdateService="onUpdateService"></serviceEditorK8s>
+                                  :showNext.sync="showNext"></serviceEditorK8s>
               </div>
-              <multipane-resizer></multipane-resizer>
+              <multipane-resizer/>
               <aside class="pipelines__aside pipelines__aside_right"
                      :style="{ flexGrow: 1 }">
                 <serviceAsideK8s :service="service"
@@ -60,6 +56,7 @@
                                                                plain
                                                                circle>
             </el-button> 创建服务</p>
+            <p v-else-if="services.length > 0">请在左侧点击要编辑的服务</p>
           </div>
           <div class = "aside__inner">
             <serviceAside></serviceAside>
@@ -83,11 +80,11 @@
   </div>
 </template>
 <script>
-  import step from '../common/step.vue'
-  import serviceTree from '../common/service_tree'
-  import serviceAside from './service_aside'
-  import { Multipane, MultipaneResizer } from 'vue-multipane'
-  import axios from 'axios'
+import step from '../common/step.vue'
+import serviceTree from '../common/service_tree'
+import serviceAside from './service_aside'
+import { Multipane, MultipaneResizer } from 'vue-multipane'
+import axios from 'axios'
 
   export default {
     components: {
@@ -105,7 +102,11 @@
         projectInfo: {},
         showNext: false,
         addCodeDrawer: false,
-        guideItems:[]
+        guideItems:[],
+        obj:{
+          name:'',
+          type:'1'
+        }
       }
     },
     methods: {
@@ -132,6 +133,16 @@
           }
         })
       },
+      // getServices() {
+      //   axios.get('/services').then((response) => {
+      //     if(response.data){
+      //       this.services = response.data.data
+      //     }
+      //   })
+      // },
+      createService() {
+        this.services.push(this.obj)
+      }
 
       // getYamlKind (payload) {
       //   this.currentServiceYamlKinds = payload
@@ -145,6 +156,7 @@
     mounted() {
       // this.getServices()
       this.readGuideItems()
+      // this.getServices()
     }
   }
 </script>
