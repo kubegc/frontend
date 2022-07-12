@@ -15,7 +15,23 @@ const store = new Vuex.Store({
     settings,
     user
   },
-  getters
+  getters,
+  state:{
+    count:0,
+    tableData:null
+  },
+  mutations:{
+    add(state){
+      state.count++
+    },
+    addData(state){
+      return state.tableData=[{
+        env:'1',
+        name:'1',
+        type:'1',
+      }]
+    }
+  }
 })
 
 export default store

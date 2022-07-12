@@ -16,7 +16,7 @@
       v-if="currentTab==='grid'"
       class="projects-grid">
       <el-row :gutter="12">
-        <el-col v-for="(Data,index) in tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="6" :xl="4">
+        <el-col v-for="(Data,index) in $store.state.tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="6" :xl="4">
           <el-card shadow="hover" class="project-card">
             <div class="operations">
               <el-dropdown @command="handleCommand" trigger="click">
@@ -32,7 +32,7 @@
             <div @click="$router.push(`/project/detail/1`)" class="content-container">
               <h4 class="project-name">
                 <el-tooltip effect="dark" :content="Data.name" placement="top">
-                  <span class="name">{{Data.name}}</span>
+                  <span class="name">{{$store.state.tableData.name}}</span>
                 </el-tooltip>
               </h4>
             </div>
@@ -100,7 +100,7 @@
       v-if="currentTab==='list'"
       class="projects-list">
       <el-table
-        :data="tableData"
+        :data="$store.state.tableData"
         style="width: 100%">
         <el-table-column prop="type" label="类型" min-width="40%">
         </el-table-column>
@@ -241,7 +241,7 @@
         getUserList().then(res => {
           if (res) {
             console.log('getUserListres', res.data.data)
-            this.tableData = res.data.data
+            this.tableData = this.$store.state.tableData
           }
         })
       },

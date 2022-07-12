@@ -72,7 +72,7 @@
     </div>
 </template>
 <script>
-import ServiceTree from '../common/service_tree'
+import ServiceTree from './container/service_tree'
 import { Multipane, MultipaneResizer } from 'vue-multipane'
 
 export default {

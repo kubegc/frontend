@@ -23,45 +23,54 @@
         <multipane class="vertical-panes"
                    layout="vertical">
           <div class="service-tree-container">
-            <serviceTree></serviceTree>
+            <serviceTree :input="service_name"
+                         :flee="block"/>
           </div>
-          <template v-if="services.length >0">
-            <template >
-              <multipane-resizer/>
-              <div class="service-editor-container"
-                   :style="{ minWidth: '300px', width: '500px'}"
-                   :class="{'pm':service.type==='pm'}">
-                <serviceEditorK8s ref="serviceEditor"
-                                  :serviceInTree="service"
-                                  :showNext.sync="showNext"></serviceEditorK8s>
-              </div>
-              <multipane-resizer/>
-              <aside class="pipelines__aside pipelines__aside_right"
-                     :style="{ flexGrow: 1 }">
-                <serviceAsideK8s :service="service"
-                                 :detectedEnvs="detectedEnvs"
-                                 :detectedServices="detectedServices"
-                                 :systemEnvs="systemEnvs"
-                                 @getServiceModules="getServiceModules"> </serviceAsideK8s>
-              </aside>
-            </template>
+          <template v-if="$store.state.count >0">
+            <multipane-resizer></multipane-resizer>
+            <div class="service-editor-container"
+                 :style="{ minWidth: '300px', width: '500px'}">
+              <serviceEditorK8s ref="serviceEditor"
+                                class="service-editor-content"></serviceEditorK8s>
+            </div>
+            <multipane-resizer></multipane-resizer>
+            <div class="pipelines__aside pipelines__aside_right"
+                 :style="{ flexGrow: 1 }">
+              <serviceAside/>
+            </div>
           </template>
-          <div
-            class="no-content">
+          <div v-else
+               class="no-content">
             <img src="@/assets/icons/editor_nodata.svg"
                  alt="">
-            <p v-if="services.length === 0">暂无服务，点击 <el-button size="mini"
-                                                               icon="el-icon-plus"
-                                                               @click="createService()"
-                                                               plain
-                                                               circle>
+            <p v-if="$store.state.count === 0">暂无服务，点击 <el-button size="mini"
+                                                                  icon="el-icon-plus"
+                                                                  @click="dialogVisible = true"
+                                                                  plain
+                                                                  circle>
             </el-button> 创建服务</p>
-            <p v-else-if="services.length > 0">请在左侧点击要编辑的服务</p>
-          </div>
-          <div class = "aside__inner">
-            <serviceAside></serviceAside>
+
+            <p v-else-if="$store.state.count > 0">请在左侧点击要编辑的服务</p>
           </div>
         </multipane>
+
+        <el-dialog title="提示"
+                   :visible.sync="dialogVisible"
+                   width="30%"
+                   :before-close="handleClose">
+          <div class="inputTip">
+            <el-input v-model="service_name" placeholder="请输入服务"></el-input>
+            <el-tooltip class="item" effect="dark" :content="msg" placement="top">
+              <i class="el-icon-warning-outline"></i>
+            </el-tooltip>
+          </div>
+
+          <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="createService()">确 定</el-button>
+          </span>
+        </el-dialog>
+
       </div>
     </div>
 
@@ -80,15 +89,19 @@
   </div>
 </template>
 <script>
-import step from '../common/step.vue'
-import serviceTree from '../common/service_tree'
-import serviceAside from './service_aside'
-import { Multipane, MultipaneResizer } from 'vue-multipane'
-import axios from 'axios'
+  import step from '../common/step.vue'
+  import serviceTree from './container/service_tree'
+  import serviceEditorK8s from './container/service_Editor'
+  import serviceAside from './container/service_Aside'
+  import { Multipane, MultipaneResizer } from 'vue-multipane'
+  import axios from 'axios'
 
   export default {
     components: {
-      step, serviceTree, serviceAside, Multipane, MultipaneResizer
+      step, serviceTree,serviceEditorK8s, serviceAside, Multipane, MultipaneResizer
+    },
+    props:{
+      msg: String
     },
     data () {
       return {
@@ -103,6 +116,9 @@ import axios from 'axios'
         showNext: false,
         addCodeDrawer: false,
         guideItems:[],
+        dialogVisible: false,
+        service_name:'',
+        block:true,
         obj:{
           name:'',
           type:'1'
@@ -141,8 +157,10 @@ import axios from 'axios'
       //   })
       // },
       createService() {
-        this.services.push(this.obj)
-      }
+        this.dialogVisible = false
+        this.$store.commit('add')
+        // this.services.push(this.obj)
+      },
 
       // getYamlKind (payload) {
       //   this.currentServiceYamlKinds = payload
@@ -151,6 +169,17 @@ import axios from 'axios'
       // jumpToKind (payload) {
       //   this.$refs.serviceEditor.jumpToWord(`kind: ${payload.kind}`)
       // }
+
+
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
+
+
     },
 
     mounted() {
@@ -319,7 +348,7 @@ import axios from 'axios'
       }
 
       .pipelines__aside_right {
-        min-width: 372px;
+        min-width: 500px;
         -webkit-transition: width 0.2s ease-out;
         transition: width 0.2s ease-out;
       }

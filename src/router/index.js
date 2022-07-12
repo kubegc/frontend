@@ -80,6 +80,10 @@ export const constantRoutes = [
         {
           path: 't6',
           component: () => import('@/views/pipeline/create/finish')
+        },
+        {
+          path: 't7',
+          component: () => import('@/views/pipeline/create/workflow')
         }
       ]
     }]

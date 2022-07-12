@@ -16,8 +16,7 @@
           </div>
         </div>
         <div class="account-integrations cf-block__list">
-          <el-table
-                    :data="mapWorkflows"
+          <el-table :data="mapWorkflows"
                     style="width: 100%;">
             <el-table-column label="工作流名称">
               <template >
@@ -56,7 +55,7 @@
                 <el-button type="success"
                            size="mini"
                            round
-                           @click="runCurrentTask(scope.row)"
+                           @click="$router.push('/t/t1/t7')"
                            plain>点击运行</el-button>
               </template>
             </el-table-column>
@@ -71,6 +70,7 @@
           <button type="primary"
                     size="small"
                     class="save-btn"
+                    @class="addList()"
                     plain>完成</button>
         </router-link>
       </div>
@@ -92,7 +92,9 @@ export default {
       loading: true,
       workflow: {},
       taskDialogVisible: false,
-      mapWorkflows: [],
+      mapWorkflows: [{
+
+      }],
       guideItems:[]
     }
   },
@@ -108,7 +110,14 @@ export default {
           this.guideItems = response.data.data
         }
       })
-    }
+    },
+    addList() {
+      this.tableData.push({
+        index: '',
+        type: '',
+        name: ''
+      })
+    },
   },
 
   computed: {

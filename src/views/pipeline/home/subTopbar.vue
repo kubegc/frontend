@@ -6,7 +6,7 @@
           <router-link
             v-hasPermi="{projectName: projectName, action: 'get_workflow'}"
             active-class="active"
-            :to="`/v1/projects/detail/${this.projectName}/pipelines`"
+            :to="`/t/t1/t6`"
           >
             <li class="nav-item">
               <i class="icon iconfont el-icon-s-unfold"></i>
@@ -16,7 +16,7 @@
           <router-link
             v-hasPermi="{projectName: projectName, action: 'get_environment'}"
             active-class="active"
-            :to="`/v1/projects/detail/${this.projectName}/envs`"
+            :to="`/v1/projects/detail`"
           >
             <li class="nav-item">
               <i class="icon iconfont el-icon-orange"></i>
@@ -27,7 +27,7 @@
           <router-link
             v-hasPermi="{projectName: projectName, action: 'get_service'}"
             active-class="active"
-            :to="`/v1/projects/detail/${this.projectName}/services`"
+            :to="`/t/t1/t4`"
           >
             <li class="nav-item">
               <i class="icon iconfont el-icon-box"></i>
@@ -37,7 +37,7 @@
           <router-link
             v-hasPermi="{projectName: projectName, action: 'get_build'}"
             active-class="active"
-            :to="`/v1/projects/detail/${this.projectName}/builds`"
+            :to="`/v1/projects/detail/builds`"
           >
             <li class="nav-item">
               <i class="icon iconfont el-icon-edit-outline"></i>
@@ -47,14 +47,14 @@
           <router-link
             v-hasPermi="{projectName: projectName, action: 'get_test'}"
             active-class="active"
-            :to="`/v1/projects/detail/${this.projectName}/test`"
+            :to="`/v1/projects/detail/test`"
           >
             <li class="nav-item">
               <i class="icon iconfont el-icon-s-platform"></i>
               <span class="name">测试</span>
             </li>
           </router-link>
-          <router-link active-class="active" :to="`/v1/projects/detail/${this.projectName}/scanner`">
+          <router-link active-class="active" :to="`/v1/projects/detail/scanner`">
             <li class="nav-item">
               <i class="icon iconfont el-icon-files"></i>
               <span class="name">代码扫描</span>
@@ -64,7 +64,7 @@
             v-if="deployType === 'helm' ||deployType === 'k8s' "
             v-hasPermi="{projectName: projectName, action: 'get_delivery'}"
             active-class="active"
-            :to="`/v1/projects/detail/${this.projectName}/version`"
+            :to="`/v1/projects/detail/version`"
           >
             <li class="nav-item">
               <i class="icon iconfont iconvery-versionmana"></i>
