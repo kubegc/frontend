@@ -4,12 +4,9 @@
       <div class="white-box-with-shadow__content">
         <div class="row cf-pipeline-yml-build__wrapper">
           <div class="cf-pipeline-yml-build__editor cf-pipeline-yml-build__editor_inline">
-            <div
-              class="cf-pipeline-yml-build__editor-wrapper"
-              @keydown.meta.83.prevent="updateServiceByKeyword"
-            >
-              <div class="yaml-desc" v-show="!service.yaml">请输入 Kubernetes YAML 配置</div>
-              <CodeMirror style="width: 100%; height: 100%;" ref="myCm" :value="service.yaml" :options="cmOptions" @input="onCmCodeChange"/>
+            <div class="cf-pipeline-yml-build__editor-wrapper">
+              <div class="yaml-desc" v-show="show1" @click="clicktrue()">请输入 Kubernetes YAML 配置</div>
+              <textarea style="width: 100%; height: 100%" ref="textarea" v-show="show2" ></textarea>
             </div>
             <div class="modal-block" v-if="service.source === 'template' && showModal">
               <el-button type="primary" size="small" @click="showModal = false">预览/编辑</el-button>
@@ -109,10 +106,16 @@ export default {
       initYaml: '',
       dialogImportYamlVisible: false,
       previewYamlFile: false,
-      showModal: true
+      showModal: true,
+      show1:true,
+      show2:false
     }
   },
   methods: {
+    clicktrue(){
+      this.show1 = !this.show1;
+      this.show2 = !this.show2
+    }
     // keepInitYaml (newYaml) {
     //   this.initYaml = newYaml
     //   this.$emit('update:yamlChange', this.initYaml !== this.service.yaml)
@@ -436,6 +439,15 @@ export default {
               padding: 9px 34px;
               color: #ccc;
               font-size: 13px;
+            }
+
+            textarea{
+              background:transparent;
+
+              border-style:none;
+
+              padding-left:20px;
+
             }
           }
 

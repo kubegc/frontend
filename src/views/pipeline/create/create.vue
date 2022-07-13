@@ -146,6 +146,17 @@
   import axios from 'axios'
   import { getUserList } from '../../../api/api'
   import tableData from '../home/pipeline_add'
+  const validateProductName = (rule, value, callback) => {
+    if (typeof value === 'undefined' || value === '') {
+      callback(new Error('填写项目主键'))
+    } else {
+      if (!/^[a-z0-9-]+$/.test(value)) {
+        callback(new Error('项目主键只支持小写字母和数字，特殊字符只支持中划线'))
+      } else {
+        callback()
+      }
+    }
+  }
 
   export default {
     data () {
@@ -186,6 +197,42 @@
           type:[{require: true, message: '请输入', trigger: 'blur'}],
           index:[{require: true, message: '请输入', trigger: 'blur'}],
           name:[{require: true, message: '请输入', trigger: 'blur'}]
+        },
+
+        rules: {
+          project_name: [
+            { required: true, message: '请输入项目名称', trigger: 'blur' }
+          ],
+          product_name: [
+            { required: true, trigger: 'change', validator: validateProductName }
+          ],
+          admins: [
+            {
+              type: 'array',
+              required: true,
+              message: '请选择项目管理员',
+              trigger: 'change'
+            }
+          ],
+          cluster_ids: [
+            {
+              type: 'array',
+              required: true,
+              message: '请选择集群资源',
+              trigger: 'change'
+            }
+          ],
+          enabled: [
+            {
+              type: 'boolean',
+              required: true,
+              message: '请选择项目是否启用项目',
+              trigger: 'change'
+            }
+          ],
+          public: [
+            { required: true, message: '项目权限不能为空', trigger: 'blur' }
+          ]
         }
       }
     },

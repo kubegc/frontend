@@ -54,15 +54,12 @@
           </div>
         </multipane>
 
-        <el-dialog title="提示"
+        <el-dialog title="新建服务"
                    :visible.sync="dialogVisible"
                    width="30%"
                    :before-close="handleClose">
           <div class="inputTip">
             <el-input v-model="service_name" placeholder="请输入服务"></el-input>
-            <el-tooltip class="item" effect="dark" :content="msg" placement="top">
-              <i class="el-icon-warning-outline"></i>
-            </el-tooltip>
           </div>
 
           <span slot="footer" class="dialog-footer">

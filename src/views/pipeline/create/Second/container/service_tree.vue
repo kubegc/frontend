@@ -317,7 +317,7 @@
         <div v-else>
           <div class="add-new-service">
             <span class="service-status "></span>
-            <div style="margin-top: 2px"><i class="service-type iconfont el-icon-s-grid"></i>{{input}}</div>
+            <div class="add-new-service-test"><i class="service-type iconfont el-icon-s-grid"></i>{{input}}</div>
           </div>
         </div>
       </template>
@@ -1357,12 +1357,18 @@
     }
 
     .add-new-service {
+      position: relative;
       margin-top: 5px;
       padding-left: 20px;
       color: #606266;
       vertical-align: middle;
       height: 20px;
       background: #96cbfe;
+
+      .add-new-service-test {
+        position: absolute;
+        margin-top: 3px;
+      }
 
       .el-input {
         width: 150px;
