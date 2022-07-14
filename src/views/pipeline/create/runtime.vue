@@ -366,7 +366,6 @@ export default {
             margin: 10px 0;
             color: #4c4c4c;
             font-weight: 400;
-            text-decoration: underline;
           }
 
           a {

@@ -9,15 +9,15 @@
     <div class="aside__inner">
       <div class="aside-bar">
         <div class="tabs__wrap tabs__wrap_vertical">
+          <button class="tabs__item" @click="selected = 'help'" :class="{'selected': selected === 'help'}" >
+            <span class="step-name">帮助</span>
+          </button>
           <button class="tabs__item" @click="selected = 'var'" :class="{'selected': selected === 'var'}">
             <span class="step-name">变量</span>
           </button>
           <div class="tabs__item" @click="selected = 'policy'" :class="{'selected': selected === 'policy'}" >
             <span class="step-name">策略</span>
           </div>
-          <button class="tabs__item" @click="selected = 'help'" :class="{'selected': selected === 'help'}" >
-            <span class="step-name">帮助</span>
-          </button>
         </div>
       </div>
       <div class="aside__content">
@@ -270,7 +270,7 @@
         addCodeDrawer: false,
         editEnvIndex: {},
         projectForm: {},
-        selected :'var'
+        selected :'help'
         // addKeyData: [
         //   {
         //     key: '',

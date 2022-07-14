@@ -308,7 +308,7 @@
       <!--      </el-dialog>-->
 
       <template>
-        <div v-if="$store.state.count === 0">
+        <div v-if="$store.state.count.length === 0">
           <div class="add-new-service" style="display: none">
             <span class="service-status "></span>
             <div style="margin-top: 3px"><i class="service-type iconfont el-icon-s-grid"></i>{{input}}</div>
@@ -317,7 +317,10 @@
         <div v-else>
           <div class="add-new-service">
             <span class="service-status "></span>
-            <div class="add-new-service-test"><i class="service-type iconfont el-icon-s-grid"></i>{{input}}</div>
+            <div class="add-new-service-test">
+              <i class="service-type iconfont el-icon-s-grid"></i>{{input}}
+              <i class="service-delete el-icon-close" @click="$store.commit('delArr',index)"></i>
+            </div>
           </div>
         </div>
       </template>
@@ -1312,6 +1315,11 @@
           vertical-align: middle;
         }
 
+        .service-delete{
+          vertical-align: middle;
+          margin-right: 10px;
+        }
+
         .tree-service-name {
           display: inline-block;
           width: calc(~'100% - 115px');
@@ -1368,6 +1376,12 @@
       .add-new-service-test {
         position: absolute;
         margin-top: 3px;
+
+        .service-delete{
+          vertical-align: middle;
+          margin-left: 150px;
+        }
+
       }
 
       .el-input {

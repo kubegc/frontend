@@ -17,12 +17,15 @@ const store = new Vuex.Store({
   },
   getters,
   state:{
-    count:0,
+    count:[],
     tableData:null
   },
   mutations:{
     add(state){
-      state.count++
+      state.count.push(0)
+    },
+    delArr(state,index){
+      state.count.splice(index,1)
     },
     addData(state){
       return state.tableData=[{

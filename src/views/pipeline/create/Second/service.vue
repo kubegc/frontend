@@ -26,7 +26,7 @@
             <serviceTree :input="service_name"
                          :flee="block"/>
           </div>
-          <template v-if="$store.state.count >0">
+          <template v-if="$store.state.count.length >0">
             <multipane-resizer></multipane-resizer>
             <div class="service-editor-container"
                  :style="{ minWidth: '300px', width: '500px'}">
@@ -36,21 +36,21 @@
             <multipane-resizer></multipane-resizer>
             <div class="pipelines__aside pipelines__aside_right"
                  :style="{ flexGrow: 1 }">
-              <serviceAside/>
+              <serviceAside />
             </div>
           </template>
           <div v-else
                class="no-content">
             <img src="@/assets/icons/editor_nodata.svg"
                  alt="">
-            <p v-if="$store.state.count === 0">暂无服务，点击 <el-button size="mini"
+            <p v-if="$store.state.count.length === 0">暂无服务，点击 <el-button size="mini"
                                                                   icon="el-icon-plus"
                                                                   @click="dialogVisible = true"
                                                                   plain
                                                                   circle>
             </el-button> 创建服务</p>
 
-            <p v-else-if="$store.state.count > 0">请在左侧点击要编辑的服务</p>
+            <p v-else-if="$store.state.count.length > 0">请在左侧点击要编辑的服务</p>
           </div>
         </multipane>
 
@@ -155,7 +155,7 @@
       // },
       createService() {
         this.dialogVisible = false
-        this.$store.commit('add')
+        this.$store.commit('add', 0)
         // this.services.push(this.obj)
       },
 
