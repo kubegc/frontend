@@ -206,6 +206,13 @@ Mock.mock('/services',{
     ]
   }
 });
-
+Mock.mock('/selectHost',{
+  code:20000,
+  data: {
+    items:[
+      {value:'选项一',  Owner:'yanbingshuai', name:'project', label:'github'},
+    ]
+  }
+});
 
 

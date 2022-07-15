@@ -11,7 +11,7 @@
           1
         </div>
         <p class="service-aside-help__step-list-item-text">
-          新建服务，支持三种方式：手工输入/从代码库同步/使用模板新建
+          新建服务，支持两种方式：手工输入/从代码库同步
         </p>
       </li>
       <li class="service-aside-help__step-list-item">
@@ -20,12 +20,12 @@
         </div>
         <p class="service-aside-help__step-list-item-text">
           添加和修改 YAML 中的变量，在运行环境中会被作为环境变量使用
-        <ul>
-          <li>容器(服务组件)的镜像版本：通过配置构建步骤，实现版本升级（代码构建->构建镜像->镜像部署）
-          </li>
-          <li>系统内置变量：可以直接在服务模板配置中引用</li>
-          <li>自定义变量：在运行环境中会被作为环境变量使用</li>
-        </ul>
+          <ul>
+            <li>容器(服务组件)的镜像版本：通过配置构建步骤，实现版本升级（代码构建->构建镜像->镜像部署）
+            </li>
+            <li>系统内置变量：可以直接在服务模板配置中引用</li>
+            <li>自定义变量：在运行环境中会被作为环境变量使用</li>
+          </ul>
         </p>
       </li>
       <li class="service-aside-help__step-list-item">

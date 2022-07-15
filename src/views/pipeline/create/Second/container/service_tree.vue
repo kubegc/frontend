@@ -39,7 +39,6 @@
     </el-dialog>
     <!--end of workspace-tree-dialog-->
     <el-dialog title="请选择代码库平台"
-               @close="closeSelectRepo"
                center
                :append-to-body="true"
                :close-on-click-modal="false"
@@ -47,55 +46,40 @@
                :visible.sync="dialogImportFileVisible">
       <div class="from-code-container">
 
-        <el-form :model="source"
-                 :rules="sourceRules"
+        <el-form :model="selectItems"
                  ref="sourceForm"
                  label-width="140px">
           <el-form-item label="托管平台"
-                        prop="codehostId"
-                        :rules="{required: true, message: '平台不能为空', trigger: 'change'}">
-            <el-select v-model="source.codehostId"
+                        prop="codehostId">
+            <el-select v-model="value"
                        size="small"
                        style="width: 100%;"
                        placeholder="请选择托管平台"
-                       @change="getRepoOwnerById(source.codehostId)"
                        filterable>
-              <el-option v-for="(host,index) in allCodeHosts"
-                         :key="index"
-                         :label="`${host.address} ${host.type==='github'?'('+host.namespace+')':''}`"
-                         :value="host.id">{{`${host.address}
-                ${host.type==='github'?'('+host.namespace+')':''}`}}</el-option>
+              <el-option v-for="item in selectItems.items"
+                         :key="item.value"
+                         :value="item.value"
+                         :label="item.label"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="代码库拥有者"
-                        prop="repoOwner"
-                        :rules="{required: true, message: '代码库拥有者不能为空', trigger: 'change'}">
-            <el-select v-model.trim="source.repoOwner"
+                        prop="repoOwner">
+            <el-select v-model.trim="value"
                        size="small"
                        style="width: 100%;"
-                       @change="getRepoNameById(source.codehostId,source.repoOwner)"
-                       @clear="clearRepoOwner"
-                       remote
-                       :remote-method="searchRepoOwner"
-                       :loading="searchRepoOwnerLoading"
-                       allow-create
-                       clearable
                        placeholder="请选择代码库拥有者"
                        filterable>
-              <el-option v-for="(repo,index) in codeInfo['repoOwners']"
-                         :key="index"
-                         :label="repo.path"
-                         :value="repo.path">
+              <el-option v-for="item in selectItems.items"
+                         :key="item.value"
+                         :label="item.Owner"
+                         :value="item.value">
               </el-option>
             </el-select>
           </el-form-item>
           <template>
             <el-form-item label="代码库名称"
-                          prop="repoName"
-                          :rules="{required: true, message: '名称不能为空', trigger: 'change'}">
-              <el-select @change="getBranchInfoById(source.codehostId,source.repoOwner,source.repoName)"
-                         @clear="clearRepoName"
-                         v-model.trim="source.repoName"
+                          prop="repoName">
+              <el-select v-model.trim="value"
                          remote
                          :remote-method="searchRepoName"
                          :loading="searchRepoNameLoading"
@@ -105,10 +89,10 @@
                          size="small"
                          placeholder="请选择代码库"
                          filterable>
-                <el-option v-for="(repo,index) in codeInfo['repos']"
-                           :key="index"
-                           :label="repo.name"
-                           :value="repo.name">
+                <el-option v-for="item in selectItems.items"
+                           :key="item.value"
+                           :label="item.name"
+                           :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -425,6 +409,8 @@
   // import { deleteServiceTemplateAPI, autoUpgradeEnvAPI, getSingleProjectAPI, updateEnvTemplateAPI, getCodeSourceAPI, getRepoOwnerByIdAPI, getRepoNameByIdAPI, getBranchInfoByIdAPI, loadRepoServiceAPI, validPreloadService, getCodeSourceByAdminAPI } from '@api'
   // import { mapGetters } from 'vuex'
 
+  import axios from "axios";
+
   export default {
     props:['input', 'flee'],
     data () {
@@ -466,21 +452,20 @@
           path: '',
           isDir: false
         },
-        serviceRules: {
-          newServiceName: [
-            {
-              type: 'string',
-              required: true,
-              validator: this.validateServiceName,
-              trigger: ['blur', 'change']
-            }
-          ]
-        },
+        selectItems:[],
+        value:'',
         previousNodeKey: ''
       }
     },
 
     methods: {
+      selectHost() {
+        axios.get('/selectHost').then((response) => {
+          if(response.data){
+            this.selectItems = response.data.data
+          }
+        })
+      },
       validateServiceName (rule, value, callback) {
         if (value === '') {
           callback(new Error('请输入服务名称'))
@@ -1182,6 +1167,7 @@
       // this.getServiceGroup()
     },
     mounted () {
+      this.selectHost()
       // window.addEventListener('resize', this.listenResize)
     },
     beforeDestroy () {
