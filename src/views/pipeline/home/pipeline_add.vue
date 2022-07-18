@@ -204,11 +204,7 @@
       return {
         pipelineItems: [],
         getUserList: [],
-        tableData: [{
-          type: '',
-          name: '',
-          env: ''
-        }],
+        tableData: [],
         currentTab: 'grid',
         dialog: false,
         fullscreen: false,
@@ -267,7 +263,6 @@
       },
       addParamsSetting() {
         this.addList()
-        this.submitForm()
       },
       deleteRow(index) {
         this.tableData.splice(index, 1)
@@ -279,13 +274,6 @@
           this.$router.push(`/test/test2/test3`)
         }
       },
-      submitForm() {
-        let _this = this;
-        let data = {
-          list: _this.tableData
-        }
-        console.log(data)
-      }
     }
   }
 </script>

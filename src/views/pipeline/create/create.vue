@@ -21,7 +21,6 @@
                        label-width="100px"
                        class="demo-projectForm">
                 <el-form-item label="工作流名称"
-                              v-show="$store.state.tableData "
                               prop="project_name">
                   <el-input v-model="$store.state.tableData"></el-input>
                 </el-form-item>
@@ -161,11 +160,7 @@
   export default {
     data () {
       return {
-        tableData:[{
-          type:'',
-          name:'',
-          env:''
-        }],
+        tableData:[],
         activeName: 'base',
         dialogVisible: true,
         users: [],
@@ -261,14 +256,14 @@
         })
       },
 
-      initPage() {
-        getUserList().then(res => {
-          if (res) {
-            console.log('getUserListres', res.data.data)
-            this.tableData = res.data.data
-          }
-        })
-      },
+      // initPage() {
+      //   getUserList().then(res => {
+      //     if (res) {
+      //       console.log('getUserListres', res.data.data)
+      //       this.tableData = res.data.data
+      //     }
+      //   })
+      // },
 
       remoteMethod (query) {
         if (query !== '') {
@@ -303,7 +298,7 @@
         this.$refs.msg[addForm.index].findAllorder(this.activeName);
       },
       addParamsSetting() {
-        this.$store.state.tableData
+        this.$store.commit('addData',JSON.stringify(this.tableData))
       }
     },
 

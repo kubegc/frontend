@@ -170,10 +170,10 @@
             <el-tooltip effect="dark"
                         content="创建服务"
                         placement="top">
-              <el-button v-if="deployType==='k8s'"
+              <el-button v-if="$store.state.count.length === 0"
                          size="mini"
                          icon="el-icon-plus"
-                         @click="ImportFileVisible = true"
+                         @click="dialogVisible = true"
                          plain
                          circle>
               </el-button>
@@ -192,6 +192,21 @@
         </el-col>
       </el-row>
     </div>
+
+    <el-dialog title="新建服务"
+               :visible.sync="dialogVisible"
+               width="30%"
+               :before-close="handleClose">
+      <div class="inputTip">
+        <el-input  v-model="namecall" placeholder="请输入服务"></el-input>
+      </div>
+
+      <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="createService()">确 定</el-button>
+          </span>
+    </el-dialog>
+
     <div class="tree-container">
       <!--      <keep-alive>-->
       <!--        <el-tree v-if="mode==='edit'"-->
@@ -302,7 +317,7 @@
           <div class="add-new-service">
             <span class="service-status "></span>
             <div class="add-new-service-test">
-              <i class="service-type iconfont el-icon-s-grid"></i>{{input}}
+              <i class="service-type iconfont el-icon-s-grid"></i>{{input}}{{namecall}}
               <i class="service-delete el-icon-close" @click="$store.commit('delArr',index)"></i>
             </div>
           </div>
@@ -435,6 +450,9 @@
         showDragContainer: false,
         showSelectPath: true,
         disabledReload: false,
+        dialogVisible: false,
+        service_name:'',
+        namecall:'',
         codeInfo: {
           repoOwners: [],
           repos: [],
@@ -506,6 +524,19 @@
           })
         }
       },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
+      createService() {
+        this.dialogVisible = false
+        this.$store.commit('add', 0)
+        // this.services.push(this.obj)
+      }
+
       // setHovered (name) {
       //   this.$nextTick(() => {
       //     this.$set(this.showHover, name, true)

@@ -18,7 +18,7 @@ const store = new Vuex.Store({
   getters,
   state:{
     count:[],
-    tableData:null
+    tableData:[]
   },
   mutations:{
     add(state){
@@ -27,12 +27,8 @@ const store = new Vuex.Store({
     delArr(state,index){
       state.count.splice(index,1)
     },
-    addData(state){
-      return state.tableData=[{
-        env:'1',
-        name:'1',
-        type:'1',
-      }]
+    addData(state,data){
+      state.tableData = data
     }
   }
 })
