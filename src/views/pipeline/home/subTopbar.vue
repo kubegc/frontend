@@ -193,10 +193,13 @@ export default {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  height: 10px;
+  height: 60px;
   padding-left: 26px;
   background-color: #fff;
-
+  box-shadow:
+    0px 1px 2px -2px rgba(0, 0, 0, 0.16),
+    0px 3px 6px 0px rgba(0, 0, 0, 0.12),
+    0px 5px 12px 4px rgba(0, 0, 0, 0.09);
 
   .nav-container {
     .nav-content {
@@ -205,8 +208,6 @@ export default {
 
         .nav-item {
           display: inline-flex;
-          align-items: center;
-          justify-content: center;
           height: 42px;
           padding: 9px 12px;
           color: #000;

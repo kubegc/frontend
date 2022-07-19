@@ -96,7 +96,7 @@ export default {
 .cf-block__list {
   -ms-flex: 1;
   flex: 1;
-  margin-top: 100px;
+  margin-top: 30px;
   padding: 0 30px;
   overflow-y: auto;
   background-color: inherit;

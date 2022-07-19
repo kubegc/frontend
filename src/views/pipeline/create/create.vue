@@ -282,17 +282,17 @@
         this.$refs[formName].resetFields()
       },
 
-      addRow(addForm){
-        this.$ref.addFormRef.validate(valid => {
-          if (!valid) return this.get$message.warning('表单填写有误，请检查！')
-          this.$message.success('添加成功！')
-          console.log(addForm)
-          this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
-          this.addForm.type = ''
-          this.addForm.index = ''
-          this.addForm.name = ''
-        })
-      },
+      // addRow(addForm){
+      //   this.$ref.addFormRef.validate(valid => {
+      //     if (!valid) return this.get$message.warning('表单填写有误，请检查！')
+      //     this.$message.success('添加成功！')
+      //     console.log(addForm)
+      //     this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
+      //     this.addForm.type = ''
+      //     this.addForm.index = ''
+      //     this.addForm.name = ''
+      //   })
+      // },
       handleClick(type, index) {
         console.log(type, index);
         this.$refs.msg[addForm.index].findAllorder(this.activeName);

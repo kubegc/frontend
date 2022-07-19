@@ -1,4 +1,8 @@
 <template>
+<div>
+  <div class="tiptop">
+    <subTopbar />
+  </div>
   <div class="workflow-task-detail">
     <el-row>
       <el-col :span="6">
@@ -96,9 +100,11 @@
       </el-table>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+  import subTopbar from '../home/subTopbar'
   import { handleCreateTemplateChange, getTextValue, getComplexOrDefValue } from '@/api/common'
   export default {
     data() {
@@ -183,11 +189,17 @@
       handleCreateTemplateChange,
       getTextValue,
       getComplexOrDefValue
-    }
+    },
+    components: {
+      subTopbar
+    },
   }
 </script>
 
 <style lang="less">
+  .tiptop{
+    top: 80px;
+  }
   .workflow-task-detail {
     margin-bottom: 350px;
     position: relative;
@@ -210,6 +222,7 @@
       }
     }
     .build-summary {
+      margin-top: 5px;
       .link a {
         color: #1989fa;
         cursor: pointer;

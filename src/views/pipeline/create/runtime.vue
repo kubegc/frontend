@@ -19,9 +19,8 @@
             <h4>环境准备</h4>
             <el-alert  type="warning" show-icon>
               <template v-slot:title>
-                环境正在准备中，可点击 「下一步」 或者 <span class="view-env-btn" @click="viewEnvStatus">查看环境状态</span>
-                <i v-if="exitLoading"
-                   class="el-icon-loading"></i>
+                环境正在准备中，可点击 「下一步」 或者 <span class="view-env-btn" >查看环境状态</span>
+                <i class="el-icon-loading"></i>
               </template>
             </el-alert>
           </div>
@@ -40,7 +39,7 @@
                        class="integration-details">
                     <template v-if="env.env_name==='dev'">
                       <span class="env-name">
-                        开发环境：{{projectName}}-dev
+                        开发环境：{{$store.state.tableData.name}}-dev
                       </span>
                       <span class="desc">，开发日常自测、业务联调</span>
 <!--                      <el-link v-if="env.err_message!==''"-->
@@ -48,7 +47,7 @@
                     </template>
                     <template v-if="env.env_name==='qa'"
                               class="env-item">
-                      <span class="env-name">测试环境：{{projectName}}-qa
+                      <span class="env-name">测试环境：{{$store.state.tableData.name}}-qa
                       </span>
                       <span class="desc">，自动化测试、业务验收</span>
 <!--                      <el-link v-if="env.err_message!==''"-->
@@ -73,13 +72,13 @@
                 </div>
                 <div class="integration-card__info">
                   <div class="integration-details">
-                    开发工作流：{{projectName}}-workflow-dev，应用日常升级，用于开发自测和联调
+                    开发工作流：{{$store.state.tableData.name}}-workflow-dev，应用日常升级，用于开发自测和联调
                   </div>
                   <div class="integration-details">
-                    测试工作流：{{projectName}}-workflow-qa，应用按需升级，用于自动化测试和业务验收
+                    测试工作流：{{$store.state.tableData.name}}-workflow-qa，应用按需升级，用于自动化测试和业务验收
                   </div>
                   <div class="integration-details">
-                    运维工作流：{{projectName}}-ops-workflow，业务按需发布，用于版本升级和业务上线
+                    运维工作流：{{$store.state.tableData.name}}-ops-workflow，业务按需发布，用于版本升级和业务上线
                   </div>
                 </div>
               </div>

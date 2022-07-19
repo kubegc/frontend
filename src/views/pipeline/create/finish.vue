@@ -44,7 +44,7 @@
                   </span>
                   <el-tag size="small">分发</el-tag>
                 </span>
-              </template>
+            </template>
             </el-table-column>
             <el-table-column width="200px"
                              label="更新信息（时间/操作人）">
@@ -127,12 +127,6 @@ export default {
   },
 
   created () {
-    this.getWorkflows()
-    bus.$emit('set-topbar-title', { title: '', breadcrumb: [{ title: '项目', url: '/v1/projects' }, { title: this.projectName, url: '' }] })
-    bus.$emit('set-sub-sidebar-title', {
-      title: '',
-      routerList: []
-    })
   },
 
   onboardingStatus: 0
