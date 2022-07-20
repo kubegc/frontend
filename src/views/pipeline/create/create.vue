@@ -21,6 +21,7 @@
                        label-width="100px"
                        class="demo-projectForm">
                 <el-form-item label="工作流名称"
+                              v-show="$store.state.tableData "
                               prop="project_name">
                   <el-input v-model="$store.state.tableData"></el-input>
                 </el-form-item>
@@ -194,41 +195,41 @@
           name:[{require: true, message: '请输入', trigger: 'blur'}]
         },
 
-        rules: {
-          project_name: [
-            { required: true, message: '请输入项目名称', trigger: 'blur' }
-          ],
-          product_name: [
-            { required: true, trigger: 'change', validator: validateProductName }
-          ],
-          admins: [
-            {
-              type: 'array',
-              required: true,
-              message: '请选择项目管理员',
-              trigger: 'change'
-            }
-          ],
-          cluster_ids: [
-            {
-              type: 'array',
-              required: true,
-              message: '请选择集群资源',
-              trigger: 'change'
-            }
-          ],
-          enabled: [
-            {
-              type: 'boolean',
-              required: true,
-              message: '请选择项目是否启用项目',
-              trigger: 'change'
-            }
-          ],
-          public: [
-            { required: true, message: '项目权限不能为空', trigger: 'blur' }
-          ]
-        }
+        // rules: {
+        //   project_name: [
+        //     { required: true, message: '请输入项目名称', trigger: 'blur' }
+        //   ],
+        //   product_name: [
+        //     { required: true, trigger: 'change', validator: validateProductName }
+        //   ],
+        //   admins: [
+        //     {
+        //       type: 'array',
+        //       required: true,
+        //       message: '请选择项目管理员',
+        //       trigger: 'change'
+        //     }
+        //   ],
+        //   cluster_ids: [
+        //     {
+        //       type: 'array',
+        //       required: true,
+        //       message: '请选择集群资源',
+        //       trigger: 'change'
+        //     }
+        //   ],
+        //   enabled: [
+        //     {
+        //       type: 'boolean',
+        //       required: true,
+        //       message: '请选择项目是否启用项目',
+        //       trigger: 'change'
+        //     }
+        //   ],
+        //   public: [
+        //     { required: true, message: '项目权限不能为空', trigger: 'blur' }
+        //   ]
+        // }
       }
     },
 
@@ -282,17 +283,17 @@
         this.$refs[formName].resetFields()
       },
 
-      // addRow(addForm){
-      //   this.$ref.addFormRef.validate(valid => {
-      //     if (!valid) return this.get$message.warning('表单填写有误，请检查！')
-      //     this.$message.success('添加成功！')
-      //     console.log(addForm)
-      //     this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
-      //     this.addForm.type = ''
-      //     this.addForm.index = ''
-      //     this.addForm.name = ''
-      //   })
-      // },
+      addRow(addForm){
+        this.$ref.addFormRef.validate(valid => {
+          if (!valid) return this.get$message.warning('表单填写有误，请检查！')
+          this.$message.success('添加成功！')
+          console.log(addForm)
+          this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
+          this.addForm.type = ''
+          this.addForm.index = ''
+          this.addForm.name = ''
+        })
+      },
       handleClick(type, index) {
         console.log(type, index);
         this.$refs.msg[addForm.index].findAllorder(this.activeName);
@@ -300,6 +301,10 @@
       addParamsSetting() {
         this.$store.commit('addData',JSON.stringify(this.tableData))
       }
+    },
+
+    created() {
+      this.tableData = this.$store.state.tableData
     },
 
     computed: {

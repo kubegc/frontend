@@ -60,6 +60,46 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-table :data="mapWorkflows"
+                    style="width: 100%;">
+            <el-table-column >
+              <template >
+                <span style="margin-left: 10px;">{{ 222 }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column width="400px">
+            </el-table-column>
+            <el-table-column width="400px">
+              <template slot-scope="scope">
+                <span>
+                  <span>
+                    <el-tag size="small">构建部署</el-tag>
+                    <span class="step-arrow"><i class="el-icon-right"></i></span>
+                  </span>
+                  <span>
+                    <el-tag size="small">交付物部署</el-tag>
+                    <span class="step-arrow"><i class="el-icon-right"></i></span>
+                  </span>
+                  <span>
+                    <el-tag size="small">测试</el-tag>
+                    <span class="step-arrow"><i class="el-icon-right"></i></span>
+                  </span>
+                  <el-tag size="small">分发</el-tag>
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column width="200px">
+            </el-table-column>
+            <el-table-column width="200px">
+              <template slot-scope="scope">
+                <el-button type="success"
+                           size="mini"
+                           round
+                           @click="$router.push('/t/t1/t7')"
+                           plain>点击运行</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </div>
       </div>
     </div>

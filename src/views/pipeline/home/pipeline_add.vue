@@ -215,7 +215,7 @@
     },
     mounted() {
       this.pipelinelength()
-      this.initPage()
+      // this.initPage()
     },
     methods: {
       createDialog() {
@@ -232,15 +232,15 @@
       next() {
         if (this.active++ > 3) this.active = 0
       },
-
-      initPage() {
-        getUserList().then(res => {
-          if (res) {
-            console.log('getUserListres', res.data.data)
-            this.tableData = this.$store.state.tableData
-          }
-        })
-      },
+      //
+      // initPage() {
+      //   getUserList().then(res => {
+      //     if (res) {
+      //       console.log('getUserListres', res.data.data)
+      //       this.tableData = this.$store.state.tableData
+      //     }
+      //   })
+      // },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`)
         this.currentPage = 1
@@ -263,6 +263,7 @@
       },
       addParamsSetting() {
         this.addList()
+        this.submitForm()
       },
       deleteRow(index) {
         this.tableData.splice(index, 1)
@@ -273,7 +274,7 @@
         } else if (command.action === 'edit') {
           this.$router.push(`/test/test2/test3`)
         }
-      },
+      }
     }
   }
 </script>

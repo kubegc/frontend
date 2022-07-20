@@ -228,7 +228,6 @@ export default {
   .projects-runtime-container {
     position: relative;
     flex: 1;
-    height: 100%;
     overflow: auto;
     background-color: #f6f6f6;
 
