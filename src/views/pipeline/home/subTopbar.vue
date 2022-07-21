@@ -161,29 +161,29 @@ export default {
     // }
   },
   methods: {
-    // bindComp (comp, type) {
-    //   if (type === 'workflow') {
-    //     comp.createWorkflow()
-    //   } else if (type === 'env') {
-    //     this.$router.push(`/v1/projects/detail/${this.projectName}/envs/create`)
-    //   } else if (type === 'build') {
-    //     this.$router.push(
-    //       `/v1/projects/detail/${this.projectName}/builds/create`
-    //     )
-    //   } else if (type === 'test') {
-    //     this.$router.push(
-    //       `/v1/projects/detail/${this.projectName}/test/add/function`
-    //     )
-    //   } else if (type === 'scanner') {
-    //     this.$router.push(
-    //       `/v1/projects/detail/${this.projectName}/scanner/create`
-    //     )
-    //   } else if (type === 'version') {
-    //     this.$router.push(
-    //       `/v1/projects/detail/${this.projectName}/version/create`
-    //     )
-    //   }
-    // }
+    bindComp (comp, type) {
+      if (type === 'workflow') {
+        comp.createWorkflow()
+      } else if (type === 'env') {
+        this.$router.push(`/v1/projects/detail/${this.projectName}/envs/create`)
+      } else if (type === 'build') {
+        this.$router.push(
+          `/v1/projects/detail/${this.projectName}/builds/create`
+        )
+      } else if (type === 'test') {
+        this.$router.push(
+          `/v1/projects/detail/${this.projectName}/test/add/function`
+        )
+      } else if (type === 'scanner') {
+        this.$router.push(
+          `/v1/projects/detail/${this.projectName}/scanner/create`
+        )
+      } else if (type === 'version') {
+        this.$router.push(
+          `/v1/projects/detail/${this.projectName}/version/create`
+        )
+      }
+    }
   }
 }
 </script>
