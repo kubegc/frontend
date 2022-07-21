@@ -32,7 +32,7 @@
             <div @click="$router.push(`/project/detail/1`)" class="content-container">
               <h4 class="project-name">
                 <el-tooltip effect="dark" :content="Data.name" placement="top">
-                  <span class="name">{{$store.state.tableData.name}}</span>
+                  <span class="name">{{111}}</span>
                 </el-tooltip>
               </h4>
             </div>
