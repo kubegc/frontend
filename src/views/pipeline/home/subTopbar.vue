@@ -16,7 +16,7 @@
           <router-link
             v-hasPermi="{projectName: projectName, action: 'get_environment'}"
             active-class="active"
-            :to="`/v1/projects/detail`"
+            :to="`/project/detail/2`"
           >
             <li class="nav-item">
               <i class="icon iconfont el-icon-orange"></i>

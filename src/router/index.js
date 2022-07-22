@@ -94,10 +94,16 @@ export const constantRoutes = [
     children: [{
       path: 'detail',
       component: Layout,
-      children: [{
-        path: '1',
-        component: () => import('@/views/pipeline/detail_ope/projectDetail')
-      }]
+      children: [
+        {
+          path: '1',
+          component: () => import('@/views/pipeline/detail_ope/projectDetail')
+        },
+        {
+          path: '2',
+          component: () => import('@/views/pipeline/detail_ope/envDetail')
+
+        }]
     }]
   },
 ]
