@@ -215,181 +215,181 @@
       </div>
     </div>
       <!--end of basic info-->
-<!--      <div-->
-<!--        v-if="(envSource==='external'||envSource==='helm') && ingressList.length > 0"-->
-<!--        class="service-container"-->
-<!--        style="margin-bottom: 16px;"-->
-<!--      >-->
-<!--        <span class="service-count">环境入口</span>-->
-<!--        <div v-loading="serviceLoading" element-loading-text="正在获取环境信息" element-loading-spinner="el-icon-loading" class="ingress-container">-->
-<!--          <el-table :data="ingressList">-->
-<!--            <el-table-column prop="name" label="Ingress 名称"></el-table-column>-->
-<!--            <el-table-column label="地址">-->
-<!--              <template slot-scope="scope">-->
-<!--                <div v-if="scope.row.host_info && scope.row.host_info.length > 0">-->
-<!--                  <div v-for="host of scope.row.host_info" :key="host.host">-->
-<!--                    <a :href="`http://${host.host}`" class="host-url" target="_blank">{{ host.host }}</a>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--                <div v-else>无</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div v-loading="serviceLoading" element-loading-text="正在获取服务信息" element-loading-spinner="el-icon-loading" class="service-container">-->
-<!--        <div class="service-title">-->
-<!--          <el-input-->
-<!--            size="mini"-->
-<!--            class="search-input"-->
-<!--            clearable-->
-<!--            v-model="serviceSearch"-->
-<!--            placeholder="搜索服务"-->
-<!--            @keyup.enter.native="searchServicesByKeyword"-->
-<!--            @clear="searchServicesByKeyword"-->
-<!--          >-->
-<!--            <i class="el-icon-search el-input__icon" slot="prefix"></i>-->
-<!--          </el-input>-->
-<!--          <span v-show="!serviceLoading" class="service-count middle">-->
-<!--            服务总数-->
-<!--            <span class="service-number">{{ envTotal }}</span> 个-->
-<!--          </span>-->
-<!--          <el-button type="text" @click="refreshServiceList">刷新</el-button>-->
-<!--        </div>-->
-<!--        <div class="env-service-list-content">-->
-<!--          <ChartList-->
-<!--            ref="chartListRef"-->
-<!--            class="left"-->
-<!--            v-if="envSource === 'helm'"-->
-<!--            :envSource="envSource"-->
-<!--            :fetchAllData="fetchAllData"-->
-<!--            :searchServicesByChart="searchServicesByChart"-->
-<!--          />-->
-<!--          <ServiceList-->
-<!--            class="right"-->
-<!--            :containerServiceList="containerServiceList"-->
-<!--            :setRoute="setRoute"-->
-<!--            :serviceStatus="serviceStatus"-->
-<!--            :envSource="envSource"-->
-<!--            :updateService="updateService"-->
-<!--            :isPmService="isPmService"-->
-<!--            :upgradeServiceByWorkflow="upgradeServiceByWorkflow"-->
-<!--            :restartService="restartService"-->
-<!--            :setServiceConfigRoute="setServiceConfigRoute"-->
-<!--          ></ServiceList>-->
-<!--        </div>-->
-<!--        <el-table v-if="pmServiceList.length > 0" class="pm-service-container" :data="pmServiceList">-->
-<!--          <el-table-column label="服务名" width="250px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <router-link :to="setPmRoute(scope)">-->
-<!--                <span class="service-name">-->
-<!--                  <i v-if="scope.row.type==='pm'" class="iconfont service-icon iconwuliji"></i>-->
-<!--                  {{ scope.row.service_name }}-->
-<!--                </span>-->
-<!--              </router-link>-->
-<!--              <template v-if=" serviceStatus[scope.row.service_name] && serviceStatus[scope.row.service_name]['tpl_updatable']">-->
-<!--                <el-tooltip-->
-<!--                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"-->
-<!--                  effect="dark"-->
-<!--                  content="更新主机资源和探活配置"-->
-<!--                  placement="top"-->
-<!--                >-->
-<!--                  <i @click="updateService(scope.row)" class="iconfont icongengxin operation"></i>-->
-<!--                </el-tooltip>-->
-<!--              </template>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column align="left" label="状态" width="130px">-->
-<!--            <template slot="header">-->
-<!--              状态-->
-<!--              <el-tooltip effect="dark" placement="top">-->
-<!--                <div slot="content">实际正常运行的服务数量/预期正常运行服务数量</div>-->
-<!--                <i class="el-icon-question"></i>-->
-<!--              </el-tooltip>-->
-<!--            </template>-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{calcPmServiceStatus(scope.row.env_statuses)}}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column align="left" min-width="160px" label="主机资源">-->
-<!--            <template slot-scope="scope">-->
-<!--              <template v-if="scope.row.env_statuses && scope.row.env_statuses.length>0">-->
-<!--                <div v-if="scope.row.serviceHostStatusArr[0]">-->
-<!--                  <span-->
-<!--                    class="pm-service-status"-->
-<!--                    :class="scope.row.serviceHostStatusArr[0]['color']"-->
-<!--                  >{{scope.row.serviceHostStatusArr[0].host}}</span>-->
-<!--                </div>-->
-<!--                <div v-if="scope.row.serviceHostStatusArr[1]">-->
-<!--                  <span-->
-<!--                    class="pm-service-status"-->
-<!--                    :class="scope.row.serviceHostStatusArr[1]['color']"-->
-<!--                  >{{scope.row.serviceHostStatusArr[1].host}}</span>-->
-<!--                </div>-->
-<!--                <el-popover-->
-<!--                  v-if="scope.row.serviceHostStatusArr.length > 2"-->
-<!--                  placement="right"-->
-<!--                  popper-class="pm-service-host-status-popover"-->
-<!--                  trigger="hover"-->
-<!--                >-->
-<!--                  <div v-for="(item,index) in _.drop(scope.row.serviceHostStatusArr,2)" :key="index">-->
-<!--                    <span class="pm-service-status" :class="item['color']">{{item.host}}</span>-->
-<!--                  </div>-->
-<!--                  <span slot="reference" class="add-host el-icon-more-outline"></span>-->
-<!--                </el-popover>-->
-<!--              </template>-->
-<!--              <div>-->
-<!--                <span class="add-host el-icon-edit-outline" @click="editHost(scope.row)"></span>-->
-<!--              </div>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+      <div
+        v-if="(envSource==='external'||envSource==='helm') && ingressList.length > 0"
+        class="service-container"
+        style="margin-bottom: 16px;"
+      >
+        <span class="service-count">环境入口</span>
+        <div v-loading="serviceLoading" element-loading-text="正在获取环境信息" element-loading-spinner="el-icon-loading" class="ingress-container">
+          <el-table :data="ingressList">
+            <el-table-column prop="name" label="Ingress 名称"></el-table-column>
+            <el-table-column label="地址">
+              <template slot-scope="scope">
+                <div v-if="scope.row.host_info && scope.row.host_info.length > 0">
+                  <div v-for="host of scope.row.host_info" :key="host.host">
+                    <a :href="`http://${host.host}`" class="host-url" target="_blank">{{ host.host }}</a>
+                  </div>
+                </div>
+                <div v-else>无</div>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <div v-loading="serviceLoading" element-loading-text="正在获取服务信息" element-loading-spinner="el-icon-loading" class="service-container">
+        <div class="service-title">
+          <el-input
+            size="mini"
+            class="search-input"
+            clearable
+            v-model="serviceSearch"
+            placeholder="搜索服务"
+            @keyup.enter.native="searchServicesByKeyword"
+            @clear="searchServicesByKeyword"
+          >
+            <i class="el-icon-search el-input__icon" slot="prefix"></i>
+          </el-input>
+          <span v-show="!serviceLoading" class="service-count middle">
+            服务总数
+            <span class="service-number">{{ envTotal }}</span> 个
+          </span>
+          <el-button type="text" @click="refreshServiceList">刷新</el-button>
+        </div>
+        <div class="env-service-list-content">
+          <ChartList
+            ref="chartListRef"
+            class="left"
+            v-if="envSource === 'helm'"
+            :envSource="envSource"
+            :fetchAllData="fetchAllData"
+            :searchServicesByChart="searchServicesByChart"
+          />
+          <ServiceList
+            class="right"
+            :containerServiceList="containerServiceList"
+            :setRoute="setRoute"
+            :serviceStatus="serviceStatus"
+            :envSource="envSource"
+            :updateService="updateService"
+            :isPmService="isPmService"
+            :upgradeServiceByWorkflow="upgradeServiceByWorkflow"
+            :restartService="restartService"
+            :setServiceConfigRoute="setServiceConfigRoute"
+          ></ServiceList>
+        </div>
+        <el-table v-if="pmServiceList.length > 0" class="pm-service-container" :data="pmServiceList">
+          <el-table-column label="服务名" width="250px">
+            <template slot-scope="scope">
+              <router-link :to="setPmRoute(scope)">
+                <span class="service-name">
+                  <i v-if="scope.row.type==='pm'" class="iconfont service-icon iconwuliji"></i>
+                  {{ scope.row.service_name }}
+                </span>
+              </router-link>
+              <template v-if=" serviceStatus[scope.row.service_name] && serviceStatus[scope.row.service_name]['tpl_updatable']">
+                <el-tooltip
+                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"
+                  effect="dark"
+                  content="更新主机资源和探活配置"
+                  placement="top"
+                >
+                  <i @click="updateService(scope.row)" class="iconfont icongengxin operation"></i>
+                </el-tooltip>
+              </template>
+            </template>
+          </el-table-column>
+          <el-table-column align="left" label="状态" width="130px">
+            <template slot="header">
+              状态
+              <el-tooltip effect="dark" placement="top">
+                <div slot="content">实际正常运行的服务数量/预期正常运行服务数量</div>
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            </template>
+            <template slot-scope="scope">
+              <span>{{calcPmServiceStatus(scope.row.env_statuses)}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="left" min-width="160px" label="主机资源">
+            <template slot-scope="scope">
+              <template v-if="scope.row.env_statuses && scope.row.env_statuses.length>0">
+                <div v-if="scope.row.serviceHostStatusArr[0]">
+                  <span
+                    class="pm-service-status"
+                    :class="scope.row.serviceHostStatusArr[0]['color']"
+                  >{{scope.row.serviceHostStatusArr[0].host}}</span>
+                </div>
+                <div v-if="scope.row.serviceHostStatusArr[1]">
+                  <span
+                    class="pm-service-status"
+                    :class="scope.row.serviceHostStatusArr[1]['color']"
+                  >{{scope.row.serviceHostStatusArr[1].host}}</span>
+                </div>
+                <el-popover
+                  v-if="scope.row.serviceHostStatusArr.length > 2"
+                  placement="right"
+                  popper-class="pm-service-host-status-popover"
+                  trigger="hover"
+                >
+                  <div v-for="(item,index) in _.drop(scope.row.serviceHostStatusArr,2)" :key="index">
+                    <span class="pm-service-status" :class="item['color']">{{item.host}}</span>
+                  </div>
+                  <span slot="reference" class="add-host el-icon-more-outline"></span>
+                </el-popover>
+              </template>
+              <div>
+                <span class="add-host el-icon-edit-outline" @click="editHost(scope.row)"></span>
+              </div>
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column align="center" label="操作" width="150px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span class="operation">-->
-<!--                <el-tooltip-->
-<!--                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"-->
-<!--                  effect="dark"-->
-<!--                  content="通过工作流升级服务"-->
-<!--                  placement="top"-->
-<!--                >-->
-<!--                  <i-->
-<!--                    @click="upgradeServiceByWorkflow(projectName,envName,scope.row.service_name,scope.row.type)"-->
-<!--                    class="iconfont iconshengji"-->
-<!--                  ></i>-->
-<!--                </el-tooltip>-->
-<!--              </span>-->
-<!--              <span v-if="scope.row.status!=='Succeeded'" class="operation">-->
-<!--                <el-tooltip-->
-<!--                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"-->
-<!--                  effect="dark"-->
-<!--                  content="查看服务升级日志"-->
-<!--                  placement="top"-->
-<!--                >-->
-<!--                  <i @click="openPmServiceLog(envName,scope.row.service_name)" class="iconfont iconiconlog"></i>-->
-<!--                </el-tooltip>-->
-<!--              </span>-->
-<!--              <span class="operation">-->
-<!--                <el-tooltip-->
-<!--                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"-->
-<!--                  effect="dark"-->
-<!--                  content="查看服务配置"-->
-<!--                  placement="top"-->
-<!--                >-->
-<!--                  <router-link :to="setPmServiceConfigRoute(scope)">-->
-<!--                    <i class="iconfont iconfuwupeizhi"></i>-->
-<!--                  </router-link>-->
-<!--                </el-tooltip>-->
-<!--              </span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-<!--        <p v-if="!scrollGetFlag && !serviceLoading && !scrollFinish" class="scroll-finish-class">-->
-<!--          <i class="el-icon-loading"></i> 数据加载中 ~-->
-<!--        </p>-->
-<!--        <p v-if="scrollFinish && page > 2" class="scroll-finish-class">数据已加载完毕 ~</p>-->
-<!--      </div>-->
-<!--    </div>-->
+          <el-table-column align="center" label="操作" width="150px">
+            <template slot-scope="scope">
+              <span class="operation">
+                <el-tooltip
+                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"
+                  effect="dark"
+                  content="通过工作流升级服务"
+                  placement="top"
+                >
+                  <i
+                    @click="upgradeServiceByWorkflow(projectName,envName,scope.row.service_name,scope.row.type)"
+                    class="iconfont iconshengji"
+                  ></i>
+                </el-tooltip>
+              </span>
+              <span v-if="scope.row.status!=='Succeeded'" class="operation">
+                <el-tooltip
+                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"
+                  effect="dark"
+                  content="查看服务升级日志"
+                  placement="top"
+                >
+                  <i @click="openPmServiceLog(envName,scope.row.service_name)" class="iconfont iconiconlog"></i>
+                </el-tooltip>
+              </span>
+              <span class="operation">
+                <el-tooltip
+                  v-hasPermi="{projectName: projectName, action: 'manage_environment'}"
+                  effect="dark"
+                  content="查看服务配置"
+                  placement="top"
+                >
+                  <router-link :to="setPmServiceConfigRoute(scope)">
+                    <i class="iconfont iconfuwupeizhi"></i>
+                  </router-link>
+                </el-tooltip>
+              </span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <p v-if="!scrollGetFlag && !serviceLoading && !scrollFinish" class="scroll-finish-class">
+          <i class="el-icon-loading"></i> 数据加载中 ~
+        </p>
+        <p v-if="scrollFinish && page > 2" class="scroll-finish-class">数据已加载完毕 ~</p>
+      </div>
+    </div>
 <!--    <UpdateHelmVarDialog :fetchAllData="fetchAllData" ref="updateHelmVarDialog" :projectName="projectName" :envName="envName" />-->
 <!--    <UpdateK8sVarDialog :fetchAllData="fetchAllData" :productInfo="productInfo" ref="updateK8sVarDialog" />-->
 <!--    <PmServiceLog ref="pmServiceLog" />-->
