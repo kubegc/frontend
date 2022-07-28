@@ -241,24 +241,24 @@
   </div>
 </template>
 <script>
-  import axios from 'axios'
+  // import axios from 'axios'
   // import bus from '@utils/event_bus'
   // import { serviceTemplateWithConfigAPI, getSingleProjectAPI, updateEnvTemplateAPI, getRegistryWhenBuildAPI, getCodeSourceByAdminAPI } from '@api'
   import test from '../help'
   import Policy from '../policy'
   // import addCode from '../common/add_code.vue'
   // import IntegrationRegistry from '@/components/projects/common/integration_registry.vue'
-  // const validateKey = (rule, value, callback) => {
-  //   if (typeof value === 'undefined' || value === '') {
-  //     callback(new Error('请输入 Key'))
-  //   } else {
-  //     if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-  //       callback(new Error('Key 只支持字母大小写和数字，特殊字符只支持下划线'))
-  //     } else {
-  //       callback()
-  //     }
-  //   }
-  // }
+  const validateKey = (rule, value, callback) => {
+    if (typeof value === 'undefined' || value === '') {
+      callback(new Error('请输入 Key'))
+    } else {
+      if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+        callback(new Error('Key 只支持字母大小写和数字，特殊字符只支持下划线'))
+      } else {
+        callback()
+      }
+    }
+  }
   export default {
     data () {
       return {
@@ -301,13 +301,6 @@
       }
     },
     methods: {
-      // readPipeline() {
-      //   axios.get('/getChangeItems').then((response) => {
-      //     if (response.data) {
-      //       this.pipelineItems = response.data.data
-      //     }
-      //   })
-      // },
       // async addBuild (item) {
       //   this.buildNameIndex = item.build_names.length
       //     ? Math.max.apply(

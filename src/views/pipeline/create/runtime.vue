@@ -125,22 +125,22 @@ export default {
         }
       })
     },
-    // viewEnvStatus () {
-    //   this.$confirm('跳出后进入项目将不再进入向导流程', '确认跳出项目初始化向导？', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   }).then(() => {
-    //     this.exitLoading = true
-    //     this.saveOnboardingStatus(this.projectName, 0).then((res) => {
-    //       this.$router.push(`/v1/projects/detail/${this.projectName}/envs`)
-    //     }).catch(() => {
-    //       this.exitLoading = false
-    //     })
-    //   }).catch(() => {
-    //     this.$message.info('取消跳转')
-    //   })
-    // },
+    viewEnvStatus () {
+      this.$confirm('跳出后进入项目将不再进入向导流程', '确认跳出项目初始化向导？', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.exitLoading = true
+        this.saveOnboardingStatus(this.projectName, 0).then((res) => {
+          this.$router.push(`/v1/projects/detail/${this.projectName}/envs`)
+        }).catch(() => {
+          this.exitLoading = false
+        })
+      }).catch(() => {
+        this.$message.info('取消跳转')
+      })
+    },
     // generateEnv (projectName, envType) {
     //   const getEnv = new Promise((resolve, reject) => {
     //     generateEnvAPI(projectName, envType).then((res) => {

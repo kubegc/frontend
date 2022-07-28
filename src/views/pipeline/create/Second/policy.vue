@@ -91,74 +91,74 @@
       </el-table>
     </el-form>
 
-<!--    <div class="secondary-title">环境</div>-->
-<!--    <el-form ref="environmentRef" :model="collaborationData" label-width="120px" label-position="left">-->
-<!--      <el-table :data="collaborationData.products" style="width: 100%;">-->
-<!--        <el-table-column label="基准环境">-->
-<!--          <template slot-scope="{ row, $index }">-->
-<!--            <el-form-item class="base-item" :prop="`products[${$index}].name`" label-width="0px" required>-->
-<!--              <el-tooltip effect="dark" :content="row.name" placement="top" :popper-class="row.name ? '' : 'hidden-base-tooltip'">-->
-<!--                <el-select v-model="row.name" placeholder="请选择基准环境" filterable size="small" :disabled="!row.add">-->
-<!--                  <el-option v-if="row.name" :label="row.name" :value="row.name"></el-option>-->
-<!--                  <el-option v-for="env in lastBaseEnvironments" :key="env" :label="env" :value="env"></el-option>-->
-<!--                </el-select>-->
-<!--              </el-tooltip>-->
-<!--            </el-form-item>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column label="配置">-->
-<!--          <template slot-scope="{ row }">-->
-<!--            <el-radio-group v-model="row.collaboration_type" @change="updateCollaborationType($event, 'environment', row)">-->
-<!--              <el-tooltip effect="dark" content="成员基于此基准环境新建一个环境" placement="top">-->
-<!--                <el-radio label="new">独享</el-radio>-->
-<!--              </el-tooltip>-->
-<!--              <el-tooltip effect="dark" content="成员共享一个基准环境" placement="top">-->
-<!--                <el-radio label="share">共享</el-radio>-->
-<!--              </el-tooltip>-->
-<!--            </el-radio-group>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column prop="prop" label="操作">-->
-<!--          <template slot-scope="{ row }">-->
-<!--            <el-popover ref="envPopoverRef" placement="right" trigger="click">-->
-<!--              <div class="auth-list">-->
-<!--                <div class="title">-->
-<!--                  <el-checkbox-->
-<!--                    :indeterminate="isIndeterminate(row, 'environment')"-->
-<!--                    :value="checkAll(row, 'environment')"-->
-<!--                    @change="handleCheckAllChange($event, row, 'environment')"-->
-<!--                  ></el-checkbox>-->
-<!--                  <i></i>-->
-<!--                  所有权限-->
-<!--                </div>-->
-<!--                <el-checkbox-group v-model="row.verbs">-->
-<!--                  <el-checkbox-->
-<!--                    v-for="environment in policy.environment[row.collaboration_type === 'new' ? 'newPermi' : 'sharePermi']"-->
-<!--                    :key="environment.action"-->
-<!--                    :label="environment.action"-->
-<!--                    class="permission-item"-->
-<!--                  >-->
-<!--                    <i :class="[environment.icon]"></i>-->
-<!--                    {{environment.alias}}-->
-<!--                  </el-checkbox>-->
-<!--                </el-checkbox-group>-->
-<!--              </div>-->
-<!--              <el-button type="primary" slot="reference" size="mini" plain style="margin-right: 10px;">权限</el-button>-->
-<!--            </el-popover>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column width="90px">-->
-<!--          <template slot-scope="{ $index }">-->
-<!--            <el-button type="primary" icon="el-icon-minus" size="mini" circle plain @click="deleteEnvironment($index)"></el-button>-->
-<!--            <el-button type="primary" icon="el-icon-plus" size="mini" circle plain @click="addEnvironment"></el-button>-->
-<!--          </template>-->
-<!--        </el-table-column>-->
-<!--        <div slot="empty">-->
-<!--          <el-button type="primary" icon="el-icon-plus" size="small" plain @click="addEnvironment"></el-button>-->
-<!--          <el-tag effect="dark">删除环境将影响参与成员操作权限</el-tag>-->
-<!--        </div>-->
-<!--      </el-table>-->
-<!--    </el-form>-->
+    <div class="secondary-title">环境</div>
+    <el-form ref="environmentRef" :model="collaborationData" label-width="120px" label-position="left">
+      <el-table :data="collaborationData" style="width: 100%;">
+        <el-table-column label="基准环境">
+          <template slot-scope="{ row, $index }">
+            <el-form-item class="base-item" :prop="`products[${$index}].name`" label-width="0px" required>
+              <el-tooltip effect="dark" :content="row.name" placement="top" :popper-class="row.name ? '' : 'hidden-base-tooltip'">
+                <el-select v-model="row.name" placeholder="请选择基准环境" filterable size="small" :disabled="!row.add">
+                  <el-option v-if="row.name" :label="row.name" :value="row.name"></el-option>
+                  <el-option v-for="env in lastBaseEnvironments" :key="env" :label="env" :value="env"></el-option>
+                </el-select>
+              </el-tooltip>
+            </el-form-item>
+          </template>
+        </el-table-column>
+        <el-table-column label="配置">
+          <template slot-scope="{ row }">
+            <el-radio-group v-model="row.collaboration_type" @change="updateCollaborationType($event, 'environment', row)">
+              <el-tooltip effect="dark" content="成员基于此基准环境新建一个环境" placement="top">
+                <el-radio label="new">独享</el-radio>
+              </el-tooltip>
+              <el-tooltip effect="dark" content="成员共享一个基准环境" placement="top">
+                <el-radio label="share">共享</el-radio>
+              </el-tooltip>
+            </el-radio-group>
+          </template>
+        </el-table-column>
+        <el-table-column prop="prop" label="操作">
+          <template slot-scope="{ row }">
+            <el-popover ref="envPopoverRef" placement="right" trigger="click">
+              <div class="auth-list">
+                <div class="title">
+                  <el-checkbox
+                    :indeterminate="isIndeterminate(row, 'environment')"
+                    :value="checkAll(row, 'environment')"
+                    @change="handleCheckAllChange($event, row, 'environment')"
+                  ></el-checkbox>
+                  <i></i>
+                  所有权限
+                </div>
+                <el-checkbox-group v-model="row.verbs">
+                  <el-checkbox
+                    v-for="environment in policy.environment[row.collaboration_type === 'new' ? 'newPermi' : 'sharePermi']"
+                    :key="environment.action"
+                    :label="environment.action"
+                    class="permission-item"
+                  >
+                    <i :class="[environment.icon]"></i>
+                    {{environment.alias}}
+                  </el-checkbox>
+                </el-checkbox-group>
+              </div>
+              <el-button type="primary" slot="reference" size="mini" plain style="margin-right: 10px;">权限</el-button>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column width="90px">
+          <template slot-scope="{ $index }">
+            <el-button type="primary" icon="el-icon-minus" size="mini" circle plain @click="deleteEnvironment($index)"></el-button>
+            <el-button type="primary" icon="el-icon-plus" size="mini" circle plain @click="addEnvironment"></el-button>
+          </template>
+        </el-table-column>
+        <div slot="empty">
+          <el-button type="primary" icon="el-icon-plus" size="small" plain @click="addEnvironment"></el-button>
+          <el-tag effect="dark">删除环境将影响参与成员操作权限</el-tag>
+        </div>
+      </el-table>
+    </el-form>
 
 <!--    <div class="recycle-resources">-->
 <!--      <span class="primary-title recycle-title">-->
