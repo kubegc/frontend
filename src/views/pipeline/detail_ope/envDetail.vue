@@ -1,34 +1,34 @@
 <template>
   <div class="env-detail-container" ref="envContainer">
-    <!--    <PmHostList ref="pmHostList" :currentPmServiceData="currentPmServiceData" @success="refreshServiceList"></PmHostList>-->
-    <!--    <el-dialog title="通过工作流升级服务" :visible.sync="showStartProductBuild" custom-class="run-workflow" width="60%">-->
-    <!--      <run-workflow-->
-    <!--        v-if="showStartProductBuild"-->
-    <!--        :workflows="currentServiceWorkflows"-->
-    <!--        :currentServiceMeta="currentServiceMeta"-->
-    <!--        @success="hideProductTaskDialog"-->
-    <!--      ></run-workflow>-->
-    <!--    </el-dialog>-->
-    <!--    <div class="envs-container">-->
-    <!--      <ChromeTabs v-model="envName" :tabList="envNameList" :label="'name'" :name="'name'">-->
-    <!--        <template v-slot="{ tab }">-->
-    <!--          <span>-->
-    <!--            <i v-if="tab.source==='helm'" class="iconfont iconhelmrepo"></i>-->
-    <!--            <i v-else-if="tab.source==='spock'" class="el-icon-cloudy"></i>-->
-    <!--            {{ $utils.tailCut(tab.name,14) }}-->
-    <!--            <el-tag v-if="tab.production" effect="light" size="mini" type="danger">生产</el-tag>-->
-    <!--            <el-tag v-if="tab.source==='external'" effect="light" size="mini" type="primary">托管</el-tag>-->
-    <!--            <el-tag v-if="!_.isNil(tab.share_env_is_base) && tab.share_env_is_base" effect="light" size="mini" type="primary">基准环境</el-tag>-->
-    <!--            <el-tag-->
-    <!--              v-if="!tab.share_env_is_base && !_.isNil(tab.share_env_base_env) && tab.share_env_base_env !==''"-->
-    <!--              effect="light"-->
-    <!--              size="mini"-->
-    <!--              type="primary"-->
-    <!--            >子环境</el-tag>-->
-    <!--          </span>-->
-    <!--        </template>-->
-    <!--      </ChromeTabs>-->
-    <!--    </div>-->
+        <PmHostList ref="pmHostList" :currentPmServiceData="currentPmServiceData" @success="refreshServiceList"></PmHostList>
+        <el-dialog title="通过工作流升级服务" :visible.sync="showStartProductBuild" custom-class="run-workflow" width="60%">
+          <run-workflow
+            v-if="showStartProductBuild"
+            :workflows="currentServiceWorkflows"
+            :currentServiceMeta="currentServiceMeta"
+            @success="hideProductTaskDialog"
+          ></run-workflow>
+        </el-dialog>
+        <div class="envs-container">
+          <ChromeTabs v-model="envName" :tabList="envNameList" :label="'name'" :name="'name'">
+            <template v-slot="{ tab }">
+              <span>
+                <i v-if="tab.source==='helm'" class="iconfont iconhelmrepo"></i>
+                <i v-else-if="tab.source==='spock'" class="el-icon-cloudy"></i>
+                {{ $utils.tailCut(tab.name,14) }}
+                <el-tag v-if="tab.production" effect="light" size="mini" type="danger">生产</el-tag>
+                <el-tag v-if="tab.source==='external'" effect="light" size="mini" type="primary">托管</el-tag>
+                <el-tag v-if="!_.isNil(tab.share_env_is_base) && tab.share_env_is_base" effect="light" size="mini" type="primary">基准环境</el-tag>
+                <el-tag
+                  v-if="!tab.share_env_is_base && !_.isNil(tab.share_env_base_env) && tab.share_env_base_env !==''"
+                  effect="light"
+                  size="mini"
+                  type="primary"
+                >子环境</el-tag>
+              </span>
+            </template>
+          </ChromeTabs>
+        </div>
     <div class="banner">
       <el-alert :closable="false" type="warning">
         <span slot="title">
@@ -54,19 +54,19 @@
         element-loading-spinner="el-icon-loading"
         class="common-parcel-block basic-info-content"
       >
-        <el-row :gutter="10">
-          <el-col v-if="!pmServiceList.length" :span="12">
-            <div class="grid-title">K8s 集群</div>
-            <div v-if="productInfo.is_local" class="grid-content">本地集群</div>
-            <div v-else class="grid-content">{{productInfo.is_prod?productInfo.cluster_name+'
-              (生产集群)':productInfo.cluster_name +' (测试集群)'}}
-            </div>
-          </el-col>
-          <el-col :span="12">
-            <div class="grid-title">更新时间</div>
-            <div class="grid-content">{{$utils.convertTimestamp(productInfo.update_time)}}</div>
-          </el-col>
-        </el-row>
+<!--        <el-row :gutter="10">-->
+<!--          <el-col v-if="!pmServiceList.length" :span="12">-->
+<!--            <div class="grid-title">K8s 集群</div>-->
+<!--            <div v-if="productInfo.is_local" class="grid-content">本地集群</div>-->
+<!--            <div v-else class="grid-content">{{productInfo.is_prod?productInfo.cluster_name+'-->
+<!--              (生产集群)':productInfo.cluster_name +' (测试集群)'}}-->
+<!--            </div>-->
+<!--          </el-col>-->
+<!--          <el-col :span="12">-->
+<!--            <div class="grid-title">更新时间</div>-->
+<!--            <div class="grid-content">{{$utils.convertTimestamp(productInfo.update_time)}}</div>-->
+<!--          </el-col>-->
+<!--        </el-row>-->
         <el-row :gutter="10">
           <el-col :span="12" v-if="!pmServiceList.length">
             <div class="grid-title">K8s 命名空间</div>
