@@ -410,25 +410,24 @@
       </p>
       <p v-if="scrollFinish && page > 2" class="scroll-finish-class">数据已加载完毕 ~</p>
     </div>
-    <!--    </div>-->
-    <!--    <UpdateHelmVarDialog :fetchAllData="fetchAllData" ref="updateHelmVarDialog" :projectName="projectName" :envName="envName" />-->
-    <!--    <UpdateK8sVarDialog :fetchAllData="fetchAllData" :productInfo="productInfo" ref="updateK8sVarDialog" />-->
-    <!--    <PmServiceLog ref="pmServiceLog" />-->
-    <!--    <ManageK8sServicesDialog :fetchAllData="fetchAllData" :productInfo="productInfo" ref="manageK8sServicesRef" />-->
-    <!--    <ManageHelmServicesDialog-->
-    <!--      :fetchAllData="fetchAllData"-->
-    <!--      :productInfo="productInfo"-->
-    <!--      ref="manageHelmServicesRef"-->
-    <!--      :productStatus="productStatus"-->
-    <!--    />-->
-    <!--    <ShareEnvDialog-->
-    <!--      :mode="shareEnvDialog.mode"-->
-    <!--      :projectName="productInfo.product_name"-->
-    <!--      :envName="productInfo.env_name"-->
-    <!--      :clusterId="productInfo.cluster_id"-->
-    <!--      @statusChange="shareEnvCallback"-->
-    <!--      ref="shareEnvRef"-->
-    <!--    />-->
+        <UpdateHelmVarDialog :fetchAllData="fetchAllData" ref="updateHelmVarDialog" :projectName="projectName" :envName="envName" />
+        <UpdateK8sVarDialog :fetchAllData="fetchAllData" :productInfo="productInfo" ref="updateK8sVarDialog" />
+        <PmServiceLog ref="pmServiceLog" />
+        <ManageK8sServicesDialog :fetchAllData="fetchAllData" :productInfo="productInfo" ref="manageK8sServicesRef" />
+        <ManageHelmServicesDialog
+          :fetchAllData="fetchAllData"
+          :productInfo="productInfo"
+          ref="manageHelmServicesRef"
+          :productStatus="productStatus"
+        />
+        <ShareEnvDialog
+          :mode="shareEnvDialog.mode"
+          :projectName="productInfo.product_name"
+          :envName="productInfo.env_name"
+          :clusterId="productInfo.cluster_id"
+          @statusChange="shareEnvCallback"
+          ref="shareEnvRef"
+        />
   </div>
 </template>
 
