@@ -104,7 +104,7 @@
 </template>
 
 <script>
-  import subTopbar from '../home/subTopbar'
+  import subTopbar from '../../home/subTopbar'
   import { handleCreateTemplateChange, getTextValue, getComplexOrDefValue } from '@/api/common'
   export default {
     data() {

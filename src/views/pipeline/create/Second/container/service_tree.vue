@@ -1,25 +1,25 @@
 <template>
   <div class="service-container">
-        <el-dialog title="是否更新对应环境？"
-                   :append-to-body="true"
-                   v-if="envNameList.length"
-                   :visible.sync="updateEnvDialogVisible"
-                   width="40%">
-          <el-checkbox-group v-model="selectedEnvs">
-            <el-checkbox v-for="(env,index) in envNameList"
-                         :key="index"
-                         :label="env.envName"></el-checkbox>
-          </el-checkbox-group>
-          <span slot="footer"
-                class="dialog-footer">
-            <el-button size="small"
-                       type="primary"
-                       @click="autoUpgradeEnv">确 定</el-button>
-            <el-button size="small"
-                       @click="updateEnvDialogVisible = false">跳过</el-button>
+    <!--        <el-dialog title="是否更新对应环境？"-->
+    <!--                   :append-to-body="true"-->
+    <!--                   v-if="envNameList.length"-->
+    <!--                   :visible.sync="updateEnvDialogVisible"-->
+    <!--                   width="40%">-->
+    <!--          <el-checkbox-group v-model="selectedEnvs">-->
+    <!--            <el-checkbox v-for="(env,index) in envNameList"-->
+    <!--                         :key="index"-->
+    <!--                         :label="env.envName"></el-checkbox>-->
+    <!--          </el-checkbox-group>-->
+    <!--          <span slot="footer"-->
+    <!--                class="dialog-footer">-->
+    <!--            <el-button size="small"-->
+    <!--                       type="primary"-->
+    <!--                       @click="autoUpgradeEnv">确 定</el-button>-->
+    <!--            <el-button size="small"-->
+    <!--                       @click="updateEnvDialogVisible = false">跳过</el-button>-->
 
-          </span>
-        </el-dialog>
+    <!--          </span>-->
+    <!--        </el-dialog>-->
     <!--start of workspace-tree-dialog-->
     <el-dialog :append-to-body="true"
                :visible.sync="workSpaceModalVisible"
@@ -123,7 +123,8 @@
                          type="primary"
                          plain
                          size="mini"
-                         round>选择文件目录</el-button>
+                         round>选择文件目录
+              </el-button>
               <span v-if="disabledReload"
                     class="preload-error">当前服务名称和选中的文件夹名称不符，请重新选择</span>
 
@@ -198,7 +199,7 @@
                width="30%"
                :before-close="handleClose">
       <div class="inputTip">
-        <el-input  v-model="namecall" placeholder="请输入服务"></el-input>
+        <el-input v-model="namecall" placeholder="请输入服务"></el-input>
       </div>
 
       <span slot="footer" class="dialog-footer">
@@ -427,8 +428,8 @@
   import axios from "axios";
 
   export default {
-    props:['input', 'flee'],
-    data () {
+    props: ['input', 'flee'],
+    data() {
       return {
         mode: 'prof',
         service: {
@@ -451,8 +452,8 @@
         showSelectPath: true,
         disabledReload: false,
         dialogVisible: false,
-        service_name:'',
-        namecall:'',
+        service_name: '',
+        namecall: '',
         codeInfo: {
           repoOwners: [],
           repos: [],
@@ -470,8 +471,8 @@
           path: '',
           isDir: false
         },
-        selectItems:[],
-        value:'',
+        selectItems: [],
+        value: '',
         previousNodeKey: ''
       }
     },
@@ -479,12 +480,12 @@
     methods: {
       selectHost() {
         axios.get('/selectHost').then((response) => {
-          if(response.data){
+          if (response.data) {
             this.selectItems = response.data.data
           }
         })
       },
-      validateServiceName (rule, value, callback) {
+      validateServiceName(rule, value, callback) {
         if (value === '') {
           callback(new Error('请输入服务名称'))
         } else if (this.filteredServices.map(ser => ser.service_name).includes(value)) {
@@ -497,7 +498,7 @@
           }
         }
       },
-      inputServiceNameDoneWhenBlur () {
+      inputServiceNameDoneWhenBlur() {
         if (this.service.newServiceName === '') {
           this.showNewServiceInput = false
         } else {
@@ -515,7 +516,7 @@
               }
               this.services.push(data)
               this.$router.replace({
-                query: { service_name: data.service_name, rightbar: 'help' }
+                query: {service_name: data.service_name, rightbar: 'help'}
               })
               this.$emit('onSelectServiceChange', data)
               this.showNewServiceInput = false
@@ -529,7 +530,8 @@
           .then(_ => {
             done();
           })
-          .catch(_ => {});
+          .catch(_ => {
+          });
       },
       createService() {
         this.dialogVisible = false
@@ -1086,7 +1088,7 @@
       // }
     },
     computed: {
-      deployType () {
+      deployType() {
         return 'k8s'
       }
       // ...mapGetters([
@@ -1193,23 +1195,22 @@
       //   }
       // }
     },
-    created () {
+    created() {
       // this.getProducts()
       // this.getServiceGroup()
     },
-    mounted () {
+    mounted() {
       this.selectHost()
       // window.addEventListener('resize', this.listenResize)
     },
-    beforeDestroy () {
+    beforeDestroy() {
       // window.removeEventListener('resize', this.listenResize)
     },
-    components: {
-    }
+    components: {}
   }
 </script>
 
-<style lang="less" >
+<style lang="less">
   .dialog-source {
     .el-dialog__footer {
       padding: 0 20px 20px;
@@ -1332,7 +1333,7 @@
           vertical-align: middle;
         }
 
-        .service-delete{
+        .service-delete {
           vertical-align: middle;
           margin-right: 10px;
         }
@@ -1394,7 +1395,7 @@
         position: absolute;
         margin-top: 3px;
 
-        .service-delete{
+        .service-delete {
           vertical-align: middle;
           margin-left: 150px;
         }
