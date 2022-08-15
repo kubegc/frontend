@@ -21,92 +21,72 @@
                 <i class="el-icon-warning" style="color: red;"></i>
               </el-tooltip>
             </el-form-item>
-            <el-form-item  label="操作">
+            <el-form-item v-if="showOperation()" label="操作">
               <el-button
-                @click="rerun"
+                v-if="taskDetail.status ==='failed' || taskDetail.status==='cancelled'|| taskDetail.status === 'timeout'"
                 type="text"
                 size="medium"
+                @click="rerun"
               >失败重试</el-button>
               <el-button
-                @click="cancel"
+                v-if="taskDetail.status === 'running' || taskDetail.status === 'created'"
                 type="text"
                 size="medium"
+                @click="cancel"
               >取消任务</el-button>
             </el-form-item>
           </el-form>
         </div>
 
-<!--        <div class="basic-right" v-if="buildSummary.length > 0 || jenkinsSummary.length > 0">-->
-<!--          <div class="primary-title not-first-child">构建信息</div>-->
-<!--          <div class="build-summary" v-if="buildSummary.length > 0">-->
-<!--            <el-table :data="buildSummary" style="width: 90%;" class="blank-background-header">-->
-<!--              <el-table-column label="服务" min-width="160">-->
-<!--                <template slot-scope="scope">{{$utils.showServiceName(scope.row.service_name)}}</template>-->
-<!--              </el-table-column>-->
-<!--              <el-table-column label="代码" min-width="160">-->
-<!--                <template slot-scope="scope">-->
-<!--                  <div v-if="scope.row.builds.length > 0">-->
-<!--                    <el-row :gutter="0" v-for="(build,index) in scope.row.builds" :key="index">-->
-<!--                      <el-col :span="24">-->
-<!--                        <RepoJump :build="build" :showCommit="false" showIcon />-->
-<!--                      </el-col>-->
-<!--                    </el-row>-->
-<!--                  </div>-->
-<!--                  <span v-else>暂无代码</span>-->
-<!--                </template>-->
-<!--              </el-table-column>-->
-<!--              <el-table-column label="Issue 追踪" width="160">-->
-<!--                <template slot-scope="scope">-->
-<!--                  <div v-if="scope.row.issues.length > 0">-->
-<!--                    <el-popover-->
-<!--                      v-for="(issue,index) in scope.row.issues"-->
-<!--                      :key="index"-->
-<!--                      trigger="hover"-->
-<!--                      placement="top"-->
-<!--                      popper-class="issue-popper"-->
-<!--                    >-->
-<!--                      <p>标题: {{issue.summary?issue.summary:'*'}}</p>-->
-<!--                      <p>报告人: {{issue.reporter?issue.reporter:'*'}}</p>-->
-<!--                      <p>分配给: {{issue.assignee?issue.assignee:'*'}}</p>-->
-<!--                      <p>优先级: {{issue.priority?issue.priority:'*'}}</p>-->
-<!--                      <span slot="reference" class="issue-name-wrapper text-center">-->
-<!--                        <a :href="issue.url" target="_blank">{{`${issue.key} ${$utils.tailCut(issue.summary,12)}`}}</a>-->
-<!--                      </span>-->
-<!--                    </el-popover>-->
-<!--                  </div>-->
-<!--                  <span v-else>暂无 Issue</span>-->
-<!--                </template>-->
-<!--              </el-table-column>-->
-<!--              <el-table-column label="环境变量" width="100">-->
-<!--                <template slot-scope="{ row }">-->
-<!--                  <el-popover placement="left" width="400" trigger="hover">-->
-<!--                    <el-table :data="row.envs" class="blank-background-header">-->
-<!--                      <el-table-column prop="key" label="Key"></el-table-column>-->
-<!--                      <el-table-column prop="value" label="Value"></el-table-column>-->
-<!--                    </el-table>-->
-<!--                    <el-button slot="reference" type="text">查看</el-button>-->
-<!--                  </el-popover>-->
-<!--                </template>-->
-<!--              </el-table-column>-->
-<!--            </el-table>-->
-<!--          </div>-->
-<!--          <div class="build-summary" v-if="jenkinsSummary.length > 0">-->
-<!--            <Etable class="blank-background-header" :tableColumns="jenkinsBuildColumns" :tableData="jenkinsSummary" id="id" />-->
-<!--          </div>-->
-<!--        </div>-->
+        <div class="basic-right">
+          <div class="primary-title not-first-child">构建信息</div>
+          <div class="build-summary" >
+            <el-table  style="width: 90%;" class="blank-background-header">
+              <el-table-column label="服务" min-width="160">
+              </el-table-column>
+              <el-table-column label="代码" min-width="160">
+                <template slot-scope="scope">
+                  <div v-if="scope.row.builds.length > 0">
+                    <el-row :gutter="0" v-for="(build,index) in scope.row.builds" :key="index">
+                      <el-col :span="24">
+                        <RepoJump :build="build" :showCommit="false" showIcon />
+                      </el-col>
+                    </el-row>
+                  </div>
+                  <span v-else>暂无代码</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="Issue 追踪" width="160">
+                <template slot-scope="scope">
+                  <div v-if="scope.row.issues.length > 0">
+                  </div>
+                  <span v-else>暂无 Issue</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="环境变量" width="100">
+                <template slot-scope="{ row }">
+                  <el-popover placement="left" width="400" trigger="hover">
+                    <el-table :data="row.envs" class="blank-background-header">
+                      <el-table-column prop="key" label="Key"></el-table-column>
+                      <el-table-column prop="value" label="Value"></el-table-column>
+                    </el-table>
+                    <el-button slot="reference" type="text">查看</el-button>
+                  </el-popover>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
 
-<!--        <div class="basic-right version-info" v-if="taskDetail.workflow_args && taskDetail.workflow_args.version_args">-->
-<!--          <div class="primary-title not-first-child">版本信息</div>-->
-<!--          <el-form class="secondary-form" label-width="100px" label-position="left">-->
-<!--            <el-form-item label="版本名称">{{taskDetail.workflow_args.version_args.version}}</el-form-item>-->
-<!--            <el-form-item label="版本描述">{{taskDetail.workflow_args.version_args.desc}}</el-form-item>-->
-<!--            <el-form-item label="版本标签">-->
-<!--              <span v-for="(label,index) in taskDetail.workflow_args.version_args.labels" :key="index" style="margin-right: 3px;">-->
-<!--                <el-tag size="small">{{label}}</el-tag>-->
-<!--              </span>-->
-<!--            </el-form-item>-->
-<!--          </el-form>-->
-<!--        </div>-->
+        <div class="basic-right version-info" >
+          <div class="primary-title not-first-child">版本信息</div>
+          <el-form class="secondary-form" label-width="100px" label-position="left">
+            <el-form-item label="版本名称"></el-form-item>
+            <el-form-item label="版本描述"></el-form-item>
+            <el-form-item label="版本标签">
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
 
 <!--      <template v-if="buildDeployArray.length > 0">-->
@@ -379,7 +359,7 @@ export default {
     return {
       workflow: {},
       taskDetail: {
-        stages: []
+        status: 'failed'
       },
       rules: {
         version: [
@@ -409,6 +389,17 @@ export default {
 
   },
   methods: {
+    showOperation() {
+      if (this.taskDetail.status === 'failed') {
+        return true
+      }
+    },
+    rerun() {
+      this.$message.success('任务已重新启动')
+    },
+    cancel() {
+      this.$message.success('任务取消成功')
+    }
 
   },
   watch: {
