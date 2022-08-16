@@ -89,95 +89,77 @@
         </div>
       </div>
 
-<!--      <template v-if="buildDeployArray.length > 0">-->
-<!--        <div class="primary-title not-first-child">环境更新</div>-->
-<!--        <el-alert-->
-<!--          class="description"-->
-<!--          v-if="jenkinsSummary.length > 0"-->
-<!--          show-icon-->
-<!--          title="使用 Zadig 构建将为您节省20%构建时间，建议您迁移构建过程到 Zadig"-->
-<!--          :closable="false"-->
-<!--          type="warning"-->
-<!--        ></el-alert>-->
-<!--        <div></div>-->
-<!--        <el-table-->
-<!--          :data="buildDeployArray"-->
-<!--          row-key="_target"-->
-<!--          :expand-row-keys="expandedBuildDeploys"-->
-<!--          @expand-change="updateBuildDeployExpanded"-->
-<!--          row-class-name="my-table-row"-->
-<!--          empty-text="无"-->
-<!--          class="build-deploy-table"-->
-<!--        >-->
-<!--          <el-table-column type="expand">-->
-<!--            <template slot-scope="scope">-->
-<!--              <TaskDetailBuild-->
-<!--                :buildv2="scope.row.buildv2SubTask"-->
-<!--                :docker_build="scope.row.docker_buildSubTask"-->
-<!--                :isWorkflow="true"-->
-<!--                :serviceName="scope.row._target"-->
-<!--                :pipelineName="workflowName"-->
-<!--                :projectName="projectName"-->
-<!--                :taskID="taskID"-->
-<!--                ref="buildComp"-->
-<!--              />-->
-<!--              <TaskDetailDeploy :deploys="scope.row.deploySubTasks" :pipelineName="workflowName" :taskID="taskID" />-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+      <template >
+        <div class="primary-title not-first-child">环境更新</div>
+        <el-alert
+          class="description"
+          show-icon
+          title="使用构建将为您节省时间"
+          :closable="false"
+          type="warning"
+        ></el-alert>
+        <div></div>
+        <el-table
 
-<!--          <el-table-column prop="_target" label="服务" min-width="200px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{$utils.showServiceName(scope.row._target)}}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          row-key="_target"
+          :expand-row-keys="expandedBuildDeploys"
+          @expand-change="updateBuildDeployExpanded"
+          row-class-name="my-table-row"
+          empty-text="无"
+          class="build-deploy-table"
+        >
+          <el-table-column type="expand">
+          </el-table-column>
 
-<!--          <el-table-column label="构建" min-width="250px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span :class="scope.row.buildOverallColor">{{ scope.row.buildOverallStatusZh }}</span>-->
-<!--              {{ scope.row.buildOverallTimeZh }}-->
-<!--              <el-tooltip v-if="scope.row.buildOverallTimeZhSec<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">-->
-<!--                <i class="el-icon-warning" style="color: red;"></i>-->
-<!--              </el-tooltip>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column prop="_target" label="服务" min-width="200px">
+            <template slot-scope="scope">
+              <span></span>
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column min-width="250">-->
-<!--            <template slot="header">-->
-<!--              部署-->
-<!--              <DeployIcons />-->
-<!--            </template>-->
-<!--            <template slot-scope="scope">-->
-<!--              <div v-if="scope.row.deploySubTasks">-->
-<!--                <template>-->
-<!--                  <span v-for="(task,index) in scope.row.deploySubTasks" :key="index">-->
-<!--                    <span :class="colorTranslation(task.status, 'pipeline', 'task')">-->
-<!--                      <span v-if="task.service_type === 'k8s'">-->
-<!--                        <i class="iconfont iconrongqifuwu"></i>-->
-<!--                        {{task.service_name}}-->
-<!--                      </span>-->
-<!--                      <span v-else-if="task.service_type === 'helm'">-->
-<!--                        <i class="iconfont iconhelmrepo"></i>-->
-<!--                        {{task.service_name}}-->
-<!--                      </span>-->
-<!--                      {{':'+ myTranslate(task.status)}}-->
-<!--                    </span>-->
-<!--                    {{ makePrettyElapsedTime(task) }}-->
-<!--                    <el-tooltip v-if="calcElapsedTimeNum(task)<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">-->
-<!--                      <i class="el-icon-warning" style="color: red;"></i>-->
-<!--                    </el-tooltip>-->
-<!--                  </span>-->
-<!--                </template>-->
-<!--              </div>-->
-<!--              <div v-if="scope.row.buildv2SubTask.service_type==='pm'">-->
-<!--                <span>-->
-<!--                  <i class="iconfont iconwuliji"></i>-->
-<!--                  主机-->
-<!--                </span>-->
-<!--              </div>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-<!--      </template>-->
+          <el-table-column label="构建" min-width="250px">
+            <template slot-scope="scope">
+              <span :class="scope.row.buildOverallColor"></span>
+              {{ scope.row.buildOverallTimeZh }}
+              <el-tooltip v-if="scope.row.buildOverallTimeZhSec<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">
+                <i class="el-icon-warning" style="color: red;"></i>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+
+          <el-table-column min-width="250">
+            <template slot="header">
+              部署
+              <DeployIcons />
+            </template>
+            <template slot-scope="scope">
+              <div >
+                <template>
+                  <span >
+                    <span>
+                      <span >
+                        <i class="iconfont iconrongqifuwu"></i>
+                      </span>
+                      <span >
+                        <i class="iconfont iconhelmrepo"></i>
+                      </span>
+                    </span>
+                    <el-tooltip  content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">
+                      <i class="el-icon-warning" style="color: red;"></i>
+                    </el-tooltip>
+                  </span>
+                </template>
+              </div>
+              <div >
+                <span>
+                  <i class="iconfont iconwuliji"></i>
+                  主机
+                </span>
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
 
 <!--      <template v-if="artifactDeployArray.length > 0">-->
 <!--        <div class="primary-title not-first-child">环境更新</div>-->
