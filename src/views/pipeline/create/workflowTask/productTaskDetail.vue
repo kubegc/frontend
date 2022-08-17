@@ -231,66 +231,61 @@
 
 <!--      <div v-if="testArray.length > 0" class="primary-title not-first-child">产品测试</div>-->
 
-<!--      <template v-if="testArray.length > 0">-->
-<!--        <span class="secondary-title">自动化测试</span>-->
-<!--        <el-table-->
-<!--          :data="testArray"-->
-<!--          row-key="_target"-->
-<!--          :expand-row-keys="expandedTests"-->
-<!--          @expand-change="updateTestExpanded"-->
-<!--          row-class-name="my-table-row"-->
-<!--          empty-text="无"-->
-<!--          class="test-table"-->
-<!--        >-->
-<!--          <el-table-column type="expand">-->
-<!--            <template slot-scope="scope">-->
-<!--              <TaskDetailTest-->
-<!--                :testingv2="scope.row.testingv2SubTask"-->
-<!--                :serviceName="scope.row._target"-->
-<!--                :pipelineName="workflowName"-->
-<!--                ref="testComp"-->
-<!--                :taskID="taskID"-->
-<!--              />-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+      <template >
+        <span class="secondary-title">自动化测试</span>
+        <el-table
+          row-key="_target"
+          :expand-row-keys="expandedTests"
+          @expand-change="updateTestExpanded"
+          row-class-name="my-table-row"
+          empty-text="无"
+          class="test-table"
+        >
+          <el-table-column type="expand">
+            <template slot-scope="scope">
+              <TaskDetailTest
+                :testingv2="scope.row.testingv2SubTask"
+                :serviceName="scope.row._target"
+                :pipelineName="workflowName"
+                ref="testComp"
+                :taskID="taskID"
+              />
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column prop="_target" label="名称" width="200px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{$utils.showServiceName(scope.row._target)}}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column prop="_target" label="名称" width="200px">
+            <template slot-scope="scope">
+              <span></span>
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column label="运行状态">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span-->
-<!--                :class="colorTranslation(scope.row.testingv2SubTask.status, 'pipeline', 'task')"-->
-<!--              >{{ myTranslate(scope.row.testingv2SubTask.status) }}</span>-->
-<!--              {{ makePrettyElapsedTime(scope.row.testingv2SubTask) }}-->
-<!--              <el-tooltip v-if="calcElapsedTimeNum(scope.row.testingv2SubTask)<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">-->
-<!--                <i class="el-icon-warning" style="color: red;"></i>-->
-<!--              </el-tooltip>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column label="运行状态">
+            <template slot-scope="scope">
+              <span></span>
+              <el-tooltip  content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">
+                <i class="el-icon-warning" style="color: red;"></i>
+              </el-tooltip>
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column label="测试报告">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span v-if="scope.row.testingv2SubTask.report_ready === true" class="show-test-result">-->
-<!--                <router-link :to="getTestReport(scope.row.testingv2SubTask, scope.row._target)">查看</router-link>-->
-<!--              </span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column label="测试报告">
+            <template slot-scope="scope">
+              <span  class="show-test-result">
+                <router-link >查看</router-link>
+              </span>
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column label="文件导出">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span-->
-<!--                v-if="scope.row.testingv2SubTask.job_ctx.is_has_artifact"-->
-<!--                @click="artifactModalVisible=true"-->
-<!--                class="download-artifact-link"-->
-<!--              >下载</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-<!--      </template>-->
+          <el-table-column label="文件导出">
+            <template slot-scope="scope">
+              <span
+                @click="artifactModalVisible=true"
+                class="download-artifact-link"
+              >下载</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
 
 <!--      <template v-if="distributeArray.length > 0">-->
 <!--        <div class="primary-title not-first-child">分发部署</div>-->
