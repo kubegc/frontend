@@ -161,42 +161,36 @@
         </el-table>
       </template>
 
-<!--      <template v-if="artifactDeployArray.length > 0">-->
-<!--        <div class="primary-title not-first-child">环境更新</div>-->
+      <template >
+        <div class="primary-title not-first-child">环境更新</div>
 
-<!--        <el-table-->
-<!--          :data="artifactDeployArray"-->
-<!--          row-key="_target"-->
-<!--          :expand-row-keys="expandedArtifactDeploys"-->
-<!--          @expand-change="updateArtifactDeployExpanded"-->
-<!--          row-class-name="my-table-row"-->
-<!--          empty-text="无"-->
-<!--          class="build-deploy-table"-->
-<!--        >-->
-<!--          <el-table-column type="expand">-->
-<!--            <template slot-scope="scope">-->
-<!--              <TaskDetailArtifactDeploy :deploy="scope.row.deploySubTask" />-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+        <el-table
+          row-key="_target"
+          :expand-row-keys="expandedArtifactDeploys"
+          @expand-change="updateArtifactDeployExpanded"
+          row-class-name="my-table-row"
+          empty-text="无"
+          class="build-deploy-table"
+        >
+          <el-table-column type="expand">
+          </el-table-column>
 
-<!--          <el-table-column prop="_target" label="服务" min-width="200px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{$utils.showServiceName(scope.row._target)}}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column prop="_target" label="服务" min-width="200px">
 
-<!--          <el-table-column min-width="200px">-->
-<!--            <template slot="header">交付物部署</template>-->
-<!--            <template slot-scope="scope">-->
-<!--              <span :class="scope.row.buildOverallColor">{{ scope.row.buildOverallStatusZh }}</span>-->
-<!--              {{ scope.row.buildOverallTimeZh }}-->
-<!--              <el-tooltip v-if="scope.row.buildOverallTimeZhSec<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">-->
-<!--                <i class="el-icon-warning" style="color: red;"></i>-->
-<!--              </el-tooltip>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-<!--      </template>-->
+          </el-table-column>
+
+          <el-table-column min-width="200px">
+            <template slot="header">交付物部署</template>
+            <template slot-scope="scope">
+              <span :class="scope.row.buildOverallColor">{{ scope.row.buildOverallStatusZh }}</span>
+              {{ scope.row.buildOverallTimeZh }}
+              <el-tooltip v-if="scope.row.buildOverallTimeZhSec<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">
+                <i class="el-icon-warning" style="color: red;"></i>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
 
 <!--      <template v-if="artifact_deployArray.length > 0">-->
 <!--        <div class="primary-title not-first-child">环境更新</div>-->
