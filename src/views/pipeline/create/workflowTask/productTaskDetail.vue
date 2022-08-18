@@ -165,29 +165,50 @@
         <div class="primary-title not-first-child">环境更新</div>
 
         <el-table
-          row-key="_target"
-          :expand-row-keys="expandedArtifactDeploys"
-          @expand-change="updateArtifactDeployExpanded"
-          row-class-name="my-table-row"
-          empty-text="无"
           class="build-deploy-table"
-        >
+          :data="tableData"
+          style="width: 100%">
           <el-table-column type="expand">
-          </el-table-column>
-
-          <el-table-column prop="_target" label="服务" min-width="200px">
-
-          </el-table-column>
-
-          <el-table-column min-width="200px">
-            <template slot="header">交付物部署</template>
-            <template slot-scope="scope">
-              <span :class="scope.row.buildOverallColor">{{ scope.row.buildOverallStatusZh }}</span>
-              {{ scope.row.buildOverallTimeZh }}
-              <el-tooltip v-if="scope.row.buildOverallTimeZhSec<0" content="本地系统时间和服务端可能存在不一致，请同步。" placement="top">
-                <i class="el-icon-warning" style="color: red;"></i>
-              </el-tooltip>
+            <template slot-scope="props">
+              <div class="item-title">构建</div>
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="资源信息">
+                  <span>{{ props.row.shop }}</span>
+                </el-form-item>
+                <el-form-item label="持续时间">
+                  <span>{{ props.row.shopId }}</span>
+                </el-form-item>
+                <el-form-item label="构建状态">
+                  <span>{{ props.row.category }}</span>
+                </el-form-item>
+                <el-form-item label="描述">
+                  <span>{{ props.row.address }}</span>
+                </el-form-item>
+              </el-form>
+              <el-card class="box-card task-process"
+                       :body-style="{padding:'8px 20px',margin: '5px 0 0 0' }">
+                <div class="log-container">
+                  <div class="log-content">
+                    <iframe src="http://123.60.93.72:30001/ssh/host/192.168.0.249" width="100%" height="600px"></iframe>
+                    <!--                  <el-link v-for="item in pageSpec.actions" :href="getExternalLink(scope.row.json, item)" target="_blank">{{-->
+                    <!--                    getComplexOrDefValue(scope.row.json, item.row)-->
+                    <!--                    }}</el-link>-->
+                  </div>
+                </div>
+              </el-card>
             </template>
+          </el-table-column>
+          <el-table-column
+            label="服务"
+            prop="service">
+          </el-table-column>
+          <el-table-column
+            label="构建"
+            prop="pr">
+          </el-table-column>
+          <el-table-column
+            label="部署"
+            prop="deploy">
           </el-table-column>
         </el-table>
       </template>
@@ -287,38 +308,32 @@
         </el-table>
       </template>
 
-<!--      <template v-if="distributeArray.length > 0">-->
-<!--        <div class="primary-title not-first-child">分发部署</div>-->
+      <template >
+        <div class="primary-title not-first-child">分发部署</div>
 
-<!--        <el-table-->
-<!--          :data="distributeArray"-->
-<!--          row-class-name="my-table-row"-->
-<!--          row-key="_target"-->
-<!--          :expand-row-keys="expandedDistributeDeploys"-->
-<!--          @expand-change="updateDistributeDeployExpanded"-->
-<!--          empty-text="无"-->
-<!--          style="width: 100%;"-->
-<!--          class="release-table"-->
-<!--        >-->
-<!--          <el-table-column type="expand">-->
-<!--            <template slot-scope="scope">-->
-<!--              <TaskDetailDistributeDeploy-->
-<!--                :distributeDeploy="scope.row"-->
-<!--                :serviceName="scope.row._target"-->
-<!--                :projectName="projectName"-->
-<!--                ref="distributeDeployComp"-->
-<!--              />-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column prop="_target" label="服务" min-width="200px">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{$utils.showServiceName(scope.row._target)}}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+        <el-table
+          row-class-name="my-table-row"
+          row-key="_target"
+          :expand-row-keys="expandedDistributeDeploys"
+          @expand-change="updateDistributeDeployExpanded"
+          empty-text="无"
+          style="width: 100%;"
+          class="release-table"
+        >
+          <el-table-column type="expand">
+            <template slot-scope="scope">
 
-<!--        </el-table>-->
-<!--      </template>-->
-<!--      <el-backtop target=".workflow-or-pipeline-task-detail"></el-backtop>-->
+            </template>
+          </el-table-column>
+          <el-table-column prop="_target" label="服务" min-width="200px">
+            <template slot-scope="scope">
+              <span></span>
+            </template>
+          </el-table-column>
+
+        </el-table>
+      </template>
+      <el-backtop target=".workflow-or-pipeline-task-detail"></el-backtop>
     </div>
   </div>
 </template>
