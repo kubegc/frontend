@@ -385,6 +385,30 @@ export default {
     },
     cancel() {
       this.$message.success('任务取消成功')
+    },
+    getTerminalAddr(json, item) {
+      const params = item.row.split(',')
+      const len = params.length
+      let addr = item.link
+      for (let i = 0; i < len; i++) {
+        const currParam = this.getTextValue(json, params[i])
+        addr = addr.replace('{' + (i + 1) + '}', currParam)
+      }
+      return addr
+    },
+    getExternalLink(json, item) {
+      if (item['link'].startsWith('@')) {
+        return getTextValue(json, item['link'].substring(1))
+      } else {
+        let linkUrl = item['link']
+        const tags = item['tag'].split(',')
+        const len = tags.length
+        for (let i = 0; i < len; i++) {
+          const tag = this.getComplexOrDefValue(json, tags[i])
+          linkUrl = linkUrl.replace('{' + (i + 1) + '}', tag)
+        }
+        return linkUrl
+      }
     }
 
   },
@@ -485,5 +509,26 @@ export default {
       }
     }
   }
+
+  .issue-popper {
+    display: inline-block;
+    font-size: 14px;
+
+    p {
+      margin: 0.5em 0;
+    }
+
+    .issue-url {
+      color: #0066ff;
+      cursor: pointer;
+    }
+  }
+
+  .description {
+    margin-top: 10px;
+    color: #606266;
+    font-size: 14px;
+  }
+  
 </style>
 
