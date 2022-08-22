@@ -59,25 +59,25 @@
       <!--      </div>-->
     </div>
 
-    <!--    <el-row>-->
-    <!--      <el-col :span="6">-->
-    <!--        <div class="section-head">-->
-    <!--          <div class="controls__wrap">-->
-    <!--            <div class="controls__right">-->
-    <!--&lt;!&ndash;              <router-link :to="`/t/t1/t2`">&ndash;&gt;-->
-    <!--                <el-button type="primary"-->
-    <!--                           class="save-btn"-->
-    <!--                           @click="addParamsSetting"-->
-    <!--                           v-model="tableData"-->
-    <!--                        plain>新建流水线</el-button>-->
-    <!--&lt;!&ndash;              </router-link>&ndash;&gt;-->
-    <!--              <div class="run-button">-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </el-col>-->
-    <!--    </el-row>-->
+        <el-row>
+          <el-col :span="6">
+            <div class="section-head">
+              <div class="controls__wrap">
+                <div class="controls__right">
+    <!--              <router-link :to="`/t/t1/t2`">-->
+                    <el-button type="primary"
+                               class="save-btn"
+                               @click="addParamsSetting"
+                               v-model="tableData"
+                            plain>新建流水线</el-button>
+    <!--              </router-link>-->
+                  <div class="run-button">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
     <el-row
       v-for="row in pipelineItems.rows"
       :key="row.index"
@@ -145,51 +145,51 @@
       </div>
     </div>
 
-    <!--    <el-table-->
-    <!--      :data="tableData"-->
-    <!--      v-loading="tableLoading"-->
-    <!--      style="width: 100%" >-->
-    <!--      <el-table-column label="序号" prop="index" min-width="40%">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column prop="type" label="类型" min-width="80%">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column prop="name" label="名称" min-width="80%">-->
-    <!--      </el-table-column>-->
-    <!--      <el-table-column  label="操作">-->
-    <!--        <template slot-scope="scope">-->
-    <!--          <el-button-->
-    <!--            type="primary"-->
-    <!--            icon="el-icon-edit"-->
-    <!--            circle-->
-    <!--            size="small">-->
-    <!--          </el-button>-->
-    <!--          <el-button-->
-    <!--            type="danger"-->
-    <!--            icon="el-icon-delete"-->
-    <!--            circle-->
-    <!--            size="small"-->
-    <!--            @click.native.prevent="deleteRow(scope.$index)"-->
-    <!--            v-model="tableData">-->
-    <!--          </el-button>-->
-    <!--        </template>-->
-    <!--        <el-button-->
-    <!--          type="danger"-->
-    <!--          icon="el-icon-delete">取消-->
-    <!--        </el-button>-->
-    <!--      </el-table-column>-->
-    <!--    </el-table>-->
-    <!--    <div class="block" style="margin-top:15px;">-->
-    <!--      <el-pagination-->
-    <!--        align='center'-->
-    <!--        @size-change="handleSizeChange"-->
-    <!--        @current-change="handleCurrentChange"-->
-    <!--        :current-page="currentPage"-->
-    <!--        :page-sizes="[10,20]"-->
-    <!--        :page-size="pageSize"-->
-    <!--        layout="total, sizes, prev, pager, next, jumper"-->
-    <!--        :total="tableData.length">-->
-    <!--      </el-pagination>-->
-    <!--    </div>-->
+        <el-table
+          :data="tableData"
+          v-loading="tableLoading"
+          style="width: 100%" >
+          <el-table-column label="序号" prop="index" min-width="40%">
+          </el-table-column>
+          <el-table-column prop="type" label="类型" min-width="80%">
+          </el-table-column>
+          <el-table-column prop="name" label="名称" min-width="80%">
+          </el-table-column>
+          <el-table-column  label="操作">
+            <template slot-scope="scope">
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                circle
+                size="small">
+              </el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                circle
+                size="small"
+                @click.native.prevent="deleteRow(scope.$index)"
+                v-model="tableData">
+              </el-button>
+            </template>
+            <el-button
+              type="danger"
+              icon="el-icon-delete">取消
+            </el-button>
+          </el-table-column>
+        </el-table>
+        <div class="block" style="margin-top:15px;">
+          <el-pagination
+            align='center'
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10,20]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="tableData.length">
+          </el-pagination>
+        </div>
   </div>
 </template>
 

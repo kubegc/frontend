@@ -529,6 +529,6 @@ export default {
     color: #606266;
     font-size: 14px;
   }
-  
+
 </style>
 
