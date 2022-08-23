@@ -140,7 +140,7 @@ export default {
       }).catch(() => {
         this.$message.info('取消跳转')
       })
-    },
+    }
     // generateEnv (projectName, envType) {
     //   const getEnv = new Promise((resolve, reject) => {
     //     generateEnvAPI(projectName, envType).then((res) => {
