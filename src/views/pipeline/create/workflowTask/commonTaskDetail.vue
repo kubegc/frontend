@@ -131,7 +131,6 @@
             </el-col>
           </el-row>
         </template>
-
       </div>
     </el-card>
 
@@ -179,7 +178,8 @@
           <el-col :span="6">
             <div
               class="item-desc"
-              :class="colorTranslation(extensionStage.status,'pipeline','task')"
+              :cla
+              ss="colorTranslation(extensionStage.status,'pipeline','task')"
             ></div>
           </el-col>
           <el-col v-if="extensionStage.status!=='running'" :span="6">
@@ -243,5 +243,247 @@ export default {
 </script>
 
 <style lang="less">
+  .issue-popper {
+    display: inline-block;
+    font-size: 14px;
 
+    p {
+      margin: 0.5em 0;
+    }
+
+    .issue-url {
+      color: #0066ff;
+      cursor: pointer;
+    }
+  }
+
+  .task-detail-container {
+    position: relative;
+    flex: 1;
+    padding: 0 20px;
+    overflow: auto;
+    font-size: 13px;
+
+    .el-breadcrumb {
+      font-size: 16px;
+      line-height: 1.35;
+
+      .el-breadcrumb__item__inner a:hover,
+      .el-breadcrumb__item__inner:hover {
+        color: #0066ff;
+        cursor: pointer;
+      }
+    }
+
+    .text {
+      font-size: 14px;
+    }
+
+    .item {
+      padding: 10px 0;
+      padding-left: 1px;
+
+      .icon-color {
+        color: #9ea3a9;
+        cursor: pointer;
+
+        &:hover {
+          color: #0066ff;
+        }
+      }
+
+      .icon-color-cancel {
+        color: #ff4949;
+        cursor: pointer;
+      }
+
+      .status {
+        line-height: 24px;
+      }
+    }
+
+    .clearfix::before,
+    .clearfix::after {
+      display: table;
+      content: '';
+    }
+
+    .clearfix {
+      span {
+        color: #303133;
+        font-size: 16px;
+        line-height: 20px;
+      }
+    }
+
+    .clearfix::after {
+      clear: both;
+    }
+
+    .box-card {
+      background-color: #fff;
+
+      .item-title {
+        color: #8d9199;
+      }
+
+      .item-desc {
+        .start-build,
+        .edit-pipeline {
+          color: #0066ff;
+          font-size: 13px;
+          cursor: pointer;
+        }
+      }
+
+      .color-passed {
+        color: #6ac73c;
+        font-weight: 500;
+      }
+
+      .color-failed {
+        color: #ff1949;
+        font-weight: 500;
+      }
+
+      .color-cancelled {
+        color: #909399;
+        font-weight: 500;
+      }
+
+      .color-timeout {
+        color: #e6a23c;
+        font-weight: 500;
+      }
+
+      .color-running {
+        color: #0066ff;
+        font-weight: 500;
+      }
+
+      .color-created {
+        color: #cdb62c;
+        font-weight: 500;
+      }
+
+      .color-notrunning {
+        color: #303133;
+        font-weight: 500;
+      }
+
+      .issue-tag {
+        margin-right: 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+      }
+
+      .deploy_env {
+        color: #0066ff;
+      }
+
+      .error-color {
+        color: #fa6464;
+      }
+
+      .show-log {
+        font-size: 1.33rem;
+        cursor: pointer;
+
+        &:hover {
+          color: #0066ff;
+        }
+      }
+
+      .show-test-result {
+        color: #0066ff;
+        cursor: pointer;
+      }
+
+      .show-log-title {
+        line-height: 17px;
+      }
+
+      .operation {
+        line-height: 16px;
+      }
+    }
+
+    .box-card,
+    .task-process {
+      margin-top: 15px;
+      border: none;
+      box-shadow: none;
+    }
+
+    .task-process {
+      width: 100%;
+    }
+
+    .el-card__header {
+      padding-left: 0;
+    }
+
+    .el-row {
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+    // .link {
+    //   a {
+    //     color: @themeColor;
+    //     cursor: pointer;
+    //   }
+    // }
+    a.item-desc {
+      color: #0066ff;
+      cursor: pointer;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      vertical-align: middle;
+
+      .ball-scale-multiple {
+        transform: none;
+
+        div {
+          top: 0;
+          left: 0;
+          width: 25px;
+          height: 25px;
+          background-color: #0066ff;
+        }
+      }
+    }
+
+    .log-container {
+      padding-bottom: 15px;
+
+      .log-content {
+        .xterm {
+          padding: 15px 10px;
+        }
+
+        .el-collapse-item__content {
+          padding-bottom: 0;
+        }
+
+        .el-collapse-item__arrow {
+          margin-right: 16px;
+        }
+
+        &.test {
+          margin-bottom: 80px;
+        }
+      }
+    }
+
+    .pointer {
+      cursor: pointer;
+    }
+  }
 </style>
