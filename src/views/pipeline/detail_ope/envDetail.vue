@@ -54,19 +54,16 @@
         element-loading-spinner="el-icon-loading"
         class="common-parcel-block basic-info-content"
       >
-<!--        <el-row :gutter="10">-->
-<!--          <el-col v-if="!pmServiceList.length" :span="12">-->
-<!--            <div class="grid-title">K8s 集群</div>-->
-<!--            <div v-if="productInfo.is_local" class="grid-content">本地集群</div>-->
-<!--            <div v-else class="grid-content">{{productInfo.is_prod?productInfo.cluster_name+'-->
-<!--              (生产集群)':productInfo.cluster_name +' (测试集群)'}}-->
-<!--            </div>-->
-<!--          </el-col>-->
-<!--          <el-col :span="12">-->
-<!--            <div class="grid-title">更新时间</div>-->
-<!--            <div class="grid-content">{{$utils.convertTimestamp(productInfo.update_time)}}</div>-->
-<!--          </el-col>-->
-<!--        </el-row>-->
+        <el-row :gutter="10">
+          <el-col v-if="!pmServiceList.length" :span="12">
+            <div class="grid-title">K8s 集群</div>
+            <div v-if="productInfo.is_local" class="grid-content">本地集群</div>
+          </el-col>
+          <el-col :span="12">
+            <div class="grid-title">更新时间</div>
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
         <el-row :gutter="10">
           <el-col :span="12" v-if="!pmServiceList.length">
             <div class="grid-title">K8s 命名空间</div>
@@ -161,12 +158,6 @@
                     环境配置
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </el-button>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click.native="jumpEnvConfigPage('Ingress')">Ingress</el-dropdown-item>
-                    <el-dropdown-item @click.native="jumpEnvConfigPage('ConfigMap')">ConfigMap</el-dropdown-item>
-                    <el-dropdown-item @click.native="jumpEnvConfigPage('Secret')">Secret</el-dropdown-item>
-                    <el-dropdown-item @click.native="jumpEnvConfigPage('PVC')">PVC</el-dropdown-item>
-                  </el-dropdown-menu>
                 </el-dropdown>
               </template>
               <template v-if="productInfo.status!=='Disconnected' && productInfo.status!=='Creating'">
@@ -275,28 +266,6 @@
             <span class="service-number">{{ envTotal }}</span> 个
           </span>
         <el-button type="text" @click="refreshServiceList">刷新</el-button>
-      </div>
-      <div class="env-service-list-content">
-        <ChartList
-          ref="chartListRef"
-          class="left"
-          v-if="envSource === 'helm'"
-          :envSource="envSource"
-          :fetchAllData="fetchAllData"
-          :searchServicesByChart="searchServicesByChart"
-        />
-        <ServiceList
-          class="right"
-          :containerServiceList="containerServiceList"
-          :setRoute="setRoute"
-          :serviceStatus="serviceStatus"
-          :envSource="envSource"
-          :updateService="updateService"
-          :isPmService="isPmService"
-          :upgradeServiceByWorkflow="upgradeServiceByWorkflow"
-          :restartService="restartService"
-          :setServiceConfigRoute="setServiceConfigRoute"
-        ></ServiceList>
       </div>
       <el-table v-if="pmServiceList.length > 0" class="pm-service-container" :data="pmServiceList">
         <el-table-column label="服务名" width="250px">

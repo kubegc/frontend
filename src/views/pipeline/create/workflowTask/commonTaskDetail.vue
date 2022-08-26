@@ -113,7 +113,7 @@
           <el-col v-if="buildStage.status!=='running'" :span="6">
           </el-col>
         </el-row>
-        <template v-if="buildStage.sub_tasks.job_ctx">
+        <template >
           <el-row :gutter="0" v-for="(build,index) in buildStage.sub_tasks.job_ctx.builds" :key="index">
             <el-col :span="6">
               <div class="item-title">
@@ -153,7 +153,6 @@
 
     <!-- end of buildv3 -->
     <el-card
-      v-if="!$utils.isEmpty(extensionStage)"
       class="box-card task-process"
       :body-style="{ padding: '0px', margin: '15px 0 0 0' }"
     >
@@ -229,7 +228,29 @@ export default {
 
   },
   methods: {
-
+    showOperation () {
+      if (
+        this.taskDetail.status !== 'running' &&
+        this.taskDetail.status !== 'passed'
+      ) {
+        return true
+      }
+      if (this.taskDetail.status === 'running') {
+        return true
+      }
+      return false
+    },
+    taskDuration (taskID, started) {
+      const refresh = () => {
+        const duration = Math.floor(Date.now() / 1000) - started
+        this.$set(this.durationSet, taskID, duration)
+      }
+      setInterval(refresh, 1000)
+      return ''
+    },
+    getBuildLog () {
+      this.showBuildLog = true
+    }
   },
   created () {
 
