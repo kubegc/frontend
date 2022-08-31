@@ -106,20 +106,6 @@
            class="block-title">
         历史任务
       </div>
-      <task-list :taskList="workflowTasks"
-                 :total="total"
-                 :pageSize="pageSize"
-                 :projectName="projectName"
-                 :baseUrl="`/v1/projects/detail/${projectName}/pipelines/multi/${workflowName}`"
-                 :workflowName="workflowName"
-                 :functionTestBaseUrl="`/v1/projects/detail/${projectName}/pipelines/multi/testcase/${workflowName}`"
-                 @cloneTask="rerun"
-                 @currentChange="changeTaskPage"
-                 showEnv
-                 showTestReport
-                 showServiceNames
-                 showOperation>
-      </task-list>
     </el-card>
 
     <el-dialog :visible.sync="taskDialogVisible"
