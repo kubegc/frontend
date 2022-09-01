@@ -244,7 +244,14 @@ export default {
 
   },
   methods: {
-
+    isStageDone (name) {
+      if (this.taskDetail.stages.length > 0) {
+        const stage = this.taskDetail.stages.find(element => {
+          return element.type === name
+        })
+        return stage ? stage.status === 'passed' : false
+      }
+    },
   },
   watch: {
 
