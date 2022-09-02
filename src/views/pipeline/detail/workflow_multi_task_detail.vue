@@ -252,6 +252,18 @@ export default {
         return stage ? stage.status === 'passed' : false
       }
     },
+    cancel () {
+      cancelWorkflowAPI(this.workflowName, this.taskID).then(res => {
+        if (this.$refs && this.$refs.buildComp) {
+          this.$refs.buildComp.killLog('buildv2')
+          this.$refs.buildComp.killLog('docker_build')
+        }
+        if (this.$refs && this.$refs.testComp) {
+          this.$refs.testComp.killLog('test')
+        }
+        this.$message.success('任务取消成功')
+      })
+    }
   },
   watch: {
 
