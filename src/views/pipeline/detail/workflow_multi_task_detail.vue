@@ -129,21 +129,6 @@
                   row-class-name="my-table-row"
                   empty-text="无"
                   class="build-deploy-table">
-          <el-table-column type="expand">
-            <template slot-scope="scope">
-              <task-detail-build :buildv2="scope.row.buildv2SubTask"
-                                 :docker_build="scope.row.docker_buildSubTask"
-                                 :isWorkflow="true"
-                                 :serviceName="scope.row._target"
-                                 :pipelineName="workflowName"
-                                 :projectName="projectName"
-                                 :taskID="taskID"
-                                 ref="buildComp"></task-detail-build>
-              <task-detail-deploy :deploys="scope.row.deploySubTasks"
-                                  :pipelineName="workflowName"
-                                  :taskID="taskID"></task-detail-deploy>
-            </template>
-          </el-table-column>
 
           <el-table-column prop="_target"
                            label="服务"
@@ -194,10 +179,6 @@
                   empty-text="无"
                   class="build-deploy-table">
           <el-table-column type="expand">
-            <template slot-scope="scope">
-              <task-detail-artifact-deploy :deploy="scope.row.deploySubTask">
-              </task-detail-artifact-deploy>
-            </template>
           </el-table-column>
 
           <el-table-column prop="_target"
@@ -276,147 +257,147 @@ export default {
 </script>
 
 <style lang="less">
-.issue-popper {
-  display: inline-block;
-  font-size: 14px;
-
-  p {
-    margin: 0.5em 0;
-  }
-
-  .issue-url {
-    color: #1989fa;
-    cursor: pointer;
-  }
-}
-
-.workflow-task-detail {
-  position: relative;
-  flex: 1;
-  padding: 0 20px;
-  overflow: auto;
-
-  .el-breadcrumb {
-    font-size: 16px;
-  }
-
-  .version-summary {
-    .title {
-      color: #606266;
-      font-size: 14px;
-      line-height: 40px;
-    }
-
-    .content {
-      color: #333;
-      font-size: 14px;
-    }
-  }
-
-  .section-head {
-    width: 222px;
-    height: 28px;
-    margin-top: 25px;
-    color: #303133;
-    font-size: 16px;
-    line-height: 28px;
-    border-bottom: 1px solid #eee;
-  }
-
-  .section-title {
+  .issue-popper {
     display: inline-block;
-    margin-top: 20px;
-    margin-left: 15px;
-    color: #666;
-    font-size: 13px;
+    font-size: 14px;
+
+    p {
+      margin: 0.5em 0;
+    }
+
+    .issue-url {
+      color: #1989fa;
+      cursor: pointer;
+    }
   }
 
-  .version-link,
-  .download-artifact-link {
-    color: #1989fa;
-    cursor: pointer;
+  .workflow-task-detail {
+    position: relative;
+    flex: 1;
+    padding: 0 20px;
+    overflow: auto;
+
+    .el-breadcrumb {
+      font-size: 16px;
+    }
+
+    .version-summary {
+      .title {
+        color: #606266;
+        font-size: 14px;
+        line-height: 40px;
+      }
+
+      .content {
+        color: #333;
+        font-size: 14px;
+      }
+    }
+
+    .section-head {
+      width: 222px;
+      height: 28px;
+      margin-top: 25px;
+      color: #303133;
+      font-size: 16px;
+      line-height: 28px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .section-title {
+      display: inline-block;
+      margin-top: 20px;
+      margin-left: 15px;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .version-link,
+    .download-artifact-link {
+      color: #1989fa;
+      cursor: pointer;
+    }
+
+    .basic-info,
+    .build-deploy-table,
+    .test-table,
+    .release-table {
+      margin-top: 10px;
+    }
+
+    .el-form-item {
+      margin-bottom: 0;
+    }
+
+    .el-form-item__label {
+      text-align: left;
+    }
+
+    .build-deploy-table,
+    .test-table,
+    .release-table {
+      span[class^="color-"] {
+        margin-right: 8px;
+      }
+
+      .icon {
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .error {
+        color: #ff1989;
+      }
+    }
+
+    .security-table,
+    .release-table {
+      margin-left: 48px;
+    }
+
+    .show-test-result {
+      a {
+        color: #1989fa;
+        cursor: pointer;
+      }
+    }
+
+    .el-table__expanded-cell {
+      padding: 0;
+    }
+
+    .my-table-row {
+      background-color: #f5faff;
+    }
+
+    .issue-name-wrapper {
+      display: block;
+
+      a {
+        margin-right: 4px;
+        color: #1989fa;
+      }
+    }
+
+    .build-summary {
+      .repo-name {
+        font-size: 15px;
+      }
+
+      .link a {
+        color: #1989fa;
+        cursor: pointer;
+      }
+
+      .el-row {
+        margin-bottom: 5px;
+      }
+    }
   }
 
-  .basic-info,
-  .build-deploy-table,
-  .test-table,
-  .release-table {
+  .description {
     margin-top: 10px;
+    color: #606266;
+    font-size: 14px;
   }
-
-  .el-form-item {
-    margin-bottom: 0;
-  }
-
-  .el-form-item__label {
-    text-align: left;
-  }
-
-  .build-deploy-table,
-  .test-table,
-  .release-table {
-    span[class^="color-"] {
-      margin-right: 8px;
-    }
-
-    .icon {
-      font-size: 18px;
-      cursor: pointer;
-    }
-
-    .error {
-      color: #ff1989;
-    }
-  }
-
-  .security-table,
-  .release-table {
-    margin-left: 48px;
-  }
-
-  .show-test-result {
-    a {
-      color: #1989fa;
-      cursor: pointer;
-    }
-  }
-
-  .el-table__expanded-cell {
-    padding: 0;
-  }
-
-  .my-table-row {
-    background-color: #f5faff;
-  }
-
-  .issue-name-wrapper {
-    display: block;
-
-    a {
-      margin-right: 4px;
-      color: #1989fa;
-    }
-  }
-
-  .build-summary {
-    .repo-name {
-      font-size: 15px;
-    }
-
-    .link a {
-      color: #1989fa;
-      cursor: pointer;
-    }
-
-    .el-row {
-      margin-bottom: 5px;
-    }
-  }
-}
-
-.description {
-  margin-top: 10px;
-  color: #606266;
-  font-size: 14px;
-}
 </style>
