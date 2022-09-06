@@ -118,7 +118,7 @@
         </div>
         <el-alert class="description" v-if="jenkinsSummary.length > 0"
           show-icon
-          title="使用 Zadig 构建将为您节省20%构建时间，建议您迁移构建过程到 Zadig"
+          title="使用构建将为您节省20%构建时间"
            :closable="false"
           type="warning">
         </el-alert>

@@ -145,71 +145,15 @@ export default {
   computed: {
     workflowName () {
       return this.$route.params.workflow_name
-    },
-    testReportExists () {
-      const items = []
-      this.workflowTasks.forEach(element => {
-        if (element.test_reports) {
-          items.push(element.task_id)
-        }
-      })
-      if (items.length > 0) {
-        return true
-      } else {
-        return false
-      }
     }
   },
   methods: {
-    async refreshHistoryTask () {
-      const res = await workflowTaskListAPI(this.workflowName, this.pageStart, this.pageSize)
-      this.processTestData(res)
-      this.workflowTasks = res.data
-      this.total = res.total
-      if (!this.timeTimeoutFinishFlag) {
-        this.timerId = setTimeout(this.refreshHistoryTask, 3000)// 保证内存中只有一个定时器
-      }
-    },
-    processTestData (res) {
-      res.data.forEach(element => {
-        if (element.test_reports) {
-          const testArray = []
-          for (const testName in element.test_reports) {
-            const val = element.test_reports[testName]
-            if (typeof val === 'object') {
-              const struct = {
-                success: null,
-                total: null,
-                name: null,
-                type: null,
-                time: null,
-                img_id: null
-              }
-              if (val.functionTestSuite) {
-                struct.name = testName
-                struct.type = 'function'
-                struct.success = val.functionTestSuite.successes ? val.functionTestSuite.successes : (val.functionTestSuite.tests - val.functionTestSuite.failures - val.functionTestSuite.errors)
-                struct.total = val.functionTestSuite.tests
-                struct.time = val.functionTestSuite.time
-              }
-              testArray.push(struct)
-            }
-          }
-          element.testSummary = testArray
-        }
-      })
-    },
     fetchHistory (start, max) {
       workflowTaskListAPI(this.workflowName, start, max).then(res => {
         this.processTestData(res)
         this.workflowTasks = res.data
         this.total = res.total
       })
-    },
-    changeTaskPage (val) {
-      const start = (val - 1) * this.pageSize
-      this.pageStart = start
-      this.fetchHistory(start, this.pageSize)
     },
     hideAndFetchHistory () {
       this.taskDialogVisible = false
@@ -268,34 +212,8 @@ export default {
     this.timeTimeoutFinishFlag = true
     clearTimeout(this.timerId)
   },
-  mounted () {
-    workflowAPI(this.workflowName).then(res => {
-      this.workflow = res
-    })
-    this.projectName = this.$route.params.project_name
-    this.refreshHistoryTask()
-    bus.$emit('set-topbar-title', {
-      title: '',
-      breadcrumb: [
-        { title: '项目', url: '/v1/projects' },
-        { title: this.projectName, url: `/v1/projects/detail/${this.projectName}` },
-        { title: '工作流', url: `/v1/projects/detail/${this.projectName}/pipelines` },
-        { title: this.workflowName, url: '' }]
-    })
-    bus.$emit('set-sub-sidebar-title', {
-      title: this.projectName,
-      url: `/v1/projects/detail/${this.projectName}`,
-      routerList: [
-        { name: '工作流', url: `/v1/projects/detail/${this.projectName}/pipelines` },
-        { name: '集成环境', url: `/v1/projects/detail/${this.projectName}/envs` },
-        { name: '服务', url: `/v1/projects/detail/${this.projectName}/services` },
-        { name: '构建', url: `/v1/projects/detail/${this.projectName}/builds` },
-        { name: '测试', url: `/v1/projects/detail/${this.projectName}/test` }]
-    })
-  },
-  components: {
-    runWorkflow
-  }
+  mounted () {},
+  components: {}
 }
 </script>
 
