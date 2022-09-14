@@ -188,6 +188,33 @@
       </template>
 
       <el-backtop target=".workflow-or-pipeline-task-detail"></el-backtop>
+            <el-dialog el-dialog title="请选择代码库平台"
+                       @close="closeSelectRepo"
+                       center
+                       :append-to-body="true"
+                       :close-on-click-modal="false"
+                       custom-class="dialog-source"
+                       :visible.sync="ImportFileVisible"
+                       class="add-new-service">
+              <el-form :model="service"
+                       :rules="serviceRules"
+                       ref="newServiceNameForm"
+                       @submit.native.prevent>
+                <el-form-item label=""
+                              prop="newServiceName">
+                  <span class="service-status new"></span>
+                  <i class="service-type iconfont iconrongqifuwu"></i>
+                  <el-input v-model="service.newServiceName"
+                            size="mini"
+                            autofocus
+                            ref="serviceNamedRef"
+                            @blur="inputServiceNameDoneWhenBlur"
+                            @keyup.enter.native="inputServiceNameDoneWhenBlur"
+                            placeholder="请输入服务名称"></el-input>
+                </el-form-item>
+
+              </el-form>
+            </el-dialog>
     </div>
 </template>
 
