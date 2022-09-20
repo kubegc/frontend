@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
 import getters from './getters'
 import app from './modules/app'
 import route from './modules/route'
@@ -27,8 +28,17 @@ const store = new Vuex.Store({
     delArr(state,index){
       state.count.splice(index,1)
     },
-    addData(state,data){
-      state.tableData = data
+
+    initList(state, tableData){
+      state.tableData = tableData
+    }
+  },
+  actions:{
+    getTableData(context) {
+      axios.get('/tabledata.json').then(({data}) =>{
+        console.log(data)
+        context.commit('initList', data)
+      })
     }
   }
 })

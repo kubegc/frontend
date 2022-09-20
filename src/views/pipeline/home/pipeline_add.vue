@@ -16,7 +16,7 @@
       v-if="currentTab==='grid'"
       class="projects-grid">
       <el-row :gutter="12">
-        <el-col v-for="(Data,index) in $store.state.tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="6" :xl="4">
+        <el-col v-for="(name,index) in tableData" :key="index" :xs="12" :sm="8" :md="6" :lg="6" :xl="4">
           <el-card shadow="hover" class="project-card">
             <div class="operations">
               <el-dropdown @command="handleCommand" trigger="click">
@@ -24,15 +24,15 @@
                   <i class="el-icon-more"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :command="{action:'edit',projectName:Data.name}">修改</el-dropdown-item>
-                  <el-dropdown-item :command="{action:'delete',projectName:Data.name}">删除</el-dropdown-item>
+                  <el-dropdown-item :command="{action:'edit',projectName:name}">修改</el-dropdown-item>
+                  <el-dropdown-item :command="{action:'delete',projectName:name}">删除</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
             <div @click="$router.push(`/project/detail/1`)" class="content-container">
               <h4 class="project-name">
-                <el-tooltip effect="dark" :content="Data.name" placement="top">
-                  <span class="name">{{111}}</span>
+                <el-tooltip effect="dark" :content="name" placement="top">
+                  <span class="name" id="name">{{name.name}}</span>
                 </el-tooltip>
               </h4>
             </div>
@@ -194,6 +194,7 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
   import axios from 'axios'
   import { getUserList } from '../../../api/api'
   import pipeline from '../pipeline'
@@ -204,7 +205,6 @@
       return {
         pipelineItems: [],
         getUserList: [],
-        tableData: [],
         currentTab: 'grid',
         dialog: false,
         fullscreen: false,
@@ -275,6 +275,14 @@
           this.$router.push(`/test/test2/test3`)
         }
       }
+    },
+
+    created() {
+      this.$store.dispatch('getTableData')
+    },
+
+    computed: {
+      ...mapState(['tableData'])
     }
   }
 </script>

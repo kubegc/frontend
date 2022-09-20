@@ -15,20 +15,19 @@
                 <el-tab-pane label="高级配置" name="advance"></el-tab-pane>
               </el-tabs>
               <el-form :model="tableData"
-                       :rules="rules"
                        label-position="top"
                        re0f="addFormRef"
                        label-width="100px"
                        class="demo-projectForm">
                 <el-form-item label="工作流名称"
-                              v-show="$store.state.tableData "
+                              v-show="$store.state.tableData"
                               prop="project_name">
                   <el-input v-model="$store.state.tableData"></el-input>
                 </el-form-item>
 
                 <el-form-item label="工作流标识"
                               prop="product_name">
-                  <el-input v-model="$store.state.tableData"></el-input>
+                  <el-input v-model="$store.state.tableData.type"></el-input>
                 </el-form-item>
 
                 <el-form-item
@@ -53,7 +52,7 @@
                   <el-input type="textarea"
                             :rows="2"
                             placeholder="请输入描述信息"
-                            v-model="$store.state.tableData">
+                            v-model="$store.state.tableData.index">
                   </el-input>
 
                 </el-form-item>
@@ -142,10 +141,9 @@
   </div>
 </template>
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapState } from 'vuex'
   import axios from 'axios'
   import { getUserList } from '../../../api/api'
-  import tableData from '../home/pipeline_add'
   const validateProductName = (rule, value, callback) => {
     if (typeof value === 'undefined' || value === '') {
       callback(new Error('填写项目主键'))
@@ -161,7 +159,6 @@
   export default {
     data () {
       return {
-        tableData:[],
         activeName: 'base',
         dialogVisible: true,
         users: [],
@@ -235,7 +232,7 @@
 
     mounted() {
       this.pipelinelength()
-      this.initPage()
+      // this.initPage()
       this.$refs.msg[0].findAllorder(this.activeName);
     },
 
@@ -304,12 +301,12 @@
     },
 
     created() {
-      this.tableData = this.$store.state.tableData
+      // this.tableData = this.$store.state.tableData
     },
 
     computed: {
-      ...mapGetters([
-        'signupStatus'
+      ...mapState([
+        'tableData'
       ]),
       currentOrganizationId () {
         return this.$store.state.login.userinfo.organization.id

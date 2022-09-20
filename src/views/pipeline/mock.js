@@ -45,12 +45,12 @@ Mock.mock('/getPipelineItems', { //输出数据
 Mock.mock('/pipelineItems',{
   code:20000,
   data: [
-          { type: 'span1', name: ' qwer123', env:'admin' },
-          { type: 'span2', name: ' asd123', env:'admin' },
-          { type: 'span3', name: ' dsad-002', env:'admin' },
-          { type: 'span4', name: ' dsacxz4', env:'admin' },
-          { type: 'span5', name: ' dsacxz4', env:'admin' },
-          { type: 'span6', name: ' dsacxz4', env:'admin' },
+          { type: 'span1', name: ' qwer123', index:'admin' },
+          { type: 'span2', name: ' asd123', index:'admin' },
+          { type: 'span3', name: ' dsad-002', index:'admin' },
+          { type: 'span4', name: ' dsacxz4', index:'admin' },
+          { type: 'span5', name: ' dsacxz4', index:'admin' },
+          { type: 'span6', name: ' dsacxz4', index:'admin' },
           // { index: 4, type: 'span4', name: ' dsacxz4' },
     ]
 
