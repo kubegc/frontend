@@ -43,7 +43,6 @@ Mock.mock('/getPipelineItems', { //输出数据
 });
 
 Mock.mock('/pipelineItems',{
-  code:20000,
   data: [
           { type: 'span1', name: ' qwer123', index:'admin' },
           { type: 'span2', name: ' asd123', index:'admin' },

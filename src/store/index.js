@@ -19,7 +19,9 @@ const store = new Vuex.Store({
   getters,
   state:{
     count:[],
-    tableData:[]
+    tableData:[],
+    inputValue:'aaa',
+    inputIndex:5,
   },
   mutations:{
     add(state){
@@ -31,6 +33,19 @@ const store = new Vuex.Store({
 
     initList(state, tableData){
       state.tableData = tableData
+    },
+    setInputValue(state, val){
+      state.inputValue = val
+    },
+    addTable(state){
+      const obj = {
+        name: state.inputValue.trim(),
+        index: state.inputIndex,
+        type: false
+      }
+      state.tableData.push(obj)
+      state.inputIndex++
+      state.inputValue =''
     }
   },
   actions:{

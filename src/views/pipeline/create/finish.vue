@@ -110,7 +110,6 @@
           <button type="primary"
                     size="small"
                     class="save-btn"
-                    @class="addList()"
                     plain>完成</button>
         </router-link>
       </div>
@@ -149,13 +148,6 @@ export default {
         if(response.data){
           this.guideItems = response.data.data
         }
-      })
-    },
-    addList() {
-      this.tableData.push({
-        index: '',
-        type: '',
-        name: ''
       })
     },
   },

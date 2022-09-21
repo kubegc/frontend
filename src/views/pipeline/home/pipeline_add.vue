@@ -251,30 +251,19 @@
         this.currentPage = val
       },
 
-      findAllorder(name) {
-        console.log(name)
-      },
-      addList() {
-        this.tableData.push({
-          index: '',
-          type: '',
-          name: ''
-        })
-      },
       addParamsSetting() {
-        this.addList()
         this.submitForm()
       },
-      deleteRow(index) {
-        this.tableData.splice(index, 1)
-      },
-      handleCommand(command) {
-        if (command.action === 'delete') {
-          this.deleteRow(command.name)
-        } else if (command.action === 'edit') {
-          this.$router.push(`/test/test2/test3`)
-        }
-      }
+      // deleteRow(index) {
+      //   this.tableData.splice(index, 1)
+      // },
+      // handleCommand(command) {
+      //   if (command.action === 'delete') {
+      //     this.deleteRow(command.name)
+      //   } else if (command.action === 'edit') {
+      //     this.$router.push(`/test/test2/test3`)
+      //   }
+      // }
     },
 
     created() {

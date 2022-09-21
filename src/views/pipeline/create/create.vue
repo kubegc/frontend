@@ -10,19 +10,18 @@
           <h1 class="project-contexts-modal__content-title">{{'开始新建工作流'}}</h1>
           <div class="project-contexts-modal__content-container">
             <div class="project-settings__inputs-container">
-              <el-tabs style="width: 100%;"    v-model="activeName">
+              <el-tabs style="width: 100%;" v-model="activeName">
                 <el-tab-pane label="基本信息" name="base"></el-tab-pane>
                 <el-tab-pane label="高级配置" name="advance"></el-tab-pane>
               </el-tabs>
-              <el-form :model="tableData"
-                       label-position="top"
-                       re0f="addFormRef"
-                       label-width="100px"
-                       class="demo-projectForm">
+              <el-form
+                label-position="top"
+                re0f="addFormRef"
+                label-width="100px"
+                class="demo-projectForm">
                 <el-form-item label="工作流名称"
-                              v-show="$store.state.tableData"
                               prop="project_name">
-                  <el-input v-model="$store.state.tableData"></el-input>
+                  <el-input :value="inputValue" @input.native="handleInputChange"></el-input>
                 </el-form-item>
 
                 <el-form-item label="工作流标识"
@@ -45,7 +44,7 @@
                           <i class="el-icon-question"></i>
                         </el-tooltip>
                       </span>
-                </el-form-item >
+                </el-form-item>
                 <el-form-item label="描述信息"
                               v-show="activeName !=='advance'"
                               prop="desc">
@@ -67,9 +66,11 @@
                       <el-radio-group size="mini"
                                       v-model="projectForm.product_feature.basic_facility">
                         <el-radio border
-                                  label="kubernetes">Kubernetes</el-radio>
+                                  label="kubernetes">Kubernetes
+                        </el-radio>
                         <el-radio border
-                                  label="cloud_host">主机</el-radio>
+                                  label="cloud_host">主机
+                        </el-radio>
                       </el-radio-group>
                     </el-col>
                   </el-row>
@@ -78,12 +79,14 @@
                       <span>环境创建方式</span>
                     </el-col>
                   </el-row>
-                  <el-row v-if="projectForm.product_feature.basic_facility==='kubernetes'&&projectForm.product_feature.create_env_type==='system'" :gutter="5">
+                  <el-row
+                    v-if="projectForm.product_feature.basic_facility==='kubernetes'&&projectForm.product_feature.create_env_type==='system'"
+                    :gutter="5">
                     <el-col :span="4">
                       <span>服务部署方式
                         <el-tooltip placement="top">
                           <div slot="content">
-                            K8s YAML 部署：使用 K8s 原生的 YAML配置方式部署服务<br />
+                            K8s YAML 部署：使用 K8s 原生的 YAML配置方式部署服务<br/>
                             Helm Chart 部署：使用 Helm 工具部署服务
                           </div>
                           <i class="icon el-icon-question"></i>
@@ -94,9 +97,11 @@
                       <el-radio-group size="mini"
                                       v-model="projectForm.product_feature.deploy_type">
                         <el-radio border
-                                  label="k8s">K8s YAML 部署</el-radio>
+                                  label="k8s">K8s YAML 部署
+                        </el-radio>
                         <el-radio border
-                                  label="helm">Helm Chart 部署</el-radio>
+                                  label="helm">Helm Chart 部署
+                        </el-radio>
                       </el-radio-group>
                     </el-col>
                   </el-row>
@@ -111,7 +116,6 @@
                                  filterable
                                  multiple
                                  remote
-                                 :remote-method="remoteMethod"
                                  :loading="loading"
                                  placeholder="请输入用户名搜索用户">
                         <el-option v-for="(user,index) in users"
@@ -132,7 +136,7 @@
           <el-button class="create-btn"
                      type="primary"
                      plain
-                     @click="addParamsSetting">{{isEdit?'确认修改':'立即创建'}}
+                     @click="addParamsSetting">{{'立即创建'}}
           </el-button>
         </router-link>
 
@@ -141,9 +145,10 @@
   </div>
 </template>
 <script>
-  import { mapState } from 'vuex'
+  import {mapState} from 'vuex'
   import axios from 'axios'
-  import { getUserList } from '../../../api/api'
+  import {getUserList} from '../../../api/api'
+
   const validateProductName = (rule, value, callback) => {
     if (typeof value === 'undefined' || value === '') {
       callback(new Error('填写项目主键'))
@@ -157,7 +162,7 @@
   }
 
   export default {
-    data () {
+    data() {
       return {
         activeName: 'base',
         dialogVisible: true,
@@ -181,15 +186,15 @@
           }
         },
         getUserList: [],
-        addForm:{
+        addForm: {
           type: '',
-          index:'',
-          name:''
+          index: '',
+          name: ''
         },
-        addFormRules:{
-          type:[{require: true, message: '请输入', trigger: 'blur'}],
-          index:[{require: true, message: '请输入', trigger: 'blur'}],
-          name:[{require: true, message: '请输入', trigger: 'blur'}]
+        addFormRules: {
+          type: [{require: true, message: '请输入', trigger: 'blur'}],
+          index: [{require: true, message: '请输入', trigger: 'blur'}],
+          name: [{require: true, message: '请输入', trigger: 'blur'}]
         },
 
         // rules: {
@@ -237,12 +242,12 @@
     },
 
     methods: {
-      async resetForm(){
+      async resetForm() {
         const test = this.tableData
         console.log(test)
       },
 
-      search () {
+      search() {
         console.log(this.tableData)
       },
 
@@ -263,54 +268,57 @@
       //   })
       // },
 
-      remoteMethod (query) {
-        if (query !== '') {
-          this.loading = true
-          const orgId = this.currentOrganizationId
-          usersAPI(orgId, '', 0, 0, query).then((res) => {
-            this.loading = false
-            this.users = this.$utils.deepSortOn(res.data, 'name')
-          })
-        } else {
-          this.users = []
-        }
-      },
+      // remoteMethod (query) {
+      //   if (query !== '') {
+      //     this.loading = true
+      //     const orgId = this.currentOrganizationId
+      //     usersAPI(orgId, '', 0, 0, query).then((res) => {
+      //       this.loading = false
+      //       this.users = this.$utils.deepSortOn(res.data, 'name')
+      //     })
+      //   } else {
+      //     this.users = []
+      //   }
+      // },
 
-      resetForm (formName) {
-        this.$refs[formName].resetFields()
-      },
+      // resetForm (formName) {
+      //   this.$refs[formName].resetFields()
+      // },
 
-      addRow(addForm){
-        this.$ref.addFormRef.validate(valid => {
-          if (!valid) return this.get$message.warning('表单填写有误，请检查！')
-          this.$message.success('添加成功！')
-          console.log(addForm)
-          this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
-          this.addForm.type = ''
-          this.addForm.index = ''
-          this.addForm.name = ''
-        })
-      },
-      handleClick(type, index) {
-        console.log(type, index);
-        this.$refs.msg[addForm.index].findAllorder(this.activeName);
-      },
+      // addRow(addForm){
+      //   this.$ref.addFormRef.validate(valid => {
+      //     if (!valid) return this.get$message.warning('表单填写有误，请检查！')
+      //     this.$message.success('添加成功！')
+      //     console.log(addForm)
+      //     this.$set(this.tableData, this.addForm.index, {type: this.addForm.type, index: this.addForm.index, name: this.addForm.name })
+      //     this.addForm.type = ''
+      //     this.addForm.index = ''
+      //     this.addForm.name = ''
+      //   })
+      // },
+      // handleClick(type, index) {
+      //   console.log(type, index);
+      //   this.$refs.msg[addForm.index].findAllorder(this.activeName);
+      // },
       addParamsSetting() {
-        this.$store.commit('addData',JSON.stringify(this.tableData))
+        if (this.inputValue.trim().length <= 0) {
+          return this.$message.warning("文本框内容不能为空！")
+        }
+        this.$store.commit('addTable')
+      },
+
+      handleInputChange(e) {
+        this.$store.commit('setInputValue', e.target.value)
       }
     },
 
     created() {
       // this.tableData = this.$store.state.tableData
+      this.$store.dispatch('getTableData')
     },
 
     computed: {
-      ...mapState([
-        'tableData'
-      ]),
-      currentOrganizationId () {
-        return this.$store.state.login.userinfo.organization.id
-      },
+      ...mapState(['inputValue'])
     }
   }
 </script>
@@ -328,7 +336,6 @@
     .el-dialog__body {
       padding: 5px 20px;
     }
-
 
 
     .create-btn {

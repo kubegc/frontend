@@ -49,9 +49,9 @@ export const constantRoutes = [
       path: 'test2',
       component: Layout,
       children: [{
-        path: 'test3',
-        component: () => import('@/views/pipeline/home/pipeline_add')
-      }]
+          path: 'test3',
+          component: () => import('@/views/pipeline/home/pipeline_add')
+        }]
     }]
   },
   {
