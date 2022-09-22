@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 import getters from './getters'
 import app from './modules/app'
 import route from './modules/route'
@@ -20,8 +20,9 @@ const store = new Vuex.Store({
   state:{
     count:[],
     tableData:[],
-    inputValue:'aaa',
-    inputIndex:5,
+    inputValue:'',
+    inputIndex:'',
+    indexType:''
   },
   mutations:{
     add(state){
@@ -31,31 +32,38 @@ const store = new Vuex.Store({
       state.count.splice(index,1)
     },
 
-    initList(state, tableData){
-      state.tableData = tableData
-    },
+    // initList(state, tableData){
+    //   state.tableData = tableData
+    // },
     setInputValue(state, val){
       state.inputValue = val
+    },
+    setInputIndex(state, index){
+      state.inputIndex = index
+    },
+    setInputType(state, type){
+      state.indexType = type
     },
     addTable(state){
       const obj = {
         name: state.inputValue.trim(),
-        index: state.inputIndex,
-        type: false
+        index: state.inputIndex.trim(),
+        type: state.indexType.trim()
       }
       state.tableData.push(obj)
-      state.inputIndex++
-      state.inputValue =''
+      state.inputValue = ''
+      state.inputIndex = ''
+      state.indexType = ''
     }
   },
-  actions:{
-    getTableData(context) {
-      axios.get('/tabledata.json').then(({data}) =>{
-        console.log(data)
-        context.commit('initList', data)
-      })
-    }
-  }
+  // actions:{
+  //   getTableData(context) {
+  //     axios.get('/tabledata.json').then(({data}) =>{
+  //       console.log(data)
+  //       context.commit('initList', data)
+  //     })
+  //   }
+  // }
 })
 
 export default store

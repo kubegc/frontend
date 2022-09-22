@@ -19,14 +19,14 @@
                 re0f="addFormRef"
                 label-width="100px"
                 class="demo-projectForm">
-                <el-form-item label="工作流名称"
+                <el-form-item label="名称"
                               prop="project_name">
-                  <el-input :value="inputValue" @input.native="handleInputChange"></el-input>
+                  <el-input :value="inputValue" @input.native="handleInputValue"></el-input>
                 </el-form-item>
 
-                <el-form-item label="工作流标识"
+                <el-form-item label="标识"
                               prop="product_name">
-                  <el-input v-model="$store.state.tableData.type"></el-input>
+                  <el-input :value="inputType" @input.native="handleInputType"></el-input>
                 </el-form-item>
 
                 <el-form-item
@@ -51,12 +51,12 @@
                   <el-input type="textarea"
                             :rows="2"
                             placeholder="请输入描述信息"
-                            v-model="$store.state.tableData.index">
+                            :value="inputIndex" @input.native="handleInputIndex">
                   </el-input>
 
                 </el-form-item>
                 <el-form-item v-show="activeName !=='advance'"
-                              label="工作流特点"
+                              label="特点"
                               prop="desc">
                   <el-row :gutter="5">
                     <el-col :span="4">
@@ -132,13 +132,13 @@
 
           </div>
         </div>
-        <router-link :to="`/t/t1/t3`" class="project-contexts-modal__footer">
-          <el-button class="create-btn"
+        <div class="project-contexts-modal__footer">
+          <el-button class="create-btn "
                      type="primary"
                      plain
                      @click="addParamsSetting">{{'立即创建'}}
           </el-button>
-        </router-link>
+        </div>
 
       </div>
     </el-dialog>
@@ -302,23 +302,37 @@
       // },
       addParamsSetting() {
         if (this.inputValue.trim().length <= 0) {
-          return this.$message.warning("文本框内容不能为空！")
+          return this.$message.warning("名称不能为空！")
         }
-        this.$store.commit('addTable')
+        else if (this.inputIndex.trim().length <= 0) {
+          return this.$message.warning("描述信息不能为空！")
+        }
+        else if (this.inputType.trim().length <= 0) {
+          return this.$message.warning("标识不能为空！")
+        }
+        else {
+          this.$router.push('/t/t1/t3')
+          this.$store.commit('addTable')
+        }
       },
 
-      handleInputChange(e) {
+      handleInputValue(e) {
         this.$store.commit('setInputValue', e.target.value)
+      },
+      handleInputIndex(e) {
+        this.$store.commit('setInputIndex', e.target.value)
+      },
+      handleInputType(e) {
+        this.$store.commit('setInputType', e.target.value)
       }
     },
 
     created() {
-      // this.tableData = this.$store.state.tableData
       this.$store.dispatch('getTableData')
     },
 
     computed: {
-      ...mapState(['inputValue'])
+      ...mapState(['inputValue', 'inputIndex', 'inputType'])
     }
   }
 </script>

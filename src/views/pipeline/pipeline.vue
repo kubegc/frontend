@@ -240,8 +240,6 @@ export default {
       if (this.active++ > 3) this.active = 0
     },
 
-    updateJson() {},
-
     readPipeline() {
       axios.get('/getPipelineItems').then((response) => {
         if (response.data) {

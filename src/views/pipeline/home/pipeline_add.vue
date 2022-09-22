@@ -267,7 +267,7 @@
     },
 
     created() {
-      this.$store.dispatch('getTableData')
+      // this.$store.dispatch('getTableData')
     },
 
     computed: {
