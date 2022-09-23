@@ -241,6 +241,13 @@
       //     }
       //   })
       // },
+      handleCommand (command) {
+        if (command.action === 'delete') {
+          this.deleteProject(command.project_name)
+        } else if (command.action === 'edit') {
+          this.$router.push(`/v1/projects/edit/${command.project_name}`)
+        }
+      },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`)
         this.currentPage = 1

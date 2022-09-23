@@ -22,7 +22,7 @@ const store = new Vuex.Store({
     tableData:[],
     inputValue:'',
     inputIndex:'',
-    indexType:''
+    inputType:''
   },
   mutations:{
     add(state){
@@ -42,18 +42,18 @@ const store = new Vuex.Store({
       state.inputIndex = index
     },
     setInputType(state, type){
-      state.indexType = type
+      state.inputType = type
     },
     addTable(state){
       const obj = {
         name: state.inputValue.trim(),
         index: state.inputIndex.trim(),
-        type: state.indexType.trim()
+        type: state.inputType.trim()
       }
       state.tableData.push(obj)
       state.inputValue = ''
       state.inputIndex = ''
-      state.indexType = ''
+      state.inputType = ''
     }
   },
   // actions:{
