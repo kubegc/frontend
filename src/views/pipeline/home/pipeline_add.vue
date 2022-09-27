@@ -145,39 +145,39 @@
 <!--      </div>-->
     </div>
 
-        <el-table
-          :data="tableData"
-          v-loading="tableLoading"
-          style="width: 100%" >
-          <el-table-column label="序号" prop="index" min-width="40%">
-          </el-table-column>
-          <el-table-column prop="type" label="类型" min-width="80%">
-          </el-table-column>
-          <el-table-column prop="name" label="名称" min-width="80%">
-          </el-table-column>
-          <el-table-column  label="操作">
-            <template slot-scope="scope">
-              <el-button
-                type="primary"
-                icon="el-icon-edit"
-                circle
-                size="small">
-              </el-button>
-              <el-button
-                type="danger"
-                icon="el-icon-delete"
-                circle
-                size="small"
-                @click.native.prevent="deleteRow(scope.$index)"
-                v-model="tableData">
-              </el-button>
-            </template>
-            <el-button
-              type="danger"
-              icon="el-icon-delete">取消
-            </el-button>
-          </el-table-column>
-        </el-table>
+<!--        <el-table-->
+<!--          :data="tableData"-->
+<!--          v-loading="tableLoading"-->
+<!--          style="width: 100%" >-->
+<!--          <el-table-column label="序号" prop="index" min-width="40%">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column prop="type" label="类型" min-width="80%">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column prop="name" label="名称" min-width="80%">-->
+<!--          </el-table-column>-->
+<!--          <el-table-column  label="操作">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-button-->
+<!--                type="primary"-->
+<!--                icon="el-icon-edit"-->
+<!--                circle-->
+<!--                size="small">-->
+<!--              </el-button>-->
+<!--              <el-button-->
+<!--                type="danger"-->
+<!--                icon="el-icon-delete"-->
+<!--                circle-->
+<!--                size="small"-->
+<!--                @click.native.prevent="deleteRow(scope.$index)"-->
+<!--                v-model="tableData">-->
+<!--              </el-button>-->
+<!--            </template>-->
+<!--            <el-button-->
+<!--              type="danger"-->
+<!--              icon="el-icon-delete">取消-->
+<!--            </el-button>-->
+<!--          </el-table-column>-->
+<!--        </el-table>-->
         <div class="block" style="margin-top:15px;">
           <el-pagination
             align='center'
